@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-97)]
-public abstract class ObjectManager<TSelf, TItem> : Singleton<TSelf> where TSelf : Singleton<TSelf> where TItem : ObjectPoolItemBase
+public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> where TSelf : SerializedSingleton<TSelf> where TItem : ObjectPoolItemBase
 {
 	[SerializeField]
 	protected string m_Path = null;

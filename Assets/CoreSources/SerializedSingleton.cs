@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 [DefaultExecutionOrder(-98)]
-public abstract class Singleton<TSelf> : MonoBehaviour where TSelf : Singleton<TSelf>
+public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where TSelf : SerializedSingleton<TSelf>
 {
 	#region 변수
 	[SerializeField]
@@ -22,9 +22,9 @@ public abstract class Singleton<TSelf> : MonoBehaviour where TSelf : Singleton<T
 			if (m_Instance != null)
 				return m_Instance;
 
-			Singleton<TSelf>[] objs = FindObjectsByType<Singleton<TSelf>>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+			SerializedSingleton<TSelf>[] objs = FindObjectsByType<SerializedSingleton<TSelf>>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-			Singleton<TSelf> obj = objs
+			SerializedSingleton<TSelf> obj = objs
 				.Where(item => item.m_IsMainScene == true)
 				.FirstOrDefault(); //GameObject.Find(typeof(T).Name);
 
