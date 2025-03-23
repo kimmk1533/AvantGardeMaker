@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.Ceeu
 {
 	public sealed class GameManager : SerializedSingleton<GameManager>
 	{
@@ -19,8 +19,9 @@ namespace AvantGardeMaker
 		#endregion
 
 		#region 매니저
-		private static EditModeManager M_Edit => EditModeManager.Instance;
+		private static EditModeManager M_EditMode => EditModeManager.Instance;
 		private static TileManager M_Tile => TileManager.Instance;
+		private static UIManager M_UI => UIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -44,16 +45,18 @@ namespace AvantGardeMaker
 		public void Initialize()
 		{
 			M_Tile.Initialize();
+			M_EditMode.Initialize();
 
-			M_Edit.Initialize();
+			M_UI.Initialize();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
 		public void Finallize()
 		{
-			M_Edit.Finallize();
+			M_UI.Finallize();
 
+			M_EditMode.Finallize();
 			M_Tile.Finallize();
 		}
 
@@ -65,16 +68,18 @@ namespace AvantGardeMaker
 			m_IsGameMode = true;
 
 			M_Tile.InitializeGame();
+			M_EditMode.InitializeGame();
 
-			M_Edit.InitializeGame();
+			M_UI.InitializeGame();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeGame()
 		{
-			M_Edit.FinallizeGame();
+			M_UI.FinallizeGame();
 
+			M_EditMode.FinallizeGame();
 			M_Tile.FinallizeGame();
 
 			m_IsGameMode = false;

@@ -52,7 +52,7 @@ public static class Methods
 
 		return tf.GetComponent<T>();
 	}
-	public static Transform FindInChilderen(this Transform transform, string n)
+	public static Transform FindInChilderen(this Transform transform, string name)
 	{
 		int count = transform.childCount;
 
@@ -61,13 +61,13 @@ public static class Methods
 		for (int i = 0; i < count; i++)
 		{
 			childTransform = transform.GetChild(i);
-			if (childTransform.name == n)
+			if (childTransform.name == name)
 			{
 				return childTransform;
 			}
 			else if (childTransform.childCount > 0)
 			{
-				childTransform = FindInChilderen(childTransform, n);
+				childTransform = FindInChilderen(childTransform, name);
 				if (childTransform != null)
 				{
 					return childTransform;
@@ -75,6 +75,10 @@ public static class Methods
 			}
 		}
 		return null;
+	}
+	public static RectTransform FindInChilderen(this RectTransform rectTransform, string name)
+	{
+		return (RectTransform)rectTransform.transform.FindInChilderen(name);
 	}
 	public static T GetChild<T>(this Transform transform, int index)
 	{

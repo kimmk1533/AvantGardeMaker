@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+namespace AvantGardeMaker.Ceeu.Enum
+{
+	public enum E_EditModeType
+	{
+		Cursor,
+		Tile,
+		Enemy
+	}
+	public enum E_TileType
+	{
+		// 타일
+		Tile,
+		// 보호 목표
+		Protection_Objective,
+		// 침입 포인트
+		Incursion_Point,
+
+		Max
+	}
+
+	public class EnumUtil
+	{
+
+	}
+}

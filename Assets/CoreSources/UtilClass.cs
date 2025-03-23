@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public static class UtilClass
 {
@@ -64,6 +65,11 @@ public static class UtilClass
 		Physics.Raycast(ray, out hit);
 
 		return hit.point;
+	}
+
+	public static bool IsPointerOnUI()
+	{
+		return EventSystem.current.IsPointerOverGameObject();
 	}
 
 	public static TextMesh CreateWorldText(object text, Transform parent = null, Vector3 localPosition = default(Vector3), float characterSize = 0.1f, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000)

@@ -1,26 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.Ceeu
 {
 	public sealed class EditModeManager : SerializedSingleton<EditModeManager>
 	{
-		#region Enum
-		public enum E_TileType
-		{
-			// 타일
-			Tile,
-			// 보호 목표
-			Protection_Objective,
-			// 침입 포인트
-			Incursion_Point,
-
-			Max
-		}
-		#endregion
-
 		#region 변수
 		private bool m_IsEditMode = false;
 
@@ -30,6 +17,8 @@ namespace AvantGardeMaker
 		[Min(1)]
 		[SerializeField]
 		private int m_MapHeight = 1;
+
+		private E_EditModeType m_EditModeType = E_EditModeType.Cursor;
 
 		#region 타일 관련
 		// 생성한 타일 부모
@@ -65,26 +54,16 @@ namespace AvantGardeMaker
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			// 마우스 위치 가져오기
-			Vector3Int mousePosition = GetMousePositionInt();
-
-			ChangeTilePreview();
-
-			m_TilePreview.transform.position = mousePosition;
-
-			// 타일 배치
-			if (Input.GetMouseButton(0) == true)
+			switch (m_EditModeType)
 			{
-				if (m_TileMap.TryGetValue(mousePosition, out (E_TileType tileType, Tile tile) value) == false)
-					AddTile(mousePosition);
-				else if (value.tileType != m_TileType)
-					ReplaceTile(mousePosition);
-			}
-			// 타일 제거
-			if (Input.GetMouseButton(1) == true &&
-				m_TileMap.ContainsKey(mousePosition) == true)
-			{
-				RemoveTile(mousePosition);
+				case E_EditModeType.Cursor:
+					CursorEditModeProcess();
+					break;
+				case E_EditModeType.Tile:
+					TileEditModeProcess();
+					break;
+				case E_EditModeType.Enemy:
+					break;
 			}
 		}
 		#endregion
@@ -155,7 +134,6 @@ namespace AvantGardeMaker
 			m_TileType = E_TileType.Tile;
 
 			m_TilePreview = m_TilePreviewMap[m_TileType];
-			m_TilePreview.gameObject.SetActive(true);
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
@@ -165,6 +143,52 @@ namespace AvantGardeMaker
 
 		}
 
+		public void SetEditModeType(E_EditModeType editModeType)
+		{
+			m_EditModeType = editModeType;
+
+			m_TilePreview.gameObject.SetActive(editModeType == E_EditModeType.Tile);
+		}
+
+		#region 커서 편집 모드 관련 함수
+		private void CursorEditModeProcess()
+		{
+
+		}
+		#endregion
+
+		#region 타일 편집 모드 관련 함수
+		private void TileEditModeProcess()
+		{
+			// 마우스 위치 가져오기
+			Vector3Int mousePosition = GetMousePositionInt();
+
+			// 마우스 포인터가 UI 위에 없는 지 확인
+			if (UtilClass.IsPointerOnUI() == false)
+			{
+				m_TilePreview.transform.position = mousePosition;
+				m_TilePreview.gameObject.SetActive(true);
+
+				// 타일 배치
+				if (Input.GetMouseButton(0) == true)
+				{
+					if (m_TileMap.TryGetValue(mousePosition, out (E_TileType tileType, Tile tile) value) == false)
+						AddTile(mousePosition);
+					else if (value.tileType != m_TileType)
+						ReplaceTile(mousePosition);
+				}
+				// 타일 제거
+				if (Input.GetMouseButton(1) == true &&
+					m_TileMap.ContainsKey(mousePosition) == true)
+				{
+					RemoveTile(mousePosition);
+				}
+			}
+			else
+			{
+				m_TilePreview.gameObject.SetActive(false);
+			}
+		}
 		private Vector3Int GetMousePositionInt()
 		{
 			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D();
@@ -206,37 +230,11 @@ namespace AvantGardeMaker
 
 			AddTile(tilePos);
 		}
-		private void ChangeTilePreview()
+		public void SetTileType(E_TileType tileType)
 		{
-			bool isKeyDown = false;
-
-			if (Input.GetKeyDown(KeyCode.Alpha1) == true)
-			{
-				m_TileType = E_TileType.Tile;
-				isKeyDown = true;
-			}
-			else if (Input.GetKeyDown(KeyCode.Alpha2) == true)
-			{
-				m_TileType = E_TileType.Protection_Objective;
-				isKeyDown = true;
-			}
-			else if (Input.GetKeyDown(KeyCode.Alpha3) == true)
-			{
-				m_TileType = E_TileType.Incursion_Point;
-				isKeyDown = true;
-			}
-
-			if (isKeyDown == true)
-			{
-				m_TilePreview.gameObject.SetActive(false);
-
-				m_TilePreview = m_TilePreviewMap[m_TileType];
-
-				Vector3Int mousePosition = GetMousePositionInt();
-				m_TilePreview.transform.position = mousePosition;
-
-				m_TilePreview.gameObject.SetActive(true);
-			}
+			m_TileType = tileType;
+			m_TilePreview = m_TilePreviewMap[m_TileType];
 		}
+		#endregion
 	}
 }

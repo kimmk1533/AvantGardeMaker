@@ -1,81 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AvantGardeMaker
 {
-	public enum E_EnemyGrade
-	{
-		E_Normal,
-		E_Elite,
-		E_Leader
-	}
 
-	public enum E_EnemyType
-	{
-		E_InfectedCreature,	//감염생물
-		E_Drone,			//드론
-		E_Sarkaz,			//살카즈
-		E_Possessed,		//숙주
-		E_SeaMonster,		//바다 괴물
-		E_ArtsCreation,		//아츠 피조물
-		E_Apparition,		//요괴
-		E_Machina,			//기계
-		E_WildBeast,		//야생동물
-		E_Collapsal,		//붕괴체
-		E_Ect				//기타
-	}
-
-	public enum E_EnemyFlyable
-	{
-		E_Walk,			//지상
-		E_Flying,		//공중
-	}
-
-	public enum E_EnemyAtkType
-	{
-		E_Disable,
-		E_Melee,
-		E_Range,
-	}
-
-	public enum E_EnemyDmgType
-	{
-		E_Physic,
-		E_Magic,
-		E_Heal,
-		E_None,
-	}
 	//적 스펙, 특성
 	public class EnemyData
 	{
 		public E_EnemyGrade m_Grade;
-		public int m_LossHp;	//보호 지점에 들어가면 깎이는 목표 HP
+		public int m_LossHp;    //보호 지점에 들어가면 깎이는 목표 HP
 
 		public E_EnemyType m_TribeType;
 		public E_EnemyFlyable m_Flyable;
 		public E_EnemyAtkType m_AtkType;
 		public E_EnemyDmgType m_DmgType;
 
-		public string m_Name;	//이름
-		public int m_Hp;		//체력
-		public int m_Atk;		//공격력
-		public float m_Def;		//방어력
+		public string m_Name;   //이름
+		public int m_Hp;        //체력
+		public int m_Atk;       //공격력
+		public float m_Def;     //방어력
 		public float m_MagicRes;//마법 저항
-		public float m_DmgRes;	//피해 감소
+		public float m_DmgRes;  //피해 감소
 		public float m_MoveSpeed;//이동 속도(타일/s)
-		public float m_AtkTime;	//공격 간격(n초당 1회)
-		public float m_Range;	//사정거리(근거리는 -1)
-		public int m_MassLevel;	//무게
+		public float m_AtkTime; //공격 간격(n초당 1회)
+		public float m_Range;   //사정거리(근거리는 -1)
+		public int m_MassLevel; //무게
 
 		public bool[] m_Immune;//기절 수면 빙결 공중 전율 공포 면역여부
 	}
 
 	public class Point
 	{
-		public int x; 
+		public int x;
 		public int y;
 	}
 
@@ -83,13 +43,13 @@ namespace AvantGardeMaker
 	public class EnemySpawnData
 	{
 		public string m_Name;
-		public int m_Wave;		//웨이브(특정 몹이 죽어야 진행될 경우 사용)
-		public int m_Amount;	//수량(일괄 스폰 시 사용) 
-		public int m_Interval;	//생성 간격(일괄 스폰 시 사용)
+		public int m_Wave;      //웨이브(특정 몹이 죽어야 진행될 경우 사용)
+		public int m_Amount;    //수량(일괄 스폰 시 사용) 
+		public int m_Interval;  //생성 간격(일괄 스폰 시 사용)
 		public int m_Time;      //작전 시작 후 n초에 스폰
 		public Point m_StartPos;//최초 스폰 지점
-		public List<Point> m_TargetPos;	//목표 지점
-		public List<int> m_WaitTime;	//목표 지점에서 n초 대기(0초면 딜레이 x)
+		public List<Point> m_TargetPos; //목표 지점
+		public List<int> m_WaitTime;    //목표 지점에서 n초 대기(0초면 딜레이 x)
 	}
 
 	//맵 정보 중 적 소환에 필요한 정보들
@@ -124,7 +84,7 @@ namespace AvantGardeMaker
 		/// </summary>
 		public virtual void Initialize()
 		{
-			m_FilePath= Path.Combine(Application.persistentDataPath, "EnemyData.yaml");
+			m_FilePath = Path.Combine(Application.persistentDataPath, "EnemyData.yaml");
 			m_StageData = new StageData();
 		}
 		/// <summary>
