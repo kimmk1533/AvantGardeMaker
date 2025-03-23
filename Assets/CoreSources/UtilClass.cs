@@ -35,24 +35,35 @@ public static class UtilClass
 		}
 	}
 
-	public static Vector3 GetMouseWorldPosition()
+	public static Vector2 GetMouseWorldPosition2D()
 	{
-		Vector3 vector = GetMouseWorldPositionZ(Input.mousePosition, Camera.main);
-		vector.z = 0f;
-		return vector;
+		return GetMouseWorldPosition2D(Input.mousePosition, Camera.main);
 	}
-	public static Vector3 GetMouseWorldPositionZ()
+	public static Vector2 GetMouseWorldPosition2D(Camera worldCamera)
 	{
-		return GetMouseWorldPositionZ(Input.mousePosition, Camera.main);
+		return GetMouseWorldPosition2D(Input.mousePosition, worldCamera);
 	}
-	public static Vector3 GetMouseWorldPositionZ(Camera worldCamera)
+	public static Vector2 GetMouseWorldPosition2D(Vector3 screenPosition, Camera worldCamera)
 	{
-		return GetMouseWorldPositionZ(Input.mousePosition, worldCamera);
-	}
-	public static Vector3 GetMouseWorldPositionZ(Vector3 screenPosition, Camera worldCamera)
-	{
-		Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
+		Vector2 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
 		return worldPosition;
+	}
+	public static Vector3 GetMouseWorldPosition3D()
+	{
+		return GetMouseWorldPosition3D(Input.mousePosition, Camera.main);
+	}
+	public static Vector3 GetMouseWorldPosition3D(Camera worldCamera)
+	{
+		return GetMouseWorldPosition3D(Input.mousePosition, worldCamera);
+	}
+	public static Vector3 GetMouseWorldPosition3D(Vector3 screenPosition, Camera worldCamera)
+	{
+		Ray ray = worldCamera.ScreenPointToRay(screenPosition);
+
+		RaycastHit hit;
+		Physics.Raycast(ray, out hit);
+
+		return hit.point;
 	}
 
 	public static TextMesh CreateWorldText(object text, Transform parent = null, Vector3 localPosition = default(Vector3), float characterSize = 0.1f, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000)

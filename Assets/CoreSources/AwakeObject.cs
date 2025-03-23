@@ -18,7 +18,7 @@ public class AwakeObject : MonoBehaviour
 
 	#region 변수
 	[SerializeField]
-	private E_Type m_Type = (E_Type)(-1);
+	private E_Type m_Type = (E_Type)(0);
 	#endregion
 
 	#region 유니티 콜백 함수

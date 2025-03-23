@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [DefaultExecutionOrder(-97)]
 public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> where TSelf : SerializedSingleton<TSelf> where TItem : ObjectPoolItemBase
 {
+	// 공통 경로
 	[SerializeField]
-	protected string m_Path = null;
+	protected string m_CommonPath = null;
 	[SerializeField]
 	protected List<OriginInfo> m_Origins = null;
 	protected Dictionary<string, ObjectPool<TItem>> m_ObjectPoolMap = null;
@@ -138,16 +140,13 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	}
 
 #if UNITY_EDITOR
-	/// <summary>
-	/// Use [ContextMenu("Load Origin")] and base.LoadOrigin_Inner
-	/// </summary>
-	protected abstract void LoadOrigin();
+	[Button("Load Origin")]
 	protected void LoadOrigin_Inner()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
 		{
 			OriginInfo info = m_Origins[i];
-			string path = System.IO.Path.Combine(m_Path, info.path, info.key);
+			string path = System.IO.Path.Combine(m_CommonPath, info.path, info.key);
 			info.origin = Resources.Load<TItem>(path);
 			if (info.origin == null)
 				Debug.LogError("원본을 불러오는 데에 실패했습니다. 경로: " + path);

@@ -19,16 +19,21 @@ namespace AvantGardeMaker
 		#endregion
 
 		#region 매니저
-		private static EditManager M_Edit => EditManager.Instance;
+		private static EditModeManager M_Edit => EditModeManager.Instance;
+		private static TileManager M_Tile => TileManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
 		private void Awake()
 		{
 			Initialize();
+
+			InitializeGame();
 		}
 		private void OnApplicationQuit()
 		{
+			FinallizeGame();
+
 			Finallize();
 		}
 		#endregion
@@ -38,6 +43,8 @@ namespace AvantGardeMaker
 		/// </summary>
 		public void Initialize()
 		{
+			M_Tile.Initialize();
+
 			M_Edit.Initialize();
 		}
 		/// <summary>
@@ -46,6 +53,8 @@ namespace AvantGardeMaker
 		public void Finallize()
 		{
 			M_Edit.Finallize();
+
+			M_Tile.Finallize();
 		}
 
 		/// <summary>
@@ -54,12 +63,20 @@ namespace AvantGardeMaker
 		public void InitializeGame()
 		{
 			m_IsGameMode = true;
+
+			M_Tile.InitializeGame();
+
+			M_Edit.InitializeGame();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeGame()
 		{
+			M_Edit.FinallizeGame();
+
+			M_Tile.FinallizeGame();
+
 			m_IsGameMode = false;
 		}
 	}
