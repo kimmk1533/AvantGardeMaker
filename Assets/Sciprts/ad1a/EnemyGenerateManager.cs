@@ -5,7 +5,7 @@ using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.ad1a
 {
 
 	//적 스펙, 특성
