@@ -73,7 +73,7 @@ namespace AvantGardeMaker
 			m_TilePreview.transform.position = mousePosition;
 
 			// 타일 배치
-			if (Input.GetMouseButtonDown(0) == true)
+			if (Input.GetMouseButton(0) == true)
 			{
 				if (m_TileMap.TryGetValue(mousePosition, out (E_TileType tileType, Tile tile) value) == false)
 					AddTile(mousePosition);
@@ -81,7 +81,7 @@ namespace AvantGardeMaker
 					ReplaceTile(mousePosition);
 			}
 			// 타일 제거
-			if (Input.GetMouseButtonDown(1) == true &&
+			if (Input.GetMouseButton(1) == true &&
 				m_TileMap.ContainsKey(mousePosition) == true)
 			{
 				RemoveTile(mousePosition);
