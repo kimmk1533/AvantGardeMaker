@@ -1149,6 +1149,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124893153}
   m_CullTransparentMesh: 1
+--- !u!1 &134798570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7644346143551190273, guid: 700f1915b4874db409719323188ccca1, type: 3}
+  m_PrefabInstance: {fileID: 2299914125093060593}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &142723038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3108,6 +3113,31 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2495311570772193205, guid: 700f1915b4874db409719323188ccca1, type: 3}
   m_PrefabInstance: {fileID: 2299914125093060593}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &549576585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134798570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 663e8e84b4be8294f999c610fb27e50a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: m_CharData
+      Entry: 6
+      Data: 
+  CharName: Fang
 --- !u!1 &578442760
 GameObject:
   m_ObjectHideFlags: 0
@@ -3451,7 +3481,7 @@ RectTransform:
   - {fileID: 85814009}
   - {fileID: 1936579644}
   - {fileID: 1579499545}
-  m_Father: {fileID: 1368605187}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7142,8 +7172,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 599329224}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1368605188
@@ -9397,7 +9426,146 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: Fang
+      Entry: 7
+      Data: 0|AvantGardeMaker.MikangMark.CharInfo, Assembly-CSharp
+    - Name: m_EngCharName
+      Entry: 1
+      Data: Fang
+    - Name: m_KorCharName
+      Entry: 1
+      Data: "\uD33D"
+    - Name: m_Rate
+      Entry: 3
+      Data: 3
+    - Name: m_MaxLevel
+      Entry: 3
+      Data: 40
+    - Name: m_Level
+      Entry: 3
+      Data: 1
+    - Name: m_MaxExp
+      Entry: 3
+      Data: 40
+    - Name: m_Exp
+      Entry: 3
+      Data: 0
+    - Name: m_Elite
+      Entry: 3
+      Data: 0
+    - Name: m_Potential
+      Entry: 3
+      Data: 0
+    - Name: m_Job
+      Entry: 3
+      Data: 0
+    - Name: m_MaxHp
+      Entry: 3
+      Data: 742
+    - Name: m_Atk
+      Entry: 3
+      Data: 157
+    - Name: m_Def
+      Entry: 3
+      Data: 132
+    - Name: m_Res
+      Entry: 3
+      Data: 0
+    - Name: m_ReSet
+      Entry: 3
+      Data: 0
+    - Name: m_SetCost
+      Entry: 3
+      Data: 8
+    - Name: m_BlockCount
+      Entry: 3
+      Data: 2
+    - Name: m_AtkSpeed
+      Entry: 3
+      Data: 2
+    - Name: m_AtkRange
+      Entry: 3
+      Data: 0
+    - Name: m_Provocation
+      Entry: 3
+      Data: 0
+    - Name: m_SkillLevel
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Plume
+      Entry: 7
+      Data: 1|AvantGardeMaker.MikangMark.CharInfo, Assembly-CSharp
+    - Name: m_EngCharName
+      Entry: 1
+      Data: Plume
+    - Name: m_KorCharName
+      Entry: 1
+      Data: "\uD50C\uB8F8"
+    - Name: m_Rate
+      Entry: 3
+      Data: 3
+    - Name: m_MaxLevel
+      Entry: 3
+      Data: 40
+    - Name: m_Level
+      Entry: 3
+      Data: 1
+    - Name: m_MaxExp
+      Entry: 3
+      Data: 40
+    - Name: m_Exp
+      Entry: 3
+      Data: 0
+    - Name: m_Elite
+      Entry: 3
+      Data: 0
+    - Name: m_Potential
+      Entry: 3
+      Data: 0
+    - Name: m_Job
+      Entry: 3
+      Data: 0
+    - Name: m_MaxHp
+      Entry: 3
+      Data: 688
+    - Name: m_Atk
+      Entry: 3
+      Data: 230
+    - Name: m_Def
+      Entry: 3
+      Data: 148
+    - Name: m_Res
+      Entry: 3
+      Data: 0
+    - Name: m_ReSet
+      Entry: 3
+      Data: 0
+    - Name: m_SetCost
+      Entry: 3
+      Data: 7
+    - Name: m_BlockCount
+      Entry: 3
+      Data: 1
+    - Name: m_AtkSpeed
+      Entry: 3
+      Data: 4
+    - Name: m_AtkRange
+      Entry: 3
+      Data: 0
+    - Name: m_Provocation
+      Entry: 3
+      Data: 0
+    - Name: m_SkillLevel
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  m_FileSaveDirectory: C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/CharInfo_Yaml
 --- !u!1 &2009689780
 GameObject:
   m_ObjectHideFlags: 0
@@ -10257,7 +10425,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7644346143551190273, guid: 700f1915b4874db409719323188ccca1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 549576585}
   m_SourcePrefab: {fileID: 100100000, guid: 700f1915b4874db409719323188ccca1, type: 3}
 --- !u!224 &2585516630871854375
 RectTransform:
@@ -11644,6 +11815,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1368605187}
+  - {fileID: 599329224}
   - {fileID: 877765}
   - {fileID: 9455698}
   - {fileID: 595938247}
