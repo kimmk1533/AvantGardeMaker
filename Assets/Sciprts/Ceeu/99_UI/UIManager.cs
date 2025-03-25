@@ -1,24 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
 	public class UIManager : SerializedSingleton<UIManager>
 	{
 		#region 변수
+		#region 메뉴 패널 관련 변수
 		[SerializeField]
 		private MenuPanel m_MenuPanel = null;
 		private bool m_MenuPanelMovingLock = false;
+		#endregion
 
+		#region 옵션 패널 관련 변수
 		[SerializeField]
-		private RectTransform m_OptionPanel = null;
-
-		[SerializeField]
-		private RectTransform m_CurrentViewPort = null;
-		private RectTransform m_TileOptionViewPort = null;
-		private RectTransform m_EnemyOptionViewPort = null;
+		private OptionPanel m_OptionPanel = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -30,68 +31,15 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 이벤트
+		public Button.ButtonClickedEvent onSystemMenuButtonClicked => m_MenuPanel.onSystemMenuButtonClicked;
+		public Button.ButtonClickedEvent onTileMenuButtonClicked => m_MenuPanel.onTileMenuButtonClicked;
+		public Button.ButtonClickedEvent onOperatorMenuButtonClicked => m_MenuPanel.onOperatorMenuButtonClicked;
+		public Button.ButtonClickedEvent onEnemyMenuButtonClicked => m_MenuPanel.onEnemyMenuButtonClicked;
 
 		#region 이벤트 함수
-		public void OnCursorMenuButtonClicked()
-		{
-			M_EditMode.SetEditModeType(Enum.E_EditModeType.Cursor);
-
-			OnOptionCloseButtonClicked();
-		}
-		public void OnTileMenuButtonClicked()
-		{
-			M_EditMode.SetEditModeType(Enum.E_EditModeType.Tile);
-
-			if (m_CurrentViewPort != null)
-				m_CurrentViewPort.gameObject.SetActive(false);
-
-			if (m_OptionPanel.gameObject.activeSelf == false)
-				ToggleOptionPanelActive();
-			else if (m_CurrentViewPort == m_TileOptionViewPort)
-			{
-				m_CurrentViewPort = null;
-				ToggleOptionPanelActive();
-				return;
-			}
-
-			m_CurrentViewPort = m_TileOptionViewPort;
-			m_CurrentViewPort.gameObject.SetActive(true);
-		}
-		public void OnEnemyMenuButtonClicked()
-		{
-			M_EditMode.SetEditModeType(Enum.E_EditModeType.Enemy);
-
-			if (m_CurrentViewPort != null)
-				m_CurrentViewPort.gameObject.SetActive(false);
-
-			if (m_OptionPanel.gameObject.activeSelf == false)
-				ToggleOptionPanelActive();
-			else if (m_CurrentViewPort == m_EnemyOptionViewPort)
-			{
-				m_CurrentViewPort = null;
-				ToggleOptionPanelActive();
-				return;
-			}
-
-			m_CurrentViewPort = m_EnemyOptionViewPort;
-			m_CurrentViewPort.gameObject.SetActive(true);
-		}
-
-		public void ToggleMenuPanelLocking()
+		public void OnMenuLockButtonClicked()
 		{
 			m_MenuPanelMovingLock = !m_MenuPanelMovingLock;
-		}
-		private void ToggleOptionPanelActive()
-		{
-			m_OptionPanel.gameObject.SetActive(!m_OptionPanel.gameObject.activeSelf);
-		}
-		public void OnOptionCloseButtonClicked()
-		{
-			m_OptionPanel.gameObject.SetActive(false);
-
-			if (m_CurrentViewPort != null)
-				m_CurrentViewPort.gameObject.SetActive(false);
-			m_CurrentViewPort = null;
 		}
 		#endregion
 		#endregion
@@ -104,14 +52,17 @@ namespace AvantGardeMaker.Ceeu
 		private void Update()
 		{
 			if (Input.GetKeyDown(KeyCode.Alpha1) == true)
-				OnCursorMenuButtonClicked();
+				m_OptionPanel.systemOptionViewport.OnMenuButtonClicked();
 			else if (Input.GetKeyDown(KeyCode.Alpha2) == true)
-				OnTileMenuButtonClicked();
+				m_OptionPanel.tileOptionViewport.OnMenuButtonClicked();
 			else if (Input.GetKeyDown(KeyCode.Alpha3) == true)
-				OnEnemyMenuButtonClicked();
+				m_OptionPanel.operatorOptionViewport.OnMenuButtonClicked();
+			else if (Input.GetKeyDown(KeyCode.Alpha4) == true)
+				m_OptionPanel.enemyOptionViewport.OnMenuButtonClicked();
 		}
 		#endregion
 
+		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
@@ -121,20 +72,12 @@ namespace AvantGardeMaker.Ceeu
 				throw new System.NullReferenceException("m_MenuPanel is null.");
 			if (m_OptionPanel == null)
 				throw new System.NullReferenceException("m_OptionPanel is null.");
-
-			m_CurrentViewPort = null;
-			m_TileOptionViewPort = m_OptionPanel.FindInChilderen("Tile Option Viewport");
-			m_TileOptionViewPort.gameObject.SetActive(false);
-			m_EnemyOptionViewPort = m_OptionPanel.FindInChilderen("Enemy Option Viewport");
-			m_EnemyOptionViewPort.gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
 		public virtual void Finallize()
 		{
-			m_EnemyOptionViewPort = null;
-			m_TileOptionViewPort = null;
 		}
 
 		/// <summary>
@@ -146,6 +89,8 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MenuPanel.OnPointerEnter(null);
 			m_MenuPanelMovingLock = true;
+
+			m_OptionPanel.Initialize();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
@@ -154,6 +99,6 @@ namespace AvantGardeMaker.Ceeu
 		{
 			m_MenuPanel.Finallize();
 		}
-
+		#endregion
 	}
 }

@@ -7,8 +7,9 @@ namespace AvantGardeMaker.Ceeu.Enum
 {
 	public enum E_EditModeType
 	{
-		Cursor,
+		System,
 		Tile,
+		Operator,
 		Enemy
 	}
 	public enum E_TileType
