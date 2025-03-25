@@ -21,12 +21,21 @@ public static class Methods
 		list[index2] = temp;
 	}
 
-	public static Transform[] GetChilderen(this Transform transform, string n)
+	public static T GetChild<T>(this Transform transform, int index) where T : Component
+	{
+		Transform child = transform.GetChild(index);
+
+		if (child == null)
+			return default(T);
+
+		return child.GetComponent<T>();
+	}
+	public static Transform[] GetChilderen(this Transform transform, string name)
 	{
 		int count = transform.childCount;
 
 		List<Transform> ret_list = new List<Transform>();
-		if (transform.name == n)
+		if (transform.name == name)
 		{
 			ret_list.Add(transform);
 		}
@@ -35,7 +44,7 @@ public static class Methods
 
 		for (int i = 0; i < count; i++)
 		{
-			Transform[] arr = transform.GetChild(i).GetChilderen(n);
+			Transform[] arr = transform.GetChild(i).GetChilderen(name);
 			if (arr != null)
 				ret_list.AddRange(arr);
 		}
@@ -43,16 +52,16 @@ public static class Methods
 		return ret_list.ToArray();
 	}
 
-	public static T Find<T>(this Transform transform, string n) where T : Component
+	public static T Find<T>(this Transform transform, string name) where T : Component
 	{
-		Transform tf = transform.Find(n);
+		Transform tf = transform.Find(name);
 
 		if (tf == null)
 			return null;
 
 		return tf.GetComponent<T>();
 	}
-	public static Transform FindInChilderen(this Transform transform, string name)
+	public static Transform FindInChildren(this Transform transform, string name)
 	{
 		int count = transform.childCount;
 
@@ -67,7 +76,7 @@ public static class Methods
 			}
 			else if (childTransform.childCount > 0)
 			{
-				childTransform = FindInChilderen(childTransform, name);
+				childTransform = FindInChildren(childTransform, name);
 				if (childTransform != null)
 				{
 					return childTransform;
@@ -76,18 +85,9 @@ public static class Methods
 		}
 		return null;
 	}
-	public static RectTransform FindInChilderen(this RectTransform rectTransform, string name)
+	public static T FindInChildren<T>(this Transform transform, string name) where T : Component
 	{
-		return (RectTransform)rectTransform.transform.FindInChilderen(name);
-	}
-	public static T GetChild<T>(this Transform transform, int index)
-	{
-		Transform child = transform.GetChild(index);
-
-		if (child == null)
-			return default(T);
-
-		return child.GetComponent<T>();
+		return transform.FindInChildren(name)?.GetComponent<T>();
 	}
 
 	public static string CombinePath(char split_word = '/', params string[] path)

@@ -1,26 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using YamlDotNet.Serialization;
 
 namespace AvantGardeMaker.Ceeu
 {
 	public sealed class EditModeManager : SerializedSingleton<EditModeManager>
 	{
 		#region 변수
+		[SerializeField]
+		private MapData m_EditingMapData = default;
+
+		#region 편집 모드 관련 변수
 		private bool m_IsEditMode = false;
 
-		[Min(1)]
-		[SerializeField]
-		private int m_MapWidth = 1;
-		[Min(1)]
-		[SerializeField]
-		private int m_MapHeight = 1;
+		private E_EditModeType m_EditModeType = E_EditModeType.System;
+		#endregion
 
-		private E_EditModeType m_EditModeType = E_EditModeType.Cursor;
+		#region 타일 관련 변수
+		// 타일 배치 가능 여부
+		private bool m_TilePlacementFlag = true;
 
-		#region 타일 관련
 		// 생성한 타일 부모
 		private GameObject m_TileParent = null;
 
@@ -38,10 +41,19 @@ namespace AvantGardeMaker.Ceeu
 		// 생성한 타일 맵
 		private Dictionary<Vector3Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
 		#endregion
+
+		#region 저장 & 불러오기 관련 변수
+		[SerializeField]
+		private string m_MapDataSavingPath = string.Empty;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
+		public MapData currentMapData => m_EditingMapData;
+
 		public bool isEditMode => m_IsEditMode;
+
+		public string mapDataSavingPath => Path.Combine(Application.persistentDataPath, m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
 		#endregion
 
 		#region 이벤트
@@ -49,6 +61,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static TileManager M_Tile => TileManager.Instance;
+		private static YamlFileManager M_YamlFile => YamlFileManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -56,7 +69,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			switch (m_EditModeType)
 			{
-				case E_EditModeType.Cursor:
+				case E_EditModeType.System:
 					CursorEditModeProcess();
 					break;
 				case E_EditModeType.Tile:
@@ -68,6 +81,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 		#endregion
 
+		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
@@ -110,6 +124,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void InitializeGame()
 		{
+			m_TilePlacementFlag = true;
+
 			m_TileParent = new GameObject("Tile Parent");
 			m_TileParent.transform.position = Vector3.zero;
 
@@ -142,6 +158,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 
 		}
+		#endregion
 
 		public void SetEditModeType(E_EditModeType editModeType)
 		{
@@ -163,9 +180,16 @@ namespace AvantGardeMaker.Ceeu
 			// 마우스 위치 가져오기
 			Vector3Int mousePosition = GetMousePositionInt();
 
+			if (Input.GetMouseButtonUp(0) == true ||
+				Input.GetMouseButtonUp(1) == true)
+				m_TilePlacementFlag = true;
+
 			// 마우스 포인터가 UI 위에 없는 지 확인
 			if (UtilClass.IsPointerOnUI() == false)
 			{
+				if (m_TilePlacementFlag == false)
+					return;
+
 				m_TilePreview.transform.position = mousePosition;
 				m_TilePreview.gameObject.SetActive(true);
 
@@ -187,8 +211,13 @@ namespace AvantGardeMaker.Ceeu
 			else
 			{
 				m_TilePreview.gameObject.SetActive(false);
+
+				if (Input.GetMouseButtonDown(0) == true ||
+					Input.GetMouseButtonDown(1) == true)
+					m_TilePlacementFlag = false;
 			}
 		}
+
 		private Vector3Int GetMousePositionInt()
 		{
 			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D();
@@ -234,6 +263,25 @@ namespace AvantGardeMaker.Ceeu
 		{
 			m_TileType = tileType;
 			m_TilePreview = m_TilePreviewMap[m_TileType];
+		}
+		#endregion
+
+		#region 저장 & 불러오기 관련 함수
+		public void SaveData()
+		{
+			M_YamlFile.Serialize(mapDataSavingPath, m_EditingMapData);
+
+			Debug.Log("YAML 저장 완료: " + mapDataSavingPath);
+		}
+		public void LoadData()
+		{
+			if (File.Exists(mapDataSavingPath) == false)
+			{
+				Debug.LogError("파일이 존재하지 않습니다. 경로: " + mapDataSavingPath);
+				return;
+			}
+
+			m_EditingMapData = M_YamlFile.Deserialize<MapData>(mapDataSavingPath);
 		}
 		#endregion
 	}
