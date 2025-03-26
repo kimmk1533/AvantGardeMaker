@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.EventEmitters;
 
 namespace AvantGardeMaker.Ceeu
 {

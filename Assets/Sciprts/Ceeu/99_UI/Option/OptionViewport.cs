@@ -9,6 +9,13 @@ namespace AvantGardeMaker.Ceeu
 	public class OptionViewport : SerializedMonoBehaviour
 	{
 		#region 변수
+		[SerializeField]
+		private string m_ViewportName = string.Empty;
+		[SerializeField]
+		private KeyCode m_Shortcut = KeyCode.Alpha1;
+		[SerializeField]
+		private E_EditModeType m_EditModeType = E_EditModeType.System;
+
 		private OptionPanel m_OptionPanel = null;
 
 		private RectTransform m_RectTransform = null;
@@ -16,6 +23,9 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		public string viewportName => m_ViewportName;
+		public KeyCode shortcut => m_Shortcut;
+		public E_EditModeType editModeType => m_EditModeType;
 		public RectTransform rectTransform => m_RectTransform;
 		public RectTransform content => m_Content;
 
@@ -24,42 +34,8 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 이벤트
 		public event System.Action<OptionViewport> onViewportTurnOn = null;
-		#endregion
 
-		#region 매니저
-		#endregion
-
-		#region 유니티 콜백 함수
-		#endregion
-
-		#region 초기화 & 마무리화 함수
-		/// <summary>
-		/// 초기화 함수
-		/// </summary>
-		public void Initialize(OptionPanel optionPanel)
-		{
-			m_OptionPanel = optionPanel;
-			onViewportTurnOn += m_OptionPanel.OnChangedViewport;
-
-			m_RectTransform = GetComponent<RectTransform>();
-
-			m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
-
-			gameObject.SetActive(false);
-		}
-		/// <summary>
-		/// 마무리화 함수
-		/// </summary>
-		public void Finallize()
-		{
-			onViewportTurnOn -= m_OptionPanel.OnChangedViewport;
-		}
-		#endregion
-
-		private void ToggleOptionPanelActive()
-		{
-			m_OptionPanel.gameObject.SetActive(!m_OptionPanel.gameObject.activeSelf);
-		}
+		#region 이벤트 함수
 		public void OnMenuButtonClicked()
 		{
 			if (currentViewport != null)
@@ -78,6 +54,46 @@ namespace AvantGardeMaker.Ceeu
 			currentViewport.gameObject.SetActive(true);
 
 			onViewportTurnOn?.Invoke(this);
+		}
+		#endregion
+		#endregion
+
+		#region 매니저
+		private static UIManager M_UI => UIManager.Instance;
+		#endregion
+
+		#region 유니티 콜백 함수
+		#endregion
+
+		#region 초기화 & 마무리화 함수
+		/// <summary>
+		/// 초기화 함수
+		/// </summary>
+		public void Initialize(OptionPanel optionPanel)
+		{
+			m_OptionPanel = optionPanel;
+			onViewportTurnOn += m_OptionPanel.OnChangedViewport;
+
+			m_RectTransform = GetComponent<RectTransform>();
+
+			m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
+
+			M_UI.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
+
+			gameObject.SetActive(false);
+		}
+		/// <summary>
+		/// 마무리화 함수
+		/// </summary>
+		public void Finallize()
+		{
+			onViewportTurnOn -= m_OptionPanel.OnChangedViewport;
+		}
+		#endregion
+
+		private void ToggleOptionPanelActive()
+		{
+			m_OptionPanel.gameObject.SetActive(!m_OptionPanel.gameObject.activeSelf);
 		}
 	}
 }

@@ -10,6 +10,9 @@ namespace AvantGardeMaker.Ceeu
 	public class UIManager : SerializedSingleton<UIManager>
 	{
 		#region 변수
+		[SerializeField]
+		private List<string> m_KeyList = new List<string>();
+
 		#region 메뉴 패널 관련 변수
 		[SerializeField]
 		private MenuPanel m_MenuPanel = null;
@@ -23,18 +26,17 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		public List<string> keyList => m_KeyList;
+
 		public bool menuPanelLock
 		{
 			get => m_MenuPanelMovingLock;
 			set => m_MenuPanelMovingLock = value;
 		}
+		public MenuButtonController menuButtonController => m_MenuPanel.menuButtonController;
 		#endregion
 
 		#region 이벤트
-		public Button.ButtonClickedEvent onSystemMenuButtonClicked => m_MenuPanel.onSystemMenuButtonClicked;
-		public Button.ButtonClickedEvent onTileMenuButtonClicked => m_MenuPanel.onTileMenuButtonClicked;
-		public Button.ButtonClickedEvent onOperatorMenuButtonClicked => m_MenuPanel.onOperatorMenuButtonClicked;
-		public Button.ButtonClickedEvent onEnemyMenuButtonClicked => m_MenuPanel.onEnemyMenuButtonClicked;
 
 		#region 이벤트 함수
 		public void OnMenuLockButtonClicked()
@@ -51,14 +53,16 @@ namespace AvantGardeMaker.Ceeu
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Alpha1) == true)
-				m_OptionPanel.systemOptionViewport.OnMenuButtonClicked();
-			else if (Input.GetKeyDown(KeyCode.Alpha2) == true)
-				m_OptionPanel.tileOptionViewport.OnMenuButtonClicked();
-			else if (Input.GetKeyDown(KeyCode.Alpha3) == true)
-				m_OptionPanel.operatorOptionViewport.OnMenuButtonClicked();
-			else if (Input.GetKeyDown(KeyCode.Alpha4) == true)
-				m_OptionPanel.enemyOptionViewport.OnMenuButtonClicked();
+			foreach (string key in m_KeyList)
+			{
+				OptionViewport optionViewport = m_OptionPanel.optionViewportController[key];
+				KeyCode keyCode = optionViewport.shortcut;
+				if (Input.GetKeyDown(keyCode) == true)
+				{
+					optionViewport.OnMenuButtonClicked();
+					M_EditMode.SetEditModeType(optionViewport.editModeType);
+				}
+			}
 		}
 		#endregion
 
@@ -86,7 +90,6 @@ namespace AvantGardeMaker.Ceeu
 		public virtual void InitializeGame()
 		{
 			m_MenuPanel.Initialize();
-
 			m_MenuPanel.OnPointerEnter(null);
 			m_MenuPanelMovingLock = true;
 

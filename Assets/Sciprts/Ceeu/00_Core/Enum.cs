@@ -14,8 +14,10 @@ namespace AvantGardeMaker.Ceeu.Enum
 	}
 	public enum E_TileType
 	{
-		// 타일
-		Tile,
+		// 저지대 타일
+		LowGroundTile,
+		// 고지대 타일
+		HighGroundTile,
 		// 보호 목표
 		Protection_Objective,
 		// 침입 포인트

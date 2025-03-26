@@ -17,7 +17,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 편집 모드 관련 변수
 		private bool m_IsEditMode = false;
 
-		private E_EditModeType m_EditModeType = E_EditModeType.System;
+		private E_EditModeType m_EditModeType = E_EditModeType.Tile;
 		#endregion
 
 		#region 타일 관련 변수
@@ -27,8 +27,10 @@ namespace AvantGardeMaker.Ceeu
 		// 생성한 타일 부모
 		private GameObject m_TileParent = null;
 
+		private Vector3 m_HighGroundTileOffset = Vector3.up * 0.2f;
+
 		// 현재 타일 타입
-		private E_TileType m_TileType = E_TileType.Tile;
+		private E_TileType m_TileType = E_TileType.LowGroundTile;
 		// 타일 프리뷰 오브젝트
 		private Tile m_TilePreview = null;
 		// 타일 프리뷰 오브젝트 맵
@@ -51,9 +53,18 @@ namespace AvantGardeMaker.Ceeu
 		#region 프로퍼티
 		public MapData currentMapData => m_EditingMapData;
 
+		#region 편집 모드 관련 프로퍼티
 		public bool isEditMode => m_IsEditMode;
+		#endregion
 
-		public string mapDataSavingPath => Path.Combine(Application.persistentDataPath, m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
+		#region 타일 관련 프로퍼티
+		public GameObject tileParent => m_TileParent;
+		#endregion
+
+		#region 저장 & 불러오기 관련 프로퍼티
+		public string mapDataSavingPath { get => m_MapDataSavingPath; set => m_MapDataSavingPath = value; }
+		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
+		#endregion
 		#endregion
 
 		#region 이벤트
@@ -70,7 +81,6 @@ namespace AvantGardeMaker.Ceeu
 			switch (m_EditModeType)
 			{
 				case E_EditModeType.System:
-					CursorEditModeProcess();
 					break;
 				case E_EditModeType.Tile:
 					TileEditModeProcess();
@@ -131,7 +141,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TilePreviewMap = new Dictionary<E_TileType, Tile>();
 
-			for (E_TileType tileType = E_TileType.Tile; tileType < E_TileType.Max; ++tileType)
+			for (E_TileType tileType = E_TileType.LowGroundTile; tileType < E_TileType.Max; ++tileType)
 			{
 				string key = tileType.ToString().Replace('_', ' ');
 				string previewKey = key + " Preview";
@@ -147,7 +157,9 @@ namespace AvantGardeMaker.Ceeu
 				m_TilePreviewMap.Add(tileType, previewTile);
 			}
 
-			m_TileType = E_TileType.Tile;
+
+			m_EditModeType = E_EditModeType.Tile;
+			m_TileType = E_TileType.LowGroundTile;
 
 			m_TilePreview = m_TilePreviewMap[m_TileType];
 		}
@@ -166,13 +178,6 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TilePreview.gameObject.SetActive(editModeType == E_EditModeType.Tile);
 		}
-
-		#region 커서 편집 모드 관련 함수
-		private void CursorEditModeProcess()
-		{
-
-		}
-		#endregion
 
 		#region 타일 편집 모드 관련 함수
 		private void TileEditModeProcess()
@@ -231,19 +236,21 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void AddTile(Vector3Int tilePos)
 		{
-			string tileKey = m_TileType.ToString().Replace('_', ' ');
+			AddTile(tilePos, m_TileType);
+		}
+		public void AddTile(Vector3Int tilePos, E_TileType tileType)
+		{
+			string tileKey = tileType.ToString().Replace('_', ' ');
 
 			Tile newTile = M_Tile.GetBuilder(tileKey)
-				.SetPosition(tilePos)
+				.SetPosition((Vector3)tilePos + (tileType == E_TileType.HighGroundTile ? m_HighGroundTileOffset : Vector3.zero))
 				.SetActive(true)
 				.SetParent(m_TileParent.transform)
 				.SetName(tilePos.ToString())
 				.SetAutoInit(true)
 				.Spawn();
 
-			newTile.GetComponent<MeshRenderer>().material = m_MaterialMap[tileKey];
-
-			m_TileMap.Add(tilePos, (m_TileType, newTile));
+			m_TileMap.Add(tilePos, (tileType, newTile));
 		}
 		private void RemoveTile(Vector3Int tilePos)
 		{
@@ -264,24 +271,52 @@ namespace AvantGardeMaker.Ceeu
 			m_TileType = tileType;
 			m_TilePreview = m_TilePreviewMap[m_TileType];
 		}
+		public Material GetTileMaterial(string tileKey)
+		{
+			return m_MaterialMap[tileKey];
+		}
 		#endregion
 
 		#region 저장 & 불러오기 관련 함수
+		[Button]
 		public void SaveData()
 		{
-			M_YamlFile.Serialize(mapDataSavingPath, m_EditingMapData);
+			m_EditingMapData.InitializeBeforeSave();
 
-			Debug.Log("YAML 저장 완료: " + mapDataSavingPath);
+			foreach (var item in m_TileMap)
+			{
+				m_EditingMapData.AddTile(item.Key, item.Value.tileType);
+			}
+
+			M_YamlFile.Serialize(mapDataSavingFilePath, m_EditingMapData);
+
+			Debug.Log("YAML 저장 완료: " + mapDataSavingFilePath);
 		}
+		[Button]
 		public void LoadData()
 		{
-			if (File.Exists(mapDataSavingPath) == false)
+			if (File.Exists(mapDataSavingFilePath) == false)
 			{
-				Debug.LogError("파일이 존재하지 않습니다. 경로: " + mapDataSavingPath);
+				Debug.LogError("파일이 존재하지 않습니다. 경로: " + mapDataSavingFilePath);
 				return;
 			}
 
-			m_EditingMapData = M_YamlFile.Deserialize<MapData>(mapDataSavingPath);
+			List<Tile> tileList = new List<Tile>();
+			foreach (var item in m_TileMap)
+			{
+				tileList.Add(item.Value.tile);
+			}
+			int count = tileList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				M_Tile.Despawn(tileList[i]);
+			}
+			m_TileMap.Clear();
+
+			m_EditingMapData = M_YamlFile.Deserialize<MapData>(mapDataSavingFilePath);
+			m_EditingMapData.InitializeAfterLoad();
+
+			Debug.Log("YAML 로드 완료: " + mapDataSavingFilePath);
 		}
 		#endregion
 	}

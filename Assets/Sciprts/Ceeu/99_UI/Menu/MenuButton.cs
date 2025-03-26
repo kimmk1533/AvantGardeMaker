@@ -1,47 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
-using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class TileOptionButton : SerializedMonoBehaviour
+	public class MenuButton : SerializedMonoBehaviour
 	{
 		#region 변수
 		private Button m_Button = null;
-
-		[SerializeField]
-		private E_TileType m_TileType = E_TileType.LowGroundTile;
 		#endregion
 
 		#region 프로퍼티
 		#endregion
 
 		#region 이벤트
-
-		#region 이벤트 함수
-		public void OnButtonClicked()
-		{
-			M_EditMode.SetTileType(m_TileType);
-		}
-		#endregion
+		public Button.ButtonClickedEvent onClick => m_Button.onClick;
 		#endregion
 
 		#region 매니저
-		private static EditModeManager M_EditMode => EditModeManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Awake()
-		{
-			Initialize();
-		}
-		private void OnApplicationQuit()
-		{
-			Finallize();
-		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -51,17 +32,13 @@ namespace AvantGardeMaker.Ceeu
 		public void Initialize()
 		{
 			m_Button = GetComponent<Button>();
-
-			m_Button.onClick.AddListener(OnButtonClicked);
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
 		public void Finallize()
 		{
-			m_Button.onClick.RemoveListener(OnButtonClicked);
-
-			m_Button = null;
+			m_Button.onClick.RemoveAllListeners();
 		}
 		#endregion
 	}

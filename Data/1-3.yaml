@@ -1,0 +1,130 @@
+tilePointList:
+  - x: -4
+    y: 0
+    z: -2
+  - x: -3
+    y: 0
+    z: -2
+  - x: -2
+    y: 0
+    z: -2
+  - x: -1
+    y: 0
+    z: -2
+  - x: 0
+    y: 0
+    z: -2
+  - x: 1
+    y: 0
+    z: -2
+  - x: 2
+    y: 0
+    z: -2
+  - x: 3
+    y: 0
+    z: -2
+  - x: 4
+    y: 0
+    z: -2
+  - x: 5
+    y: 0
+    z: -2
+  - x: -4
+    y: 0
+    z: -1
+  - x: -3
+    y: 0
+    z: -1
+  - x: -2
+    y: 0
+    z: -1
+  - x: -1
+    y: 0
+    z: -1
+  - x: 0
+    y: 0
+    z: -1
+  - x: 1
+    y: 0
+    z: -1
+  - x: 2
+    y: 0
+    z: -1
+  - x: 3
+    y: 0
+    z: -1
+  - x: 4
+    y: 0
+    z: -1
+  - x: 5
+    y: 0
+    z: -1
+  - x: -5
+    y: 0
+    z: -2
+  - x: 6
+    y: 0
+    z: -2
+  - x: -4
+    y: 0
+    z: -3
+  - x: -3
+    y: 0
+    z: -3
+  - x: -2
+    y: 0
+    z: -3
+  - x: -1
+    y: 0
+    z: -3
+  - x: 0
+    y: 0
+    z: -3
+  - x: 1
+    y: 0
+    z: -3
+  - x: 2
+    y: 0
+    z: -3
+  - x: 3
+    y: 0
+    z: -3
+  - x: 4
+    y: 0
+    z: -3
+  - x: 5
+    y: 0
+    z: -3
+tileTypeList:
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - LowGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - Protection_Objective
+  - Incursion_Point
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
+  - HighGroundTile
