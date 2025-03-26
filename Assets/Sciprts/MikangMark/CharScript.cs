@@ -4,19 +4,19 @@ using AvantGardeMaker.MikangMark;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using System;
+using System.IO;
 
 namespace AvantGardeMaker.MikangMark
 {
 	public class CharScript : SerializedMonoBehaviour
 	{
 		#region 변수
-		[SerializeField]
-		CharInfo m_CharData;
+		public CharInfo m_CharData;
 
 		Yaml m_Yaml;
 
 		[SerializeField]
-		string CharName;
+		public string CharName;
 
 		string m_FilePath;
         #endregion
@@ -42,14 +42,19 @@ namespace AvantGardeMaker.MikangMark
         /// </summary>
         public void Initialize()
 		{
-            
+            /*
             m_Yaml = GameObject.Find("GameManager").GetComponent<Yaml>();
-            m_FilePath = m_Yaml.m_FilePath;
+            m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, CharName + ".yaml");
             m_CharData = new CharInfo();
-            Debug.Log(CharName + ".yaml");
-            Debug.Log(m_FilePath);
             m_CharData = m_Yaml.LoadData(m_FilePath, CharName + ".yaml");
-            Debug.Log(m_CharData.m_EngCharName);
+            */
+        }
+        public void SetData()
+        {
+            m_Yaml = GameObject.Find("GameManager").GetComponent<Yaml>();
+            m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, CharName + ".yaml");
+            m_CharData = new CharInfo();
+            m_CharData = m_Yaml.LoadData(m_FilePath, CharName + ".yaml");
         }
 		/// <summary>
 		/// 마무리화 함수

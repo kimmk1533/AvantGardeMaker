@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
@@ -22,6 +23,21 @@ namespace AvantGardeMaker.MikangMark
         float m_ClearSecond = 0.0f;
 
         float m_RealTime = 0.0f;
+
+        public List<string> m_ReceivePlayOperator;//게임들어오기전 편성한 캐릭터들의 이름 받기
+
+        [SerializeField]
+        GameObject m_CharPannel;
+        [SerializeField]
+        Transform m_CharBox;
+
+        public List<GameObject> m_PlayingOpers;
+
+        
+        public List<GameObject> m_ReadyOperator;
+        /*[SerializeField]
+        List<CharInfo> m_ReadyOperatorInfo;
+        */
         #endregion
 
         #region 프로퍼티
@@ -39,6 +55,10 @@ namespace AvantGardeMaker.MikangMark
             m_Cost = 5;
             SetStartCost(5);
             m_Cost = m_StartCost;
+            //m_ReadyOperatorInfo = new List<CharInfo>();
+            //m_ReadyOperator = new List<GameObject>();
+            m_PlayingOpers = new List<GameObject>();
+            CreateOperBox(m_ReceivePlayOperator.Count);
         }
         private void FixedUpdate()
         {
@@ -97,11 +117,18 @@ namespace AvantGardeMaker.MikangMark
         {
             return m_MaxCost;
         }
-
         public float GetRealTime()
         {
             return m_ClearSecond;
         }
-
+        public void CreateOperBox(int _OpCount)
+        {
+            for (int i = 0; i < _OpCount; i++) 
+            {
+                m_ReadyOperator.Add(Instantiate(m_CharPannel, m_CharBox));
+                m_ReadyOperator[i].gameObject.GetComponent<CharScript>().CharName = m_ReceivePlayOperator[i];
+                m_ReadyOperator[i].gameObject.GetComponent<CharScript>().SetData();
+            }
+        }
     }
 }

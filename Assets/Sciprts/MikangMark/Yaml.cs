@@ -47,8 +47,8 @@ namespace AvantGardeMaker.MikangMark
 
 		private string customFileName;
         public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/CharInfo_Yaml";
-        public string m_FilePath;
-
+        //public string m_FilePath;
+        public List<CharInfo> m_CharInfoList;
         #region 오퍼정보
         [SerializeField]
         CharInfo Fang = new CharInfo
@@ -304,10 +304,14 @@ namespace AvantGardeMaker.MikangMark
         #region 유니티 콜백 함수
         private void Start()
         {
+            m_CharInfoList = new List<CharInfo>();
             SaveData(m_FileSaveDirectory, "Fang.yaml", Fang);
             //LoadData(m_FilePath, "Fang.yaml");
             SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
             //LoadData(m_FilePath, "Plume.yaml");
+
+            m_CharInfoList.Add(Fang);
+            m_CharInfoList.Add(Plume);
         }
 
 
@@ -319,13 +323,13 @@ namespace AvantGardeMaker.MikangMark
             {
                 Directory.CreateDirectory(directory);
             }
-            m_FilePath = Path.Combine(directory, fileName);
+            string m_FilePath = Path.Combine(directory, fileName);
 
             var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
 
             string yaml = serializer.Serialize(charData);
             File.WriteAllText(m_FilePath, yaml);
-            Debug.Log("YAML 저장 완료:\n" + m_FilePath);
+            //Debug.Log("YAML 저장 완료:\n" + m_FilePath);
         }
 
         public CharInfo LoadData(string directory, string fileName)
