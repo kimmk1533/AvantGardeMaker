@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.ad1a
 {
 	[Serializable]
 	public class MapData
