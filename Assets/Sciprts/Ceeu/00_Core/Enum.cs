@@ -5,6 +5,15 @@ using UnityEngine;
 
 namespace AvantGardeMaker.Ceeu.Enum
 {
+	public enum E_Direction
+	{
+		Up,
+		Down,
+		Left,
+		Right,
+
+		Max
+	}
 	public enum E_EditModeType
 	{
 		System,
@@ -24,6 +33,11 @@ namespace AvantGardeMaker.Ceeu.Enum
 		Incursion_Point,
 
 		Max
+	}
+	public enum E_CameraMode
+	{
+		GameMode,
+		EditMode,
 	}
 
 	public class EnumUtil

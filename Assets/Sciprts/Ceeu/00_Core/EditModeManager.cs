@@ -11,8 +11,24 @@ namespace AvantGardeMaker.Ceeu
 	public sealed class EditModeManager : SerializedSingleton<EditModeManager>
 	{
 		#region 변수
+		#region 카메라 관련 변수
 		[SerializeField]
-		private MapData m_EditingMapData = default;
+		private Camera m_EditModeCamera = null;
+
+		[SerializeField]
+		private Transform m_EditModeCameraTransform = default;
+		[SerializeField]
+		private Transform m_GameModeCameraTransform = default;
+
+		[SerializeField, Min(0f)]
+		private float m_CameraSwitchDuration = 1f;
+
+		[SerializeField, ReadOnly]
+		private E_CameraMode m_CameraMode = E_CameraMode.EditMode;
+
+		[SerializeField, ReadOnly]
+		private bool m_IsCameraSwitching = false;
+		#endregion
 
 		#region 편집 모드 관련 변수
 		private bool m_IsEditMode = false;
@@ -46,28 +62,53 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 저장 & 불러오기 관련 변수
 		[SerializeField]
+		private SavingData m_EditingMapData = default;
+
+		[SerializeField]
 		private string m_MapDataSavingPath = string.Empty;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
-		public MapData currentMapData => m_EditingMapData;
-
 		#region 편집 모드 관련 프로퍼티
 		public bool isEditMode => m_IsEditMode;
 		#endregion
 
 		#region 타일 관련 프로퍼티
 		public GameObject tileParent => m_TileParent;
+
+		private bool tilePreviewActive =>
+			m_CameraMode == E_CameraMode.EditMode &&
+			m_IsCameraSwitching == false;
 		#endregion
 
 		#region 저장 & 불러오기 관련 프로퍼티
+		public SavingData currentMapData => m_EditingMapData;
+
 		public string mapDataSavingPath { get => m_MapDataSavingPath; set => m_MapDataSavingPath = value; }
 		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
 		#endregion
 		#endregion
 
 		#region 이벤트
+		private event System.Action onCameraSwitcingFinished = null;
+
+		#region 이벤트 함수
+		private void OnCameraSwitchingFinished()
+		{
+			switch (m_CameraMode)
+			{
+				case E_CameraMode.GameMode:
+					//m_EditModeCamera.orthographic = false;
+					break;
+				case E_CameraMode.EditMode:
+					m_EditModeCamera.orthographic = true;
+					break;
+				default:
+					break;
+			}
+		}
+		#endregion
 		#endregion
 
 		#region 매니저
@@ -78,6 +119,9 @@ namespace AvantGardeMaker.Ceeu
 		#region 유니티 콜백 함수
 		private void Update()
 		{
+			if (Input.GetKeyDown(KeyCode.Space) == true)
+				SwitchCameraMode();
+
 			switch (m_EditModeType)
 			{
 				case E_EditModeType.System:
@@ -120,13 +164,15 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			m_TileMap = new Dictionary<Vector3Int, (E_TileType, Tile)>();
+
+			onCameraSwitcingFinished += OnCameraSwitchingFinished;
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
 		public void Finallize()
 		{
-
+			onCameraSwitcingFinished = null;
 		}
 
 		/// <summary>
@@ -176,12 +222,78 @@ namespace AvantGardeMaker.Ceeu
 		{
 			m_EditModeType = editModeType;
 
-			m_TilePreview.gameObject.SetActive(editModeType == E_EditModeType.Tile);
+			m_TilePreview.gameObject.SetActive(editModeType == E_EditModeType.Tile &&
+				tilePreviewActive);
 		}
+
+		#region 카메라 관련 함수
+		private void SwitchCameraMode()
+		{
+			if (m_IsCameraSwitching == true)
+				return;
+
+			m_IsCameraSwitching = true;
+
+			switch (m_CameraMode)
+			{
+				case E_CameraMode.GameMode:
+					m_CameraMode = E_CameraMode.EditMode;
+
+					StartCoroutine(MoveCamera(m_EditModeCameraTransform));
+					//m_EditModeCamera.orthographic = true;
+					break;
+				case E_CameraMode.EditMode:
+					m_CameraMode = E_CameraMode.GameMode;
+
+					StartCoroutine(MoveCamera(m_GameModeCameraTransform));
+					m_EditModeCamera.orthographic = false;
+					m_TilePreview.gameObject.SetActive(false);
+					break;
+				default:
+					return;
+			}
+
+		}
+
+		private IEnumerator MoveCamera(Transform targetTransform)
+		{
+			if (m_CameraSwitchDuration <= 0f)
+			{
+				m_EditModeCamera.transform.position = targetTransform.position;
+				m_EditModeCamera.transform.rotation = targetTransform.rotation;
+				m_IsCameraSwitching = false;
+				onCameraSwitcingFinished?.Invoke();
+				yield break;
+			}
+
+			Vector3 initPosition = m_EditModeCamera.transform.position;
+			Quaternion initRotation = m_EditModeCamera.transform.rotation;
+			float t = 0f;
+
+			for (float time = 0f; time <= m_CameraSwitchDuration; time += Time.deltaTime)
+			{
+				yield return null;
+
+				t = Mathf.Clamp01(time / m_CameraSwitchDuration);
+
+				m_EditModeCamera.transform.position = Vector3.Lerp(initPosition, targetTransform.position, t);
+				m_EditModeCamera.transform.rotation = Quaternion.Lerp(initRotation, targetTransform.rotation, t);
+			}
+
+			m_EditModeCamera.transform.position = targetTransform.position;
+			m_EditModeCamera.transform.rotation = targetTransform.rotation;
+			m_IsCameraSwitching = false;
+			onCameraSwitcingFinished?.Invoke();
+		}
+		#endregion
 
 		#region 타일 편집 모드 관련 함수
 		private void TileEditModeProcess()
 		{
+			if (m_CameraMode == E_CameraMode.GameMode ||
+				m_IsCameraSwitching == true)
+				return;
+
 			// 마우스 위치 가져오기
 			Vector3Int mousePosition = GetMousePositionInt();
 
@@ -313,7 +425,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 			m_TileMap.Clear();
 
-			m_EditingMapData = M_YamlFile.Deserialize<MapData>(mapDataSavingFilePath);
+			m_EditingMapData = M_YamlFile.Deserialize<SavingData>(mapDataSavingFilePath);
 			m_EditingMapData.InitializeAfterLoad();
 
 			Debug.Log("YAML 로드 완료: " + mapDataSavingFilePath);

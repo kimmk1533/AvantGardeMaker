@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu.Enum;
+using AvantGardeMaker.MikangMark;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using YamlDotNet.Serialization;
@@ -9,7 +11,7 @@ namespace AvantGardeMaker.Ceeu
 	public class Tile : ObjectPoolItemBase
 	{
 		#region 변수
-		private Vector3Int m_Position;
+
 		#endregion
 
 		#region 프로퍼티
@@ -84,11 +86,6 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 		#endregion
 
-		public Vector3Int position
-		{
-			get => m_Position;
-			set => m_Position = value;
-		}
 		#endregion
 
 		#region 이벤트
@@ -100,6 +97,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 유니티 콜백 함수
 		#endregion
 
+		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
@@ -111,6 +109,12 @@ namespace AvantGardeMaker.Ceeu
 		/// 마무리화 함수
 		/// </summary>
 		public void Finallize()
+		{
+
+		}
+		#endregion
+
+		public void SetOperator(string operatorKey, E_Direction direction)
 		{
 
 		}

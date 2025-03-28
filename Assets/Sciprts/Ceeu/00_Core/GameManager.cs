@@ -9,13 +9,13 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		#region 게임 관련 변수
-		private MapData m_GameMapData = default;
+		private SavingData m_GameMapData = default;
 		private bool m_IsGameMode = false;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
-		public MapData currentMapData => m_GameMapData;
+		public SavingData currentMapData => m_GameMapData;
 		public bool isGameMode => m_IsGameMode;
 		#endregion
 

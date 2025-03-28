@@ -14577,7 +14577,7 @@ Transform:
   m_GameObject: {fileID: 1553628110}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19564,8 +19564,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 268764966}
-  - {fileID: 1892271663}
   - {fileID: 620198489}
+  - {fileID: 1892271663}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1942080652
@@ -20840,6 +20840,12 @@ MonoBehaviour:
       Data: 
   m_IsMainScene: 1
   m_DontDestroyOnLoad: 0
+  m_EditModeCamera: {fileID: 268764965}
+  m_EditModeCameraTransform: {fileID: 620198489}
+  m_GameModeCameraTransform: {fileID: 1892271663}
+  m_CameraSwitchDuration: 1
+  m_CameraMode: 1
+  m_IsCameraSwitching: 0
   m_EditingMapData:
     m_MinTile: {x: 2147483647, y: 0, z: 2147483647}
     m_MaxTile: {x: -2147483648, y: 0, z: -2147483648}
