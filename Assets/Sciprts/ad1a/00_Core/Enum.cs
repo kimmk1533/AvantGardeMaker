@@ -47,4 +47,13 @@ namespace AvantGardeMaker.ad1a.Enum
 		E_Heal,
 		E_None,
 	}
+
+	public enum E_EnemyState
+	{
+		None,
+		Idle,
+		Move,
+		Attack,
+		Dead,
+	}
 }

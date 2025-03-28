@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.ad1a;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ namespace AvantGardeMaker.Ceeu
 		private static EditModeManager M_EditMode => EditModeManager.Instance;
 		private static TileManager M_Tile => TileManager.Instance;
 		private static UIManager M_UI => UIManager.Instance;
+
+		private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -53,6 +56,9 @@ namespace AvantGardeMaker.Ceeu
 			M_EditMode.Initialize();
 
 			M_UI.Initialize();
+
+			//ad1a
+			M_EnemyGenerate.Initialize();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -63,6 +69,9 @@ namespace AvantGardeMaker.Ceeu
 
 			M_EditMode.Finallize();
 			M_Tile.Finallize();
+
+			//ad1a
+			M_EnemyGenerate.Finallize();
 		}
 
 		/// <summary>
@@ -77,6 +86,9 @@ namespace AvantGardeMaker.Ceeu
 			M_EditMode.InitializeGame();
 
 			M_UI.InitializeGame();
+
+			//ad1a
+			M_EnemyGenerate.InitializeGame();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
@@ -89,6 +101,9 @@ namespace AvantGardeMaker.Ceeu
 			M_Tile.FinallizeGame();
 
 			m_IsGameMode = false;
+
+			//ad1a
+			M_EnemyGenerate.FinallizeGame();
 		}
 		#endregion
 	}

@@ -5,7 +5,6 @@ using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-
 /*
  * 옵젝 매니저(풀링 되어있음)
 ObjectManager<자신, 복사할_스크립트)
@@ -22,70 +21,14 @@ public class ItemBuilder : ObjectPool<복사할_스크립트>.ItemBuilder
  */
 namespace AvantGardeMaker.ad1a
 {
-	public struct CombatStatValue<T>
-	{
-		public T m_InitStat;
-		public T m_CurStat;
-	}
-
-	//적 스펙, 특성
-	public class EnemyData
-	{
-		public E_EnemyGrade m_Grade;
-		public int m_LossHp;    //보호 지점에 들어가면 깎이는 목표 HP
-
-		public E_EnemyType m_TribeType;
-		public E_EnemyFlyable m_Flyable;
-		public E_EnemyAtkType m_AtkType;
-		public E_EnemyDmgType m_DmgType;
-
-		public string m_Name;   //이름
-		public CombatStatValue<int> m_Hp;        //체력
-		public CombatStatValue<int> m_Atk;       //공격력
-		public CombatStatValue<float> m_Def;     //방어력
-		public CombatStatValue<float> m_MagicRes;//마법 저항
-		public CombatStatValue<float> m_DmgRes;  //피해 감소
-		public CombatStatValue<float> m_MoveSpeed;//이동 속도(타일/s)
-		public CombatStatValue<float> m_AtkTime; //공격 간격(n초당 1회)
-		public CombatStatValue<float> m_Range;   //사정거리(근거리는 -1)
-		public CombatStatValue<int> m_MassLevel; //무게
-
-		public bool[] m_Immune;//기절 수면 빙결 공중 전율 공포 면역여부
-	}
-
-	//적 소환, 이동 관련 정보
-	public class EnemySpawnData
-	{
-		public string m_Name;   //스폰시킬 적의 이름
-		public int m_Wave;      //웨이브(특정 몹이 죽어야 진행될 경우 사용)
-		public int m_Amount;    //수량(일괄 스폰 시 사용) 
-		public float m_Interval;  //생성 간격(일괄 스폰 시 사용)
-		public float m_Time;      //작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
-		public Vector2Int m_StartPos;//최초 스폰 지점
-		public List<Vector2Int> m_TargetPos; //목표 지점
-		public List<float> m_WaitTime;    //목표 지점에서 n초 대기(0초면 딜레이 x)
-	}
-
-	//맵 정보 중 적 소환에 필요한 정보들
-	public class StageData
-	{
-		public string m_Stage;      //스테이지 이름(검색 키 값)
-		public List<EnemyData> m_EnemyData;
-		public List<EnemySpawnData> m_EnemySpawnData;
-
-		public StageData()
-		{
-			m_EnemyData = new List<EnemyData>();
-			m_EnemySpawnData = new List<EnemySpawnData>();
-		}
-	}
-
-	public class EnemyGenerateManager : ObjectManager<EnemyGenerateManager, Enemy>
+	public class EnemyManager : ObjectManager<EnemyManager, Enemy>
 	{
 		#region 기본 템플릿
 		#region 변수
 		private string m_FilePath;
 		private StageData m_CurStageData;
+
+		private bool[,] m_TestMap;
 		#endregion
 
 		#region 프로퍼티
@@ -98,6 +41,11 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void Start()
+		{
+			Initialize();
+			InitializeGame();
+		}
 		#endregion
 
 		/// <summary>
@@ -106,8 +54,28 @@ namespace AvantGardeMaker.ad1a
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_TestMap = new bool[7, 7]
+			{ { true,true,true,false,true,true,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,true,true,false,true},};
+
 			m_FilePath = Path.Combine(Application.persistentDataPath, "EnemyData.yaml");
 			m_CurStageData = new StageData();
+
+			//전부 기본값을 가진 DummyEnemy 1개를 소환하는 DummyStage
+			m_CurStageData.m_Stage = "DummyStage";
+
+			EnemyData enemyData = new EnemyData();
+			m_CurStageData.m_EnemyData.Add(enemyData);
+
+			EnemySpawnData enemySpawnData = new EnemySpawnData();
+			//enemySpawnData.m_Amount = 3;
+			m_CurStageData.m_EnemySpawnData.Add(enemySpawnData);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -123,6 +91,8 @@ namespace AvantGardeMaker.ad1a
 		public override void InitializeGame()
 		{
 			base.InitializeGame();
+
+			StartCoroutine(StartEnemyCoroutine());
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
 		}
 		/// <summary>
@@ -139,15 +109,24 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public IEnumerator StartEnemyCoroutine()
 		{
-			if (m_CurStageData == null ||
-				m_CurStageData.m_EnemyData.Count == 0 ||
-				m_CurStageData.m_EnemySpawnData.Count == 0)//현재 스테이지 정보가 비어있다면 즉시 종료
+			Debug.Log("EnemyGenerator.StartEnemyCoroutine Start");
+			if (m_CurStageData == null)//Init이 실행되지 않았다면 즉시 종료
+			{
+				Debug.LogError("Init doesn't run(CurStageData == null)");
 				yield break;
+			}
+			if (m_CurStageData.m_EnemyData.Count == 0 ||
+			m_CurStageData.m_EnemySpawnData.Count == 0)//현재 스테이지 정보가 비어있다면 즉시 종료
+			{
+				Debug.LogError("StageData is Empty(data.Count == 0)");
+				yield break;
+			}
 
 			for (int i = 0; i < m_CurStageData.m_EnemySpawnData.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
 			{
 				StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyData, m_CurStageData.m_EnemySpawnData));
 			}
+			Debug.Log("EnemyGenerator.StartEnemyCoroutine Done");
 		}
 
 		/// <summary>
@@ -155,6 +134,7 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public IEnumerator GenerateEnemyGroup(List<EnemyData> enemyData, List<EnemySpawnData> enemySpawnData)
 		{
+			Debug.Log("GenerateEnemyGroup");
 			EnemyData curEnemy;
 			for (int i = 0; i < enemySpawnData.Count; i++)
 			{
@@ -169,26 +149,41 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public IEnumerator GenerateEnemy(EnemyData enemyData, EnemySpawnData enemySpawnData)
 		{
+			Debug.Log("GenerateEnemy");
+			enemySpawnData.m_StartPos = new Vector3(6, 0, 6);
+			enemySpawnData.m_EndPos = new Vector3(0, 0, 6);
 			for (int i = 0; i < enemySpawnData.m_Amount; i++)
 			{
 				if (i != 0)
 					yield return new WaitForSeconds(enemySpawnData.m_Interval);
 
-				Enemy newEnemy = GetBuilder(enemySpawnData.m_Name)
+				Enemy newEnemy = GetBuilder(enemySpawnData.m_Name)  //이때 실제 적 오브젝트가 생성됨
 					.SetActive(true)
+					.SetPosition(enemySpawnData.m_StartPos)
 					.Spawn();
+
 				newEnemy.m_EnemyData = enemyData;
-				StartCoroutine(EnemyMove(newEnemy));
+				newEnemy.m_CurPos = enemySpawnData.m_StartPos;
+
+				StartCoroutine(EnemyMove(newEnemy, enemySpawnData));
 			}
 		}
 
 		/// <summary>
 		/// 시작 지점에 나타나 목표 지점 List가 빌 때까지 이동과 대기(0초 가능) 반복
 		/// </summary>
-		public IEnumerator EnemyMove(Enemy enemy)
+		public IEnumerator EnemyMove(Enemy enemy, EnemySpawnData enemySpawnData)
 		{
-			//
-
+			Debug.Log("EnemyMove");
+			Debug.Log("CurPos: [" + enemy.m_CurPos.x + ", " + enemy.m_CurPos.z + "]");
+			Debug.Log("TargetPos: [" + enemySpawnData.m_EndPos.x + ", " + enemySpawnData.m_EndPos.z + "]");
+			enemySpawnData.m_TransitPos = PathFinder.FindPath(enemySpawnData.m_StartPos, enemySpawnData.m_EndPos, m_TestMap);
+			for (int i = 0; i < enemySpawnData.m_TransitPos.Count; i++)
+			{
+				enemy.m_TargetPos = enemySpawnData.m_TransitPos[i];
+				enemy.m_EnemyState = E_EnemyState.Move;
+				yield return new WaitUntil(() => enemy.m_EnemyState != E_EnemyState.Move);
+			}
 			yield break;
 		}
 	}
