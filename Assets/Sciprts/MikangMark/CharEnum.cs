@@ -9,7 +9,7 @@ namespace AvantGardeMaker.MikangMark
 	{
 		BangGard, Sniper, Gard, Caster,
 		Defender, Medic, Specialist, Supporter
-    }
+	}
 
 	public enum E_AttackRange { Close, Far }
 	public enum E_AttackSpeed { Very_Slow, Slow, Nomal, Fast, VeryFast }

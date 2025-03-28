@@ -7,128 +7,128 @@ using static UnityEditor.PlayerSettings;
 
 namespace AvantGardeMaker.MikangMark
 {
-    public class InGamePlayManager : SerializedSingleton<InGamePlayManager>
-    {
-        #region 변수
-        int m_GameHp;
-        int m_GameSpeed;
+	public class InGamePlayManager : SerializedSingleton<InGamePlayManager>
+	{
+		#region 변수
+		int m_GameHp;
+		int m_GameSpeed;
 
-        float m_time = 0;
+		float m_time = 0;
 
-        int m_MaxCost = 99;
-        int m_Cost = 0;
-        int m_SetAbleCount;
+		int m_MaxCost = 99;
+		int m_Cost = 0;
+		int m_SetAbleCount;
 
-        int m_StartCost;
-        float m_ClearSecond = 0.0f;
+		int m_StartCost;
+		float m_ClearSecond = 0.0f;
 
-        float m_RealTime = 0.0f;
+		float m_RealTime = 0.0f;
 
-        public List<string> m_ReceivePlayOperator;//게임들어오기전 편성한 캐릭터들의 이름 받기
+		public List<string> m_ReceivePlayOperator;//게임들어오기전 편성한 캐릭터들의 이름 받기
 
-        [SerializeField]
-        GameObject m_CharPannel;
-        [SerializeField]
-        Transform m_CharBox;
+		[SerializeField]
+		GameObject m_CharPannel;
+		[SerializeField]
+		Transform m_CharBox;
 
-        public List<GameObject> m_PlayingOpers;
+		public List<GameObject> m_PlayingOpers;
 
-        
-        public List<GameObject> m_ReadyOperator;
-        /*[SerializeField]
-        List<CharInfo> m_ReadyOperatorInfo;
-        */
-        #endregion
+		
+		public List<GameObject> m_ReadyOperator;
+		/*[SerializeField]
+		List<CharInfo> m_ReadyOperatorInfo;
+		*/
+		#endregion
 
-        #region 프로퍼티
-        #endregion
+		#region 프로퍼티
+		#endregion
 
-        #region 이벤트
-        #endregion
+		#region 이벤트
+		#endregion
 
-        #region 매니저
-        #endregion
+		#region 매니저
+		#endregion
 
-        #region 유니티 콜백 함수
-        private void Start()
-        {
-            m_Cost = 5;
-            SetStartCost(5);
-            m_Cost = m_StartCost;
-            //m_ReadyOperatorInfo = new List<CharInfo>();
-            //m_ReadyOperator = new List<GameObject>();
-            m_PlayingOpers = new List<GameObject>();
-            CreateOperBox(m_ReceivePlayOperator.Count);
-        }
-        private void FixedUpdate()
-        {
-            m_RealTime += Time.deltaTime;
-            m_ClearSecond = m_RealTime;
-            m_ClearSecond = m_ClearSecond - ((int)m_ClearSecond);
-            if (m_RealTime >= 1.0f)
-            {
-                m_Cost++;
-                m_RealTime = 0.0f;
-            }
+		#region 유니티 콜백 함수
+		private void Start()
+		{
+			m_Cost = 5;
+			SetStartCost(5);
+			m_Cost = m_StartCost;
+			//m_ReadyOperatorInfo = new List<CharInfo>();
+			//m_ReadyOperator = new List<GameObject>();
+			m_PlayingOpers = new List<GameObject>();
+			CreateOperBox(m_ReceivePlayOperator.Count);
+		}
+		private void FixedUpdate()
+		{
+			m_RealTime += Time.deltaTime;
+			m_ClearSecond = m_RealTime;
+			m_ClearSecond = m_ClearSecond - ((int)m_ClearSecond);
+			if (m_RealTime >= 1.0f)
+			{
+				m_Cost++;
+				m_RealTime = 0.0f;
+			}
 
-        }
-        #endregion
+		}
+		#endregion
 
-        /// <summary>
-        /// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
-        /// </summary>
-        public virtual void Initialize()
-        {
-            Debug.Log("Initialize");
-        }
-        /// <summary>
-        /// 마무리화 함수 (게임 종료 시 호출)
-        /// </summary>
-        public virtual void Finallize()
-        {
-            Debug.Log("Finallize");
-        }
+		/// <summary>
+		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
+		/// </summary>
+		public virtual void Initialize()
+		{
+			Debug.Log("Initialize");
+		}
+		/// <summary>
+		/// 마무리화 함수 (게임 종료 시 호출)
+		/// </summary>
+		public virtual void Finallize()
+		{
+			Debug.Log("Finallize");
+		}
 
-        /// <summary>
-        /// 게임 초기화 함수 (Game Scene 진입 시 호출)
-        /// </summary>
-        public virtual void InitializeGame()
-        {
+		/// <summary>
+		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// </summary>
+		public virtual void InitializeGame()
+		{
 
-            Debug.Log("InitializeGame");
-        }
-        /// <summary>
-        /// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
-        /// </summary>
-        public virtual void FinallizeGame()
-        {
-            Debug.Log("FinallizeGame");
-        }
+			Debug.Log("InitializeGame");
+		}
+		/// <summary>
+		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// </summary>
+		public virtual void FinallizeGame()
+		{
+			Debug.Log("FinallizeGame");
+		}
 
-        public void SetStartCost(int _cost)
-        {
-            m_StartCost = _cost;
-        }
-        public int GetCost()
-        {
-            return m_Cost;
-        }
-        public int GetMaxCost()
-        {
-            return m_MaxCost;
-        }
-        public float GetRealTime()
-        {
-            return m_ClearSecond;
-        }
-        public void CreateOperBox(int _OpCount)
-        {
-            for (int i = 0; i < _OpCount; i++) 
-            {
-                m_ReadyOperator.Add(Instantiate(m_CharPannel, m_CharBox));
-                m_ReadyOperator[i].gameObject.GetComponent<CharScript>().CharName = m_ReceivePlayOperator[i];
-                m_ReadyOperator[i].gameObject.GetComponent<CharScript>().SetData();
-            }
-        }
-    }
+		public void SetStartCost(int _cost)
+		{
+			m_StartCost = _cost;
+		}
+		public int GetCost()
+		{
+			return m_Cost;
+		}
+		public int GetMaxCost()
+		{
+			return m_MaxCost;
+		}
+		public float GetRealTime()
+		{
+			return m_ClearSecond;
+		}
+		public void CreateOperBox(int _OpCount)
+		{
+			for (int i = 0; i < _OpCount; i++) 
+			{
+				m_ReadyOperator.Add(Instantiate(m_CharPannel, m_CharBox));
+				m_ReadyOperator[i].gameObject.GetComponent<CharScript>().CharName = m_ReceivePlayOperator[i];
+				m_ReadyOperator[i].gameObject.GetComponent<CharScript>().SetData();
+			}
+		}
+	}
 }

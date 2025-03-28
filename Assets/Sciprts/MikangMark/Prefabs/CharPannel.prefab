@@ -856,11 +856,14 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: m_OpInfo
-      Entry: 6
-      Data: 
-  m_Operator: {fileID: 6266139184085059318, guid: 8d8af10734821d749b97074076331099, type: 3}
+    SerializationNodes: []
+  A: {fileID: 0}
+  BPrefab: {fileID: 6266139184085059318, guid: 8d8af10734821d749b97074076331099, type: 3}
+  UICamera: {fileID: 0}
+  MainCamera: {fileID: 0}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &7730869274951982219
 GameObject:
   m_ObjectHideFlags: 0
