@@ -27,17 +27,14 @@ namespace AvantGardeMaker.MikangMark
 		public List<string> m_ReceivePlayOperator;//게임들어오기전 편성한 캐릭터들의 이름 받기
 
 		[SerializeField]
-		GameObject m_CharPannel;
+		GameObject m_OperPannel;
 		[SerializeField]
-		Transform m_CharBox;
+		Transform m_OperBox;
 
 		public List<GameObject> m_PlayingOpers;
 
 		
 		public List<GameObject> m_ReadyOperator;
-		/*[SerializeField]
-		List<CharInfo> m_ReadyOperatorInfo;
-		*/
 		#endregion
 
 		#region 프로퍼티
@@ -52,13 +49,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			m_Cost = 5;
-			SetStartCost(5);
-			m_Cost = m_StartCost;
-			//m_ReadyOperatorInfo = new List<CharInfo>();
-			//m_ReadyOperator = new List<GameObject>();
-			m_PlayingOpers = new List<GameObject>();
-			CreateOperBox(m_ReceivePlayOperator.Count);
+			Initialize();
 		}
 		private void FixedUpdate()
 		{
@@ -79,14 +70,20 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public virtual void Initialize()
 		{
-			Debug.Log("Initialize");
+			m_Cost = 5;
+			SetStartCost(5);
+			m_Cost = m_StartCost;
+			m_PlayingOpers = new List<GameObject>();
+			m_ReadyOperator = new List<GameObject>();
+			m_OperBox = GameObject.Find("OperBox").transform;
+			CreateOperBox(m_ReceivePlayOperator.Count);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
 		public virtual void Finallize()
 		{
-			Debug.Log("Finallize");
+			
 		}
 
 		/// <summary>
@@ -94,15 +91,14 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public virtual void InitializeGame()
 		{
-
-			Debug.Log("InitializeGame");
+			
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
 		/// </summary>
 		public virtual void FinallizeGame()
 		{
-			Debug.Log("FinallizeGame");
+			
 		}
 
 		public void SetStartCost(int _cost)
@@ -125,9 +121,11 @@ namespace AvantGardeMaker.MikangMark
 		{
 			for (int i = 0; i < _OpCount; i++) 
 			{
-				m_ReadyOperator.Add(Instantiate(m_CharPannel, m_CharBox));
-				m_ReadyOperator[i].gameObject.GetComponent<CharScript>().CharName = m_ReceivePlayOperator[i];
-				m_ReadyOperator[i].gameObject.GetComponent<CharScript>().SetData();
+				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox));
+				m_ReadyOperator[i].GetComponent<Operator>().OperName = m_ReceivePlayOperator[i];
+				m_ReadyOperator[i].GetComponent<Operator>().SetData();
+				m_ReadyOperator[i].name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
+
 			}
 		}
 	}

@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 6617025116508227477}
   - component: {fileID: 846145607633637575}
   m_Layer: 0
-  m_Name: CharPannel
+  m_Name: OperPannel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -857,13 +857,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  A: {fileID: 0}
-  BPrefab: {fileID: 6266139184085059318, guid: 8d8af10734821d749b97074076331099, type: 3}
-  UICamera: {fileID: 0}
-  MainCamera: {fileID: 0}
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  m_OperatorPrefab: {fileID: 6266139184085059318, guid: 8d8af10734821d749b97074076331099, type: 3}
+  Canvas: {fileID: 0}
+  isDragging: 0
 --- !u!1 &7730869274951982219
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,14 +6,15 @@ using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using System;
+using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.MikangMark
 {
 	[SerializeField]
-	public class CharInfo
+	public class OperInfo
 	{
-		public string m_EngCharName;//영어이름
-		public string m_KorCharName;//한글이름
+		public string m_EngOperName;//영어이름
+		public string m_KorOperName;//한글이름
 		public int m_Rate;//레어도
 		
 		public int m_MaxLevel;//최대레벨
@@ -46,15 +47,15 @@ namespace AvantGardeMaker.MikangMark
 		#region 변수
 
 		private string customFileName;
-		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/CharInfo_Yaml";
+		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml";
 		//public string m_FilePath;
-		public List<CharInfo> m_CharInfoList;
+		public List<OperInfo> m_OperInfoList;
 		#region 오퍼정보
 		[SerializeField]
-		CharInfo Fang = new CharInfo
+		OperInfo Fang = new()
 		{
-			m_EngCharName = "Fang",
-			m_KorCharName = "팽",
+			m_EngOperName = "Fang",
+			m_KorOperName = "팽",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -64,7 +65,7 @@ namespace AvantGardeMaker.MikangMark
 
 			m_Elite = 0,
 			m_Potential = 0,
-			m_Job = E_Jop.BangGard,
+			m_Job = E_Jop.VanGuard,
 
 			m_MaxHp = 742,
 			m_Atk = 157,
@@ -80,10 +81,10 @@ namespace AvantGardeMaker.MikangMark
 		};
 
 		[SerializeField]
-		CharInfo Plume = new CharInfo
+		OperInfo Plume = new()
 		{
-			m_EngCharName = "Plume",
-			m_KorCharName = "플룸",
+			m_EngOperName = "Plume",
+			m_KorOperName = "플룸",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -93,7 +94,7 @@ namespace AvantGardeMaker.MikangMark
 
 			m_Elite = 0,
 			m_Potential = 0,
-			m_Job = E_Jop.BangGard,
+			m_Job = E_Jop.VanGuard,
 
 			m_MaxHp = 688,
 			m_Atk = 230,
@@ -106,10 +107,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close
 		};
 
-		CharInfo Melantha = new CharInfo
+		OperInfo Melantha = new OperInfo
 		{
-			m_EngCharName = "Melantha",
-			m_KorCharName = "멜란사",
+			m_EngOperName = "Melantha",
+			m_KorOperName = "멜란사",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -119,7 +120,7 @@ namespace AvantGardeMaker.MikangMark
 
 			m_Elite = 0,
 			m_Potential = 0,
-			m_Job = E_Jop.Gard,
+			m_Job = E_Jop.Guard,
 
 			m_MaxHp = 1395,
 			m_Atk = 396,
@@ -132,10 +133,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close
 		};
 
-		CharInfo Popukar = new CharInfo
+		OperInfo Popukar = new OperInfo
 		{
-			m_EngCharName = "Popukar",
-			m_KorCharName = "포푸카",
+			m_EngOperName = "Popukar",
+			m_KorOperName = "포푸카",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -145,7 +146,7 @@ namespace AvantGardeMaker.MikangMark
 
 			m_Elite = 0,
 			m_Potential = 0,
-			m_Job = E_Jop.Gard,
+			m_Job = E_Jop.Guard,
 
 			m_MaxHp = 1130,
 			m_Atk = 263,
@@ -158,10 +159,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close
 		};
 
-		CharInfo Beagle = new CharInfo
+		OperInfo Beagle = new OperInfo
 		{
-			m_EngCharName = "Beagle",
-			m_KorCharName = "비글",
+			m_EngOperName = "Beagle",
+			m_KorOperName = "비글",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -184,10 +185,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close
 		};
 
-		CharInfo Adnachiel = new CharInfo
+		OperInfo Adnachiel = new OperInfo
 		{
-			m_EngCharName = "Adnachiel",
-			m_KorCharName = "아드나키엘",
+			m_EngOperName = "Adnachiel",
+			m_KorOperName = "아드나키엘",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -210,10 +211,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Far
 		};
 
-		CharInfo Kroos = new CharInfo
+		OperInfo Kroos = new OperInfo
 		{
-			m_EngCharName = "Kroos",
-			m_KorCharName = "크루스",
+			m_EngOperName = "Kroos",
+			m_KorOperName = "크루스",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -236,10 +237,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Far
 		};
 
-		CharInfo Lava = new CharInfo
+		OperInfo Lava = new OperInfo
 		{
-			m_EngCharName = "Lava",
-			m_KorCharName = "라바",
+			m_EngOperName = "Lava",
+			m_KorOperName = "라바",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -262,10 +263,10 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Far
 		};
 
-		CharInfo Steward = new CharInfo
+		OperInfo Steward = new OperInfo
 		{
-			m_EngCharName = "Steward",
-			m_KorCharName = "스튜어드",
+			m_EngOperName = "Steward",
+			m_KorOperName = "스튜어드",
 			m_Rate = 3,
 
 			m_MaxLevel = 40,
@@ -304,19 +305,19 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			m_CharInfoList = new List<CharInfo>();
+			m_OperInfoList = new List<OperInfo>();
 			SaveData(m_FileSaveDirectory, "Fang.yaml", Fang);
 			//LoadData(m_FilePath, "Fang.yaml");
 			SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
 			//LoadData(m_FilePath, "Plume.yaml");
 
-			m_CharInfoList.Add(Fang);
-			m_CharInfoList.Add(Plume);
+			m_OperInfoList.Add(Fang);
+			m_OperInfoList.Add(Plume);
 		}
 
 
 		#endregion
-		public void SaveData(string directory, string fileName,CharInfo charData)
+		public void SaveData(string directory, string fileName, OperInfo operData)
 		{
 			
 			if (!Directory.Exists(directory))
@@ -327,25 +328,24 @@ namespace AvantGardeMaker.MikangMark
 
 			var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
 
-			string yaml = serializer.Serialize(charData);
+			string yaml = serializer.Serialize(operData);
 			File.WriteAllText(m_FilePath, yaml);
 			//Debug.Log("YAML 저장 완료:\n" + m_FilePath);
 		}
 
-		public CharInfo LoadData(string directory, string fileName)
+		public OperInfo LoadData(string directory, string fileName)
 		{
 			if (!File.Exists(directory))
 			{
 				Debug.LogError("YAML 파일을 찾을 수 없습니다!");
-				return new CharInfo();
+				return new OperInfo();
 			}
 			string yaml = File.ReadAllText(directory);
 			var deserializer = new DeserializerBuilder()
 				.WithNamingConvention(CamelCaseNamingConvention.Instance)
 				.Build();
 
-			CharInfo character = deserializer.Deserialize<CharInfo>(yaml);
-			//Debug.Log($"불러온 데이터: Name={character.m_EngCharName}, Health={character.m_MaxHp}, Mana={character.m_Level}");
+			OperInfo character = deserializer.Deserialize<OperInfo>(yaml);
 			return character;
 		}
 		/// <summary>
@@ -353,12 +353,7 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public void Initialize()
 		{
-			/*
-			m_FilePath = Path.Combine(Application.persistentDataPath, "CharInfo.yaml");
-			Debug.Log(m_FilePath);
-			SaveData();
-			LoadData();
-			*/
+
 		}
 		/// <summary>
 		/// 마무리화 함수

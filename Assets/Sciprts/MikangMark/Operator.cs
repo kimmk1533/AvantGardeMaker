@@ -8,15 +8,15 @@ using System.IO;
 
 namespace AvantGardeMaker.MikangMark
 {
-	public class CharScript : SerializedMonoBehaviour
+	public class Operator : ObjectPoolItemBase
 	{
 		#region 변수
-		public CharInfo m_CharData;
+		public OperInfo m_OperData;
 
 		Yaml m_Yaml;
 
 		[SerializeField]
-		public string CharName;
+		public string OperName;
 
 		string m_FilePath;
 		#endregion
@@ -42,19 +42,14 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public void Initialize()
 		{
-			/*
-			m_Yaml = GameObject.Find("GameManager").GetComponent<Yaml>();
-			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, CharName + ".yaml");
-			m_CharData = new CharInfo();
-			m_CharData = m_Yaml.LoadData(m_FilePath, CharName + ".yaml");
-			*/
+			
 		}
 		public void SetData()
 		{
 			m_Yaml = GameObject.Find("GameManager").GetComponent<Yaml>();
-			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, CharName + ".yaml");
-			m_CharData = new CharInfo();
-			m_CharData = m_Yaml.LoadData(m_FilePath, CharName + ".yaml");
+			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, OperName + ".yaml");
+			m_OperData = new OperInfo();
+			m_OperData = m_Yaml.LoadData(m_FilePath, OperName + ".yaml");
 		}
 		/// <summary>
 		/// 마무리화 함수
