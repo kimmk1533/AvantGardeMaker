@@ -17,6 +17,7 @@ namespace AvantGardeMaker.Ceeu
 		[SerializeField]
 		private MenuPanel m_MenuPanel = null;
 		private bool m_MenuPanelMovingLock = false;
+		private bool m_CanUseMenuShortcut = true;
 		#endregion
 
 		#region 옵션 패널 관련 변수
@@ -43,6 +44,14 @@ namespace AvantGardeMaker.Ceeu
 		{
 			m_MenuPanelMovingLock = !m_MenuPanelMovingLock;
 		}
+		public void OnMapNameInputFieldFocused()
+		{
+			m_CanUseMenuShortcut = false;
+		}
+		public void OnMapNameInputFieldUnfocused()
+		{
+			m_CanUseMenuShortcut = true;
+		}
 		#endregion
 		#endregion
 
@@ -53,16 +62,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			foreach (string key in m_KeyList)
-			{
-				OptionViewport optionViewport = m_OptionPanel.optionViewportController[key];
-				KeyCode keyCode = optionViewport.shortcut;
-				if (Input.GetKeyDown(keyCode) == true)
-				{
-					optionViewport.OnMenuButtonClicked();
-					M_EditMode.SetEditModeType(optionViewport.editModeType);
-				}
-			}
+			MenuShortcut();
 		}
 		#endregion
 
@@ -103,5 +103,22 @@ namespace AvantGardeMaker.Ceeu
 			m_MenuPanel.Finallize();
 		}
 		#endregion
+
+		private void MenuShortcut()
+		{
+			if (m_CanUseMenuShortcut == false)
+				return;
+
+			foreach (string key in m_KeyList)
+			{
+				OptionViewport optionViewport = m_OptionPanel.optionViewportController[key];
+				KeyCode keyCode = optionViewport.shortcut;
+				if (Input.GetKeyDown(keyCode) == true)
+				{
+					optionViewport.OnMenuButtonClicked();
+					M_EditMode.SetEditModeType(optionViewport.editModeType);
+				}
+			}
+		}
 	}
 }
