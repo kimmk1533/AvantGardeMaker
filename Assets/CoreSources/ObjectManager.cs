@@ -48,7 +48,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 			itemPool.Initialize(itemBuilder);
 		}
 	}
-	public virtual void FinallizeGame()
+	public virtual void FinallizeMain()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
 		{
