@@ -10,7 +10,7 @@ using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.MikangMark
 {
-	public class Yaml : SerializedMonoBehaviour
+	public class YamlManager : SerializedSingleton<YamlManager>
 	{
 		#region 변수
 
@@ -46,7 +46,8 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close,
 			m_Provocation = 0,
 			m_SkillLevel = 1,
-			m_OperPos = new int[0,3]
+			m_OperPos = new (0, 3),
+			m_RealAttackRange = new List<(int, int)> { new(1, 3) }
 		};
 
 		[SerializeField]
@@ -75,7 +76,9 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkSpeed = E_AttackSpeed.VeryFast,
 			m_AtkRange = E_AttackRange.Close,
 			m_Provocation = 0,
-			m_SkillLevel = 1
+			m_SkillLevel = 1,
+			m_OperPos = (0, 3),
+			m_RealAttackRange = new List<(int, int)> { (1, 3) }
 		};
 
 		OperInfo Melantha = new OperInfo
@@ -276,14 +279,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			m_OperInfoList = new List<OperInfo>();
-			SaveData(m_FileSaveDirectory, "Fang.yaml", Fang);
-			//LoadData(m_FilePath, "Fang.yaml");
-			SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
-			//LoadData(m_FilePath, "Plume.yaml");
 
-			m_OperInfoList.Add(Fang);
-			m_OperInfoList.Add(Plume);
 		}
 
 
@@ -322,14 +318,33 @@ namespace AvantGardeMaker.MikangMark
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public virtual void Initialize()
+		{
+			m_OperInfoList = new List<OperInfo>();
+			SaveData(m_FileSaveDirectory, "Fang.yaml", Fang);
+			//LoadData(m_FilePath, "Fang.yaml");
+			SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
+			//LoadData(m_FilePath, "Plume.yaml");
+
+			m_OperInfoList.Add(Fang);
+			m_OperInfoList.Add(Plume);
+		}
+		public virtual void Finallize()
+		{
+
+		}
+
+		/// <summary>
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// </summary>
+		public virtual void InitializeGame()
 		{
 
 		}
 		/// <summary>
-		/// 마무리화 함수
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public void Finallize()
+		public virtual void FinallizeGame()
 		{
 
 		}
