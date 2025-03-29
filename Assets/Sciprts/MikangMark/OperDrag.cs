@@ -19,7 +19,6 @@ namespace AvantGardeMaker.MikangMark
 
 		private RectTransform B;  // 따라다닐 UI 오브젝트
 		public bool isDragging = false;
-		public GameObject OperStatUI;
 		GameObject newB;
 		#endregion
 
@@ -48,7 +47,7 @@ namespace AvantGardeMaker.MikangMark
 		// UI 생성
 		public void Initialize()
 		{
-
+			
 		}
 
 		public void OnBeginDrag(PointerEventData eventData)
@@ -61,6 +60,7 @@ namespace AvantGardeMaker.MikangMark
 				newB = Instantiate(m_OperatorPrefab, m_Canvas.transform);
 				B = newB.GetComponent<RectTransform>();
 				newB.name = GetComponent<Operator>().OperName;
+				UIManager.Instance.OperStatUISetActive(true);
 			}
 		}
 
@@ -78,10 +78,12 @@ namespace AvantGardeMaker.MikangMark
 			if (GameObject.Find("Fang").GetComponent<OperPoint>().IsOnTile)
 			{
 				gameObject.SetActive(false);
+				UIManager.Instance.OperStatUISetActive(false);
 			}
 			else
 			{
 				Destroy(newB);
+				UIManager.Instance.OperStatUISetActive(false);
 			}
 
 		}

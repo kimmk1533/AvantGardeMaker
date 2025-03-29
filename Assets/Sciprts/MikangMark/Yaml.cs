@@ -10,38 +10,6 @@ using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.MikangMark
 {
-	[SerializeField]
-	public class OperInfo
-	{
-		public string m_EngOperName;//영어이름
-		public string m_KorOperName;//한글이름
-		public int m_Rate;//레어도
-		
-		public int m_MaxLevel;//최대레벨
-		public int m_Level;//현재레벨
-		public int m_MaxExp;//현재레벨 최대경험치
-		public int m_Exp;//현재경험치
-		
-		public int m_Elite;//특성
-		public int m_Potential;//재능
-		public E_Jop m_Job;//직군
-		
-		public int m_MaxHp;//최대체력
-		public int m_Atk;//공격력
-		public int m_Def;//방어력
-		public int m_Res;//마항
-		public E_ResetSpeed m_ReSet;//재배치속도
-		public int m_SetCost;//배치코스트
-		public int m_BlockCount;//저지
-		public E_AttackSpeed m_AtkSpeed;//공격속도
-		public E_AttackRange m_AtkRange;//공격범위
-
-		public int m_Provocation;//도발
-		public int m_SkillLevel;//스킬레벨
-	}
-
-
-
 	public class Yaml : SerializedMonoBehaviour
 	{
 		#region 변수
@@ -77,7 +45,8 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkSpeed = E_AttackSpeed.Nomal,
 			m_AtkRange = E_AttackRange.Close,
 			m_Provocation = 0,
-			m_SkillLevel = 1
+			m_SkillLevel = 1,
+			m_OperPos = new int[0,3]
 		};
 
 		[SerializeField]
@@ -104,7 +73,9 @@ namespace AvantGardeMaker.MikangMark
 			m_SetCost = 7,
 			m_BlockCount = 1,
 			m_AtkSpeed = E_AttackSpeed.VeryFast,
-			m_AtkRange = E_AttackRange.Close
+			m_AtkRange = E_AttackRange.Close,
+			m_Provocation = 0,
+			m_SkillLevel = 1
 		};
 
 		OperInfo Melantha = new OperInfo

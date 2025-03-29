@@ -2735,61 +2735,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa02f73474d208049828fa8bc455b775, type: 3}
---- !u!1 &495599876
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 495599878}
-  - component: {fileID: 495599877}
-  m_Layer: 0
-  m_Name: UiController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &495599877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 495599876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97f479b6a86eb154090dbd068aa2b328, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  m_Cost: {fileID: 142723040}
-  m_CostImage: {fileID: 504509807}
---- !u!4 &495599878
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 495599876}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 743.4706, y: 283.05173, z: -309.71088}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &503959819
 GameObject:
   m_ObjectHideFlags: 0
@@ -5155,7 +5100,7 @@ GameObject:
   - component: {fileID: 935145976}
   - component: {fileID: 935145975}
   m_Layer: 0
-  m_Name: Coust_Image
+  m_Name: Cost_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7489,7 +7434,7 @@ GameObject:
   - component: {fileID: 1384588357}
   - component: {fileID: 1384588356}
   m_Layer: 0
-  m_Name: OperStatChar_Image
+  m_Name: Oper_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9261,10 +9206,10 @@ RectTransform:
   - {fileID: 144310486}
   - {fileID: 364173625}
   - {fileID: 2117386507}
+  - {fileID: 1736211684}
   - {fileID: 1621478921}
   - {fileID: 783708340}
   - {fileID: 906738697}
-  - {fileID: 1736211684}
   - {fileID: 1685015563}
   - {fileID: 120139420}
   - {fileID: 1377388438}
@@ -10060,6 +10005,7 @@ GameObject:
   - component: {fileID: 2002700176}
   - component: {fileID: 2002700177}
   - component: {fileID: 2002700178}
+  - component: {fileID: 2002700179}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -10201,6 +10147,15 @@ MonoBehaviour:
     - Name: m_SkillLevel
       Entry: 3
       Data: 0
+    - Name: m_AttackRange
+      Entry: 6
+      Data: 
+    - Name: m_RealAttackRange
+      Entry: 6
+      Data: 
+    - Name: m_OperPos
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -10270,10 +10225,54 @@ MonoBehaviour:
     - Name: m_SkillLevel
       Entry: 3
       Data: 0
+    - Name: m_AttackRange
+      Entry: 6
+      Data: 
+    - Name: m_RealAttackRange
+      Entry: 6
+      Data: 
+    - Name: m_OperPos
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
   m_FileSaveDirectory: C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml
+--- !u!114 &2002700179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002700174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1058aa8613493b748ad018aad2a5b36f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  m_IsMainScene: 1
+  m_DontDestroyOnLoad: 0
+  m_Cost: {fileID: 142723040}
+  m_CostImage: {fileID: 504509807}
+  m_OperStatUI: {fileID: 1626726304}
+  m_OperImg: {fileID: 0}
+  m_JobImg: {fileID: 0}
+  m_Arousal: {fileID: 0}
+  m_Name: {fileID: 0}
+  m_OperLevelValue: {fileID: 0}
+  m_StatAttackValue: {fileID: 0}
+  m_StatDefence: {fileID: 0}
+  m_StatMagicDefence: {fileID: 0}
+  m_StatBlock: {fileID: 0}
 --- !u!1 &2033714249
 GameObject:
   m_ObjectHideFlags: 0
@@ -12377,7 +12376,6 @@ SceneRoots:
   - {fileID: 877765}
   - {fileID: 9455698}
   - {fileID: 595938247}
-  - {fileID: 495599878}
   - {fileID: 2002700176}
   - {fileID: 656254635}
   - {fileID: 662863695}
