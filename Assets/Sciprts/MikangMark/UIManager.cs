@@ -21,7 +21,7 @@ namespace AvantGardeMaker.MikangMark
 		public Image m_OperImg;
 		public Image m_JobImg;
 		public Image m_Arousal;
-		public TextMeshProUGUI m_Name;
+		public TextMeshProUGUI m_OperName;
 		public TextMeshProUGUI m_OperLevelValue;
 		public TextMeshProUGUI m_StatAttackValue;
 		public TextMeshProUGUI m_StatDefence;
@@ -39,7 +39,8 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Awake()
+		
+		private void Start()
 		{
 			OperStatUISetActive(false);
 		}

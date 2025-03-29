@@ -47,10 +47,6 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Start()
-		{
-			Initialize();
-		}
 		private void FixedUpdate()
 		{
 			m_RealTime += Time.deltaTime;
@@ -123,9 +119,8 @@ namespace AvantGardeMaker.MikangMark
 			{
 				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox));
 				m_ReadyOperator[i].GetComponent<Operator>().OperName = m_ReceivePlayOperator[i];
-				m_ReadyOperator[i].GetComponent<Operator>().SetData();
 				m_ReadyOperator[i].name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
-
+				m_ReadyOperator[i].GetComponent<Operator>().SetData();
 			}
 		}
 	}

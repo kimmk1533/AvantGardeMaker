@@ -35,11 +35,18 @@ namespace AvantGardeMaker.MikangMark
 		public int m_Provocation;//도발
 		public int m_SkillLevel;//스킬레벨
 
-		public int[,] m_AttackRange = new int[7, 7];//이차원배열로 오퍼위치(1), 오퍼의 공격범위(0), 오퍼의공격권외(-1) 등을 정수형으로 저장
+		public int[,] m_AttackRange = new int[7, 7];//이차원배열로 오퍼위치(0), 오퍼의 공격범위(1), 오퍼의공격권외(2) 등을 정수형으로 저장
 
-		public List<int[,]> m_RealAttackRange = new List<int[,]>();//공격범위 좌표의 리스트
-		public int[,] m_OperPos = new int[0, 0];//오퍼레이터의 위치
-
+		public List<(int, int)> m_RealAttackRange = new List<(int, int)>();//공격범위 좌표의 리스트
+		public (int, int) m_OperPos;//오퍼레이터의 위치
+		public OperInfo()
+		{
+			AttackRangeSetting(m_OperPos.Item1, m_OperPos.Item2, E_TileAttackRange.OperPos);
+			for (int i = 0; i < m_RealAttackRange.Count; i++)
+			{
+				AttackRangeSetting(m_RealAttackRange[i].Item1, m_RealAttackRange[i].Item2, E_TileAttackRange.InRange);
+			}
+		}
 		public void AttackRangeSetting(int _X, int _Y, E_TileAttackRange _AttackType)
 		{
 			m_AttackRange[_X, _Y] = (int)_AttackType;
@@ -86,7 +93,7 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public override void InitializeMain()
 		{
-			//base.InitializeMain();
+			base.InitializeMain();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)

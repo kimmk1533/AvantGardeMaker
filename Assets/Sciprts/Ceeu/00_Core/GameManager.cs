@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AvantGardeMaker.ad1a;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using AvantGardeMaker.MikangMark;
 
 namespace AvantGardeMaker.Ceeu
 {
@@ -30,6 +31,12 @@ namespace AvantGardeMaker.Ceeu
 		private static EnemySpawnDataUIManager M_EnemySpawnDataUI => EnemySpawnDataUIManager.Instance;
 
 		private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
+
+		private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
+
+		private static OperatorManager M_Operator=>OperatorManager.Instance;
+
+		private static YamlManager M_Yaml => YamlManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -58,6 +65,12 @@ namespace AvantGardeMaker.Ceeu
 
 			//ad1a
 			M_EnemyGenerate.Initialize();
+
+			//MikangMark
+			M_InGamePlay.Initialize();
+			M_Yaml.Initialize();
+			M_Operator.Initialize();
+			
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -71,6 +84,12 @@ namespace AvantGardeMaker.Ceeu
 
 			//ad1a
 			M_EnemyGenerate.Finallize();
+
+			//MikangMark
+			M_InGamePlay.Finallize();
+			M_Yaml.Finallize();
+			M_Operator.Finallize();
+			
 		}
 
 		/// <summary>
@@ -78,11 +97,18 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void InitializeGame()
 		{
+			
 			m_GameStageData = M_MapEditor.currentStageData;
 			m_IsGameMode = true;
 
 			//ad1a
 			M_EnemyGenerate.InitializeMain();
+
+			//MikangMark
+			M_InGamePlay.InitializeGame();
+			M_Yaml.InitializeGame();
+			M_Operator.InitializeMain();
+			
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (In Game Scene 나갈 시 호출)
@@ -93,6 +119,12 @@ namespace AvantGardeMaker.Ceeu
 
 			//ad1a
 			M_EnemyGenerate.FinallizeMain();
+
+			//MikangMark
+			M_InGamePlay.FinallizeGame();
+			M_Yaml.FinallizeGame();
+			M_Operator.FinallizeMain();
+			
 		}
 
 		/// <summary>

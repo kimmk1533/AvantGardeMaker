@@ -10004,6 +10004,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2002700176}
   - component: {fileID: 2002700177}
+  - component: {fileID: 2002700180}
   - component: {fileID: 2002700178}
   - component: {fileID: 2002700179}
   m_Layer: 0
@@ -10049,7 +10050,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_IsMainScene: 1
+  m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
   m_ReceivePlayOperator:
   - Fang
@@ -10154,7 +10155,17 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: m_OperPos
-      Entry: 6
+      Entry: 7
+      Data: System.ValueTuple`2[[System.Int32, mscorlib],[System.Int32, mscorlib]],
+        mscorlib
+    - Name: Item1
+      Entry: 3
+      Data: 0
+    - Name: Item2
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8
@@ -10232,11 +10243,23 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: m_OperPos
-      Entry: 6
+      Entry: 7
+      Data: System.ValueTuple`2[[System.Int32, mscorlib],[System.Int32, mscorlib]],
+        mscorlib
+    - Name: Item1
+      Entry: 3
+      Data: 0
+    - Name: Item2
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8
       Data: 
+  m_IsInitScene: 0
+  m_DontDestroyOnLoad: 0
   m_FileSaveDirectory: C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml
 --- !u!114 &2002700179
 MonoBehaviour:
@@ -10259,20 +10282,45 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_IsMainScene: 1
+  m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
   m_Cost: {fileID: 142723040}
   m_CostImage: {fileID: 504509807}
   m_OperStatUI: {fileID: 1626726304}
-  m_OperImg: {fileID: 0}
-  m_JobImg: {fileID: 0}
-  m_Arousal: {fileID: 0}
-  m_Name: {fileID: 0}
-  m_OperLevelValue: {fileID: 0}
-  m_StatAttackValue: {fileID: 0}
-  m_StatDefence: {fileID: 0}
-  m_StatMagicDefence: {fileID: 0}
-  m_StatBlock: {fileID: 0}
+  m_OperImg: {fileID: 1384588356}
+  m_JobImg: {fileID: 2033714251}
+  m_Arousal: {fileID: 1790653485}
+  m_OperName: {fileID: 601353513}
+  m_OperLevelValue: {fileID: 1043344993}
+  m_StatAttackValue: {fileID: 1027499913}
+  m_StatDefence: {fileID: 1185770996}
+  m_StatMagicDefence: {fileID: 254996060}
+  m_StatBlock: {fileID: 503959821}
+--- !u!114 &2002700180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002700174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd5d3c0f52ebd54280729a7ae6496d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  m_IsInitScene: 0
+  m_DontDestroyOnLoad: 0
+  m_CommonPath: 
+  m_Origins: []
 --- !u!1 &2033714249
 GameObject:
   m_ObjectHideFlags: 0
