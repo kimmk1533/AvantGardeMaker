@@ -54,7 +54,7 @@ namespace AvantGardeMaker.Ceeu
 			OptionViewport saveLoadOptionViewport = m_OptionViewportMap["Save&Load"];
 			TMP_InputField stageNameInputField = saveLoadOptionViewport.transform.FindInChildren<TMP_InputField>("Stage Name InputField");
 
-			stageNameInputField.onEndEdit.AddListener((inputString) => M_MapEditor.mapDataSavingPath = inputString);
+			stageNameInputField.onEndEdit.AddListener((inputString) => M_MapEditor.stageName = inputString);
 			stageNameInputField.onEndEdit.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);
 			stageNameInputField.onSelect.AddListener(M_MapEditorUI.OnMapNameInputFieldFocused);
 			stageNameInputField.onDeselect.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);

@@ -703,7 +703,8 @@ MonoBehaviour:
     m_MaxTile: {x: 0, y: 0, z: 0}
     <tilePointList>k__BackingField: []
     <tileTypeList>k__BackingField: 
-  m_MapDataSavingPath: TestMapData
+  m_StageName: 
+  m_UIFont: {fileID: 11400000, guid: 3ae1711be89b13e43bb5db753d33d76a, type: 2}
 --- !u!4 &2021308435
 Transform:
   m_ObjectHideFlags: 0

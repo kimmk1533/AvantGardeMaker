@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -72,35 +73,117 @@ public static class UtilClass
 		return EventSystem.current.IsPointerOverGameObject();
 	}
 
-	public static TextMesh CreateWorldText(object text, Transform parent = null, Vector3 localPosition = default(Vector3), float characterSize = 0.1f, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000)
+	public static TextMesh CreateWorldText(object text, Transform parent = null, Vector3 localPosition = default, float characterSize = 0.1f, Font font = null, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000, float duration = -1f)
+	{
+		return CreateWorldText(text.ToString(), parent, localPosition, characterSize, font, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder, duration);
+	}
+	public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default, float characterSize = 0.1f, Font font = null, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000, float duration = -1f)
 	{
 		if (color == null)
 			color = Color.white;
 
-		return CreateWorldText(parent, text.ToString(), localPosition, characterSize, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder);
-	}
-	public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), float characterSize = 0.1f, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.LowerLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000)
-	{
-		if (color == null)
-			color = Color.white;
+		WorldTextOption option = new WorldTextOption()
+		{
+			localPosition = localPosition,
+			characterSize = characterSize,
+			font = font,
+			fontSize = fontSize,
+			color = color.Value,
+			textAnchor = textAnchor,
+			textAlignment = textAlignment,
+			sortingOrder = sortingOrder,
+			duration = duration
+		};
 
-		return CreateWorldText(parent, text, localPosition, characterSize, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder);
+		return CreateWorldText(parent, text, option);
 	}
-	public static TextMesh CreateWorldText(Transform parent, string text, Vector3 localPosition, float characterSize, int fontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int sortingOrder)
+	public static TextMesh CreateWorldText(Transform parent, string text, WorldTextOption option)
 	{
 		GameObject gameObject = new GameObject("World_Text", typeof(TextMesh));
+
 		Transform transform = gameObject.transform;
 		transform.SetParent(parent, false);
-		transform.localPosition = localPosition;
+		transform.localPosition = option.localPosition;
+
 		TextMesh textMesh = gameObject.GetComponent<TextMesh>();
-		textMesh.anchor = textAnchor;
-		textMesh.alignment = textAlignment;
+		textMesh.anchor = option.textAnchor;
+		textMesh.alignment = option.textAlignment;
 		textMesh.text = text;
-		textMesh.characterSize = characterSize;
-		textMesh.fontSize = fontSize;
-		textMesh.color = color;
-		textMesh.GetComponent<MeshRenderer>().sortingOrder = sortingOrder;
+		textMesh.characterSize = option.characterSize;
+		textMesh.font = option.font;
+		textMesh.fontSize = option.fontSize;
+		textMesh.color = option.color;
+		textMesh.GetComponent<MeshRenderer>().sortingOrder = option.sortingOrder;
+		if (option.duration >= 0f)
+			GameObject.Destroy(gameObject, option.duration);
+
 		return textMesh;
+	}
+
+	public static TextMeshPro CreateWorldText(object text, Transform parent = null, Vector3 localPosition = default, TMP_FontAsset font = null, int fontSize = 40, Color? color = null, TextAlignmentOptions textAlignment = TextAlignmentOptions.Left, int sortingOrder = 5000, float duration = -1f)
+	{
+		return CreateWorldText(text.ToString(), parent, localPosition, font, fontSize, color, textAlignment, sortingOrder, duration);
+	}
+	public static TextMeshPro CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default, TMP_FontAsset font = null, int fontSize = 40, Color? color = null, TextAlignmentOptions textAlignment = TextAlignmentOptions.Left, int sortingOrder = 5000, float duration = -1f)
+	{
+		if (color == null)
+			color = Color.white;
+
+		WorldTMP_TextOption option = new WorldTMP_TextOption()
+		{
+			localPosition = localPosition,
+			tmpFont = font,
+			fontSize = fontSize,
+			color = color.Value,
+			textAlignment = textAlignment,
+			sortingOrder = sortingOrder,
+			duration = duration,
+		};
+
+		return CreateWorldText(parent, text, option);
+	}
+	public static TextMeshPro CreateWorldText(Transform parent, string text, WorldTMP_TextOption option)
+	{
+		GameObject gameObject = new GameObject("World_TMP_Text", typeof(TextMeshPro));
+
+		Transform transform = gameObject.transform;
+		transform.SetParent(parent, false);
+		transform.localPosition = option.localPosition;
+
+		TextMeshPro textMesh = gameObject.GetComponent<TextMeshPro>();
+		textMesh.alignment = option.textAlignment;
+		textMesh.text = text;
+		textMesh.font = option.tmpFont;
+		textMesh.fontSize = option.fontSize;
+		textMesh.color = option.color;
+		textMesh.sortingOrder = option.sortingOrder;
+		if (option.duration >= 0f)
+			GameObject.Destroy(gameObject, option.duration);
+
+		return textMesh;
+	}
+
+	public class WorldTextOption
+	{
+		public Vector3 localPosition = default;
+		public float characterSize = 0.1f;
+		public Font font = null;
+		public int fontSize = 40;
+		public Color color = Color.white;
+		public TextAnchor textAnchor = TextAnchor.LowerLeft;
+		public TextAlignment textAlignment = TextAlignment.Left;
+		public int sortingOrder = 5000;
+		public float duration = -1f;
+	}
+	public class WorldTMP_TextOption
+	{
+		public Vector3 localPosition = default;
+		public TMP_FontAsset tmpFont = null;
+		public int fontSize = 40;
+		public Color color = Color.white;
+		public TextAlignmentOptions textAlignment = TextAlignmentOptions.Left;
+		public int sortingOrder = 5000;
+		public float duration = -1f;
 	}
 
 	[System.Serializable]

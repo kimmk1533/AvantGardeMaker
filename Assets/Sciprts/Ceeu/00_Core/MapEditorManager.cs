@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
@@ -57,7 +58,10 @@ namespace AvantGardeMaker.Ceeu
 		private StageData m_EditingStageData = default;
 
 		[SerializeField]
-		private string m_MapDataSavingPath = string.Empty;
+		private string m_StageName = string.Empty;
+
+		[SerializeField]
+		private TMP_FontAsset m_UIFont = null;
 		#endregion
 		#endregion
 
@@ -84,8 +88,8 @@ namespace AvantGardeMaker.Ceeu
 		#region 저장 & 불러오기 관련 프로퍼티
 		public StageData currentStageData => m_EditingStageData;
 
-		public string mapDataSavingPath { get => m_MapDataSavingPath; set => m_MapDataSavingPath = value; }
-		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
+		public string stageName { get => m_StageName; set => m_StageName = value; }
+		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_StageName) + (m_StageName.EndsWith(".yaml") == false ? ".yaml" : "");
 		#endregion
 		#endregion
 
@@ -405,7 +409,16 @@ namespace AvantGardeMaker.Ceeu
 
 			M_YamlFile.Serialize(mapDataSavingFilePath, m_EditingStageData);
 
-			Debug.Log("YAML 저장 완료: " + mapDataSavingFilePath);
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
+			{
+				tmpFont = m_UIFont,
+				fontSize = 20,
+				textAlignment = TextAlignmentOptions.Midline,
+				duration = 1f,
+			});
+			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
+
+			Debug.Log("[YAML 저장 완료]: " + mapDataSavingFilePath);
 		}
 		[Button]
 		public void LoadData()
@@ -431,7 +444,16 @@ namespace AvantGardeMaker.Ceeu
 			m_EditingStageData = M_YamlFile.Deserialize<StageData>(mapDataSavingFilePath);
 			m_EditingStageData.InitializeAfterLoad();
 
-			Debug.Log("YAML 로드 완료: " + mapDataSavingFilePath);
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
+			{
+				tmpFont = m_UIFont,
+				fontSize = 20,
+				textAlignment = TextAlignmentOptions.Midline,
+				duration = 1f,
+			});
+			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
+
+			Debug.Log("[YAML 로드 완료]: " + mapDataSavingFilePath);
 		}
 		#endregion
 	}
