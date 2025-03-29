@@ -48,6 +48,7 @@ namespace AvantGardeMaker.ad1a
 		//}
 		#endregion
 
+		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
@@ -98,11 +99,12 @@ namespace AvantGardeMaker.ad1a
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public override void FinallizeGame()
+		public override void FinallizeMain()
 		{
-			base.FinallizeGame();
+			base.FinallizeMain();
 			//init에서 만들어둔 복사용 적 삭제
 		}
+		#endregion
 		#endregion
 		/// <summary>
 		/// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴

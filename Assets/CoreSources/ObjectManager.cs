@@ -6,13 +6,19 @@ using UnityEngine;
 [DefaultExecutionOrder(-97)]
 public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> where TSelf : SerializedSingleton<TSelf> where TItem : ObjectPoolItemBase
 {
+	#region 변수
 	// 공통 경로
 	[SerializeField]
 	protected string m_CommonPath = null;
 	[SerializeField]
 	protected List<OriginInfo> m_Origins = null;
 	protected Dictionary<string, ObjectPool<TItem>> m_ObjectPoolMap = null;
+	#endregion
 
+	#region 초기화 & 마무리화 함수
+	/// <summary>
+	/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
+	/// </summary>
 	public virtual void Initialize()
 	{
 		if (m_Origins == null)
@@ -30,10 +36,16 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 			AddPool(originInfo, transform);
 		}
 	}
+	/// <summary>
+	/// 마무리화 함수 (게임 종료 시 호출)
+	/// </summary>
 	public virtual void Finallize()
 	{
 	}
 
+	/// <summary>
+	/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+	/// </summary>
 	public virtual void InitializeMain()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
@@ -48,6 +60,9 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 			itemPool.Initialize(itemBuilder);
 		}
 	}
+	/// <summary>
+	/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+	/// </summary>
 	public virtual void FinallizeMain()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
@@ -60,6 +75,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 			GetPool(originInfo.key).Finallize();
 		}
 	}
+	#endregion
 
 	protected void AddPool(OriginInfo info, Transform parent)
 	{

@@ -89,7 +89,7 @@ namespace AvantGardeMaker.Ceeu
 			m_IsGameMode = false;
 
 			//ad1a
-			M_EnemyGenerate.FinallizeGame();
+			M_EnemyGenerate.FinallizeMain();
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			M_MapEditorUI.FinallizeGame();
 			M_MapEditor.FinallizeGame();
-			M_Tile.FinallizeGame();
+			M_Tile.FinallizeMain();
 		}
 		#endregion
 

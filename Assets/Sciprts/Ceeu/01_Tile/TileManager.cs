@@ -53,9 +53,9 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public override void FinallizeGame()
+		public override void FinallizeMain()
 		{
-			base.FinallizeGame();
+			base.FinallizeMain();
 
 
 		}
