@@ -7,11 +7,11 @@ public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where
 {
 	#region 변수
 	[SerializeField]
-	protected bool m_IsMainScene;
+	protected bool m_IsInitScene = false;
 	[SerializeField]
-	protected bool m_DontDestroyOnLoad;
+	protected bool m_DontDestroyOnLoad = false;
 
-	private static TSelf m_Instance;
+	private static TSelf m_Instance = null;
 	#endregion
 
 	#region 프로퍼티
@@ -25,19 +25,19 @@ public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where
 			SerializedSingleton<TSelf>[] objs = FindObjectsByType<SerializedSingleton<TSelf>>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
 			SerializedSingleton<TSelf> obj = objs
-				.Where(item => item.m_IsMainScene == true)
+				.Where(item => item.m_IsInitScene == true)
 				.FirstOrDefault(); //GameObject.Find(typeof(T).Name);
 
 			if (obj == null)
 			{
 				if (objs.Length > 0)
-					m_Instance = objs[0].GetComponent<TSelf>();
+					obj = m_Instance = objs[0].GetComponent<TSelf>();
 				else
 				{
 					GameObject t = new GameObject(typeof(TSelf).Name + "_New");
 					obj = m_Instance = t.AddComponent<TSelf>();
-					obj.m_IsMainScene = true;
-					obj.m_DontDestroyOnLoad = true;
+					obj.m_IsInitScene = false;
+					obj.m_DontDestroyOnLoad = false;
 				}
 			}
 			else
@@ -65,7 +65,7 @@ public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where
 	}
 	#endregion
 
-	private void Awake()
+	protected virtual void Awake()
 	{
 		if (Application.isPlaying == true &&
 			m_DontDestroyOnLoad)

@@ -22,7 +22,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static UIManager M_UI => UIManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -38,7 +38,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_ButtonMap = new Dictionary<string, MenuButton>();
 
-			foreach (string key in M_UI.keyList)
+			foreach (string key in M_MapEditorUI.keyList)
 			{
 				string menuName = key + " Menu";
 

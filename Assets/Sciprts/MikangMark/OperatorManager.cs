@@ -41,14 +41,14 @@ namespace AvantGardeMaker.MikangMark
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
 		public virtual void InitializeGame()
 		{
-			base.InitializeGame();
+			base.InitializeMain();
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public virtual void FinallizeGame()
 		{

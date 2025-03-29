@@ -7,48 +7,42 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class UIManager : SerializedSingleton<UIManager>
+	public class MapEditorUIManager : SerializedSingleton<MapEditorUIManager>
 	{
 		#region 변수
 		[SerializeField]
 		private List<string> m_KeyList = new List<string>();
 
 		#region 메뉴 패널 관련 변수
-		[SerializeField]
-		private MenuPanel m_MenuPanel = null;
-		private bool m_MenuPanelMovingLock = false;
 		private bool m_CanUseMenuShortcut = true;
 		#endregion
 
 		#region 옵션 패널 관련 변수
-		[SerializeField]
-		private OptionPanel m_OptionPanel = null;
+
 		#endregion
 		#endregion
 
 		#region 프로퍼티
 		public List<string> keyList => m_KeyList;
 
-		public bool menuPanelLock
-		{
-			get => m_MenuPanelMovingLock;
-			set => m_MenuPanelMovingLock = value;
-		}
-		public MenuButtonController menuButtonController => m_MenuPanel.menuButtonController;
+		#region 메뉴 패널 관련 프로퍼티
+		public MenuPanel menuPanel { get; set; }
+		public MenuButtonController menuButtonController => menuPanel.menuButtonController;
+		#endregion
+
+		#region 옵션 패널 관련 프로퍼티
+		public OptionPanel optionPanel { get; set; }
+		#endregion
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
-		public void OnMenuLockButtonClicked()
-		{
-			m_MenuPanelMovingLock = !m_MenuPanelMovingLock;
-		}
-		public void OnMapNameInputFieldFocused()
+		public void OnMapNameInputFieldFocused(string inputString)
 		{
 			m_CanUseMenuShortcut = false;
 		}
-		public void OnMapNameInputFieldUnfocused()
+		public void OnMapNameInputFieldUnfocused(string inputString)
 		{
 			m_CanUseMenuShortcut = true;
 		}
@@ -56,7 +50,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static EditModeManager M_EditMode => EditModeManager.Instance;
+		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -72,10 +66,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public virtual void Initialize()
 		{
-			if (m_MenuPanel == null)
-				throw new System.NullReferenceException("m_MenuPanel is null.");
-			if (m_OptionPanel == null)
-				throw new System.NullReferenceException("m_OptionPanel is null.");
+
+			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -85,22 +77,22 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public virtual void InitializeGame()
+		public virtual void InitializeMain()
 		{
-			m_MenuPanel.Initialize();
-			m_MenuPanel.OnPointerEnter(null);
-			m_MenuPanelMovingLock = true;
+			menuPanel.Initialize();
 
-			m_OptionPanel.Initialize();
+			optionPanel.Initialize();
+
+			gameObject.SetActive(true);
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public virtual void FinallizeGame()
 		{
-			m_MenuPanel.Finallize();
+			menuPanel.Finallize();
 		}
 		#endregion
 
@@ -111,7 +103,7 @@ namespace AvantGardeMaker.Ceeu
 
 			foreach (string key in m_KeyList)
 			{
-				OptionViewport optionViewport = m_OptionPanel.optionViewportController[key];
+				OptionViewport optionViewport = optionPanel.optionViewportController[key];
 				KeyCode keyCode = optionViewport.shortcut;
 				if (Input.GetKeyDown(keyCode) == true)
 				{

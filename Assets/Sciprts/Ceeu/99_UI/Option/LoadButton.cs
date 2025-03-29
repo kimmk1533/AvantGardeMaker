@@ -26,7 +26,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static EditModeManager M_EditMode => EditModeManager.Instance;
+		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

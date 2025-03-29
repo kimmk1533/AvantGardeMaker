@@ -34,7 +34,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	{
 	}
 
-	public virtual void InitializeGame()
+	public virtual void InitializeMain()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
 		{

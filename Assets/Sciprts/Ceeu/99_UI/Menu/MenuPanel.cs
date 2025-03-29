@@ -15,6 +15,9 @@ namespace AvantGardeMaker.Ceeu
 		private float m_MovingOffset = 0f;
 
 		private MenuButtonController m_MenuButtonController = null;
+
+		private Button m_MenuLockButton = null;
+		private bool m_MenuPanelMovingLock = false;
 		#endregion
 
 		#region 프로퍼티
@@ -23,9 +26,14 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 이벤트
 		#region 이벤트 함수
+		public void OnMenuLockButtonClicked()
+		{
+			m_MenuPanelMovingLock = !m_MenuPanelMovingLock;
+		}
+
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (M_UI.menuPanelLock == true)
+			if (m_MenuPanelMovingLock == true)
 				return;
 
 			Vector3 position = m_RectTransform.anchoredPosition;
@@ -34,7 +42,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			if (M_UI.menuPanelLock == true)
+			if (m_MenuPanelMovingLock == true)
 				return;
 
 			Vector3 position = m_RectTransform.anchoredPosition;
@@ -45,7 +53,6 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static UIManager M_UI => UIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -63,12 +70,16 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MenuButtonController = m_RectTransform.FindInChildren<MenuButtonController>("Menu Content");
 			m_MenuButtonController.Initialize(this);
+
+			m_MenuLockButton = m_RectTransform.Find<Button>("Lock Button");
+			m_MenuLockButton.onClick.AddListener(OnMenuLockButtonClicked);
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
 		public void Finallize()
 		{
+			m_MenuLockButton.onClick.RemoveAllListeners();
 			m_MenuButtonController.Finallize();
 		}
 		#endregion

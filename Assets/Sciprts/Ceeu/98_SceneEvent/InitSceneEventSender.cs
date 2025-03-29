@@ -2,31 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class SaveButton : SerializedMonoBehaviour
+	public class InitSceneEventSender : SceneEventSender
 	{
 		#region 변수
-		private Button m_Button = null;
 		#endregion
 
 		#region 프로퍼티
 		#endregion
 
 		#region 이벤트
-
-		#region 이벤트 함수
-		public void OnButtonClicked()
-		{
-			M_EditMode.SaveData();
-		}
-		#endregion
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -36,20 +26,19 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		protected override void Initialize()
 		{
-			m_Button = GetComponent<Button>();
+			base.Initialize();
 
-			m_Button.onClick.AddListener(OnButtonClicked);
+			SceneLoader.LoadScene("Main Menu Scene");
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		protected override void Finallize()
 		{
-			m_Button.onClick.RemoveListener(OnButtonClicked);
+			base.Finallize();
 
-			m_Button = null;
 		}
 		#endregion
 	}

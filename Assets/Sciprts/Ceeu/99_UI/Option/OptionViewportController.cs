@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	[System.Serializable]
 	public class OptionViewportController : SerializedMonoBehaviour
 	{
 		#region 변수
 		private OptionPanel m_OptionPanel = null;
 
+		[SerializeField, ReadOnly]
 		private Dictionary<string, OptionViewport> m_OptionViewportMap = null;
 		#endregion
 
@@ -23,7 +24,8 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니져
-		private static UIManager M_UI => UIManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -39,7 +41,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_OptionViewportMap = new Dictionary<string, OptionViewport>();
 
-			foreach (string key in M_UI.keyList)
+			foreach (string key in M_MapEditorUI.keyList)
 			{
 				string viewportName = key + " Option Viewport";
 
@@ -48,6 +50,14 @@ namespace AvantGardeMaker.Ceeu
 
 				m_OptionViewportMap.Add(key, optionViewport);
 			}
+
+			OptionViewport saveLoadOptionViewport = m_OptionViewportMap["Save&Load"];
+			TMP_InputField stageNameInputField = saveLoadOptionViewport.transform.FindInChildren<TMP_InputField>("Stage Name InputField");
+
+			stageNameInputField.onEndEdit.AddListener((inputString) => M_MapEditor.mapDataSavingPath = inputString);
+			stageNameInputField.onEndEdit.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);
+			stageNameInputField.onSelect.AddListener(M_MapEditorUI.OnMapNameInputFieldFocused);
+			stageNameInputField.onDeselect.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);
 		}
 		/// <summary>
 		/// 마무리화 함수

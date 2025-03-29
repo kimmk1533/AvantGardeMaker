@@ -59,7 +59,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static UIManager M_UI => UIManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -78,7 +78,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
 
-			M_UI.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
+			M_MapEditorUI.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
 
 			gameObject.SetActive(false);
 		}

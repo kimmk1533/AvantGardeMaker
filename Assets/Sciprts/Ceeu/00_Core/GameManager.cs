@@ -10,13 +10,13 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		#region 게임 관련 변수
-		private SavingData m_GameMapData = default;
+		private StageData m_GameStageData = default;
 		private bool m_IsGameMode = false;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
-		public SavingData currentMapData => m_GameMapData;
+		public StageData currentMapData => m_GameStageData;
 		public bool isGameMode => m_IsGameMode;
 		#endregion
 
@@ -24,24 +24,22 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static EditModeManager M_EditMode => EditModeManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static TileManager M_Tile => TileManager.Instance;
-		private static UIManager M_UI => UIManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 
 		private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Awake()
+		protected override void Awake()
 		{
-			Initialize();
+			base.Awake();
 
-			InitializeGame();
+			Initialize();
 		}
 		private void OnApplicationQuit()
 		{
-			FinallizeGame();
-
 			Finallize();
 		}
 		#endregion
@@ -53,9 +51,8 @@ namespace AvantGardeMaker.Ceeu
 		public void Initialize()
 		{
 			M_Tile.Initialize();
-			M_EditMode.Initialize();
-
-			M_UI.Initialize();
+			M_MapEditor.Initialize();
+			M_MapEditorUI.Initialize();
 
 			//ad1a
 			M_EnemyGenerate.Initialize();
@@ -65,9 +62,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
-			M_UI.Finallize();
-
-			M_EditMode.Finallize();
+			M_MapEditorUI.Finallize();
+			M_MapEditor.Finallize();
 			M_Tile.Finallize();
 
 			//ad1a
@@ -75,36 +71,50 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (In Game Scene 진입 시 호출)
 		/// </summary>
 		public void InitializeGame()
 		{
-			m_GameMapData = M_EditMode.currentMapData;
+			m_GameStageData = M_MapEditor.currentStageData;
 			m_IsGameMode = true;
 
-			M_Tile.InitializeGame();
-			M_EditMode.InitializeGame();
-
-			M_UI.InitializeGame();
-
 			//ad1a
-			M_EnemyGenerate.InitializeGame();
+			M_EnemyGenerate.InitializeMain();
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (In Game Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeGame()
 		{
-			M_UI.FinallizeGame();
-
-			M_EditMode.FinallizeGame();
-			M_Tile.FinallizeGame();
-
 			m_IsGameMode = false;
 
 			//ad1a
 			M_EnemyGenerate.FinallizeGame();
 		}
+
+		/// <summary>
+		/// 게임 초기화 함수 (Map Editor Scene 진입 시 호출)
+		/// </summary>
+		public void InitializeMapEditor()
+		{
+			M_Tile.InitializeMain();
+			M_MapEditor.InitializeMain();
+			M_MapEditorUI.InitializeMain();
+		}
+		/// <summary>
+		/// 게임 마무리화 함수 (Map Editor Scene 나갈 시 호출)
+		/// </summary>
+		public void FinallizeMapEditor()
+		{
+			M_MapEditorUI.FinallizeGame();
+			M_MapEditor.FinallizeGame();
+			M_Tile.FinallizeGame();
+		}
 		#endregion
+
+		public void SynchronizeStageData()
+		{
+			m_GameStageData = M_MapEditor.currentStageData;
+		}
 	}
 }

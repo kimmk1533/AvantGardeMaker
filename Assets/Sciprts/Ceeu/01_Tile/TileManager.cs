@@ -29,7 +29,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
-
+			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -42,16 +42,16 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public override void InitializeGame()
+		public override void InitializeMain()
 		{
-			base.InitializeGame();
+			base.InitializeMain();
 
-
+			gameObject.SetActive(true);
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeGame()
 		{

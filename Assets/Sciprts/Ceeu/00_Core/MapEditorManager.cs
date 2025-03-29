@@ -8,18 +8,10 @@ using YamlDotNet.Serialization;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public sealed class EditModeManager : SerializedSingleton<EditModeManager>
+	public sealed class MapEditorManager : SerializedSingleton<MapEditorManager>
 	{
 		#region 변수
 		#region 카메라 관련 변수
-		[SerializeField]
-		private Camera m_EditModeCamera = null;
-
-		[SerializeField]
-		private Transform m_EditModeCameraTransform = default;
-		[SerializeField]
-		private Transform m_GameModeCameraTransform = default;
-
 		[SerializeField, Min(0f)]
 		private float m_CameraSwitchDuration = 1f;
 
@@ -62,7 +54,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 저장 & 불러오기 관련 변수
 		[SerializeField]
-		private SavingData m_EditingMapData = default;
+		private StageData m_EditingStageData = default;
 
 		[SerializeField]
 		private string m_MapDataSavingPath = string.Empty;
@@ -70,6 +62,13 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		#region 카메라 관련 프로퍼티
+		public Camera mapEditorCamera { get; set; }
+
+		public Transform editModeCameraTransform { get; set; }
+		public Transform gameModeCameraTransform { get; set; }
+		#endregion
+
 		#region 편집 모드 관련 프로퍼티
 		public bool isEditMode => m_IsEditMode;
 		#endregion
@@ -83,7 +82,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 저장 & 불러오기 관련 프로퍼티
-		public SavingData currentMapData => m_EditingMapData;
+		public StageData currentStageData => m_EditingStageData;
 
 		public string mapDataSavingPath { get => m_MapDataSavingPath; set => m_MapDataSavingPath = value; }
 		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_MapDataSavingPath) + (m_MapDataSavingPath.EndsWith(".yaml") == false ? ".yaml" : "");
@@ -102,7 +101,7 @@ namespace AvantGardeMaker.Ceeu
 					//m_EditModeCamera.orthographic = false;
 					break;
 				case E_CameraMode.EditMode:
-					m_EditModeCamera.orthographic = true;
+					mapEditorCamera.orthographic = true;
 					break;
 				default:
 					break;
@@ -166,6 +165,8 @@ namespace AvantGardeMaker.Ceeu
 			m_TileMap = new Dictionary<Vector3Int, (E_TileType, Tile)>();
 
 			onCameraSwitcingFinished += OnCameraSwitchingFinished;
+
+			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -176,9 +177,9 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeGame()
+		public void InitializeMain()
 		{
 			m_TilePlacementFlag = true;
 
@@ -208,9 +209,11 @@ namespace AvantGardeMaker.Ceeu
 			m_TileType = E_TileType.LowGroundTile;
 
 			m_TilePreview = m_TilePreviewMap[m_TileType];
+
+			gameObject.SetActive(true);
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeGame()
 		{
@@ -239,14 +242,14 @@ namespace AvantGardeMaker.Ceeu
 				case E_CameraMode.GameMode:
 					m_CameraMode = E_CameraMode.EditMode;
 
-					StartCoroutine(MoveCamera(m_EditModeCameraTransform));
+					StartCoroutine(MoveCamera(editModeCameraTransform));
 					//m_EditModeCamera.orthographic = true;
 					break;
 				case E_CameraMode.EditMode:
 					m_CameraMode = E_CameraMode.GameMode;
 
-					StartCoroutine(MoveCamera(m_GameModeCameraTransform));
-					m_EditModeCamera.orthographic = false;
+					StartCoroutine(MoveCamera(gameModeCameraTransform));
+					mapEditorCamera.orthographic = false;
 					m_TilePreview.gameObject.SetActive(false);
 					break;
 				default:
@@ -259,15 +262,15 @@ namespace AvantGardeMaker.Ceeu
 		{
 			if (m_CameraSwitchDuration <= 0f)
 			{
-				m_EditModeCamera.transform.position = targetTransform.position;
-				m_EditModeCamera.transform.rotation = targetTransform.rotation;
+				mapEditorCamera.transform.position = targetTransform.position;
+				mapEditorCamera.transform.rotation = targetTransform.rotation;
 				m_IsCameraSwitching = false;
 				onCameraSwitcingFinished?.Invoke();
 				yield break;
 			}
 
-			Vector3 initPosition = m_EditModeCamera.transform.position;
-			Quaternion initRotation = m_EditModeCamera.transform.rotation;
+			Vector3 initPosition = mapEditorCamera.transform.position;
+			Quaternion initRotation = mapEditorCamera.transform.rotation;
 			float t = 0f;
 
 			for (float time = 0f; time <= m_CameraSwitchDuration; time += Time.deltaTime)
@@ -276,12 +279,12 @@ namespace AvantGardeMaker.Ceeu
 
 				t = Mathf.Clamp01(time / m_CameraSwitchDuration);
 
-				m_EditModeCamera.transform.position = Vector3.Lerp(initPosition, targetTransform.position, t);
-				m_EditModeCamera.transform.rotation = Quaternion.Lerp(initRotation, targetTransform.rotation, t);
+				mapEditorCamera.transform.position = Vector3.Lerp(initPosition, targetTransform.position, t);
+				mapEditorCamera.transform.rotation = Quaternion.Lerp(initRotation, targetTransform.rotation, t);
 			}
 
-			m_EditModeCamera.transform.position = targetTransform.position;
-			m_EditModeCamera.transform.rotation = targetTransform.rotation;
+			mapEditorCamera.transform.position = targetTransform.position;
+			mapEditorCamera.transform.rotation = targetTransform.rotation;
 			m_IsCameraSwitching = false;
 			onCameraSwitcingFinished?.Invoke();
 		}
@@ -393,14 +396,14 @@ namespace AvantGardeMaker.Ceeu
 		[Button]
 		public void SaveData()
 		{
-			m_EditingMapData.InitializeBeforeSave();
+			m_EditingStageData.InitializeBeforeSave();
 
 			foreach (var item in m_TileMap)
 			{
-				m_EditingMapData.AddTile(item.Key, item.Value.tileType);
+				m_EditingStageData.AddTile(item.Key, item.Value.tileType);
 			}
 
-			M_YamlFile.Serialize(mapDataSavingFilePath, m_EditingMapData);
+			M_YamlFile.Serialize(mapDataSavingFilePath, m_EditingStageData);
 
 			Debug.Log("YAML 저장 완료: " + mapDataSavingFilePath);
 		}
@@ -425,8 +428,8 @@ namespace AvantGardeMaker.Ceeu
 			}
 			m_TileMap.Clear();
 
-			m_EditingMapData = M_YamlFile.Deserialize<SavingData>(mapDataSavingFilePath);
-			m_EditingMapData.InitializeAfterLoad();
+			m_EditingStageData = M_YamlFile.Deserialize<StageData>(mapDataSavingFilePath);
+			m_EditingStageData.InitializeAfterLoad();
 
 			Debug.Log("YAML 로드 완료: " + mapDataSavingFilePath);
 		}

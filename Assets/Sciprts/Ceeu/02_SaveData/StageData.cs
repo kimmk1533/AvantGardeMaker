@@ -5,33 +5,50 @@ using UnityEngine;
 using AvantGardeMaker.Ceeu.Enum;
 using YamlDotNet.Serialization;
 using Sirenix.Serialization;
+using AvantGardeMaker.ad1a;
 
 namespace AvantGardeMaker.Ceeu
 {
 	[System.Serializable]
-	public struct SavingData
+	public struct StageData
 	{
 		#region 변수
+		#region 타일 관련 변수
 		[SerializeField, ReadOnly]
 		private Vector3Int m_MinTile;
 		[SerializeField, ReadOnly]
 		private Vector3Int m_MaxTile;
 		#endregion
+		#endregion
 
 		#region 프로퍼티
-		public List<Point> tilePointList { get; set; }
-		public List<E_TileType> tileTypeList { get; set; }
-
+		#region 타일 관련 프로퍼티
 		[YamlIgnore]
 		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
 		[YamlIgnore]
 		public int mapHeight => m_MaxTile.z - m_MinTile.z + 1;
 		#endregion
 
-		#region 매니져
-		private static EditModeManager M_EditMode => EditModeManager.Instance;
+		#region 타일 저장 관련 프로퍼티
+		[field: SerializeField, ReadOnly]
+		public List<Point> tilePointList { get; set; }
+		[field: SerializeField, ReadOnly]
+		public List<E_TileType> tileTypeList { get; set; }
 		#endregion
 
+		#region 적 저장 관련 프로퍼티
+		[field: SerializeField, ReadOnly]
+		public List<EnemyData> enemyDataList { get; set; }
+		[field: SerializeField, ReadOnly]
+		public List<EnemySpawnData> enemySpawnDataList { get; set; }
+		#endregion
+		#endregion
+
+		#region 매니져
+		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
+		#endregion
+
+		#region 초기화 & 마무리화 함수
 		public void InitializeBeforeSave()
 		{
 			tilePointList = new List<Point>();
@@ -58,6 +75,7 @@ namespace AvantGardeMaker.Ceeu
 				M_EditMode.AddTile(tilePos, tileType);
 			}
 		}
+		#endregion
 
 		public void AddTile(Vector3Int pos, E_TileType tileType)
 		{

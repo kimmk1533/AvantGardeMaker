@@ -41,11 +41,11 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Start()
-		{
-			Initialize();
-			InitializeGame();
-		}
+		//private void Start()
+		//{
+		//	Initialize();
+		//	InitializeGame();
+		//}
 		#endregion
 
 		/// <summary>
@@ -86,17 +86,17 @@ namespace AvantGardeMaker.ad1a
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public override void InitializeGame()
+		public override void InitializeMain()
 		{
-			base.InitializeGame();
+			base.InitializeMain();
 
 			StartCoroutine(StartEnemyCoroutine());
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeGame()
 		{
