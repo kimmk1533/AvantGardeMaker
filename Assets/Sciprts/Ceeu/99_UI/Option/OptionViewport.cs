@@ -19,6 +19,7 @@ namespace AvantGardeMaker.Ceeu
 		private OptionPanel m_OptionPanel = null;
 
 		private RectTransform m_RectTransform = null;
+		[SerializeField]
 		private RectTransform m_Content = null;
 		#endregion
 
@@ -76,7 +77,8 @@ namespace AvantGardeMaker.Ceeu
 
 			m_RectTransform = GetComponent<RectTransform>();
 
-			m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
+			if (m_Content == null)
+				m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
 
 			M_MapEditorUI.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
 

@@ -24,9 +24,10 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static TileManager M_Tile => TileManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static EnemySpawnDataUIManager M_EnemySpawnDataUI => EnemySpawnDataUIManager.Instance;
 
 		private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
 		#endregion
@@ -53,6 +54,7 @@ namespace AvantGardeMaker.Ceeu
 			M_Tile.Initialize();
 			M_MapEditor.Initialize();
 			M_MapEditorUI.Initialize();
+			M_EnemySpawnDataUI.Initialize();
 
 			//ad1a
 			M_EnemyGenerate.Initialize();
@@ -62,6 +64,7 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
+			M_EnemySpawnDataUI.Finallize();
 			M_MapEditorUI.Finallize();
 			M_MapEditor.Finallize();
 			M_Tile.Finallize();
@@ -100,14 +103,16 @@ namespace AvantGardeMaker.Ceeu
 			M_Tile.InitializeMain();
 			M_MapEditor.InitializeMain();
 			M_MapEditorUI.InitializeMain();
+			M_EnemySpawnDataUI.InitializeMain();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Map Editor Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeMapEditor()
 		{
-			M_MapEditorUI.FinallizeGame();
-			M_MapEditor.FinallizeGame();
+			M_EnemySpawnDataUI.FinallizeMain();
+			M_MapEditorUI.FinallizeMain();
+			M_MapEditor.FinallizeMain();
 			M_Tile.FinallizeMain();
 		}
 		#endregion

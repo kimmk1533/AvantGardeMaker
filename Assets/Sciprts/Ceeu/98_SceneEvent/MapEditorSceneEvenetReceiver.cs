@@ -24,6 +24,11 @@ namespace AvantGardeMaker.Ceeu
 		[SerializeField]
 		private OptionPanel m_OptionPanel = null;
 		#endregion
+
+		#region Enemy Spawn Data UI Manager 관련 변수
+		[SerializeField]
+		private RectTransform m_EnemySpawnDataUIParent = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -34,8 +39,10 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static GameManager M_Game => GameManager.Instance;
+
 		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static EnemySpawnDataUIManager M_EnemySpawnDataUI => EnemySpawnDataUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -56,6 +63,8 @@ namespace AvantGardeMaker.Ceeu
 
 			M_MapEditorUI.menuPanel = m_MenuPanel;
 			M_MapEditorUI.optionPanel = m_OptionPanel;
+
+			M_EnemySpawnDataUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			#endregion
 
 			M_Game.InitializeMapEditor();

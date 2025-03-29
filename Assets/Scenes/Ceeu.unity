@@ -3618,18 +3618,16 @@ MonoBehaviour:
       Data: 
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
-  m_EditModeCamera: {fileID: 268764965}
-  m_EditModeCameraTransform: {fileID: 620198489}
-  m_GameModeCameraTransform: {fileID: 1892271663}
   m_CameraSwitchDuration: 1
   m_CameraMode: 1
   m_IsCameraSwitching: 0
-  m_EditingMapData:
-    m_MinTile: {x: 2147483647, y: 0, z: 2147483647}
-    m_MaxTile: {x: -2147483648, y: 0, z: -2147483648}
+  m_EditingStageData:
+    m_MinTile: {x: 0, y: 0, z: 0}
+    m_MaxTile: {x: 0, y: 0, z: 0}
     <tilePointList>k__BackingField: []
     <tileTypeList>k__BackingField: 
-  m_MapDataSavingPath: TestMapData
+  m_StageName: 
+  m_UIFont: {fileID: 0}
 --- !u!1 &526786707
 GameObject:
   m_ObjectHideFlags: 0
@@ -17748,7 +17746,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: m_OptionViewportMap
+      Entry: 6
+      Data: 
 --- !u!1 &1754446995
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,6 +19,10 @@ namespace AvantGardeMaker.Ceeu
 		[SerializeField, ReadOnly]
 		private Vector3Int m_MaxTile;
 		#endregion
+
+		#region 적 관련 변수
+		private Dictionary<string, EnemyData> m_EnemyDataMap;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -36,6 +40,11 @@ namespace AvantGardeMaker.Ceeu
 		public List<E_TileType> tileTypeList { get; set; }
 		#endregion
 
+		#region 적 관련 프로퍼티
+		[YamlIgnore]
+		public Dictionary<string, EnemyData> enemyDataMap => m_EnemyDataMap;
+		#endregion
+
 		#region 적 저장 관련 프로퍼티
 		[field: SerializeField, ReadOnly]
 		public List<EnemyData> enemyDataList { get; set; }
@@ -51,6 +60,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 초기화 & 마무리화 함수
 		public void InitializeBeforeSave()
 		{
+			#region 타일 관련 초기화
 			tilePointList = new List<Point>();
 			tileTypeList = new List<E_TileType>();
 
@@ -59,9 +69,11 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MaxTile = Vector3Int.one * int.MinValue;
 			m_MaxTile.y = 0;
+			#endregion
 		}
 		public void InitializeAfterLoad()
 		{
+			#region 타일 배치
 			int count = tilePointList.Count;
 
 			if (count != tileTypeList.Count)
@@ -74,6 +86,15 @@ namespace AvantGardeMaker.Ceeu
 
 				M_EditMode.AddTile(tilePos, tileType);
 			}
+			#endregion
+
+			#region 적 정보 이전
+			m_EnemyDataMap = new Dictionary<string, EnemyData>();
+			foreach (var item in m_EnemyDataMap)
+			{
+
+			}
+			#endregion
 		}
 		#endregion
 

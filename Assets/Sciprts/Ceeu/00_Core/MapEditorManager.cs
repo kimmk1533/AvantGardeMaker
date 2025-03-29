@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -51,6 +52,15 @@ namespace AvantGardeMaker.Ceeu
 
 		// 생성한 타일 맵
 		private Dictionary<Vector3Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
+		#endregion
+
+		#region 적 관련 변수
+		[SerializeField]
+		private Dictionary<string, EnemyData> m_EnemyDataMap = new Dictionary<string, EnemyData>();
+
+		// <웨이브, 소환 데이터 리스트>
+		[SerializeField]
+		private Dictionary<int, List<EnemySpawnData>> m_EnemySpawnDataMap = new Dictionary<int, List<EnemySpawnData>>();
 		#endregion
 
 		#region 저장 & 불러오기 관련 변수
@@ -219,7 +229,7 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeGame()
+		public void FinallizeMain()
 		{
 
 		}
