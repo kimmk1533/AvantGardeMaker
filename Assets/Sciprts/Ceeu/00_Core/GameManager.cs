@@ -36,7 +36,7 @@ namespace AvantGardeMaker.Ceeu
 
 		private static OperatorManager M_Operator=>OperatorManager.Instance;
 
-		private static YamlManager M_Yaml => YamlManager.Instance;
+		private static OperatorYamlManager M_Yaml => OperatorYamlManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -110,8 +110,8 @@ namespace AvantGardeMaker.Ceeu
 
 			//MikangMark
 			M_Operator.InitializeMain();
-			M_Yaml.InitializeGame();
-			M_InGamePlay.InitializeGame();
+			M_Yaml.InitializeMain();
+			M_InGamePlay.InitializeMain();
 			
 			
 			
@@ -128,8 +128,8 @@ namespace AvantGardeMaker.Ceeu
 
 			//MikangMark
 			M_Operator.FinallizeMain();
-			M_Yaml.FinallizeGame();
-			M_InGamePlay.FinallizeGame();
+			M_Yaml.FinallizeMain();
+			M_InGamePlay.FinallizeMain();
 			
 			
 			

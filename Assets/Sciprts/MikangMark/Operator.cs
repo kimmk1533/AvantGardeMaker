@@ -13,7 +13,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 변수
 		public OperInfo m_OperData;
 
-		YamlManager m_Yaml;
+		OperatorYamlManager m_Yaml;
 
 		[SerializeField]
 		public string OperName;
@@ -47,7 +47,7 @@ namespace AvantGardeMaker.MikangMark
 		public void SetData()
 		{
 			Debug.Log("Operator.cs");
-			m_Yaml = GameObject.Find("GameManager").GetComponent<YamlManager>();
+			m_Yaml = GameObject.Find("GameManager").GetComponent<OperatorYamlManager>();
 			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, OperName + ".yaml");
 			//m_OperData = m_Yaml.LoadData(m_FilePath, OperName + ".yaml");
 		}
