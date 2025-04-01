@@ -12,7 +12,7 @@ namespace AvantGardeMaker.ad1a.Enum
 		E_Leader
 	}
 
-	public enum E_EnemyType
+	public enum E_EnemyRaceType
 	{
 		E_InfectedCreature, //감염생물
 		E_Drone,            //드론

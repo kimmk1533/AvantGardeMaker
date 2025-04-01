@@ -29,6 +29,8 @@ namespace AvantGardeMaker.ad1a
 		private StageData m_CurStageData;
 
 		private bool[,] m_TestMap;
+
+		private List<Enemy> m_EnemyList;    //생성한 enemy 목록
 		#endregion
 
 		#region 프로퍼티
@@ -41,11 +43,32 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-		//private void Start()
-		//{
-		//	Initialize();
-		//	InitializeGame();
-		//}
+		private void Start()
+		{
+			Initialize();
+			InitializeMain();
+		}
+
+		void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.D))
+			{
+				for (int i = 0; i < m_EnemyList.Count; i++)
+				{
+					m_EnemyList[i].m_EnemyData.m_Hp.m_CurStat = 0.0f;
+				}
+			}
+
+			//죽은 적을 오브젝트 풀에 반환
+			for (int i = 0; i < m_EnemyList.Count; i++)
+			{
+				if (m_EnemyList[i].m_EnemyData.m_Hp.m_CurStat <= 0.0f)
+				{
+					Despawn(m_EnemyList[i]);
+					m_EnemyList.RemoveAt(i);
+				}
+			}
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -72,11 +95,13 @@ namespace AvantGardeMaker.ad1a
 			m_CurStageData.m_Stage = "DummyStage";
 
 			EnemyData enemyData = new EnemyData();
-			m_CurStageData.m_EnemyData.Add(enemyData);
+			m_CurStageData.m_EnemyDataList.Add(enemyData);
 
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
 			//enemySpawnData.m_Amount = 3;
-			m_CurStageData.m_EnemySpawnData.Add(enemySpawnData);
+			m_CurStageData.m_EnemySpawnDataList.Add(enemySpawnData);
+
+			m_EnemyList = new List<Enemy>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -111,24 +136,22 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public IEnumerator StartEnemyCoroutine()
 		{
-			Debug.Log("EnemyGenerator.StartEnemyCoroutine Start");
 			if (m_CurStageData == null)//Init이 실행되지 않았다면 즉시 종료
 			{
 				Debug.LogError("Init doesn't run(CurStageData == null)");
 				yield break;
 			}
-			if (m_CurStageData.m_EnemyData.Count == 0 ||
-			m_CurStageData.m_EnemySpawnData.Count == 0)//현재 스테이지 정보가 비어있다면 즉시 종료
+			if (m_CurStageData.m_EnemyDataList.Count == 0 ||
+			m_CurStageData.m_EnemySpawnDataList.Count == 0)//현재 스테이지 정보가 비어있다면 즉시 종료
 			{
 				Debug.LogError("StageData is Empty(data.Count == 0)");
 				yield break;
 			}
 
-			for (int i = 0; i < m_CurStageData.m_EnemySpawnData.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
+			for (int i = 0; i < m_CurStageData.m_EnemySpawnDataList.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
 			{
-				StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyData, m_CurStageData.m_EnemySpawnData));
+				StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyDataList, m_CurStageData.m_EnemySpawnDataList));
 			}
-			Debug.Log("EnemyGenerator.StartEnemyCoroutine Done");
 		}
 
 		/// <summary>
@@ -162,10 +185,14 @@ namespace AvantGardeMaker.ad1a
 				Enemy newEnemy = GetBuilder(enemySpawnData.m_Name)  //이때 실제 적 오브젝트가 생성됨
 					.SetActive(true)
 					.SetPosition(enemySpawnData.m_StartPos)
+					.SetAutoInit(true)
 					.Spawn();
 
+				newEnemy.Initialize();
 				newEnemy.m_EnemyData = enemyData;
 				newEnemy.m_CurPos = enemySpawnData.m_StartPos;
+
+				m_EnemyList.Add(newEnemy);
 
 				StartCoroutine(EnemyMove(newEnemy, enemySpawnData));
 			}
@@ -183,8 +210,8 @@ namespace AvantGardeMaker.ad1a
 			for (int i = 0; i < enemySpawnData.m_TransitPos.Count; i++)
 			{
 				enemy.m_TargetPos = enemySpawnData.m_TransitPos[i];
-				enemy.m_EnemyState = E_EnemyState.Move;
-				yield return new WaitUntil(() => enemy.m_EnemyState != E_EnemyState.Move);
+				enemy.m_CurEnemyState = E_EnemyState.Move;
+				yield return new WaitUntil(() => enemy.m_CurEnemyState != E_EnemyState.Move);
 			}
 			yield break;
 		}
