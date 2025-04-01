@@ -67,9 +67,11 @@ namespace AvantGardeMaker.Ceeu
 			M_EnemyGenerate.Initialize();
 
 			//MikangMark
-			M_InGamePlay.Initialize();
-			M_Yaml.Initialize();
 			M_Operator.Initialize();
+			M_Yaml.Initialize();
+			M_InGamePlay.Initialize();
+			
+			
 			
 		}
 		/// <summary>
@@ -86,9 +88,11 @@ namespace AvantGardeMaker.Ceeu
 			M_EnemyGenerate.Finallize();
 
 			//MikangMark
-			M_InGamePlay.Finallize();
-			M_Yaml.Finallize();
 			M_Operator.Finallize();
+			M_Yaml.Finallize();
+			M_InGamePlay.Finallize();
+			
+			
 			
 		}
 
@@ -105,9 +109,11 @@ namespace AvantGardeMaker.Ceeu
 			M_EnemyGenerate.InitializeMain();
 
 			//MikangMark
-			M_InGamePlay.InitializeGame();
-			M_Yaml.InitializeGame();
 			M_Operator.InitializeMain();
+			M_Yaml.InitializeGame();
+			M_InGamePlay.InitializeGame();
+			
+			
 			
 		}
 		/// <summary>
@@ -121,9 +127,11 @@ namespace AvantGardeMaker.Ceeu
 			M_EnemyGenerate.FinallizeMain();
 
 			//MikangMark
-			M_InGamePlay.FinallizeGame();
-			M_Yaml.FinallizeGame();
 			M_Operator.FinallizeMain();
+			M_Yaml.FinallizeGame();
+			M_InGamePlay.FinallizeGame();
+			
+			
 			
 		}
 

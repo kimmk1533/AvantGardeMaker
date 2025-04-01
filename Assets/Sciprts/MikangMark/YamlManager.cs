@@ -18,9 +18,11 @@ namespace AvantGardeMaker.MikangMark
 		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml";
 		//public string m_FilePath;
 		public List<OperInfo> m_OperInfoList;
+		/*
 		#region 오퍼정보
+
 		[SerializeField]
-		OperInfo Fang = new()
+		public OperInfo Fang = new OperInfo()
 		{
 			m_EngOperName = "Fang",
 			m_KorOperName = "팽",
@@ -46,12 +48,11 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close,
 			m_Provocation = 0,
 			m_SkillLevel = 1,
-			m_OperPos = new (0, 3),
-			m_RealAttackRange = new List<(int, int)> { new(1, 3) }
+			m_AttackRange = new E_TileAttackRange[7, 7],
 		};
 
 		[SerializeField]
-		OperInfo Plume = new()
+		public OperInfo Plume = new()
 		{
 			m_EngOperName = "Plume",
 			m_KorOperName = "플룸",
@@ -77,8 +78,6 @@ namespace AvantGardeMaker.MikangMark
 			m_AtkRange = E_AttackRange.Close,
 			m_Provocation = 0,
 			m_SkillLevel = 1,
-			m_OperPos = (0, 3),
-			m_RealAttackRange = new List<(int, int)> { (1, 3) }
 		};
 
 		OperInfo Melantha = new OperInfo
@@ -265,6 +264,7 @@ namespace AvantGardeMaker.MikangMark
 
 
 		#endregion
+		*/
 		#endregion
 
 		#region 프로퍼티
@@ -277,57 +277,20 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Start()
-		{
-
-		}
-
-
+		
 		#endregion
-		public void SaveData(string directory, string fileName, OperInfo operData)
-		{
-			
-			if (!Directory.Exists(directory))
-			{
-				Directory.CreateDirectory(directory);
-			}
-			string m_FilePath = Path.Combine(directory, fileName);
-
-			var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
-
-			string yaml = serializer.Serialize(operData);
-			File.WriteAllText(m_FilePath, yaml);
-			//Debug.Log("YAML 저장 완료:\n" + m_FilePath);
-		}
-
-		public OperInfo LoadData(string directory, string fileName)
-		{
-			if (!File.Exists(directory))
-			{
-				Debug.LogError("YAML 파일을 찾을 수 없습니다!");
-				return new OperInfo();
-			}
-			string yaml = File.ReadAllText(directory);
-			var deserializer = new DeserializerBuilder()
-				.WithNamingConvention(CamelCaseNamingConvention.Instance)
-				.Build();
-
-			OperInfo character = deserializer.Deserialize<OperInfo>(yaml);
-			return character;
-		}
+		
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
 		public virtual void Initialize()
 		{
+			//SaveData(m_FileSaveDirectory, "Fang.yaml", m_OperInfoList[0]);
+			//SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
 			m_OperInfoList = new List<OperInfo>();
-			SaveData(m_FileSaveDirectory, "Fang.yaml", Fang);
-			//LoadData(m_FilePath, "Fang.yaml");
-			SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
-			//LoadData(m_FilePath, "Plume.yaml");
+			m_OperInfoList.Add(m_OperInfoList[0]);
 
-			m_OperInfoList.Add(Fang);
-			m_OperInfoList.Add(Plume);
+			//m_OperInfoList.Add(Plume);
 		}
 		public virtual void Finallize()
 		{

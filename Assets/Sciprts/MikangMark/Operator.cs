@@ -46,10 +46,10 @@ namespace AvantGardeMaker.MikangMark
 		}
 		public void SetData()
 		{
+			Debug.Log("Operator.cs");
 			m_Yaml = GameObject.Find("GameManager").GetComponent<YamlManager>();
 			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, OperName + ".yaml");
-			m_OperData = new OperInfo();
-			m_OperData = m_Yaml.LoadData(m_FilePath, OperName + ".yaml");
+			//m_OperData = m_Yaml.LoadData(m_FilePath, OperName + ".yaml");
 		}
 		/// <summary>
 		/// 마무리화 함수

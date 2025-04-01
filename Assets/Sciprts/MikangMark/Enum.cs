@@ -22,5 +22,5 @@ namespace AvantGardeMaker.MikangMark.Enum
 
 	public enum E_ResetSpeed { Slow, Nomal, Fast }
 
-	public enum E_TileAttackRange { OutRange, OperPos, InRange }
+	public enum E_TileAttackRange { OutRange=1, OperPos, InRange }
 }

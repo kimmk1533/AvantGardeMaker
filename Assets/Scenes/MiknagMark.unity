@@ -10007,6 +10007,7 @@ GameObject:
   - component: {fileID: 2002700180}
   - component: {fileID: 2002700178}
   - component: {fileID: 2002700179}
+  - component: {fileID: 2002700181}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -10078,189 +10079,12 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: m_OperInfoList
-      Entry: 6
-      Data: 
-    - Name: Fang
-      Entry: 7
-      Data: 0|AvantGardeMaker.MikangMark.OperInfo, Assembly-CSharp
-    - Name: m_EngOperName
-      Entry: 1
-      Data: Fang
-    - Name: m_KorOperName
-      Entry: 1
-      Data: "\uD33D"
-    - Name: m_Rate
-      Entry: 3
-      Data: 3
-    - Name: m_MaxLevel
-      Entry: 3
-      Data: 40
-    - Name: m_Level
-      Entry: 3
-      Data: 1
-    - Name: m_MaxExp
-      Entry: 3
-      Data: 40
-    - Name: m_Exp
-      Entry: 3
-      Data: 0
-    - Name: m_Elite
-      Entry: 3
-      Data: 0
-    - Name: m_Potential
-      Entry: 3
-      Data: 0
-    - Name: m_Job
-      Entry: 3
-      Data: 0
-    - Name: m_MaxHp
-      Entry: 3
-      Data: 742
-    - Name: m_Atk
-      Entry: 3
-      Data: 157
-    - Name: m_Def
-      Entry: 3
-      Data: 132
-    - Name: m_Res
-      Entry: 3
-      Data: 0
-    - Name: m_ReSet
-      Entry: 3
-      Data: 0
-    - Name: m_SetCost
-      Entry: 3
-      Data: 8
-    - Name: m_BlockCount
-      Entry: 3
-      Data: 2
-    - Name: m_AtkSpeed
-      Entry: 3
-      Data: 2
-    - Name: m_AtkRange
-      Entry: 3
-      Data: 0
-    - Name: m_Provocation
-      Entry: 3
-      Data: 0
-    - Name: m_SkillLevel
-      Entry: 3
-      Data: 0
-    - Name: m_AttackRange
-      Entry: 6
-      Data: 
-    - Name: m_RealAttackRange
-      Entry: 6
-      Data: 
-    - Name: m_OperPos
-      Entry: 7
-      Data: System.ValueTuple`2[[System.Int32, mscorlib],[System.Int32, mscorlib]],
-        mscorlib
-    - Name: Item1
-      Entry: 3
-      Data: 0
-    - Name: Item2
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Plume
-      Entry: 7
-      Data: 1|AvantGardeMaker.MikangMark.OperInfo, Assembly-CSharp
-    - Name: m_EngOperName
-      Entry: 1
-      Data: Plume
-    - Name: m_KorOperName
-      Entry: 1
-      Data: "\uD50C\uB7FC"
-    - Name: m_Rate
-      Entry: 3
-      Data: 3
-    - Name: m_MaxLevel
-      Entry: 3
-      Data: 40
-    - Name: m_Level
-      Entry: 3
-      Data: 1
-    - Name: m_MaxExp
-      Entry: 3
-      Data: 40
-    - Name: m_Exp
-      Entry: 3
-      Data: 0
-    - Name: m_Elite
-      Entry: 3
-      Data: 0
-    - Name: m_Potential
-      Entry: 3
-      Data: 0
-    - Name: m_Job
-      Entry: 3
-      Data: 0
-    - Name: m_MaxHp
-      Entry: 3
-      Data: 688
-    - Name: m_Atk
-      Entry: 3
-      Data: 230
-    - Name: m_Def
-      Entry: 3
-      Data: 148
-    - Name: m_Res
-      Entry: 3
-      Data: 0
-    - Name: m_ReSet
-      Entry: 3
-      Data: 0
-    - Name: m_SetCost
-      Entry: 3
-      Data: 7
-    - Name: m_BlockCount
-      Entry: 3
-      Data: 1
-    - Name: m_AtkSpeed
-      Entry: 3
-      Data: 4
-    - Name: m_AtkRange
-      Entry: 3
-      Data: 0
-    - Name: m_Provocation
-      Entry: 3
-      Data: 0
-    - Name: m_SkillLevel
-      Entry: 3
-      Data: 0
-    - Name: m_AttackRange
-      Entry: 6
-      Data: 
-    - Name: m_RealAttackRange
-      Entry: 6
-      Data: 
-    - Name: m_OperPos
-      Entry: 7
-      Data: System.ValueTuple`2[[System.Int32, mscorlib],[System.Int32, mscorlib]],
-        mscorlib
-    - Name: Item1
-      Entry: 3
-      Data: 0
-    - Name: Item2
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
   m_FileSaveDirectory: C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml
+  m_OperInfoList:
+  - {fileID: 11400000, guid: 5903d5ce4137c05498f2608d3b950ed7, type: 2}
 --- !u!114 &2002700179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10321,6 +10145,29 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 0
   m_CommonPath: 
   m_Origins: []
+--- !u!114 &2002700181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002700174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 440ac6d402f87cf479e7636ed9747f42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  m_IsInitScene: 0
+  m_DontDestroyOnLoad: 0
 --- !u!1 &2033714249
 GameObject:
   m_ObjectHideFlags: 0
