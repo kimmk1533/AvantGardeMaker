@@ -9,13 +9,13 @@ namespace AvantGardeMaker.ad1a
 	public class StageData
 	{
 		public string m_Stage;      //스테이지 이름(검색 키 값)
-		public List<EnemyData> m_EnemyData;
-		public List<EnemySpawnData> m_EnemySpawnData;
+		public List<EnemyData> m_EnemyDataList;
+		public List<EnemySpawnData> m_EnemySpawnDataList;
 
 		public StageData()
 		{
-			m_EnemyData = new List<EnemyData>();
-			m_EnemySpawnData = new List<EnemySpawnData>();
+			m_EnemyDataList = new List<EnemyData>();
+			m_EnemySpawnDataList = new List<EnemySpawnData>();
 		}
 	}
 }
