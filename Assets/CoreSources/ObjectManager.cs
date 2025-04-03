@@ -157,12 +157,12 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 
 #if UNITY_EDITOR
 	[Button("Load Origin")]
-	protected void LoadOrigin_Inner()
+	protected void LoadOrigin()
 	{
 		for (int i = 0; i < m_Origins.Count; ++i)
 		{
 			OriginInfo info = m_Origins[i];
-			string path = System.IO.Path.Combine(m_CommonPath, info.path, info.key);
+			string path = System.IO.Path.Combine(m_CommonPath, info.additionalPath, info.key);
 			info.origin = Resources.Load<TItem>(path);
 			if (info.origin == null)
 				Debug.LogError("원본을 불러오는 데에 실패했습니다. 경로: " + path);
@@ -177,7 +177,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 		[field: SerializeField, ReadOnly(true)]
 		public string key { get; set; }
 		[field: SerializeField, ReadOnly(true)]
-		public string path { get; set; }
+		public string additionalPath { get; set; }
 
 		[field: Space]
 		[field: SerializeField, ReadOnly(true)]

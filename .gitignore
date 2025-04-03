@@ -74,3 +74,6 @@ Assets/Plugins/Sirenix/Demos/Sample - RPG Editor.unitypackage.meta
 Assets/Plugins/Sirenix/Demos/Editor Windows.unitypackage.meta
 Assets/Plugins/Sirenix/Demos/Custom Drawers.unitypackage.meta
 Assets/Plugins/Sirenix/Demos/Custom Attribute Processors.unitypackage.meta
+Assets/Plugins/Verpha/Hierarchy Designer/Editor/Saved Data/HierarchyDesigner_SavedData_Folders.json
+Assets/Plugins/Verpha/Hierarchy Designer/Editor/Saved Data/HierarchyDesigner_SavedData_GeneralSettings.json
+Assets/Plugins/Verpha/Hierarchy Designer/Editor/Saved Data/HierarchyDesigner_SavedData_Separators.json
