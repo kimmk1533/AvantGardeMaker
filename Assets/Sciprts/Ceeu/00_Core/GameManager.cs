@@ -29,13 +29,13 @@ namespace AvantGardeMaker.Ceeu
 		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 
-		private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
+		//private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
 
-		private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
+		//private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
 
-		private static OperatorManager M_Operator=>OperatorManager.Instance;
+		//private static OperatorManager M_Operator=>OperatorManager.Instance;
 
-		private static OperatorYamlManager M_Yaml => OperatorYamlManager.Instance;
+		//private static OperatorYamlManager M_Yaml => OperatorYamlManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -62,12 +62,12 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditorUI.Initialize();
 
 			//ad1a
-			M_EnemyGenerate.Initialize();
+			//M_EnemyGenerate.Initialize();
 
 			//MikangMark
-			M_Operator.Initialize();
-			M_Yaml.Initialize();
-			M_InGamePlay.Initialize();
+			//M_Operator.Initialize();
+			//M_Yaml.Initialize();
+			//M_InGamePlay.Initialize();
 			
 			
 			
@@ -82,12 +82,12 @@ namespace AvantGardeMaker.Ceeu
 			M_Tile.Finallize();
 
 			//ad1a
-			M_EnemyGenerate.Finallize();
+			//M_EnemyGenerate.Finallize();
 
 			//MikangMark
-			M_Operator.Finallize();
-			M_Yaml.Finallize();
-			M_InGamePlay.Finallize();
+			//M_Operator.Finallize();
+			//M_Yaml.Finallize();
+			//M_InGamePlay.Finallize();
 			
 			
 			
@@ -103,12 +103,12 @@ namespace AvantGardeMaker.Ceeu
 			m_IsGameMode = true;
 
 			//ad1a
-			M_EnemyGenerate.InitializeMain();
+			//M_EnemyGenerate.InitializeMain();
 
 			//MikangMark
-			M_Operator.InitializeMain();
-			M_Yaml.InitializeMain();
-			M_InGamePlay.InitializeMain();
+			//M_Operator.InitializeMain();
+			//M_Yaml.InitializeMain();
+			//M_InGamePlay.InitializeMain();
 			
 			
 			
@@ -121,12 +121,12 @@ namespace AvantGardeMaker.Ceeu
 			m_IsGameMode = false;
 
 			//ad1a
-			M_EnemyGenerate.FinallizeMain();
+			//M_EnemyGenerate.FinallizeMain();
 
 			//MikangMark
-			M_Operator.FinallizeMain();
-			M_Yaml.FinallizeMain();
-			M_InGamePlay.FinallizeMain();
+			//M_Operator.FinallizeMain();
+			//M_Yaml.FinallizeMain();
+			//M_InGamePlay.FinallizeMain();
 			
 			
 			
