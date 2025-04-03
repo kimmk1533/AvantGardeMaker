@@ -18,10 +18,12 @@ namespace AvantGardeMaker.MikangMark
 
 		public GameObject m_OperStatUI;
 
+		public OperInfo m_SelectOperatorInfo;
+
 		public Image m_OperImg;
 		public Image m_JobImg;
 		public Image m_Arousal;
-		public TextMeshProUGUI m_OperName;
+		public TextMeshProUGUI m_OperKorName;
 		public TextMeshProUGUI m_OperLevelValue;
 		public TextMeshProUGUI m_StatAttackValue;
 		public TextMeshProUGUI m_StatDefence;
@@ -43,12 +45,12 @@ namespace AvantGardeMaker.MikangMark
 		private void Start()
 		{
 			OperStatUISetActive(false);
+			m_SelectOperatorInfo = InGamePlayManager.Instance.m_ReadyOperator[0].GetComponent<Operator>().m_OperData;
 		}
 		private void FixedUpdate()
 		{
-			m_Timer = InGamePlayManager.Instance.GetRealTime();
-			m_CostImage.fillAmount = m_Timer;
-			m_Cost.text = InGamePlayManager.Instance.GetCost().ToString();
+			
+			UpdateUI();
 		}
 		#endregion
 
@@ -56,6 +58,23 @@ namespace AvantGardeMaker.MikangMark
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
 		/// 
+
+		public void UpdateUI()
+		{
+			#region 코스트 관련UI
+			m_Timer = InGamePlayManager.Instance.GetRealTime();
+			m_CostImage.fillAmount = m_Timer;
+			m_Cost.text = InGamePlayManager.Instance.GetCost().ToString();
+			#endregion
+			#region 활성화된 오퍼스텟정보UI
+			m_OperKorName.text = m_SelectOperatorInfo.KorOperName;
+			m_OperLevelValue.text = m_SelectOperatorInfo.Level.ToString();
+			m_StatAttackValue.text = m_SelectOperatorInfo.Atk.ToString();
+			m_StatDefence.text = m_SelectOperatorInfo.Def.ToString();
+			m_StatMagicDefence.text = m_SelectOperatorInfo.Res.ToString();
+			m_StatBlock.text = m_SelectOperatorInfo.BlockCount.ToString();
+			#endregion
+		}
 		public void OperStatUISetActive(bool is_Active)
 		{
 			m_OperStatUI.SetActive(is_Active);

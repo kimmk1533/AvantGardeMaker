@@ -12,9 +12,6 @@ namespace AvantGardeMaker.MikangMark
 	{
 		#region 변수
 		public OperInfo m_OperData;
-
-		OperatorYamlManager m_Yaml;
-
 		[SerializeField]
 		public string OperName;
 
@@ -33,30 +30,37 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			Initialize();
+
 		}
 		#endregion
 
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void InitializePoolItem()
 		{
-			
+			base.InitializePoolItem();
 		}
 		public void SetData()
 		{
-			Debug.Log("Operator.cs");
-			m_Yaml = GameObject.Find("GameManager").GetComponent<OperatorYamlManager>();
-			m_FilePath = Path.Combine(m_Yaml.m_FileSaveDirectory, OperName + ".yaml");
-			//m_OperData = m_Yaml.LoadData(m_FilePath, OperName + ".yaml");
+			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			{
+				if (OperName == OperatorJsonManager.Instance.m_OperInfoList[i].EngOperName)
+				{
+					m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+				}
+			}
+			m_FilePath = OperatorJsonManager.Instance.m_FileSaveDirectory;
+			//Json파일 생성
+			m_OperData.SaveJsonData(m_FilePath, OperName + ".Json", m_OperData);
+			m_OperData = m_OperData.LoadJsonData(m_FilePath, OperName + ".Json");
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void FinallizePoolItem()
 		{
-
+			base.FinallizePoolItem();
 		}
 	}
 }

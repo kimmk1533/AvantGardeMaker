@@ -23,8 +23,8 @@ namespace AvantGardeMaker.MikangMark
 		float m_ClearSecond = 0.0f;
 
 		float m_RealTime = 0.0f;
-
-		public List<string> m_ReceivePlayOperator;//게임들어오기전 편성한 캐릭터들의 이름 받기
+		//게임들어오기전 편성한 캐릭터들의 이름 받기
+		public List<string> m_ReceivePlayOperator;
 
 		[SerializeField]
 		GameObject m_OperPannel;
@@ -47,6 +47,10 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void Start()
+		{
+			Initialize();
+		}
 		private void FixedUpdate()
 		{
 			m_RealTime += Time.deltaTime;

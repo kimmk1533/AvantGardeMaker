@@ -1,0 +1,160 @@
+{
+    "serializationData": {
+        "SerializedFormat": 2,
+        "SerializedBytes": [],
+        "ReferencedUnityObjects": [],
+        "SerializedBytesString": "",
+        "Prefab": {
+            "instanceID": 0
+        },
+        "PrefabModificationsReferencedUnityObjects": [],
+        "PrefabModifications": [],
+        "SerializationNodes": [
+            {
+                "Name": "EngOperName",
+                "Entry": 1,
+                "Data": "Fang"
+            },
+            {
+                "Name": "KorOperName",
+                "Entry": 1,
+                "Data": "팽"
+            },
+            {
+                "Name": "Rate",
+                "Entry": 3,
+                "Data": "3"
+            },
+            {
+                "Name": "MaxLevel",
+                "Entry": 3,
+                "Data": "40"
+            },
+            {
+                "Name": "Level",
+                "Entry": 3,
+                "Data": "1"
+            },
+            {
+                "Name": "MaxExp",
+                "Entry": 3,
+                "Data": "40"
+            },
+            {
+                "Name": "Exp",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "Elite",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "Potential",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "Job",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "MaxHp",
+                "Entry": 3,
+                "Data": "742"
+            },
+            {
+                "Name": "Atk",
+                "Entry": 3,
+                "Data": "157"
+            },
+            {
+                "Name": "Def",
+                "Entry": 3,
+                "Data": "132"
+            },
+            {
+                "Name": "Res",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "ReSet",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "SetCost",
+                "Entry": 3,
+                "Data": "8"
+            },
+            {
+                "Name": "BlockCount",
+                "Entry": 3,
+                "Data": "2"
+            },
+            {
+                "Name": "AtkSpeed",
+                "Entry": 3,
+                "Data": "2"
+            },
+            {
+                "Name": "AtkRange",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "Provocation",
+                "Entry": 3,
+                "Data": "0"
+            },
+            {
+                "Name": "SkillLevel",
+                "Entry": 3,
+                "Data": "1"
+            },
+            {
+                "Name": "AttackPos",
+                "Entry": 7,
+                "Data": "0|UnityEngine.Vector2[], UnityEngine.CoreModule"
+            },
+            {
+                "Name": "",
+                "Entry": 12,
+                "Data": "1"
+            },
+            {
+                "Name": "",
+                "Entry": 7,
+                "Data": "UnityEngine.Vector2, UnityEngine.CoreModule"
+            },
+            {
+                "Name": "",
+                "Entry": 4,
+                "Data": "1"
+            },
+            {
+                "Name": "",
+                "Entry": 4,
+                "Data": "0"
+            },
+            {
+                "Name": "",
+                "Entry": 8,
+                "Data": ""
+            },
+            {
+                "Name": "",
+                "Entry": 13,
+                "Data": ""
+            },
+            {
+                "Name": "",
+                "Entry": 8,
+                "Data": ""
+            }
+        ]
+    }
+}

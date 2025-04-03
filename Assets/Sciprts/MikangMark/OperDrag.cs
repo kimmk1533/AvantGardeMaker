@@ -14,10 +14,10 @@ namespace AvantGardeMaker.MikangMark
 	public class OperDrag : SerializedMonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
 		#region 변수
-		public GameObject m_OperatorPrefab; // B의 프리팹 (없을 경우 생성)
+		public GameObject m_OperatorPrefab;
 		public GameObject m_Canvas;
-
-		private RectTransform B;  // 따라다닐 UI 오브젝트
+		// 따라다닐 UI 오브젝트
+		private RectTransform B;
 		public bool isDragging = false;
 		GameObject newB;
 		#endregion
@@ -49,7 +49,7 @@ namespace AvantGardeMaker.MikangMark
 		{
 			
 		}
-
+		
 		public void OnBeginDrag(PointerEventData eventData)
 		{
 			isDragging = true;
@@ -59,11 +59,12 @@ namespace AvantGardeMaker.MikangMark
 			{
 				newB = Instantiate(m_OperatorPrefab, m_Canvas.transform);
 				B = newB.GetComponent<RectTransform>();
+				newB.GetComponent<Operator>().m_OperData = GetComponent<Operator>().m_OperData;
+				newB.GetComponent<Operator>().OperName = GetComponent<Operator>().OperName;
 				newB.name = GetComponent<Operator>().OperName;
 				UIManager.Instance.OperStatUISetActive(true);
 			}
 		}
-
 		public void OnDrag(PointerEventData eventData)
 		{
 			if (!isDragging) return;

@@ -220,8 +220,6 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: m_OperData
-      Entry: 6
-      Data: 
+    SerializationNodes: []
+  m_OperData: {fileID: 0}
   OperName: 

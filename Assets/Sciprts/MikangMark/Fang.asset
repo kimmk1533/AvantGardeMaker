@@ -21,187 +21,90 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: m_AttackRange
-      Entry: 7
-      Data: 0|AvantGardeMaker.MikangMark.Enum.E_TileAttackRange[,], Assembly-CSharp
-    - Name: 
-      Entry: 12
-      Data: 49
-    - Name: ranks
+    - Name: EngOperName
       Entry: 1
-      Data: 7|7
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
+      Data: Fang
+    - Name: KorOperName
+      Entry: 1
+      Data: "\uD33D"
+    - Name: Rate
       Entry: 3
       Data: 3
-    - Name: 
+    - Name: MaxLevel
+      Entry: 3
+      Data: 40
+    - Name: Level
+      Entry: 3
+      Data: 1
+    - Name: MaxExp
+      Entry: 3
+      Data: 40
+    - Name: Exp
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: Elite
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: Potential
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: Job
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: MaxHp
+      Entry: 3
+      Data: 742
+    - Name: Atk
+      Entry: 3
+      Data: 157
+    - Name: Def
+      Entry: 3
+      Data: 132
+    - Name: Res
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: ReSet
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: SetCost
+      Entry: 3
+      Data: 8
+    - Name: BlockCount
+      Entry: 3
+      Data: 2
+    - Name: AtkSpeed
+      Entry: 3
+      Data: 2
+    - Name: AtkRange
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: Provocation
       Entry: 3
       Data: 0
-    - Name: 
+    - Name: SkillLevel
       Entry: 3
+      Data: 1
+    - Name: AttackPos
+      Entry: 7
+      Data: 0|UnityEngine.Vector2[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
       Data: 0
     - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  m_FileSaveDirectory: C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml
-  m_EngOperName: Fang
-  m_KorOperName: "\uD33D"
-  m_Rate: 3
-  m_MaxLevel: 40
-  m_Level: 1
-  m_MaxExp: 40
-  m_Exp: 0
-  m_Elite: 0
-  m_Potential: 0
-  m_Job: 0
-  m_MaxHp: 742
-  m_Atk: 157
-  m_Def: 132
-  m_Res: 0
-  m_ReSet: 0
-  m_SetCost: 0
-  m_BlockCount: 0
-  m_AtkSpeed: 2
-  m_AtkRange: 0
-  m_Provocation: 0
-  m_SkillLevel: 1

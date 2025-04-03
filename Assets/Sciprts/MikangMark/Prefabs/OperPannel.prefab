@@ -585,8 +585,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 99
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3ae1711be89b13e43bb5db753d33d76a, type: 2}
-  m_sharedMaterial: {fileID: 4427333010554503336, guid: 3ae1711be89b13e43bb5db753d33d76a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -742,6 +742,7 @@ GameObject:
   - component: {fileID: 5667542404846475372}
   - component: {fileID: 6617025116508227477}
   - component: {fileID: 846145607633637575}
+  - component: {fileID: 7442462781945562578}
   m_Layer: 0
   m_Name: OperPannel
   m_TagString: Untagged
@@ -831,11 +832,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: m_CharData
-      Entry: 6
-      Data: 
-  CharName: 
+    SerializationNodes: []
+  m_OperData: {fileID: 0}
+  OperName: 
 --- !u!114 &846145607633637575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -858,8 +857,29 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   m_OperatorPrefab: {fileID: 6266139184085059318, guid: 8d8af10734821d749b97074076331099, type: 3}
-  Canvas: {fileID: 0}
+  m_Canvas: {fileID: 0}
   isDragging: 0
+--- !u!114 &7442462781945562578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7644346143551190273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff55aa07f8b00d499feeb6669d9c126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
 --- !u!1 &7730869274951982219
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,13 +1000,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 7442462781945562578}
+        m_TargetAssemblyTypeName: AvantGardeMaker.MikangMark.OperatorClick, Assembly-CSharp
+        m_MethodName: OnPointerDown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 using System;
 using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.MikangMark
 {
-	public class OperatorYamlManager : SerializedSingleton<OperatorYamlManager>
+	public class OperatorJsonManager : SerializedSingleton<OperatorJsonManager>
 	{
 		#region 변수
 
-		private string customFileName;
-		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Yaml";
+		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Json";
 		//public string m_FilePath;
 		public List<OperInfo> m_OperInfoList;
 		/*
@@ -285,12 +282,7 @@ namespace AvantGardeMaker.MikangMark
 		/// </summary>
 		public virtual void Initialize()
 		{
-			//SaveData(m_FileSaveDirectory, "Fang.yaml", m_OperInfoList[0]);
-			//SaveData(m_FileSaveDirectory, "Plume.yaml", Plume);
-			m_OperInfoList = new List<OperInfo>();
-			m_OperInfoList.Add(m_OperInfoList[0]);
 
-			//m_OperInfoList.Add(Plume);
 		}
 		public virtual void Finallize()
 		{
