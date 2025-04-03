@@ -138,16 +138,6 @@ namespace AvantGardeMaker.ad1a
 			path.Reverse(); //도착점부터 add했기 때문에 전체 순서를 뒤집어야 함
 			return path;
 		}
-
-		///// <summary>
-		///// 이동 가능 여부
-		///// </summary>
-		//private static bool IsValidPosition(Vector3 pos, bool[,] grid)
-		//{
-		//	return pos.x >= 0 && pos.x < grid.GetLength(0) &&   //x값이 grid 안에 있는지
-		//		pos.y >= 0 && pos.y < grid.GetLength(1) &&      //y값이 grid 안에 있는지
-		//		grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.z)];                   //현재 좌표가 grid에서 이동 가능한지
-		//}
 		/// <summary>
 		/// 이동 가능 여부
 		/// </summary>

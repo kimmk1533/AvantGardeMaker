@@ -56,4 +56,15 @@ namespace AvantGardeMaker.ad1a.Enum
 		Attack,
 		Dead,
 	}
+
+	[System.Flags]
+	public enum E_EnemyImmuneType
+	{
+		Stun = 1 << 0,
+		Sleep = 1 << 1,
+		Freeze = 1 << 2,
+		Airborn = 1 << 3,
+		Shiver = 1 << 4,
+		Fear = 1 << 5,
+	}
 }

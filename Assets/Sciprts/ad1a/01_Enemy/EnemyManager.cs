@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,7 +31,12 @@ namespace AvantGardeMaker.ad1a
 
 		private bool[,] m_TestMap;
 
-		private List<Enemy> m_EnemyList;    //생성한 enemy 목록
+		//생성한 enemy 목록
+		private List<Enemy> m_EnemyList;
+
+		//enemy별 <이름, 정보> 딕셔너리(저장, 불러오기 용)
+		[SerializeField]
+		private Dictionary<string, EnemyData> m_EnemyDataDictionary = null;
 		#endregion
 
 		#region 프로퍼티
@@ -51,18 +57,16 @@ namespace AvantGardeMaker.ad1a
 
 		void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.D))
+			if (Input.GetKeyDown(KeyCode.S))
 			{
-				for (int i = 0; i < m_EnemyList.Count; i++)
-				{
-					m_EnemyList[i].m_EnemyData.m_Hp.m_CurStat = 0.0f;
-				}
+				SaveEnemyData();
+				Debug.Log("데이터 저장 완료");
 			}
 
 			//죽은 적을 오브젝트 풀에 반환
 			for (int i = 0; i < m_EnemyList.Count; i++)
 			{
-				if (m_EnemyList[i].m_EnemyData.m_Hp.m_CurStat <= 0.0f)
+				if (m_EnemyList[i].m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
 				{
 					Despawn(m_EnemyList[i]);
 					m_EnemyList.RemoveAt(i);
@@ -79,6 +83,11 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.Initialize();
 
+			if (m_EnemyDataDictionary == null)
+			{
+				m_EnemyDataDictionary = new Dictionary<string, EnemyData>();
+			}
+
 			m_TestMap = new bool[7, 7]
 			{ { true,true,true,false,true,true,true},
 			  { true,false,true,false,true,false,true},
@@ -88,7 +97,7 @@ namespace AvantGardeMaker.ad1a
 			  { true,false,true,false,true,false,true},
 			  { true,false,true,true,true,false,true},};
 
-			m_FilePath = Path.Combine(Application.persistentDataPath, "EnemyData.yaml");
+			m_FilePath = Path.Combine(Application.dataPath, "..", "Data", "EnemyData.json");
 			m_CurStageData = new StageData();
 
 			//전부 기본값을 가진 DummyEnemy 1개를 소환하는 DummyStage
@@ -98,10 +107,15 @@ namespace AvantGardeMaker.ad1a
 			m_CurStageData.m_EnemyDataList.Add(enemyData);
 
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
-			//enemySpawnData.m_Amount = 3;
 			m_CurStageData.m_EnemySpawnDataList.Add(enemySpawnData);
 
 			m_EnemyList = new List<Enemy>();
+
+			m_EnemyDataDictionary = new Dictionary<string, EnemyData>()
+			{
+				{"111111",null},
+				{"222222",enemyData },
+			};
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -118,8 +132,8 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.InitializeMain();
 
-			StartCoroutine(StartEnemyCoroutine());
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
+			//StartCoroutine(StartEnemyCoroutine());
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -128,9 +142,68 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.FinallizeMain();
 			//init에서 만들어둔 복사용 적 삭제
+
 		}
 		#endregion
 		#endregion
+
+		[System.Serializable]
+		public class JsonEnemyDataList
+		{
+			public EnemyData[] m_EnemyDataList = null;
+			public JsonEnemyDataList(int count) { m_EnemyDataList = new EnemyData[count]; }
+		}
+
+		[Button("Save EnemyData")]
+		///<summary>
+		///EnemyDataDictionary에 있는 EnemyData를 json으로 저장
+		/// </summary>
+		public void SaveEnemyData()
+		{
+			/*
+			//StringBuilder jsonStringBuilder = new StringBuilder();
+			//foreach (var item in m_EnemyDataDictionary.Values)
+			//{
+			//	jsonStringBuilder.Append(JsonUtility.ToJson(item));
+			//}
+			//File.WriteAllText(m_FilePath, jsonStringBuilder.ToString());*/
+
+			JsonEnemyDataList enemyDataList = new JsonEnemyDataList(m_EnemyDataDictionary.Count);
+			int index = 0;
+			foreach (var item in m_EnemyDataDictionary)
+			{
+				enemyDataList.m_EnemyDataList[index++] = item.Value;
+			}
+			File.WriteAllText(m_FilePath, JsonUtility.ToJson(enemyDataList, true));
+		}
+
+		[Button("Load EnemyData")]
+		///<summary>
+		///json 파일에 있는 EnemyData를 저장
+		/// </summary>
+		public void LoadEnemyData()
+		{
+			string json = File.ReadAllText(m_FilePath);
+			JsonEnemyDataList dataList = JsonUtility.FromJson<JsonEnemyDataList>(json);
+
+			m_EnemyDataDictionary.Clear();
+			for (int i = 0; i < dataList.m_EnemyDataList.Length; i++)
+			{
+				EnemyData enemyData = dataList.m_EnemyDataList[i];
+				m_EnemyDataDictionary.Add(enemyData.Name, enemyData);
+			}
+		}
+
+		public EnemyData GetEnemyData(string name)
+		{
+			if (m_EnemyDataDictionary.TryGetValue(name, out EnemyData enemyData) == false)
+			{
+				Debug.LogError("Enemy name " + name + " not found.");
+				return null;
+			}
+			return m_EnemyDataDictionary[name];
+		}
+
 		/// <summary>
 		/// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴
 		/// </summary>
@@ -163,8 +236,8 @@ namespace AvantGardeMaker.ad1a
 			EnemyData curEnemy;
 			for (int i = 0; i < enemySpawnData.Count; i++)
 			{
-				yield return new WaitForSeconds(enemySpawnData[i].m_Time);
-				curEnemy = enemyData.Find(n => n.m_Name.Equals(enemySpawnData[i].m_Name));
+				yield return new WaitForSeconds(enemySpawnData[i].Time);
+				curEnemy = enemyData.Find(n => n.Name.Equals(enemySpawnData[i].Name));
 				StartCoroutine(GenerateEnemy(curEnemy, enemySpawnData[i]));
 			}
 		}
@@ -175,22 +248,21 @@ namespace AvantGardeMaker.ad1a
 		public IEnumerator GenerateEnemy(EnemyData enemyData, EnemySpawnData enemySpawnData)
 		{
 			Debug.Log("GenerateEnemy");
-			enemySpawnData.m_StartPos = new Vector3(6, 0, 6);
-			enemySpawnData.m_EndPos = new Vector3(0, 0, 6);
-			for (int i = 0; i < enemySpawnData.m_Amount; i++)
+			enemySpawnData.StartPos = new Vector3(6, 0, 6);
+			enemySpawnData.EndPos = new Vector3(0, 0, 6);
+			for (int i = 0; i < enemySpawnData.Amount; i++)
 			{
 				if (i != 0)
-					yield return new WaitForSeconds(enemySpawnData.m_Interval);
+					yield return new WaitForSeconds(enemySpawnData.Interval);
 
-				Enemy newEnemy = GetBuilder(enemySpawnData.m_Name)  //이때 실제 적 오브젝트가 생성됨
+				Enemy newEnemy = GetBuilder(enemySpawnData.Name)  //이때 실제 적 오브젝트가 생성됨
 					.SetActive(true)
-					.SetPosition(enemySpawnData.m_StartPos)
+					.SetPosition(enemySpawnData.StartPos)
 					.SetAutoInit(true)
 					.Spawn();
 
-				newEnemy.Initialize();
 				newEnemy.m_EnemyData = enemyData;
-				newEnemy.m_CurPos = enemySpawnData.m_StartPos;
+				newEnemy.m_CurPos = enemySpawnData.StartPos;
 
 				m_EnemyList.Add(newEnemy);
 
@@ -203,13 +275,15 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public IEnumerator EnemyMove(Enemy enemy, EnemySpawnData enemySpawnData)
 		{
-			Debug.Log("EnemyMove");
-			Debug.Log("CurPos: [" + enemy.m_CurPos.x + ", " + enemy.m_CurPos.z + "]");
-			Debug.Log("TargetPos: [" + enemySpawnData.m_EndPos.x + ", " + enemySpawnData.m_EndPos.z + "]");
-			enemySpawnData.m_TransitPos = PathFinder.FindPath(enemySpawnData.m_StartPos, enemySpawnData.m_EndPos, m_TestMap);
-			for (int i = 0; i < enemySpawnData.m_TransitPos.Count; i++)
+			//경유 지점 추가
+			List<Vector3> path = PathFinder.FindPath(enemySpawnData.StartPos, enemySpawnData.EndPos, m_TestMap);
+			//path[0]은 시작지점임
+			for (int i = 1; i < path.Count; i++)
+				enemySpawnData.TransitPos.Add(path[i]);
+
+			for (int i = 0; i < enemySpawnData.TransitPos.Count; i++)
 			{
-				enemy.m_TargetPos = enemySpawnData.m_TransitPos[i];
+				enemy.m_TargetPos = enemySpawnData.TransitPos[i];
 				enemy.m_CurEnemyState = E_EnemyState.Move;
 				yield return new WaitUntil(() => enemy.m_CurEnemyState != E_EnemyState.Move);
 			}

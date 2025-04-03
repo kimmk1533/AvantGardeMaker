@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.ad1a
 {
-	public class OriginiumSlug : SerializedMonoBehaviour
+	public class OriginiumSlug : Enemy
 	{
 		#region 변수
 		#endregion

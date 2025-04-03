@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
@@ -25,8 +26,6 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 프로퍼티
-		//public bool m_IsDead => m_EnemyData.m_Hp.m_CurStat <= 0.0f;
-
 		#endregion
 
 		#region 이벤트
@@ -38,20 +37,20 @@ namespace AvantGardeMaker.ad1a
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if(m_EnemyData != null)
-			//죽음
-			if (m_EnemyData.m_Hp.m_CurStat <= 0.0f)
-			{
-				m_CurEnemyState = E_EnemyState.Dead;
-				Dead();
-			}
+			if (m_EnemyData != null)
+				//죽음
+				if (m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
+				{
+					m_CurEnemyState = E_EnemyState.Dead;
+					Dead();
+				}
 
 			//이동
 			m_CurPos = transform.position;
 			if (m_CurEnemyState == E_EnemyState.Move)
 			{
 				Vector3 direction = m_TargetPos - m_CurPos;
-				float moveAmount = m_EnemyData.m_MoveSpeed.m_CurStat * Time.deltaTime;
+				float moveAmount = m_EnemyData.FixedData.MoveSpeed.CurStat * Time.deltaTime;
 
 				if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
 				{
@@ -136,17 +135,19 @@ namespace AvantGardeMaker.ad1a
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void InitializePoolItem()
 		{
+			base.InitializePoolItem();
+
 			if (m_EnemyData == null)
 				m_EnemyData = new EnemyData();
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void FinallizePoolItem()
 		{
-
+			base.FinallizePoolItem();
 		}
 
 		void Attack(GameObject target)
