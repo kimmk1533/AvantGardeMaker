@@ -219,68 +219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Type: 1
---- !u!1 &1103912275
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1103912277}
-  - component: {fileID: 1103912276}
-  m_Layer: 0
-  m_Name: Enemy Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1103912276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1103912275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad1ccebd1d92a1f4380e291488635727, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  m_IsInitScene: 1
-  m_DontDestroyOnLoad: 1
-  m_CommonPath: ad1a\Prefab\
-  m_Origins:
-  - <key>k__BackingField: DummyEnemy
-    <path>k__BackingField: 
-    <useFlag>k__BackingField: 1
-    <poolSize>k__BackingField: 2
-    <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
---- !u!4 &1103912277
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1103912275}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1401078897
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,51 +337,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
---- !u!1 &1585218711
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1585218713}
-  - component: {fileID: 1585218712}
-  m_Layer: 0
-  m_Name: ======== ad1a ===========
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1585218712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585218711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0239e7105bdb3042815cb6603569d97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Type: 1
---- !u!4 &1585218713
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585218711}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1594695670
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,22 +395,22 @@ MonoBehaviour:
   m_CommonPath: Ceeu/Prefabs
   m_Origins:
   - <key>k__BackingField: LowGroundTile
-    <path>k__BackingField: 
+    <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
   - <key>k__BackingField: HighGroundTile
-    <path>k__BackingField: 
+    <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
   - <key>k__BackingField: Protection Objective
-    <path>k__BackingField: 
+    <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 5
     <origin>k__BackingField: {fileID: -2000793769421993583, guid: ae049637790ef4e46933620dfdefcb96, type: 3}
   - <key>k__BackingField: Incursion Point
-    <path>k__BackingField: 
+    <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 5
     <origin>k__BackingField: {fileID: -8871848148905976471, guid: 54fc1097332a64b459847bf0a035be7a, type: 3}
@@ -576,6 +469,23 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
+  m_CommonPath: Ceeu/Prefabs/UI
+  m_Origins:
+  - <key>k__BackingField: Enemy Data UI
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 10
+    <origin>k__BackingField: {fileID: 743649475707460741, guid: d0d356fef47f5c444be266128bb5f1e3, type: 3}
+  - <key>k__BackingField: Enemy Spawn Data UI
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 10
+    <origin>k__BackingField: {fileID: 3373354572747204386, guid: 88aaa9d338fe97642be08a36e9d6e522, type: 3}
+  - <key>k__BackingField: Enemy WayPoint Data UI
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 10
+    <origin>k__BackingField: {fileID: 6102094215302992146, guid: 959d8b1ca6acaa0458091a89703ba599, type: 3}
   m_KeyList:
   - System
   - Tile
@@ -583,68 +493,6 @@ MonoBehaviour:
   - Enemy
   - Save&Load
   - Help
---- !u!1 &1633767070
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1633767072}
-  - component: {fileID: 1633767071}
-  m_Layer: 0
-  m_Name: 99_EnemySpawnDataUIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1633767071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633767070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60e16caeb004df045953f009f81cc263, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  m_IsInitScene: 1
-  m_DontDestroyOnLoad: 1
-  m_CommonPath: Ceeu/Prefabs/UI
-  m_Origins:
-  - <key>k__BackingField: Enemy Spawn Data UI
-    <path>k__BackingField: 
-    <useFlag>k__BackingField: 1
-    <poolSize>k__BackingField: 10
-    <origin>k__BackingField: {fileID: 3373354572747204386, guid: 88aaa9d338fe97642be08a36e9d6e522, type: 3}
---- !u!4 &1633767072
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633767070}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2021308433
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,6 +737,3 @@ SceneRoots:
   - {fileID: 1594695671}
   - {fileID: 354989139}
   - {fileID: 1595956306}
-  - {fileID: 1633767072}
-  - {fileID: 1585218713}
-  - {fileID: 1103912277}

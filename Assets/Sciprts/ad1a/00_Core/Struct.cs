@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -17,27 +18,18 @@ namespace AvantGardeMaker.ad1a
 		[field: SerializeField]
 		public T CurStat { get; set; }
 		[field: SerializeField]
-		public string Rank { get; set; }
+		public E_EnemyRankType Rank { get; set; }
 
-		public VariableCombatStatValue(T val)
+		public VariableCombatStatValue(T val, E_EnemyRankType rankType)
 		{
 			InitStat = CurStat = val;
-			Rank = string.Empty;
+			Rank = rankType;
 		}
-		public VariableCombatStatValue(T initVal, T curVal)
+		public VariableCombatStatValue(T initVal, T curVal, E_EnemyRankType rankType)
 		{
 			InitStat = initVal;
 			CurStat = curVal;
-			Rank = string.Empty;
-		}
-
-		public string GetJsonVal()
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.Append(JsonUtility.ToJson(InitStat));
-			sb.Append(JsonUtility.ToJson(CurStat));
-			sb.Append(JsonUtility.ToJson(Rank));
-			return sb.ToString();
+			Rank = rankType;
 		}
 	}
 
@@ -60,13 +52,6 @@ namespace AvantGardeMaker.ad1a
 		{
 			InitStat = initVal;
 			CurStat = curVal;
-		}
-		public string GetJsonVal()
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.Append(JsonUtility.ToJson(InitStat));
-			sb.Append(JsonUtility.ToJson(CurStat));
-			return sb.ToString();
 		}
 	}
 }

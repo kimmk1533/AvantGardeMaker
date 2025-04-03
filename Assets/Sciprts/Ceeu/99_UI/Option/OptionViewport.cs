@@ -80,7 +80,7 @@ namespace AvantGardeMaker.Ceeu
 			if (m_Content == null)
 				m_Content = (RectTransform)m_RectTransform.Find(name.Replace("Viewport", "Content"));
 
-			M_MapEditorUI.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
+			M_MapEditorUI.menuPanel.menuButtonController[m_ViewportName].onClick.AddListener(OnMenuButtonClicked);
 
 			gameObject.SetActive(false);
 		}

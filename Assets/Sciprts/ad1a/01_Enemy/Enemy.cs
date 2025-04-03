@@ -50,7 +50,7 @@ namespace AvantGardeMaker.ad1a
 			if (m_CurEnemyState == E_EnemyState.Move)
 			{
 				Vector3 direction = m_TargetPos - m_CurPos;
-				float moveAmount = m_EnemyData.FixedData.MoveSpeed.CurStat * Time.deltaTime;
+				float moveAmount = m_EnemyData.VariableData.MovementSpeed.CurStat * Time.deltaTime;
 
 				if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
 				{

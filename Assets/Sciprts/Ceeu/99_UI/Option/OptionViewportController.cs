@@ -55,9 +55,6 @@ namespace AvantGardeMaker.Ceeu
 			TMP_InputField stageNameInputField = saveLoadOptionViewport.transform.FindInChildren<TMP_InputField>("Stage Name InputField");
 
 			stageNameInputField.onEndEdit.AddListener((inputString) => M_MapEditor.stageName = inputString);
-			stageNameInputField.onEndEdit.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);
-			stageNameInputField.onSelect.AddListener(M_MapEditorUI.OnMapNameInputFieldFocused);
-			stageNameInputField.onDeselect.AddListener(M_MapEditorUI.OnMapNameInputFieldUnfocused);
 		}
 		/// <summary>
 		/// 마무리화 함수

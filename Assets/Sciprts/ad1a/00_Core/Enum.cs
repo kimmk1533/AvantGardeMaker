@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.ad1a.Enum
 {
-	public enum E_EnemyGrade
+	public enum E_EnemyType
 	{
 		E_Normal,
 		E_Elite,
@@ -33,7 +33,7 @@ namespace AvantGardeMaker.ad1a.Enum
 		E_Flying,       //공중
 	}
 
-	public enum E_EnemyAtkType
+	public enum E_EnemyAtkPatternType
 	{
 		E_Disable,
 		E_Melee,
@@ -66,5 +66,74 @@ namespace AvantGardeMaker.ad1a.Enum
 		Airborn = 1 << 3,
 		Shiver = 1 << 4,
 		Fear = 1 << 5,
+	}
+
+	public enum E_EnemyRankType
+	{
+		None,
+
+		E,
+		D,
+		C,
+		B,
+		Bplus,
+		A,
+		Aplus,
+		S,
+		Splus,
+		SS,
+
+		Question,
+	}
+
+	public class EnumUtil
+	{
+		public static string EnumToKorString<TEnum>(TEnum enumValue) where TEnum : System.Enum
+		{
+			switch (typeof(TEnum).Name)
+			{
+				default:
+					break;
+				case "E_EnemyRaceType":
+					if (System.Enum.TryParse<E_EnemyRaceType>(enumValue.ToString(), out E_EnemyRaceType raceType) == false)
+						break;
+
+					return EnumToKorString_RaceType(raceType);
+			}
+
+			return string.Empty;
+		}
+		private static string EnumToKorString_RaceType(E_EnemyRaceType raceType)
+		{
+			switch (raceType)
+			{
+				default:
+					break;
+				case E_EnemyRaceType.E_InfectedCreature:
+					return "감염생물";
+				case E_EnemyRaceType.E_Drone:
+					return "드론";
+				case E_EnemyRaceType.E_Sarkaz:
+					return "살카즈";
+				case E_EnemyRaceType.E_Possessed:
+					return "숙주";
+				case E_EnemyRaceType.E_SeaMonster:
+					return "바다 괴물";
+				case E_EnemyRaceType.E_ArtsCreation:
+					return "아츠 피조물";
+				case E_EnemyRaceType.E_Apparition:
+					return "요괴";
+				case E_EnemyRaceType.E_Machina:
+					return "기계";
+				case E_EnemyRaceType.E_WildBeast:
+					return "야생동물";
+				case E_EnemyRaceType.E_Collapsal:
+					return "붕괴체";
+				case E_EnemyRaceType.E_Ect:
+					return "기타";
+			}
+
+			return string.Empty;
+		}
 	}
 }
