@@ -35,7 +35,6 @@ namespace AvantGardeMaker
 		{
 			if (IsMouseOverObject(out RaycastHit hit))
 			{
-				Debug.Log($"마우스가 {hit.collider.gameObject.name} 위에 있음!");
 				IsOnTile = true;
 				Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.transform.position);
 

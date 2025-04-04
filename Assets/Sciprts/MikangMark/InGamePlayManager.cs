@@ -50,6 +50,7 @@ namespace AvantGardeMaker.MikangMark
 		private void Start()
 		{
 			Initialize();
+			Debug.Log("InGamePlayManager");
 		}
 		private void FixedUpdate()
 		{
@@ -124,7 +125,8 @@ namespace AvantGardeMaker.MikangMark
 				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox));
 				m_ReadyOperator[i].GetComponent<Operator>().OperName = m_ReceivePlayOperator[i];
 				m_ReadyOperator[i].name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
-				m_ReadyOperator[i].GetComponent<Operator>().SetData();
+				m_ReadyOperator[i].GetComponent<Operator>().m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+				//m_ReadyOperator[i].GetComponent<Operator>().SetData();
 			}
 		}
 	}

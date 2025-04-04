@@ -14,6 +14,7 @@ namespace AvantGardeMaker.MikangMark
 
 		public string m_FileSaveDirectory = "C:/Users/kimjh741963/Desktop/ARK3D/AvantGardeMaker/Assets/Sciprts/MikangMark/OperInfo_Json";
 		//public string m_FilePath;
+		[SerializeField]
 		public List<OperInfo> m_OperInfoList;
 		/*
 		#region 오퍼정보
@@ -274,9 +275,8 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
-		
 		#endregion
-		
+
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>

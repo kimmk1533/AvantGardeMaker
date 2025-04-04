@@ -74,7 +74,6 @@ namespace AvantGardeMaker.MikangMark
 
 		public void OnEndDrag(PointerEventData eventData)
 		{
-			Debug.Log("endDrag");
 			isDragging = false;
 			if (GameObject.Find("Fang").GetComponent<OperPoint>().IsOnTile)
 			{

@@ -7,77 +7,56 @@ using UnityEngine;
 
 namespace AvantGardeMaker.MikangMark
 {
-	[CreateAssetMenu(fileName = "OperatorInfo", menuName = "Scriptable Object/OperatorInfo", order = int.MaxValue)]
+	[CreateAssetMenu(fileName = "OperatorInfo", menuName = "Scriptable Object/OperatorInfo", order = int.MinValue)]
 	public class OperInfo : SerializedScriptableObject
 	{
 		//영어이름
-		[SerializeField]
-		public string EngOperName { get; set; }
-		[SerializeField]
+		public string EngOperName;
 		//한글이름
-		public string KorOperName { get; set; }
-		[SerializeField]
+		public string KorOperName;
 		//레어도
-		public int Rate { get; set; }
-		[SerializeField]
+		public int Rate;
 		//최대레벨
-		public int MaxLevel { get; set; }
-		[SerializeField]
+		public int MaxLevel;
 		//현재레벨
-		public int Level { get; set; }
-		[SerializeField]
+		public int Level;
 		//현재레벨 최대경험치
-		public int MaxExp { get; set; }
-		[SerializeField]
+		public int MaxExp;
 		//현재경험치
-		public int Exp { get; set; }
-		[SerializeField]
+		public int Exp;
 		//특성
-		public int Elite { get; set; }
-		[SerializeField]
+		public int Elite;
 		//재능
-		public int Potential { get; set; }
-		[SerializeField]
+		public int Potential;
 		//직군
-		public E_Jop Job { get; set; }
-		[SerializeField]
+		public E_Jop Job;
 		//최대체력
-		public int MaxHp { get; set; }
-		[SerializeField]
+		public int MaxHp;
 		//공격력
-		public int Atk { get; set; }
-		[SerializeField]
+		public int Atk;
 		//방어력
-		public int Def { get; set; }
-		[SerializeField]
+		public int Def;
 		//마항
-		public int Res { get; set; }
-		[SerializeField]
+		public int Res;
 		//재배치속도
-		public E_ResetSpeed ReSet { get; set; }
-		[SerializeField]
+		public E_ResetSpeed ReSet;
 		//배치코스트
-		public int SetCost { get; set; }
-		[SerializeField]
+		public int SetCost;
 		//저지
-		public int BlockCount { get; set; }
-		[SerializeField]
+		public int BlockCount;
 		//공격속도
-		public E_AttackSpeed AtkSpeed { get; set; }
-		[SerializeField]
+		public E_AttackSpeed AtkSpeed;
 		//공격범위
-		public E_AttackRange AtkRange { get; set; }
-		[SerializeField]
+		public E_AttackRange AtkRange;
 		//도발
-		public int Provocation { get; set; }
-		[SerializeField]
+		public int Provocation;
 		//스킬레벨
-		public int SkillLevel { get; set; }
-		[SerializeField]
+		public int SkillLevel;
 		//공격범위좌표
-		public Vector2[] AttackPos { get; set; }
+		public Vector2[] AttackPos;
 		public void SaveJsonData(string directory, string fileName, OperInfo operData)
 		{
+			Debug.Log("SaveJsonData");
 			if (!Directory.Exists(directory))
 			{
 				Directory.CreateDirectory(directory);

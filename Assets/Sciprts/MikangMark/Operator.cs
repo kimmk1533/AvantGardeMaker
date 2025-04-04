@@ -15,7 +15,7 @@ namespace AvantGardeMaker.MikangMark
 		[SerializeField]
 		public string OperName;
 
-		string m_FilePath;
+		
 		#endregion
 
 		#region 프로퍼티
@@ -43,6 +43,7 @@ namespace AvantGardeMaker.MikangMark
 		}
 		public void SetData()
 		{
+			string m_FilePath;
 			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
 			{
 				if (OperName == OperatorJsonManager.Instance.m_OperInfoList[i].EngOperName)

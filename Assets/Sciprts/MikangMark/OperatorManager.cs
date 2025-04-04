@@ -10,9 +10,9 @@ namespace AvantGardeMaker.MikangMark
 	{
 		#region 변수
 		//대기실에서 가져온 오퍼레이터들의 모든정보
-		List<Operator> m_ReciveOper = new List<Operator>();
+		public List<OperInfo> m_ReciveOper = new List<OperInfo>();
 		//인게임에서 배치가 완료된 오퍼레이터의 모든정보
-		List<Operator> m_ActiveOper = new List<Operator>();
+		public List<OperInfo> m_ActiveOper = new List<OperInfo>();
 
 		#endregion
 
@@ -28,7 +28,12 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			Initialize();
+			Debug.Log("OperatorManager");
+			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			{
+				m_ReciveOper.Add(OperatorJsonManager.Instance.m_OperInfoList[i]);
+			}
+			//Initialize();
 		}
 		#endregion
 
@@ -39,10 +44,12 @@ namespace AvantGardeMaker.MikangMark
 		public override void Initialize()
 		{
 			base.Initialize();
+			/*
 			for(int i=0;i< m_ReciveOper.Count; i++)
 			{
-				//m_ReciveOper[i] = 
+				m_ReciveOper[i] = OperatorJsonManager.Instance.m_OperInfoList[i];
 			}
+			*/
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
