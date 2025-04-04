@@ -7,54 +7,45 @@ namespace AvantGardeMaker.ad1a.Enum
 {
 	public enum E_EnemyType
 	{
-		E_Normal,
-		E_Elite,
-		E_Leader
+		Normal,
+		Elite,
+		Leader
 	}
 
 	public enum E_EnemyRaceType
 	{
-		E_InfectedCreature, //감염생물
-		E_Drone,            //드론
-		E_Sarkaz,           //살카즈
-		E_Possessed,        //숙주
-		E_SeaMonster,       //바다 괴물
-		E_ArtsCreation,     //아츠 피조물
-		E_Apparition,       //요괴
-		E_Machina,          //기계
-		E_WildBeast,        //야생동물
-		E_Collapsal,        //붕괴체
-		E_Ect               //기타
+		InfectedCreature, //감염생물
+		Drone,            //드론
+		Sarkaz,           //살카즈
+		Possessed,        //숙주
+		SeaMonster,       //바다 괴물
+		ArtsCreation,     //아츠 피조물
+		Apparition,       //요괴
+		Machina,          //기계
+		WildBeast,        //야생동물
+		Collapsal,        //붕괴체
+		Ect               //기타
 	}
 
 	public enum E_EnemyFlyable
 	{
-		E_Walk,         //지상
-		E_Flying,       //공중
+		Walk,         //지상
+		Flying,       //공중
 	}
 
 	public enum E_EnemyAtkPatternType
 	{
-		E_Disable,
-		E_Melee,
-		E_Range,
+		Disable,
+		Melee,
+		Range,
 	}
 
 	public enum E_EnemyDmgType
 	{
-		E_Physic,
-		E_Magic,
-		E_Heal,
-		E_None,
-	}
-
-	public enum E_EnemyState
-	{
+		Physic,
+		Magic,
+		Heal,
 		None,
-		Idle,
-		Move,
-		Attack,
-		Dead,
 	}
 
 	[System.Flags]
@@ -86,6 +77,14 @@ namespace AvantGardeMaker.ad1a.Enum
 		Question,
 	}
 
+	public enum E_EnemyState
+	{
+		None,
+		Idle,
+		Move,
+		Attack,
+		Dead,
+	}
 	public class EnumUtil
 	{
 		public static string EnumToKorString<TEnum>(TEnum enumValue) where TEnum : System.Enum
@@ -99,6 +98,24 @@ namespace AvantGardeMaker.ad1a.Enum
 						break;
 
 					return EnumToKorString_RaceType(raceType);
+
+				case "E_EnemyFlyable":
+					if (System.Enum.TryParse<E_EnemyFlyable>(enumValue.ToString(), out E_EnemyFlyable flyable) == false)
+						break;
+
+					return EnumToKorString_Flyable(flyable);
+
+				case "E_EnemyAtkPatternType":
+					if (System.Enum.TryParse<E_EnemyAtkPatternType>(enumValue.ToString(), out E_EnemyAtkPatternType atkPatternType) == false)
+						break;
+
+					return EnumToKorString_AtkPatternType(atkPatternType);
+
+				case "E_EnemyDmgType":
+					if (System.Enum.TryParse<E_EnemyDmgType>(enumValue.ToString(), out E_EnemyDmgType dmgType) == false)
+						break;
+
+					return EnumToKorString_DmgType(dmgType);
 			}
 
 			return string.Empty;
@@ -109,28 +126,77 @@ namespace AvantGardeMaker.ad1a.Enum
 			{
 				default:
 					break;
-				case E_EnemyRaceType.E_InfectedCreature:
+				case E_EnemyRaceType.InfectedCreature:
 					return "감염생물";
-				case E_EnemyRaceType.E_Drone:
+				case E_EnemyRaceType.Drone:
 					return "드론";
-				case E_EnemyRaceType.E_Sarkaz:
+				case E_EnemyRaceType.Sarkaz:
 					return "살카즈";
-				case E_EnemyRaceType.E_Possessed:
+				case E_EnemyRaceType.Possessed:
 					return "숙주";
-				case E_EnemyRaceType.E_SeaMonster:
+				case E_EnemyRaceType.SeaMonster:
 					return "바다 괴물";
-				case E_EnemyRaceType.E_ArtsCreation:
+				case E_EnemyRaceType.ArtsCreation:
 					return "아츠 피조물";
-				case E_EnemyRaceType.E_Apparition:
+				case E_EnemyRaceType.Apparition:
 					return "요괴";
-				case E_EnemyRaceType.E_Machina:
+				case E_EnemyRaceType.Machina:
 					return "기계";
-				case E_EnemyRaceType.E_WildBeast:
+				case E_EnemyRaceType.WildBeast:
 					return "야생동물";
-				case E_EnemyRaceType.E_Collapsal:
+				case E_EnemyRaceType.Collapsal:
 					return "붕괴체";
-				case E_EnemyRaceType.E_Ect:
+				case E_EnemyRaceType.Ect:
 					return "기타";
+			}
+
+			return string.Empty;
+		}
+
+		private static string EnumToKorString_Flyable(E_EnemyFlyable flyable)
+		{
+			switch (flyable)
+			{
+				default:
+					break;
+				case E_EnemyFlyable.Walk:
+					return "지상";
+				case E_EnemyFlyable.Flying:
+					return "공중";
+			}
+
+			return string.Empty;
+		}
+
+		private static string EnumToKorString_AtkPatternType(E_EnemyAtkPatternType atkPatternType)
+		{
+			switch (atkPatternType)
+			{
+				default:
+					break;
+				case E_EnemyAtkPatternType.Disable:
+					return "비공격";
+				case E_EnemyAtkPatternType.Melee:
+					return "근거리";
+				case E_EnemyAtkPatternType.Range:
+					return "원거리";
+			}
+
+			return string.Empty;
+		}
+
+		private static string EnumToKorString_DmgType(E_EnemyDmgType dmgType)
+		{
+			switch (dmgType)
+			{
+				default:
+					break;
+				case E_EnemyDmgType.Physic:
+					return "물리";
+				case E_EnemyDmgType.Magic:
+					return "마법";
+				case E_EnemyDmgType.Heal:
+					return "치료";
 			}
 
 			return string.Empty;
