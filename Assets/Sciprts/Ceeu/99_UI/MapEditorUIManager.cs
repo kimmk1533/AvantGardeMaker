@@ -20,6 +20,8 @@ namespace AvantGardeMaker.Ceeu
 		#region 옵션 패널 관련 변수
 
 		#endregion
+
+		private Stack<Panel> m_PanelStack = null;
 		#endregion
 
 		#region 프로퍼티
@@ -54,6 +56,7 @@ namespace AvantGardeMaker.Ceeu
 		private void Update()
 		{
 			//MenuShortcut();
+			PanelStackShortcut();
 		}
 		#endregion
 
@@ -64,6 +67,8 @@ namespace AvantGardeMaker.Ceeu
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_PanelStack = new Stack<Panel>();
 
 			gameObject.SetActive(false);
 		}
@@ -105,6 +110,8 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizeMain();
 
+			m_PanelStack.Clear();
+
 			menuPanel.Finallize();
 
 			optionPanel.Finallize();
@@ -124,6 +131,28 @@ namespace AvantGardeMaker.Ceeu
 					M_EditMode.SetEditModeType(optionViewport.editModeType);
 				}
 			}
+		}
+		private void PanelStackShortcut()
+		{
+			if (m_PanelStack.Count <= 0)
+				return;
+			if (Input.GetKeyDown(KeyCode.Escape) == false)
+				return;
+
+			Panel panel = m_PanelStack.Peek();
+			while (m_PanelStack.Count > 0 &&
+				panel != null &&
+				panel.gameObject.activeSelf == false)
+				panel = m_PanelStack.Pop();
+
+			panel.gameObject.SetActive(false);
+		}
+		public void RegisterPanel(Panel panel)
+		{
+			if (m_PanelStack.Contains(panel) == true)
+				return;
+
+			m_PanelStack.Push(panel);
 		}
 	}
 }

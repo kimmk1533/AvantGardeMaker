@@ -38,9 +38,12 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Initialize()
 		{
-			m_Button = GetComponent<Button>();
+			if (m_Button == null)
+			{
+				m_Button = GetComponent<Button>();
 
-			m_Button.onClick.AddListener(OnButtonClicked);
+				m_Button.onClick.AddListener(OnButtonClicked);
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -48,8 +51,6 @@ namespace AvantGardeMaker.Ceeu
 		public void Finallize()
 		{
 			m_Button.onClick.RemoveListener(OnButtonClicked);
-
-			m_Button = null;
 		}
 		#endregion
 	}

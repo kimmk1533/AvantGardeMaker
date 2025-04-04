@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class OptionPanel : SerializedMonoBehaviour
+	public class OptionPanel : Panel
 	{
 		#region 변수
 		private RectTransform m_RectTransform = null;
@@ -57,24 +57,44 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void Initialize()
 		{
-			m_RectTransform = GetComponent<RectTransform>();
+			base.Initialize();
 
-			m_ViewportParent = m_RectTransform.Find<ScrollRect>("Option Viewports");
-			m_ViewportController = m_ViewportParent.GetComponent<OptionViewportController>();
-			m_ViewportController.Initialize(this);
+			if (m_RectTransform == null)
+				m_RectTransform = GetComponent<RectTransform>();
+
+			if (m_ViewportParent == null)
+				m_ViewportParent = m_RectTransform.Find<ScrollRect>("Option Viewports");
+
+			if (m_ViewportController == null)
+			{
+				m_ViewportController = m_ViewportParent.GetComponent<OptionViewportController>();
+				m_ViewportController.Initialize(this);
+			}
+
 			m_CurrentViewport = null;
 
-			m_ScrollBar = m_RectTransform.Find<Scrollbar>("Scrollbar Vertical");
-			m_CloseButton = m_RectTransform.Find<Button>("Close Button");
-			m_CloseButton.onClick.AddListener(OnCloseButtonClicked);
+			if (m_ScrollBar == null)
+				m_ScrollBar = m_RectTransform.Find<Scrollbar>("Scrollbar Vertical");
+			if (m_CloseButton == null)
+			{
+				m_CloseButton = m_RectTransform.Find<Button>("Close Button");
+				m_CloseButton.onClick.AddListener(OnCloseButtonClicked);
+			}
 
-			m_SaveButton = m_RectTransform.FindInChildren<SaveButton>("Save Button");
-			m_LoadButton = m_RectTransform.FindInChildren<LoadButton>("Load Button");
+			if (m_SaveButton == null)
+			{
+				m_SaveButton = m_RectTransform.FindInChildren<SaveButton>("Save Button");
 
-			m_SaveButton.Initialize();
-			m_LoadButton.Initialize();
+				m_SaveButton.Initialize();
+			}
+			if (m_LoadButton == null)
+			{
+				m_LoadButton = m_RectTransform.FindInChildren<LoadButton>("Load Button");
+
+				m_LoadButton.Initialize();
+			}
 
 			gameObject.SetActive(false);
 		}
@@ -83,6 +103,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
+			base.Finallize();
+
 			m_LoadButton.Finallize();
 			m_SaveButton.Finallize();
 

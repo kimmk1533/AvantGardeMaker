@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class EnemyDataSettingPanel : SerializedMonoBehaviour
+	public class EnemyDataSettingPanel : Panel
 	{
 		#region 변수
 		private EnemySpawnDataUI m_CurrentEnemySpawnDataUI = null;
@@ -158,8 +158,10 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void Initialize()
 		{
+			base.Initialize();
+
 			#region Enemy Stat 초기화
 			#region Infos 초기화
 			if (m_EnemyTypeImage == null)
@@ -287,8 +289,9 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void Finallize()
 		{
+			base.Finallize();
 
 		}
 		#endregion
