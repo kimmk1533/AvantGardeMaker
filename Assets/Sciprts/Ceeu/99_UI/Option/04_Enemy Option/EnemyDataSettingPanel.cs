@@ -75,7 +75,8 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void OnHpInputFieldValueChanged(string inputString)
 		{
-			OnStatInputFieldValueChanged(m_HpDataUI, inputString);
+			//OnStatInputFieldValueChanged(m_HpDataUI, inputString);
+			Debug.Log("Hp");
 		}
 		private void OnAtkInputFieldValueChanged(string inputString)
 		{
@@ -110,9 +111,9 @@ namespace AvantGardeMaker.Ceeu
 		#region WayPoint
 		private void OnAddButtonClicked()
 		{
-			EnemyWayPointDataUI wayPointDataUI = M_MapEditor.GetBuilder("Enemy WayPoint Data UI")
+			EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
 				.SetScale(Vector3.one)
-				.SetParent(M_MapEditor.enemyWayPointDataUIParent)
+				.SetParent(M_MapEditorUI.enemyWayPointDataUIParent)
 				.SetAutoInit(true)
 				.SetActive(true)
 				.Spawn() as EnemyWayPointDataUI;
@@ -148,7 +149,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorUIManager M_MapEditor => MapEditorUIManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -293,6 +294,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Finallize();
 
+
 		}
 		#endregion
 
@@ -308,71 +310,125 @@ namespace AvantGardeMaker.Ceeu
 			EnemyData enemyData = m_CurrentEnemySpawnDataUI.enemyData;
 
 			#region Infos
-			//string enemyType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
-			//m_EnemyTypeImage = enemyData.FixedData.EnemyType;
+			/// 한섭 기준: 지위
+			/// 
+			/// 값: 일반, 정예, 리더
+			string enemyType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
+			m_EnemyTypeImage.sprite = null;
 
+			/// 
+			/// 한섭 기준: 종족
+			/// 
+			/// 값: 감염생물, 드론, 살카즈, 숙주, 바다 괴물, 아츠 피조물, 요괴, 기계, 야생동물, 붕괴체, 기타
+			/// 
 			string raceText = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.RaceType);
 			m_RaceText.text = raceText;
 
-			//string codeText = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.Code);
-			//m_CodeText = null;
+			/// 
+			/// 한섭 기준: 코드
+			/// 
+			m_CodeText.text = enemyData.FixedData.Code.ToUpper();
 
+			/// 
+			/// 한섭 기준: 이름
+			/// 
 			m_NameText.text = enemyData.Name;
 
+			/// 
+			/// 한섭 기준: 공격 방식
+			/// 
+			/// 값: 비공격, 근거리, 원거리
+			/// 
 			string atkPattern = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.AtkPattern);
+			/// 
+			/// 한섭 기준: 대미지 타입
+			/// 
+			/// 값: 물리, 마법, 치료, 없음
+			/// 
 			string dmgType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.DmgType);
 			m_AttackInfoText.text = atkPattern + " " + dmgType;
 
-			//m_LifeTypeImage = null;
+			/// 
+			/// 한섭 기준: 목표 생명
+			/// 
 			m_LifeValueText.text = enemyData.FixedData.LossHp.ToString();
+			m_LifeValueText.transform.parent.gameObject.SetActive(enemyData.FixedData.LossHp != 1);
+			if (enemyData.FixedData.LossHp == 0)
+			{
+				//m_LifeTypeImage.sprite = 파란색 라이프 이미지;
+
+				ColorUtility.TryParseHtmlString("#035E88", out Color color);
+				m_LifeValueText.color = color;
+			}
+			else
+			{
+				//m_LifeTypeImage.sprite = 빨간색 라이프 이미지;
+
+				ColorUtility.TryParseHtmlString("#991517", out Color color);
+				m_LifeValueText.color = color;
+			}
 			#endregion
 
 			#region Datas
-			//m_PortraitImage = null;
+			// 초상화
+			//m_PortraitImage.sprite = null;
 
+			// 무게
 			m_WeightValueText.text = enemyData.FixedData.Weight.InitStat.ToString();
 
-			m_HpDataUI.inputField.text = ((int)enemyData.VariableData.Hp.InitStat).ToString();
-			//m_HpDataUI.rankText.text = enemyData.VariableData.Hp.Rank.ToString();
-			m_HpDataUI.rankDropdown.value = (int)enemyData.VariableData.Hp.Rank;
-
-			m_AtkDataUI.inputField.text = ((int)enemyData.VariableData.Atk.InitStat).ToString();
-			//m_AtkDataUI.rankText.text = enemyData.VariableData.Atk.Rank.ToString();
-			m_AtkDataUI.rankDropdown.value = (int)enemyData.VariableData.Atk.Rank;
-
-			m_DefDataUI.inputField.text = ((int)enemyData.VariableData.Def.InitStat).ToString();
-			//m_DefDataUI.rankText.text = enemyData.VariableData.Def.Rank.ToString();
-			m_DefDataUI.rankDropdown.value = (int)enemyData.VariableData.Def.Rank;
-
-			m_ResDataUI.inputField.text = ((int)enemyData.VariableData.Res.InitStat).ToString();
-			//m_ResDataUI.rankText.text = enemyData.VariableData.Res.Rank.ToString();
-			m_ResDataUI.rankDropdown.value = (int)enemyData.VariableData.Res.Rank;
-
-			m_MovementSpeedDataUI.inputField.text = ((int)enemyData.VariableData.MovementSpeed.InitStat).ToString();
-			//m_MovementSpeedDataUI.rankText.text = enemyData.VariableData.MovementSpeed.Rank.ToString();
-			m_MovementSpeedDataUI.rankDropdown.value = (int)enemyData.VariableData.MovementSpeed.Rank;
-
-			m_AspdDataUI.inputField.text = ((int)enemyData.VariableData.Aspd.InitStat).ToString();
-			//m_AspdDataUI.rankText.text = enemyData.VariableData.Aspd.Rank.ToString();
-			m_AspdDataUI.rankDropdown.value = (int)enemyData.VariableData.Aspd.Rank;
-
-			m_ElementalResDataUI.inputField.text = ((int)enemyData.VariableData.ElementalRes.InitStat).ToString();
-			//m_ElementalResDataUI.rankText.text = enemyData.VariableData.ElementalRes.Rank.ToString();
-			m_ElementalResDataUI.rankDropdown.value = (int)enemyData.VariableData.ElementalRes.Rank;
-
-			m_EffectResistanceDataUI.inputField.text = ((int)enemyData.VariableData.EffectResistance.InitStat).ToString();
-			//m_EffectResistanceDataUI.rankText.text = enemyData.VariableData.EffectResistance.Rank.ToString();
-			m_EffectResistanceDataUI.rankDropdown.value = (int)enemyData.VariableData.EffectResistance.Rank;
+			// 체력
+			m_HpDataUI.UpdateUI(enemyData.VariableData.Hp);
+			// 공격력
+			m_AtkDataUI.UpdateUI(enemyData.VariableData.Atk);
+			// 방어력
+			m_DefDataUI.UpdateUI(enemyData.VariableData.Def);
+			// 마법 저항
+			m_ResDataUI.UpdateUI(enemyData.VariableData.Res);
+			// 이동 속도
+			m_MovementSpeedDataUI.UpdateUI(enemyData.VariableData.MovementSpeed);
+			// 공격 속도
+			m_AspdDataUI.UpdateUI(enemyData.VariableData.Aspd);
+			// 원소 저항
+			m_ElementalResDataUI.UpdateUI(enemyData.VariableData.ElementalRes);
+			// 피해 저항
+			m_EffectResistanceDataUI.UpdateUI(enemyData.VariableData.EffectResistance);
 			#endregion
 
 			#region Descriptions
-			//m_EnemyDescriptionText = null;
-			//m_TraitDescriptionText = null;
+			Transform immuneParent = M_MapEditorUI.enemyImmuneDescriptionParent;
+
+			int count = immuneParent.childCount;
+			for (int i = 0; i < count; ++i)
+			{
+				M_MapEditorUI.Despawn(immuneParent.GetChild<EnemyImmuneOption>(0));
+			}
+
+			m_EnemyDescriptionText.text = enemyData.FixedData.Description;
+			m_TraitDescriptionText.text = enemyData.FixedData.Trait;
+
+			// 능력 패널 On / Off
+			m_TraitDescriptionText.transform.parent.gameObject.SetActive(enemyData.FixedData.Trait != "");
+			// 내성 패널 On / Off
+			immuneParent.parent.gameObject.SetActive(enemyData.FixedData.ImmuneType > 0);
+
+			string[] immuneKorStringArr = ad1a.Enum.EnumUtil.EnumFlagToKorString(enemyData.FixedData.ImmuneType);
+
+			for (int i = 0; i < immuneKorStringArr.Length; ++i)
+			{
+				EnemyImmuneOption enemyImmuneOption = M_MapEditorUI.GetBuilder("Enemy Immune Option")
+					.SetParent(immuneParent)
+					.SetScale(Vector3.one)
+					.SetActive(true)
+					.SetAutoInit(true)
+					.Spawn() as EnemyImmuneOption;
+
+				enemyImmuneOption.text = immuneKorStringArr[i] + " 면역";
+			}
 			#endregion
 		}
 		private void UpdateWayPointUI()
 		{
-			RectTransform wayPointDataUIParent = M_MapEditor.enemyWayPointDataUIParent;
+			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{
@@ -381,14 +437,14 @@ namespace AvantGardeMaker.Ceeu
 				if (wayPointDataUI == null)
 					continue;
 
-				M_MapEditor.Despawn(wayPointDataUI);
+				M_MapEditorUI.Despawn(wayPointDataUI);
 			}
 
 			count = m_CurrentEnemySpawnDataUI.enemyWayPointList.Count;
 			for (int i = 0; i < count; ++i)
 			{
 				Vector2 wayPoint = m_CurrentEnemySpawnDataUI.enemyWayPointList[i];
-				EnemyWayPointDataUI wayPointDataUI = M_MapEditor.GetBuilder("Enemy WayPoint Data UI")
+				EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
 					.SetParent(wayPointDataUIParent)
 					.SetScale(Vector3.one)
 					.SetActive(true)
@@ -447,7 +503,7 @@ namespace AvantGardeMaker.Ceeu
 			#region WayPoints
 			m_CurrentEnemySpawnDataUI.enemyWayPointList.Clear();
 
-			RectTransform wayPointDataUIParent = M_MapEditor.enemyWayPointDataUIParent;
+			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{
@@ -461,7 +517,7 @@ namespace AvantGardeMaker.Ceeu
 		private class DataUI
 		{
 			public TMP_InputField inputField { get; }
-			[System.Obsolete]
+			[System.Obsolete("현재는 사용X, 이후 추가 가능성 있음")]
 			public TMP_Text rankText { get; }
 			public TMP_Dropdown rankDropdown { get; }
 
@@ -470,6 +526,13 @@ namespace AvantGardeMaker.Ceeu
 				inputField = transform.FindInChildren<TMP_InputField>(dataName + " InputField");
 				rankText = transform.FindInChildren<TMP_Text>(dataName + " Rank Text");
 				rankDropdown = transform.FindInChildren<TMP_Dropdown>(dataName + " Rank Dropdown");
+			}
+
+			public void UpdateUI(VariableCombatStatValue<float> statValue)
+			{
+				inputField.text = ((int)statValue.InitStat).ToString();
+				rankText.text = statValue.Rank.ToString().Replace("plus", "+");
+				rankDropdown.value = (int)statValue.Rank;
 			}
 		}
 	}

@@ -14,6 +14,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		[field: SerializeField]
 		public EnemyData enemyData { get; set; }
 		#endregion
 
@@ -30,12 +31,14 @@ namespace AvantGardeMaker.Ceeu
 				.Spawn() as EnemySpawnDataUI;
 
 			enemySpawnDataUI.enemyData = enemyData;
+			M_MapEditor.AddEnemyData(enemyData);
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
 		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -50,9 +53,11 @@ namespace AvantGardeMaker.Ceeu
 			base.InitializePoolItem();
 
 			if (m_Button == null)
+			{
 				m_Button = GetComponent<Button>();
 
-			m_Button.onClick.AddListener(OnAddButtonClicked);
+				m_Button.onClick.AddListener(OnAddButtonClicked);
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수

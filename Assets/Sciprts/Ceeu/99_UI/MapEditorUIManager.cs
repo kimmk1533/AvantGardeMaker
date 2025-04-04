@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,6 +23,9 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		private Stack<Panel> m_PanelStack = null;
+
+		[SerializeField, ReadOnly(true)]
+		private EnemyData m_TestEnemyData = null;
 		#endregion
 
 		#region 프로퍼티
@@ -39,6 +43,7 @@ namespace AvantGardeMaker.Ceeu
 		public RectTransform enemySpawnDataUIParent { get; set; }
 		public RectTransform enemyDataUIParent { get; set; }
 		public RectTransform enemyWayPointDataUIParent { get; set; }
+		public RectTransform enemyImmuneDescriptionParent { get; set; }
 		#endregion
 		#endregion
 
@@ -49,7 +54,8 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -92,14 +98,18 @@ namespace AvantGardeMaker.Ceeu
 			optionPanel.Initialize();
 			enemyDataSettingPanel.Initialize();
 
-			EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
-				.SetScale(Vector3.one)
-				.SetParent(enemyDataUIParent)
-				.SetAutoInit(true)
-				.SetActive(true)
-				.Spawn() as EnemyDataUI;
+			//foreach (var item in M_Enemy.GetAllEnemyData())
+			{
+				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
+					.SetScale(Vector3.one)
+					.SetParent(enemyDataUIParent)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn() as EnemyDataUI;
 
-			enemyDataUI.enemyData = new ad1a.EnemyData();
+				//enemyDataUI.enemyData = item;
+				enemyDataUI.enemyData = m_TestEnemyData;
+			}
 
 			gameObject.SetActive(true);
 		}
@@ -128,7 +138,7 @@ namespace AvantGardeMaker.Ceeu
 				if (Input.GetKeyDown(keyCode) == true)
 				{
 					optionViewport.OnMenuButtonClicked();
-					M_EditMode.SetEditModeType(optionViewport.editModeType);
+					M_MapEditor.SetEditModeType(optionViewport.editModeType);
 				}
 			}
 		}

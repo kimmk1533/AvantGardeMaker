@@ -46,7 +46,7 @@ namespace AvantGardeMaker.ad1a.Enum
 		//지상
 		Walk,
 		//공중
-		Flying,       
+		Flying,
 	}
 
 	public enum E_EnemyAtkPatternType
@@ -72,7 +72,7 @@ namespace AvantGardeMaker.ad1a.Enum
 	}
 
 	[System.Flags]
-	public enum E_EnemyImmuneType
+	public enum E_EnemyImmuneType : byte
 	{
 		Stun = 1 << 0,
 		Sleep = 1 << 1,
@@ -84,19 +84,31 @@ namespace AvantGardeMaker.ad1a.Enum
 
 	public enum E_EnemyRankType
 	{
+		// -
 		None,
 
+		// E
 		E,
+		// D
 		D,
+		// C
 		C,
+		// B
 		B,
+		// B+
 		Bplus,
+		// A
 		A,
+		// A+
 		Aplus,
+		// S
 		S,
+		// S+
 		Splus,
+		// SS
 		SS,
 
+		// ?
 		Question,
 	}
 
@@ -121,19 +133,16 @@ namespace AvantGardeMaker.ad1a.Enum
 						break;
 
 					return EnumToKorString_RaceType(raceType);
-
 				case "E_EnemyFlyable":
 					if (System.Enum.TryParse<E_EnemyFlyable>(enumValue.ToString(), out E_EnemyFlyable flyable) == false)
 						break;
 
 					return EnumToKorString_Flyable(flyable);
-
 				case "E_EnemyAtkPatternType":
 					if (System.Enum.TryParse<E_EnemyAtkPatternType>(enumValue.ToString(), out E_EnemyAtkPatternType atkPatternType) == false)
 						break;
 
 					return EnumToKorString_AtkPatternType(atkPatternType);
-
 				case "E_EnemyDmgType":
 					if (System.Enum.TryParse<E_EnemyDmgType>(enumValue.ToString(), out E_EnemyDmgType dmgType) == false)
 						break;
@@ -173,7 +182,6 @@ namespace AvantGardeMaker.ad1a.Enum
 
 			return string.Empty;
 		}
-
 		private static string EnumToKorString_Flyable(E_EnemyFlyable flyable)
 		{
 			switch (flyable)
@@ -188,7 +196,6 @@ namespace AvantGardeMaker.ad1a.Enum
 
 			return string.Empty;
 		}
-
 		private static string EnumToKorString_AtkPatternType(E_EnemyAtkPatternType atkPatternType)
 		{
 			switch (atkPatternType)
@@ -205,7 +212,6 @@ namespace AvantGardeMaker.ad1a.Enum
 
 			return string.Empty;
 		}
-
 		private static string EnumToKorString_DmgType(E_EnemyDmgType dmgType)
 		{
 			switch (dmgType)
@@ -218,6 +224,60 @@ namespace AvantGardeMaker.ad1a.Enum
 					return "마법";
 				case E_EnemyDmgType.Heal:
 					return "치료";
+			}
+
+			return string.Empty;
+		}
+
+		public static string[] EnumFlagToKorString<TEnumFlag>(TEnumFlag enumFlagValue) where TEnumFlag : System.Enum
+		{
+			List<string> korStringList = new List<string>();
+
+			switch (typeof(TEnumFlag).Name)
+			{
+				default:
+					return null;
+				case "E_EnemyImmuneType":
+					E_EnemyImmuneType immuneType = (E_EnemyImmuneType)(1 << 0);
+
+					while (immuneType < E_EnemyImmuneType.Fear &&
+						immuneType != 0)
+					{
+						InfiniteLoopDetector.Run();
+
+						if (enumFlagValue.HasFlag(immuneType) == false)
+						{
+							immuneType = (E_EnemyImmuneType)((int)immuneType << 1);
+							continue;
+						}
+
+						korStringList.Add(EnumFlagToKorString_ImmuneType(immuneType));
+
+						immuneType = (E_EnemyImmuneType)((int)immuneType << 1);
+					}
+					break;
+			}
+
+			return korStringList.ToArray();
+		}
+		private static string EnumFlagToKorString_ImmuneType(E_EnemyImmuneType immuneType)
+		{
+			switch (immuneType)
+			{
+				default:
+					break;
+				case E_EnemyImmuneType.Stun:
+					return "기절";
+				case E_EnemyImmuneType.Sleep:
+					return "수면";
+				case E_EnemyImmuneType.Freeze:
+					return "빙결";
+				case E_EnemyImmuneType.Airborn:
+					return "공중 부양";
+				case E_EnemyImmuneType.Shiver:
+					return "전율";
+				case E_EnemyImmuneType.Fear:
+					return "공포";
 			}
 
 			return string.Empty;

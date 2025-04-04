@@ -256,7 +256,7 @@ MonoBehaviour:
   m_UsePercent: 1
   m_UseProgressBar: 0
   m_FadeBG: {fileID: 1709940402}
-  m_FadeDuration: 1
+  m_FadeDuration: 0
   m_Percent: {fileID: 1401765222}
   m_ProgressBar: {fileID: 0}
 --- !u!4 &1111580758

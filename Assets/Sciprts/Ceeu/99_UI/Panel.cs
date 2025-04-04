@@ -36,14 +36,12 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public virtual void Initialize()
 		{
-
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
 		public virtual void Finallize()
 		{
-
 		}
 		#endregion
 	}

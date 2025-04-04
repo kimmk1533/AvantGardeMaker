@@ -33,6 +33,8 @@ namespace AvantGardeMaker.Ceeu
 		private RectTransform m_EnemyDataUIParent = null;
 		[SerializeField]
 		private RectTransform m_EnemyWayPointDataUIParent = null;
+		[SerializeField]
+		private RectTransform m_EnemyImmuneDescriptionParent = null;
 		#endregion
 		#endregion
 
@@ -73,6 +75,7 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditorUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditorUI.enemyDataUIParent = m_EnemyDataUIParent;
 			M_MapEditorUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
+			M_MapEditorUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
 			#endregion
 
 			M_Game.InitializeMapEditor();

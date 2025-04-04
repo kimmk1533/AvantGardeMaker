@@ -36,7 +36,7 @@ namespace AvantGardeMaker.Ceeu
 		// 생성한 타일 부모
 		private GameObject m_TileParent = null;
 
-		private Vector3 m_HighGroundTileOffset = Vector3.up * 0.2f;
+		private Vector3 m_HighGroundTileOffset = Vector3.back * 0.2f;
 
 		// 현재 타일 타입
 		private E_TileType m_TileType = E_TileType.LowGroundTile;
@@ -48,18 +48,9 @@ namespace AvantGardeMaker.Ceeu
 		// 머터리얼 정보 맵
 		[SerializeField]
 		private Dictionary<string, Material> m_MaterialMap = new Dictionary<string, Material>();
-
-		// 생성한 타일 맵
-		private Dictionary<Vector2Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
 		#endregion
 
 		#region 적 관련 변수
-		[SerializeField]
-		private Dictionary<string, EnemyData> m_EnemyDataMap = new Dictionary<string, EnemyData>();
-
-		// <웨이브, 소환 데이터 리스트>
-		[SerializeField]
-		private Dictionary<int, List<EnemySpawnData>> m_EnemySpawnDataMap = new Dictionary<int, List<EnemySpawnData>>();
 		#endregion
 
 		#region 저장 & 불러오기 관련 변수
@@ -71,6 +62,16 @@ namespace AvantGardeMaker.Ceeu
 
 		[SerializeField]
 		private TMP_FontAsset m_UIFont = null;
+
+		// 생성한 타일 맵
+		private Dictionary<Vector2Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
+		// 적 데이터 맵
+		[SerializeField, ReadOnly]
+		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
+		// 적 스폰 데이터 맵
+		// <웨이브, 소환 데이터 리스트>
+		[SerializeField, ReadOnly]
+		private Dictionary<int, List<EnemySpawnData>> m_EnemySpawnDataMap = null;
 		#endregion
 		#endregion
 
@@ -175,6 +176,8 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			m_TileMap = new Dictionary<Vector2Int, (E_TileType, Tile)>();
+			m_EnemyDataMap = new Dictionary<string, EnemyData>();
+			m_EnemySpawnDataMap = new Dictionary<int, List<EnemySpawnData>>();
 
 			onCameraSwitcingFinished += OnCameraSwitchingFinished;
 
@@ -408,6 +411,13 @@ namespace AvantGardeMaker.Ceeu
 		}
 		#endregion
 
+		#region 적 관련 함수
+		public void AddEnemyData(EnemyData enemyData)
+		{
+			m_EnemyDataMap.TryAdd(enemyData.Name, enemyData);
+		}
+		#endregion
+
 		#region 저장 & 불러오기 관련 함수
 		[Button]
 		public void SaveData()
@@ -417,6 +427,10 @@ namespace AvantGardeMaker.Ceeu
 			foreach (var item in m_TileMap)
 			{
 				m_EditingStageData.AddTile(item.Key, item.Value.tileType);
+			}
+			foreach (var item in m_EnemyDataMap)
+			{
+				m_EditingStageData.AddEnemyData(item.Value);
 			}
 
 			JsonBuilder.Serialize(mapDataSavingFilePath, m_EditingStageData);

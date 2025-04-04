@@ -59,7 +59,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
-		/// 저장 이전의 초기화
+		/// 저장 이전의 초기화 (기존 데이터 삭제)
 		/// </summary>
 		public void InitializeBeforeSave()
 		{
@@ -75,9 +75,22 @@ namespace AvantGardeMaker.Ceeu
 			m_MinTile = Vector2Int.one * int.MaxValue;
 			m_MaxTile = Vector2Int.one * int.MinValue;
 			#endregion
+
+			#region 적 관련 초기화
+			if (m_EnemyDataList == null)
+				m_EnemyDataList = new List<EnemyData>();
+			if (m_EnemySpawnDataList == null)
+				m_EnemySpawnDataList = new List<EnemySpawnData>();
+			if (m_EnemyDataMap == null)
+				m_EnemyDataMap = new Dictionary<string, EnemyData>();
+
+			m_EnemyDataList.Clear();
+			m_EnemySpawnDataList.Clear();
+			m_EnemyDataMap.Clear();
+			#endregion
 		}
 		/// <summary>
-		/// 불러오기 이후의 초기화
+		/// 불러오기 이후의 초기화 (새로운 데이터 적용)
 		/// </summary>
 		public void InitializeAfterLoad()
 		{
@@ -97,11 +110,6 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region 적 정보 불러오기
-			if (m_EnemyDataMap == null)
-				m_EnemyDataMap = new Dictionary<string, EnemyData>();
-
-			m_EnemyDataMap.Clear();
-
 			foreach (var item in m_EnemyDataList)
 			{
 				m_EnemyDataMap.Add(item.Name, item);
@@ -120,6 +128,10 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MaxTile.x = Mathf.Max(m_MaxTile.x, pos.x);
 			m_MaxTile.y = Mathf.Max(m_MaxTile.y, pos.y);
+		}
+		public void AddEnemyData(EnemyData enemyData)
+		{
+
 		}
 	}
 }
