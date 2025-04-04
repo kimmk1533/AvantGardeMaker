@@ -169,8 +169,6 @@ namespace AvantGardeMaker.ad1a.Enum
 					return "야생동물";
 				case E_EnemyRaceType.Collapsal:
 					return "붕괴체";
-				case E_EnemyRaceType.Ect:
-					return "기타";
 			}
 
 			return string.Empty;
