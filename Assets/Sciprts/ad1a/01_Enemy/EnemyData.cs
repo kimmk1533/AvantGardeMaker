@@ -41,12 +41,14 @@ namespace AvantGardeMaker.ad1a
 		//▲▲▲▲▲▲▲▲▲▲▲▲적 정보 중단▲▲▲▲▲▲▲▲▲▲▲▲//
 
 		//적 설명
-		public string Lore;
+		[TextArea(6,20)]
+		public string Description;
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲적 정보 하단▲▲▲▲▲▲▲▲▲▲▲▲//
 
 		//적 능력
-		public string Ability;
+		[TextArea(5,10)]
+		public string Trait;
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲능력▲▲▲▲▲▲▲▲▲▲▲▲//
 
@@ -79,16 +81,15 @@ namespace AvantGardeMaker.ad1a
 
 	/*[CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Object/EnemyData", order = int.MinValue)]*/
 	[System.Serializable]
+	[CreateAssetMenu(fileName = "ScriptableEnemyData", menuName = "Scriptable Object/ScriptableEnemyData", order = int.MinValue)]
 	//적 스펙, 특성
-	public class EnemyData
+	public class EnemyData : ScriptableObject
 	{
 		//이름(키 값임)
 		public string Name;
 
-		[field: SerializeField]
 		//고정된 값
 		public EnemyFixedData FixedData;
-		[field: SerializeField]
 		//전투중 바뀔 수 있는 값
 		public EnemyVariableData VariableData;
 

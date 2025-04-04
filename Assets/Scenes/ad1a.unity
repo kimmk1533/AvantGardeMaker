@@ -156,13 +156,16 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  m_IsMainScene: 0
+    SerializationNodes:
+    - Name: m_EnemyDataDictionary
+      Entry: 6
+      Data: 
+  m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
   m_CommonPath: ad1a\Prefab\
   m_Origins:
   - <key>k__BackingField: DummyEnemy
-    <path>k__BackingField: 
+    <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 2
     <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}

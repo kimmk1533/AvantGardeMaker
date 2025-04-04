@@ -34,6 +34,9 @@ namespace AvantGardeMaker.ad1a
 		//생성한 enemy 목록
 		private List<Enemy> m_EnemyList;
 
+		//스크립터블 오브젝트 추가용
+		public List<EnemyData> m_EnemyDataList;
+
 		//enemy별 <이름, 정보> 딕셔너리(저장, 불러오기 용)
 		[SerializeField]
 		private Dictionary<string, EnemyData> m_EnemyDataDictionary = null;
@@ -147,6 +150,7 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 		#endregion
 
+		#region Json
 		[System.Serializable]
 		public class JsonEnemyDataList
 		{
@@ -160,14 +164,6 @@ namespace AvantGardeMaker.ad1a
 		/// </summary>
 		public void SaveEnemyData()
 		{
-			/*
-			//StringBuilder jsonStringBuilder = new StringBuilder();
-			//foreach (var item in m_EnemyDataDictionary.Values)
-			//{
-			//	jsonStringBuilder.Append(JsonUtility.ToJson(item));
-			//}
-			//File.WriteAllText(m_FilePath, jsonStringBuilder.ToString());*/
-
 			JsonEnemyDataList enemyDataList = new JsonEnemyDataList(m_EnemyDataDictionary.Count);
 			int index = 0;
 			foreach (var item in m_EnemyDataDictionary)
@@ -193,7 +189,7 @@ namespace AvantGardeMaker.ad1a
 				m_EnemyDataDictionary.Add(enemyData.Name, enemyData);
 			}
 		}
-
+		#endregion
 		public EnemyData GetEnemyData(string name)
 		{
 			if (m_EnemyDataDictionary.TryGetValue(name, out EnemyData enemyData) == false)
@@ -202,6 +198,34 @@ namespace AvantGardeMaker.ad1a
 				return null;
 			}
 			return m_EnemyDataDictionary[name];
+		}
+
+		[Button]
+		public void AddScriptable2Dictionary()
+		{
+			if (m_EnemyDataList == null)
+			{
+				Debug.LogError("m_EnemyDataList is null");
+				return;
+			}
+
+			if(m_EnemyDataDictionary == null)
+				m_EnemyDataDictionary = new Dictionary<string, EnemyData>();
+
+			for (int i = 0; i < m_EnemyDataList.Count; i++)
+			{
+				if(!m_EnemyDataDictionary.TryAdd(m_EnemyDataList[i].Name, m_EnemyDataList[i]))
+				{
+					Debug.LogError("Scriptable to Dictionary Failed");
+					return;
+				}
+			}
+		}
+
+		[Button]
+		public void ClearEnemyDictionary()
+		{
+			m_EnemyDataDictionary.Clear();
 		}
 
 		/// <summary>

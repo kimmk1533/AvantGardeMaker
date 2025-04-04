@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef381811585a4294cb0a90d73b3a5bf0, type: 3}
+  m_Name: OriginiumSlug
+  m_EditorClassIdentifier: 
+  Name: OriginiumSlug
+  FixedData:
+    RaceType: 1
+    Code: B1
+    AtkPattern: 1
+    DmgType: 0
+    EnemyType: 0
+    LossHp: 1
+    Flyable: 0
+    PortraitImagePath: 
+    Weight:
+      InitStat: 1
+      CurStat: 1
+    Range:
+      InitStat: -1
+      CurStat: -1
+    Description: "\uC57C\uC0DD\uC758 \uAC10\uC5FC \uC0DD\uBB3C. \uC774\uB7F0 \uC800\uC9C0\uB2A5
+      \uC0DD\uBB3C\uC740 \uC801\uC758 \uCE90\uC2A4\uD130\uC5D0\uAC8C \uC870\uC885\uB2F9\uD560
+      \uAC00\uB2A5\uC131\uC774 \uC788\uC73C\uBA70, \uC778\uACF5\uC124\uBE44\uC5D0
+      \uCE68\uC785\uD558\uC5EC \uBB34\uB9AC\uC9C0\uC5B4 \uACF5\uACA9\uD55C\uB2E4."
+    Trait: 
+    ImmuneType: 0
+  VariableData:
+    Hp:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    Atk:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    Def:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    Res:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    MovementSpeed:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    Aspd:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    ElementalRes:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
+    EffectResistance:
+      InitStat: 0
+      CurStat: 0
+      Rank: 0
