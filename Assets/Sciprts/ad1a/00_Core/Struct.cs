@@ -13,12 +13,9 @@ namespace AvantGardeMaker.ad1a
 	/// </summary>
 	public struct VariableCombatStatValue<T>
 	{
-		[field: SerializeField]
-		public T InitStat { get; set; }
-		[field: SerializeField]
-		public T CurStat { get; set; }
-		[field: SerializeField]
-		public E_EnemyRankType Rank { get; set; }
+		public T InitStat;
+		public T CurStat;
+		public E_EnemyRankType Rank;
 
 		public VariableCombatStatValue(T val, E_EnemyRankType rankType)
 		{
@@ -39,10 +36,8 @@ namespace AvantGardeMaker.ad1a
 	/// </summary>
 	public struct FixedCombatStatValue<T>
 	{
-		[field: SerializeField]
-		public T InitStat { get; set; }
-		[field: SerializeField]
-		public T CurStat { get; set; }
+		public T InitStat;
+		public T CurStat;
 
 		public FixedCombatStatValue(T val)
 		{

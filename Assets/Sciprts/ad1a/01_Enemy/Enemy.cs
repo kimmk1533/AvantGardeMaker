@@ -23,6 +23,8 @@ namespace AvantGardeMaker.ad1a
 
 		public List<GameObject> m_TargetOperList = null;   //공격 범위 내 오퍼들
 		public GameObject m_TargetOper;             //공격할 오퍼
+
+
 		#endregion
 
 		#region 프로퍼티

@@ -7,44 +7,67 @@ namespace AvantGardeMaker.ad1a.Enum
 {
 	public enum E_EnemyType
 	{
+		//일반
 		Normal,
+		//정예
 		Elite,
-		Leader
+		//리더
+		Leader,
 	}
 
 	public enum E_EnemyRaceType
 	{
-		InfectedCreature, //감염생물
-		Drone,            //드론
-		Sarkaz,           //살카즈
-		Possessed,        //숙주
-		SeaMonster,       //바다 괴물
-		ArtsCreation,     //아츠 피조물
-		Apparition,       //요괴
-		Machina,          //기계
-		WildBeast,        //야생동물
-		Collapsal,        //붕괴체
-		Ect               //기타
+		//기타
+		None,
+		//감염생물
+		InfectedCreature,
+		//드론
+		Drone,
+		//살카즈
+		Sarkaz,
+		//숙주
+		Possessed,
+		//바다 괴물
+		SeaMonster,
+		//아츠 피조물
+		ArtsCreation,
+		//요괴
+		Apparition,
+		//기계
+		Machina,
+		//야생동물
+		WildBeast,
+		//붕괴체
+		Collapsal,
 	}
 
 	public enum E_EnemyFlyable
 	{
-		Walk,         //지상
-		Flying,       //공중
+		//지상
+		Walk,
+		//공중
+		Flying,       
 	}
 
 	public enum E_EnemyAtkPatternType
 	{
+		//비공격
 		Disable,
+		//근거리
 		Melee,
+		//원거리
 		Range,
 	}
 
 	public enum E_EnemyDmgType
 	{
+		//물리
 		Physic,
+		//마법
 		Magic,
+		//치료
 		Heal,
+		//없음
 		None,
 	}
 
