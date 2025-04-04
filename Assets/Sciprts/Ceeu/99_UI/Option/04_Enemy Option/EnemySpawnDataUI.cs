@@ -17,11 +17,14 @@ namespace AvantGardeMaker.Ceeu
 		private TMP_InputField m_TimeStampInputField = null;
 		private TMP_InputField m_WaveTimeInputField = null;
 		private Button m_DeleteButton = null;
+
+		private List<Vector2> m_EnemyWayPointList = null;
 		#endregion
 
 		#region 프로퍼티
 		public EnemyData enemyData { get; set; }
 		public EnemySpawnData enemySpawnData { get; set; }
+		public List<Vector2> enemyWayPointList => m_EnemyWayPointList;
 		#endregion
 
 		#region 이벤트
@@ -31,7 +34,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			EnemyDataSettingPanel settingPanel = M_MapEditorUI.enemyDataSettingPanel;
 
-			settingPanel.UpdateUIFromEnemyData(enemyData);
+			settingPanel.SetEnemySpawnDataUI(this);
 
 			settingPanel.gameObject.SetActive(true);
 		}
@@ -142,6 +145,9 @@ namespace AvantGardeMaker.Ceeu
 
 				m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
 			}
+
+			if (m_EnemyWayPointList == null)
+				m_EnemyWayPointList = new List<Vector2>();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -149,6 +155,12 @@ namespace AvantGardeMaker.Ceeu
 		public override void FinallizePoolItem()
 		{
 			base.FinallizePoolItem();
+
+			//for (int i = 0; i < m_EnemyWayPointDataUIList.Count; ++i)
+			//{
+			//	M_MapEditorUI.Despawn(m_EnemyWayPointDataUIList[i]);
+			//}
+			m_EnemyWayPointList.Clear();
 		}
 		#endregion
 	}

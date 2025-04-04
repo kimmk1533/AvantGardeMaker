@@ -11,7 +11,7 @@ namespace AvantGardeMaker.Ceeu
 	public class EnemyDataSettingPanel : SerializedMonoBehaviour
 	{
 		#region 변수
-		private EnemyData m_CurrentEnemyData = null;
+		private EnemySpawnDataUI m_CurrentEnemySpawnDataUI = null;
 
 		#region Enemy Stat 변수
 		#region Infos 변수
@@ -131,14 +131,15 @@ namespace AvantGardeMaker.Ceeu
 		private void OnConfirmButtonClicked()
 		{
 			// 새로운 적 데이터 저장
-			UpdateEnemyDataFromUI();
+			SaveEnemyDataUI();
 
 			gameObject.SetActive(false);
 		}
 		private void OnCancleButtonClicked()
 		{
 			// 기존 적 데이터 불러오기
-			UpdateUIFromEnemyData(m_CurrentEnemyData);
+			UpdateStatUI();
+			UpdateWayPointUI();
 
 			gameObject.SetActive(false);
 		}
@@ -292,9 +293,16 @@ namespace AvantGardeMaker.Ceeu
 		}
 		#endregion
 
-		public void UpdateUIFromEnemyData(EnemyData enemyData)
+		public void SetEnemySpawnDataUI(EnemySpawnDataUI enemySpawnDataUI)
 		{
-			m_CurrentEnemyData = enemyData;
+			m_CurrentEnemySpawnDataUI = enemySpawnDataUI;
+
+			UpdateStatUI();
+			UpdateWayPointUI();
+		}
+		private void UpdateStatUI()
+		{
+			EnemyData enemyData = m_CurrentEnemySpawnDataUI.enemyData;
 
 			#region Infos
 			//string enemyType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
@@ -359,11 +367,39 @@ namespace AvantGardeMaker.Ceeu
 			//m_TraitDescriptionText = null;
 			#endregion
 		}
-		public void UpdateEnemyDataFromUI()
+		private void UpdateWayPointUI()
 		{
-			EnemyData enemyData = m_CurrentEnemyData;
+			RectTransform wayPointDataUIParent = M_MapEditor.enemyWayPointDataUIParent;
+			int count = wayPointDataUIParent.childCount;
+			for (int i = 0; i < count; ++i)
+			{
+				EnemyWayPointDataUI wayPointDataUI = wayPointDataUIParent.GetChild<EnemyWayPointDataUI>(0);
 
+				if (wayPointDataUI == null)
+					continue;
+
+				M_MapEditor.Despawn(wayPointDataUI);
+			}
+
+			count = m_CurrentEnemySpawnDataUI.enemyWayPointList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Vector2 wayPoint = m_CurrentEnemySpawnDataUI.enemyWayPointList[i];
+				EnemyWayPointDataUI wayPointDataUI = M_MapEditor.GetBuilder("Enemy WayPoint Data UI")
+					.SetParent(wayPointDataUIParent)
+					.SetScale(Vector3.one)
+					.SetActive(true)
+					.SetAutoInit(true)
+					.Spawn() as EnemyWayPointDataUI;
+
+				wayPointDataUI.position = wayPoint;
+			}
+		}
+		private void SaveEnemyDataUI()
+		{
 			#region Datas
+			EnemyData enemyData = m_CurrentEnemySpawnDataUI.enemyData;
+
 			string hpText = m_HpDataUI.inputField.text.Replace(",", "");
 			float.TryParse(hpText, out float hpValue);
 			ad1a.Enum.E_EnemyRankType hpRankType = (ad1a.Enum.E_EnemyRankType)m_HpDataUI.rankDropdown.value;
@@ -403,6 +439,19 @@ namespace AvantGardeMaker.Ceeu
 			float.TryParse(effectResistanceText, out float effectResistanceValue);
 			ad1a.Enum.E_EnemyRankType effectResistanceRankType = (ad1a.Enum.E_EnemyRankType)m_EffectResistanceDataUI.rankDropdown.value;
 			enemyData.VariableData.EffectResistance = new VariableCombatStatValue<float>(effectResistanceValue, effectResistanceRankType);
+			#endregion
+
+			#region WayPoints
+			m_CurrentEnemySpawnDataUI.enemyWayPointList.Clear();
+
+			RectTransform wayPointDataUIParent = M_MapEditor.enemyWayPointDataUIParent;
+			int count = wayPointDataUIParent.childCount;
+			for (int i = 0; i < count; ++i)
+			{
+				EnemyWayPointDataUI wayPointDataUI = wayPointDataUIParent.GetChild<EnemyWayPointDataUI>(i);
+
+				m_CurrentEnemySpawnDataUI.enemyWayPointList.Add(wayPointDataUI.position);
+			}
 			#endregion
 		}
 

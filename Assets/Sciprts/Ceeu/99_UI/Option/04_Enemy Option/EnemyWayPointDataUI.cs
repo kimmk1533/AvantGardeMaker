@@ -17,6 +17,49 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		public float x
+		{
+			get
+			{
+				if (m_XInputField.text == string.Empty)
+					return 0f;
+
+				if (float.TryParse(m_XInputField.text, out float xValue) == false)
+					throw new System.Exception("Enemy WayPoint x InputField의 값을 float로 변환 하는데 실패");
+
+				return xValue;
+			}
+			set
+			{
+				m_XInputField.text = value.ToString();
+			}
+		}
+		public float y
+		{
+			get
+			{
+				if (m_YInputField.text == string.Empty)
+					return 0f;
+
+				if (float.TryParse(m_YInputField.text, out float yValue) == false)
+					throw new System.Exception("Enemy WayPoint y InputField의 값을 float로 변환 하는데 실패");
+
+				return yValue;
+			}
+			set
+			{
+				m_YInputField.text = value.ToString();
+			}
+		}
+		public Vector2 position
+		{
+			get => new Vector2(x, y);
+			set
+			{
+				x = value.x;
+				y = value.y;
+			}
+		}
 		#endregion
 
 		#region 이벤트
@@ -70,7 +113,8 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizePoolItem();
 
-
+			m_XInputField.text = string.Empty;
+			m_YInputField.text = string.Empty;
 		}
 		#endregion
 	}
