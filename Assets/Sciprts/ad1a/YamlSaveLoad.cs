@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using YamlDotNet.Serialization;
 
 namespace AvantGardeMaker.ad1a
 {
@@ -67,11 +66,11 @@ namespace AvantGardeMaker.ad1a
 		//데이터를 YAML로 저장
 		public void SaveData(MapData mapData)
 		{
-			var serializer = new SerializerBuilder().Build();
-			string yaml = serializer.Serialize(mapData);
+			//var serializer = new SerializerBuilder().Build();
+			//string yaml = serializer.Serialize(mapData);
 
-			File.WriteAllText(m_FilePath, yaml);
-			Debug.Log($"YAML 저장 완료: {m_FilePath}");
+			//File.WriteAllText(m_FilePath, yaml);
+			//Debug.Log($"YAML 저장 완료: {m_FilePath}");
 		}
 
 		//YAML 파일을 불러와 객체로 변환
@@ -83,11 +82,12 @@ namespace AvantGardeMaker.ad1a
 				return null;
 			}
 
-			string yaml = File.ReadAllText(m_FilePath);
-			var deserializer = new DeserializerBuilder().Build();
-			MapData mapData = deserializer.Deserialize<MapData>(yaml);
+			//string yaml = File.ReadAllText(m_FilePath);
+			//var deserializer = new DeserializerBuilder().Build();
+			//MapData mapData = deserializer.Deserialize<MapData>(yaml);
 
-			return mapData;
+			//return mapData;
+			return null;
 		}
 	}
 }

@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using AvantGardeMaker.Ceeu.Enum;
-using YamlDotNet.Serialization;
-using Sirenix.Serialization;
 using AvantGardeMaker.ad1a;
+using AvantGardeMaker.Ceeu.Enum;
 
 namespace AvantGardeMaker.Ceeu
 {
@@ -14,100 +12,114 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		#region 타일 관련 변수
+		#region 저장&불러오기
 		[SerializeField, ReadOnly]
-		private Vector3Int m_MinTile;
+		[FoldoutGroup("Tiles")]
+		private List<Vector2Int> m_TilePointList;
 		[SerializeField, ReadOnly]
-		private Vector3Int m_MaxTile;
+		[FoldoutGroup("Tiles")]
+		private List<E_TileType> m_TileTypeList;
+		#endregion
+
+		[SerializeField, ReadOnly]
+		[FoldoutGroup("Infos")]
+		private Vector2Int m_MinTile;
+		[SerializeField, ReadOnly]
+		[FoldoutGroup("Infos")]
+		private Vector2Int m_MaxTile;
 		#endregion
 
 		#region 적 관련 변수
+		#region 저장&불러오기
+		[SerializeField, ReadOnly]
+		private List<EnemyData> m_EnemyDataList;
+		[SerializeField, ReadOnly]
+		private List<EnemySpawnData> m_EnemySpawnDataList;
+		#endregion
+
 		private Dictionary<string, EnemyData> m_EnemyDataMap;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
 		#region 타일 관련 프로퍼티
-		[YamlIgnore]
 		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
-		[YamlIgnore]
-		public int mapHeight => m_MaxTile.z - m_MinTile.z + 1;
-		#endregion
-
-		#region 타일 저장 관련 프로퍼티
-		[field: SerializeField, ReadOnly]
-		public List<Point> tilePointList { get; set; }
-		[field: SerializeField, ReadOnly]
-		public List<E_TileType> tileTypeList { get; set; }
+		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 		#endregion
 
 		#region 적 관련 프로퍼티
-		[YamlIgnore]
-		public Dictionary<string, EnemyData> enemyDataMap => m_EnemyDataMap;
-		#endregion
 
-		#region 적 저장 관련 프로퍼티
-		[field: SerializeField, ReadOnly]
-		public List<EnemyData> enemyDataList { get; set; }
-		[field: SerializeField, ReadOnly]
-		public List<EnemySpawnData> enemySpawnDataList { get; set; }
 		#endregion
 		#endregion
 
 		#region 매니져
-		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 초기화 & 마무리화 함수
+		/// <summary>
+		/// 저장 이전의 초기화
+		/// </summary>
 		public void InitializeBeforeSave()
 		{
 			#region 타일 관련 초기화
-			tilePointList = new List<Point>();
-			tileTypeList = new List<E_TileType>();
+			if (m_TilePointList == null)
+				m_TilePointList = new List<Vector2Int>();
+			if (m_TileTypeList == null)
+				m_TileTypeList = new List<E_TileType>();
 
-			m_MinTile = Vector3Int.one * int.MaxValue;
-			m_MinTile.y = 0;
+			m_TilePointList.Clear();
+			m_TileTypeList.Clear();
 
-			m_MaxTile = Vector3Int.one * int.MinValue;
-			m_MaxTile.y = 0;
+			m_MinTile = Vector2Int.one * int.MaxValue;
+			m_MaxTile = Vector2Int.one * int.MinValue;
 			#endregion
 		}
+		/// <summary>
+		/// 불러오기 이후의 초기화
+		/// </summary>
 		public void InitializeAfterLoad()
 		{
 			#region 타일 배치
-			int count = tilePointList.Count;
+			int count = m_TilePointList.Count;
 
-			if (count != tileTypeList.Count)
+			if (count != m_TileTypeList.Count)
 				Debug.LogError("저장한 위치와 타일의 갯수가 다름");
 
 			for (int i = 0; i < count; ++i)
 			{
-				Vector3Int tilePos = tilePointList[i];
-				E_TileType tileType = tileTypeList[i];
+				Vector2Int tilePos = m_TilePointList[i];
+				E_TileType tileType = m_TileTypeList[i];
 
-				M_EditMode.AddTile(tilePos, tileType);
+				M_MapEditor.AddTile(tilePos, tileType);
 			}
 			#endregion
 
-			#region 적 정보 이전
-			m_EnemyDataMap = new Dictionary<string, EnemyData>();
-			foreach (var item in m_EnemyDataMap)
-			{
+			#region 적 정보 불러오기
+			if (m_EnemyDataMap == null)
+				m_EnemyDataMap = new Dictionary<string, EnemyData>();
 
+			m_EnemyDataMap.Clear();
+
+			foreach (var item in m_EnemyDataList)
+			{
+				m_EnemyDataMap.Add(item.Name, item);
 			}
 			#endregion
 		}
 		#endregion
 
-		public void AddTile(Vector3Int pos, E_TileType tileType)
+		public void AddTile(Vector2Int pos, E_TileType tileType)
 		{
-			tilePointList.Add(pos);
-			tileTypeList.Add(tileType);
+			m_TilePointList.Add(pos);
+			m_TileTypeList.Add(tileType);
 
 			m_MinTile.x = Mathf.Min(m_MinTile.x, pos.x);
-			m_MinTile.z = Mathf.Min(m_MinTile.z, pos.z);
+			m_MinTile.y = Mathf.Min(m_MinTile.y, pos.y);
 
 			m_MaxTile.x = Mathf.Max(m_MaxTile.x, pos.x);
-			m_MaxTile.z = Mathf.Max(m_MaxTile.z, pos.z);
+			m_MaxTile.y = Mathf.Max(m_MaxTile.y, pos.y);
 		}
 	}
 }

@@ -6,7 +6,6 @@ using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using YamlDotNet.Serialization;
 
 namespace AvantGardeMaker.Ceeu
 {
@@ -51,7 +50,7 @@ namespace AvantGardeMaker.Ceeu
 		private Dictionary<string, Material> m_MaterialMap = new Dictionary<string, Material>();
 
 		// 생성한 타일 맵
-		private Dictionary<Vector3Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
+		private Dictionary<Vector2Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
 		#endregion
 
 		#region 적 관련 변수
@@ -99,7 +98,7 @@ namespace AvantGardeMaker.Ceeu
 		public StageData currentStageData => m_EditingStageData;
 
 		public string stageName { get => m_StageName; set => m_StageName = value; }
-		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_StageName) + (m_StageName.EndsWith(".yaml") == false ? ".yaml" : "");
+		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_StageName) + (m_StageName.EndsWith(".json") == false ? ".json" : "");
 		#endregion
 		#endregion
 
@@ -126,7 +125,6 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static TileManager M_Tile => TileManager.Instance;
-		private static YamlFileManager M_YamlFile => YamlFileManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -176,7 +174,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 			#endregion
 
-			m_TileMap = new Dictionary<Vector3Int, (E_TileType, Tile)>();
+			m_TileMap = new Dictionary<Vector2Int, (E_TileType, Tile)>();
 
 			onCameraSwitcingFinished += OnCameraSwitchingFinished;
 
@@ -200,24 +198,26 @@ namespace AvantGardeMaker.Ceeu
 			m_TileParent = new GameObject("Tile Parent");
 			m_TileParent.transform.position = Vector3.zero;
 
-			m_TilePreviewMap = new Dictionary<E_TileType, Tile>();
-
-			for (E_TileType tileType = E_TileType.LowGroundTile; tileType < E_TileType.Max; ++tileType)
+			if (m_TilePreviewMap == null)
 			{
-				string key = tileType.ToString().Replace('_', ' ');
-				string previewKey = key + " Preview";
+				m_TilePreviewMap = new Dictionary<E_TileType, Tile>();
 
-				Tile previewTile = M_Tile.GetBuilder(key)
-					.SetParent(transform)
-					.SetName(previewKey)
-					.SetAutoInit(true)
-					.Spawn();
+				for (E_TileType tileType = E_TileType.LowGroundTile; tileType < E_TileType.Max; ++tileType)
+				{
+					string key = tileType.ToString().Replace('_', ' ');
+					string previewKey = key + " Preview";
 
-				previewTile.GetComponent<MeshRenderer>().material = m_MaterialMap[previewKey];
+					Tile previewTile = M_Tile.GetBuilder(key)
+						.SetParent(transform)
+						.SetName(previewKey)
+						.SetAutoInit(true)
+						.Spawn();
 
-				m_TilePreviewMap.Add(tileType, previewTile);
+					previewTile.GetComponent<MeshRenderer>().material = m_MaterialMap[previewKey];
+
+					m_TilePreviewMap.Add(tileType, previewTile);
+				}
 			}
-
 
 			m_EditModeType = E_EditModeType.Tile;
 			m_TileType = E_TileType.LowGroundTile;
@@ -231,7 +231,7 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void FinallizeMain()
 		{
-
+			m_TileParent = null;
 		}
 		#endregion
 
@@ -312,7 +312,7 @@ namespace AvantGardeMaker.Ceeu
 				return;
 
 			// 마우스 위치 가져오기
-			Vector3Int mousePosition = GetMousePositionInt();
+			Vector2Int mousePosition = GetMousePositionInt();
 
 			if (Input.GetMouseButtonUp(0) == true ||
 				Input.GetMouseButtonUp(1) == true)
@@ -324,7 +324,7 @@ namespace AvantGardeMaker.Ceeu
 				if (m_TilePlacementFlag == false)
 					return;
 
-				m_TilePreview.transform.position = mousePosition;
+				m_TilePreview.transform.position = (Vector3Int)mousePosition;
 				m_TilePreview.gameObject.SetActive(true);
 
 				// 타일 배치
@@ -352,27 +352,29 @@ namespace AvantGardeMaker.Ceeu
 			}
 		}
 
-		private Vector3Int GetMousePositionInt()
+		private Vector2Int GetMousePositionInt()
 		{
 			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D();
-			Vector3Int mousePositionInt = new Vector3Int(
+			Vector2Int mousePositionInt = new Vector2Int(
 				Mathf.RoundToInt(mousePosition.x),
-				0,
-				Mathf.RoundToInt(mousePosition.z)
+				Mathf.RoundToInt(mousePosition.y)
 				);
 
 			return mousePositionInt;
 		}
-		private void AddTile(Vector3Int tilePos)
+		private void AddTile(Vector2Int tilePos)
 		{
 			AddTile(tilePos, m_TileType);
 		}
-		public void AddTile(Vector3Int tilePos, E_TileType tileType)
+		public void AddTile(Vector2Int tilePos, E_TileType tileType)
 		{
 			string tileKey = tileType.ToString().Replace('_', ' ');
 
+			Vector3 tilePosition = new Vector3(tilePos.x, tilePos.y);
+			tilePosition += (tileType == E_TileType.HighGroundTile ? m_HighGroundTileOffset : Vector3.zero);
+
 			Tile newTile = M_Tile.GetBuilder(tileKey)
-				.SetPosition((Vector3)tilePos + (tileType == E_TileType.HighGroundTile ? m_HighGroundTileOffset : Vector3.zero))
+				.SetPosition(tilePosition)
 				.SetActive(true)
 				.SetParent(m_TileParent.transform)
 				.SetName(tilePos.ToString())
@@ -381,7 +383,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TileMap.Add(tilePos, (tileType, newTile));
 		}
-		private void RemoveTile(Vector3Int tilePos)
+		private void RemoveTile(Vector2Int tilePos)
 		{
 			Tile removeTile = m_TileMap[tilePos].tile;
 
@@ -389,7 +391,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TileMap.Remove(tilePos);
 		}
-		private void ReplaceTile(Vector3Int tilePos)
+		private void ReplaceTile(Vector2Int tilePos)
 		{
 			RemoveTile(tilePos);
 
@@ -417,7 +419,7 @@ namespace AvantGardeMaker.Ceeu
 				m_EditingStageData.AddTile(item.Key, item.Value.tileType);
 			}
 
-			M_YamlFile.Serialize(mapDataSavingFilePath, m_EditingStageData);
+			JsonBuilder.Serialize(mapDataSavingFilePath, m_EditingStageData);
 
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
 			{
@@ -428,7 +430,7 @@ namespace AvantGardeMaker.Ceeu
 			});
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 
-			Debug.Log("[YAML 저장 완료]: " + mapDataSavingFilePath);
+			Debug.Log("[Json 저장 완료]: " + mapDataSavingFilePath);
 		}
 		[Button]
 		public void LoadData()
@@ -451,7 +453,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 			m_TileMap.Clear();
 
-			m_EditingStageData = M_YamlFile.Deserialize<StageData>(mapDataSavingFilePath);
+			m_EditingStageData = JsonBuilder.Deserialize<StageData>(mapDataSavingFilePath);
 			m_EditingStageData.InitializeAfterLoad();
 
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
@@ -463,7 +465,7 @@ namespace AvantGardeMaker.Ceeu
 			});
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 
-			Debug.Log("[YAML 로드 완료]: " + mapDataSavingFilePath);
+			Debug.Log("[Json 로드 완료]: " + mapDataSavingFilePath);
 		}
 		#endregion
 	}
