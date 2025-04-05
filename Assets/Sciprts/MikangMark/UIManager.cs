@@ -38,6 +38,8 @@ namespace AvantGardeMaker.MikangMark
 		public float minChildren_x = 0;
 		public float maxChildren_x = 0;
 		public float opset = 0;
+
+		public GameObject m_AttackRangeHighlight;
 		#endregion
 
 		#region 프로퍼티
@@ -53,8 +55,8 @@ namespace AvantGardeMaker.MikangMark
 
 		private void Start()
 		{
-			Debug.Log("UIManger");
 			OperStatUISetActive(false);
+			//디폴트로 선택된 첫번째 오퍼
 			m_SelectOperator = new Operator();
 			m_SelectOperator = InGamePlayManager.Instance.GetOperInfo(0);
 			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
@@ -63,12 +65,6 @@ namespace AvantGardeMaker.MikangMark
 				{
 					m_SelectOperator.m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
 				}
-			}
-			m_ATKPosList = new List<Image>();
-			for (int i = 0;i< m_SelectOperator.m_OperData.AttackPos.Length; i++)
-			{
-				m_ATKPosList.Add(Instantiate(m_ATKPos, m_ATKRangeField.transform));
-				m_ATKPosList[i].rectTransform.anchoredPosition = m_OperatorPos_InRange.rectTransform.anchoredPosition;
 			}
 			OperATKRangeCreate(m_SelectOperator.m_OperData.AttackPos);
 			AlignChildren();
@@ -83,11 +79,18 @@ namespace AvantGardeMaker.MikangMark
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
 		/// 
+		//공격범위 UI생성함수
 		public void OperATKRangeCreate(Vector2[] _ATKRange)
 		{
 			//공격범위 이미지 사이의 간격
 			int intervalOpset = 6;
-			for(int i=0;i< _ATKRange.Length; i++)
+			m_ATKPosList = new List<Image>();
+			for (int i = 0; i < m_SelectOperator.m_OperData.AttackPos.Length; i++)
+			{
+				m_ATKPosList.Add(Instantiate(m_ATKPos, m_ATKRangeField.transform));
+				m_ATKPosList[i].rectTransform.anchoredPosition = m_OperatorPos_InRange.rectTransform.anchoredPosition;
+			}
+			for (int i=0;i< _ATKRange.Length; i++)
 			{
 				m_ATKPosList[i].rectTransform.anchoredPosition += _ATKRange[i] * intervalOpset;
 			}
@@ -140,10 +143,6 @@ namespace AvantGardeMaker.MikangMark
 		public void OperStatUISetActive(bool is_Active)
 		{
 			m_OperStatUI.SetActive(is_Active);
-		}
-		public void OperStatUISetting(OperInfo _operInfo)
-		{
-
 		}
 		public virtual void Initialize()
 		{

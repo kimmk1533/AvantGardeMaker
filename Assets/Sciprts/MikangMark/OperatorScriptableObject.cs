@@ -56,7 +56,6 @@ namespace AvantGardeMaker.MikangMark
 		public Vector2[] AttackPos;
 		public void SaveJsonData(string directory, string fileName, OperInfo operData)
 		{
-			Debug.Log("SaveJsonData");
 			if (!Directory.Exists(directory))
 			{
 				Directory.CreateDirectory(directory);

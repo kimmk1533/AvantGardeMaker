@@ -58,6 +58,7 @@ namespace AvantGardeMaker.MikangMark
 			if (B == null)
 			{
 				newB = Instantiate(m_OperatorPrefab, m_Canvas.transform);
+				newB.GetComponent<DragOperSetPos>().enabled = false;
 				B = newB.GetComponent<RectTransform>();
 				newB.GetComponent<Operator>().m_OperData = GetComponent<Operator>().m_OperData;
 				newB.GetComponent<Operator>().OperName = GetComponent<Operator>().OperName;
@@ -79,6 +80,7 @@ namespace AvantGardeMaker.MikangMark
 			{
 				gameObject.SetActive(false);
 				UIManager.Instance.OperStatUISetActive(false);
+				newB.GetComponent<DragOperSetPos>().enabled = true;
 			}
 			else
 			{

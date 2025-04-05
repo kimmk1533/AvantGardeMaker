@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: -1981936640212520501}
   - component: {fileID: 3706882213541263304}
   - component: {fileID: -7239862314741184774}
+  - component: {fileID: -6344580601356745129}
   m_Layer: 0
   m_Name: Operator
   m_TagString: Untagged
@@ -223,3 +224,24 @@ MonoBehaviour:
     SerializationNodes: []
   m_OperData: {fileID: 0}
   OperName: 
+--- !u!114 &-6344580601356745129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6266139184085059318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b57043b398cf846a2446548751ad51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []

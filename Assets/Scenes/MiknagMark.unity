@@ -6667,6 +6667,7 @@ MonoBehaviour:
   minChildren_x: 0
   maxChildren_x: 0
   opset: 0
+  m_AttackRangeHighlight: {fileID: 7324110389715306264, guid: 59e840707769c5941a60fc2535212ac0, type: 3}
 --- !u!114 &2002700180
 MonoBehaviour:
   m_ObjectHideFlags: 0

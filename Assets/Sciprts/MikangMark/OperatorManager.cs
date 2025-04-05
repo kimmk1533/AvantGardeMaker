@@ -28,7 +28,6 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			Debug.Log("OperatorManager");
 			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
 			{
 				m_ReciveOper.Add(OperatorJsonManager.Instance.m_OperInfoList[i]);

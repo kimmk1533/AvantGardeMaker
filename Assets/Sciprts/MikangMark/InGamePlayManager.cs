@@ -50,7 +50,6 @@ namespace AvantGardeMaker.MikangMark
 		private void Start()
 		{
 			Initialize();
-			Debug.Log("InGamePlayManager");
 		}
 		private void FixedUpdate()
 		{
