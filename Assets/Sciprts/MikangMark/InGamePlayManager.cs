@@ -31,10 +31,10 @@ namespace AvantGardeMaker.MikangMark
 		[SerializeField]
 		Transform m_OperBox;
 
-		public List<GameObject> m_PlayingOpers;
+		public List<Operator> m_PlayingOpers;
 
 		
-		public List<GameObject> m_ReadyOperator;
+		public List<Operator> m_ReadyOperator;
 		#endregion
 
 		#region 프로퍼티
@@ -74,10 +74,14 @@ namespace AvantGardeMaker.MikangMark
 			m_Cost = 5;
 			SetStartCost(5);
 			m_Cost = m_StartCost;
-			m_PlayingOpers = new List<GameObject>();
-			m_ReadyOperator = new List<GameObject>();
+			m_PlayingOpers = new List<Operator>();
+			m_ReadyOperator = new List<Operator>();
 			m_OperBox = GameObject.Find("OperBox").transform;
 			CreateOperBox(m_ReceivePlayOperator.Count);
+			for (int i = 0; i < m_ReadyOperator.Count; i++)
+			{
+				m_ReadyOperator[i].SetData();
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -122,12 +126,17 @@ namespace AvantGardeMaker.MikangMark
 		{
 			for (int i = 0; i < _OpCount; i++) 
 			{
-				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox));
-				m_ReadyOperator[i].GetComponent<Operator>().OperName = m_ReceivePlayOperator[i];
-				m_ReadyOperator[i].name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
-				m_ReadyOperator[i].GetComponent<Operator>().m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
-				//m_ReadyOperator[i].GetComponent<Operator>().SetData();
+				
+				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox).GetComponent<Operator>());
+				m_ReadyOperator[i].OperName = m_ReceivePlayOperator[i];
+				m_ReadyOperator[i].gameObject.name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
+				m_ReadyOperator[i].m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
 			}
+		}
+
+		public Operator GetOperInfo(int _index)
+		{
+			return m_ReadyOperator[_index];
 		}
 	}
 }

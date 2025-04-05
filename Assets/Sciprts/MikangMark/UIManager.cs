@@ -55,7 +55,15 @@ namespace AvantGardeMaker.MikangMark
 		{
 			Debug.Log("UIManger");
 			OperStatUISetActive(false);
-			m_SelectOperator = InGamePlayManager.Instance.m_ReadyOperator[0].GetComponent<Operator>();
+			m_SelectOperator = new Operator();
+			m_SelectOperator = InGamePlayManager.Instance.GetOperInfo(0);
+			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			{
+				if (m_SelectOperator.OperName == OperatorJsonManager.Instance.m_OperInfoList[i].EngOperName)
+				{
+					m_SelectOperator.m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+				}
+			}
 			m_ATKPosList = new List<Image>();
 			for (int i = 0;i< m_SelectOperator.m_OperData.AttackPos.Length; i++)
 			{

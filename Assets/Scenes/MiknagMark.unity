@@ -6543,9 +6543,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2002700176}
-  - component: {fileID: 2002700177}
-  - component: {fileID: 2002700180}
   - component: {fileID: 2002700178}
+  - component: {fileID: 2002700180}
+  - component: {fileID: 2002700177}
   - component: {fileID: 2002700179}
   m_Layer: 0
   m_Name: GameManager
@@ -6650,7 +6650,7 @@ MonoBehaviour:
   m_Cost: {fileID: 142723040}
   m_CostImage: {fileID: 504509807}
   m_OperStatUI: {fileID: 1626726304}
-  m_SelectOperatorInfo: {fileID: 0}
+  m_SelectOperator: {fileID: 0}
   m_OperImg: {fileID: 1384588356}
   m_JobImg: {fileID: 2033714251}
   m_Arousal: {fileID: 1790653485}
@@ -6692,6 +6692,8 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 0
   m_CommonPath: 
   m_Origins: []
+  m_ReciveOper: []
+  m_ActiveOper: []
 --- !u!1 &2033714249
 GameObject:
   m_ObjectHideFlags: 0
