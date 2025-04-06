@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef381811585a4294cb0a90d73b3a5bf0, type: 3}
   m_Name: Yoma
   m_EditorClassIdentifier: 
-  Name: 
+  EngName: Yoma
+  KorName: "'\uC694\uB9C8'"
   FixedData:
-    RaceType: 0
-    Code: 
+    RaceType: 2
+    Code: D1
     AtkPattern: 0
-    DmgType: 0
+    DmgType: 3
     EnemyType: 0
-    LossHp: 0
-    Flyable: 0
+    LossHp: 1
+    Flyable: 1
     PortraitImagePath: 
     Weight:
       InitStat: 0
@@ -28,8 +29,17 @@ MonoBehaviour:
     Range:
       InitStat: 0
       CurStat: 0
-    Description: 
-    Trait: 
+    Description: "\uC801\uC774 \uC870\uC885\uD558\uB294 \uB4DC\uB860. \uB0B4\uBD80\uC5D0\uC120
+      '\uC694\uB9C8'\uB77C\uACE0 \uBD88\uB9AC\uACE0 \uC788\uB2E4. \uC6D0\uAC70\uB9AC
+      \uC870\uC885\uC774 \uAC00\uB2A5\uD55C \uC544\uCE20 \uB9AC\uC2DC\uBC84\uAC00
+      \uD0D1\uC7AC\uB41C \uAC83\uC73C\uB85C \uBBF8\uB904\uBCF4\uC544 \uAC00\uAE4C\uC6B4
+      \uACF3\uC5D0 \uC228\uC5B4\uC788\uB294 \uCE90\uC2A4\uD130\uAC00 \uC870\uC885\uD558\uACE0
+      \uC788\uB294 \uAC83\uC73C\uB85C \uBCF4\uC778\uB2E4. \uBC29\uC5B4\uB825\uC774
+      \uB192\uC740 \uC624\uD37C\uB808\uC774\uD130\uC5D0\uAC90 \uD070 \uB300\uBBF8\uC9C0\uB97C
+      \uC904 \uC218\uB294 \uC5C6\uACA0\uC9C0\uB9CC, \uADF8\uB807\uC9C0 \uC54A\uC740
+      \uC624\uD37C\uB808\uC774\uD130\uC5D0\uAC90 \uC5EC\uC804\uD788 \uC704\uD611\uC801\uC778
+      \uC874\uC7AC\uB2E4."
+    Trait: "\u2022<indent=15><line-height=25>\uBE44\uD589 \uC720\uB2DB</line-height></indent>"
     ImmuneType: 0
   VariableData:
     Hp:

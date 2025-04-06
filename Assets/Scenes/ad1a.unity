@@ -151,14 +151,96 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: c3eaadf5fd7e65842b0cd33054f9e0a5, type: 2}
+    - {fileID: 11400000, guid: 993705e5ed411c341867fe005b459917, type: 2}
+    - {fileID: 11400000, guid: bc16c49c83e665a4091633ddb40b734c, type: 2}
+    - {fileID: 11400000, guid: 58e2b1500cedc8e47999736f18cec14b, type: 2}
+    - {fileID: 11400000, guid: 4ce71c52fad893a4d8c75346e13772aa, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: m_EnemyDataDictionary
-      Entry: 6
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[AvantGardeMaker.ad1a.EnemyData,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\uC6D0\uC11D\uCDA9"
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\uC11D\uAD81\uBCD1"
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "'\uC694\uB9C8'"
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\uACE0\uC5D0\uB108\uC9C0 \uC6D0\uC11D\uCDA9"
+    - Name: $v
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\uC740\uC2E0\uC11D\uAD81\uBCD1"
+    - Name: $v
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
@@ -169,6 +251,12 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 2
     <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
+  m_EnemyDataList:
+  - {fileID: 11400000, guid: c3eaadf5fd7e65842b0cd33054f9e0a5, type: 2}
+  - {fileID: 11400000, guid: 993705e5ed411c341867fe005b459917, type: 2}
+  - {fileID: 11400000, guid: bc16c49c83e665a4091633ddb40b734c, type: 2}
+  - {fileID: 11400000, guid: 58e2b1500cedc8e47999736f18cec14b, type: 2}
+  - {fileID: 11400000, guid: 4ce71c52fad893a4d8c75346e13772aa, type: 2}
 --- !u!4 &286487759
 Transform:
   m_ObjectHideFlags: 0

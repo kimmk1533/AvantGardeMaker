@@ -414,7 +414,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 적 관련 함수
 		public void AddEnemyData(EnemyData enemyData)
 		{
-			m_EnemyDataMap.TryAdd(enemyData.Name, enemyData);
+			m_EnemyDataMap.TryAdd(enemyData.EngName, enemyData);
 		}
 		#endregion
 

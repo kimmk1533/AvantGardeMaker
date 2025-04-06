@@ -87,11 +87,13 @@ namespace AvantGardeMaker.ad1a
 	public class EnemyData : ScriptableObject
 	{
 		//이름(키 값임)
-		public string Name = string.Empty;
+		public string EngName = string.Empty;
+		public string KorName = string.Empty;
 
 		//고정된 값
 		public EnemyFixedData FixedData = new EnemyFixedData();
 		//전투중 바뀔 수 있는 값
 		public EnemyVariableData VariableData = new EnemyVariableData();
 	}
+
 }

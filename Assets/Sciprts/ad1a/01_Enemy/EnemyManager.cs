@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using AvantGardeMaker.ad1a.Enum;
+using AvantGardeMaker.Ceeu;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -26,8 +27,7 @@ namespace AvantGardeMaker.ad1a
 	{
 		#region 기본 템플릿
 		#region 변수
-		private string m_FilePath;
-		private StageData m_CurStageData;
+		private string m_ForderPath;
 
 		private bool[,] m_TestMap;
 
@@ -35,11 +35,8 @@ namespace AvantGardeMaker.ad1a
 		private List<Enemy> m_EnemyList;
 
 		//스크립터블 오브젝트 추가용
-		public List<EnemyData> m_EnemyDataList;
-
-		//enemy별 <이름, 정보> 딕셔너리(저장, 불러오기 용)
 		[SerializeField]
-		private Dictionary<string, EnemyData> m_EnemyDataDictionary = null;
+		private List<EnemyData> m_EnemyDataList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -58,24 +55,24 @@ namespace AvantGardeMaker.ad1a
 			InitializeMain();
 		}
 
-		void Update()
-		{
-			if (Input.GetKeyDown(KeyCode.S))
-			{
-				SaveEnemyData();
-				Debug.Log("데이터 저장 완료");
-			}
+		//void Update()
+		//{
+		//	if (Input.GetKeyDown(KeyCode.S))
+		//	{
+		//		SaveEnemyData();
+		//		Debug.Log("데이터 저장 완료");
+		//	}
 
-			//죽은 적을 오브젝트 풀에 반환
-			for (int i = 0; i < m_EnemyList.Count; i++)
-			{
-				if (m_EnemyList[i].m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
-				{
-					Despawn(m_EnemyList[i]);
-					m_EnemyList.RemoveAt(i);
-				}
-			}
-		}
+		//	//죽은 적을 오브젝트 풀에 반환
+		//	for (int i = 0; i < m_EnemyList.Count; i++)
+		//	{
+		//		if (m_EnemyList[i].m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
+		//		{
+		//			Despawn(m_EnemyList[i]);
+		//			m_EnemyList.RemoveAt(i);
+		//		}
+		//	}
+		//}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -86,11 +83,6 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.Initialize();
 
-			if (m_EnemyDataDictionary == null)
-			{
-				m_EnemyDataDictionary = new Dictionary<string, EnemyData>();
-			}
-
 			m_TestMap = new bool[7, 7]
 			{ { true,true,true,false,true,true,true},
 			  { true,false,true,false,true,false,true},
@@ -100,25 +92,10 @@ namespace AvantGardeMaker.ad1a
 			  { true,false,true,false,true,false,true},
 			  { true,false,true,true,true,false,true},};
 
-			m_FilePath = Path.Combine(Application.dataPath, "..", "Data", "EnemyData.json");
-			m_CurStageData = new StageData();
+			m_ForderPath = "ad1a/Data/EnemyData";
 
-			//전부 기본값을 가진 DummyEnemy 1개를 소환하는 DummyStage
-			m_CurStageData.m_Stage = "DummyStage";
-
-			EnemyData enemyData = new EnemyData();
-			m_CurStageData.m_EnemyDataList.Add(enemyData);
-
-			EnemySpawnData enemySpawnData = new EnemySpawnData();
-			m_CurStageData.m_EnemySpawnDataList.Add(enemySpawnData);
-
-			m_EnemyList = new List<Enemy>();
-
-			m_EnemyDataDictionary = new Dictionary<string, EnemyData>()
-			{
-				{"111111",null},
-				{"222222",enemyData },
-			};
+			//json에서 EnemyData를 꺼내와 저장
+			m_EnemyDataList = new List<EnemyData>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -135,6 +112,8 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.InitializeMain();
 
+			//LoadEnemyData();
+
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
 			//StartCoroutine(StartEnemyCoroutine());
 		}
@@ -150,168 +129,112 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 		#endregion
 
-		#region Json
-		[System.Serializable]
-		public class JsonEnemyDataList
-		{
-			public EnemyData[] m_EnemyDataList = null;
-			public JsonEnemyDataList(int count) { m_EnemyDataList = new EnemyData[count]; }
-		}
-
-		[Button("Save EnemyData")]
-		///<summary>
-		///EnemyDataDictionary에 있는 EnemyData를 json으로 저장
-		/// </summary>
-		public void SaveEnemyData()
-		{
-			JsonEnemyDataList enemyDataList = new JsonEnemyDataList(m_EnemyDataDictionary.Count);
-			int index = 0;
-			foreach (var item in m_EnemyDataDictionary)
-			{
-				enemyDataList.m_EnemyDataList[index++] = item.Value;
-			}
-			File.WriteAllText(m_FilePath, JsonUtility.ToJson(enemyDataList, true));
-		}
-
 		[Button("Load EnemyData")]
 		///<summary>
-		///json 파일에 있는 EnemyData를 저장
+		/// Resources 폴더에 있는 EnemyData 스크립터블 오브젝트를 List에 저장
 		/// </summary>
 		public void LoadEnemyData()
 		{
-			string json = File.ReadAllText(m_FilePath);
-			JsonEnemyDataList dataList = JsonUtility.FromJson<JsonEnemyDataList>(json);
-
-			m_EnemyDataDictionary.Clear();
-			for (int i = 0; i < dataList.m_EnemyDataList.Length; i++)
-			{
-				EnemyData enemyData = dataList.m_EnemyDataList[i];
-				m_EnemyDataDictionary.Add(enemyData.Name, enemyData);
-			}
+			m_EnemyDataList.Clear();
+			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>(m_ForderPath));
 		}
-		#endregion
 		public EnemyData GetEnemyData(string name)
 		{
-			if (m_EnemyDataDictionary.TryGetValue(name, out EnemyData enemyData) == false)
-			{
-				Debug.LogError("Enemy name " + name + " not found.");
-				return null;
-			}
-			return m_EnemyDataDictionary[name];
+			return m_EnemyDataList.Find(n => n.name == name);
+		}
+
+		public List<EnemyData> GetAllEnemyData()
+		{
+			return m_EnemyDataList;
 		}
 
 		[Button]
-		public void AddScriptable2Dictionary()
+		public void ClearEnemyDataList()
 		{
-			if (m_EnemyDataList == null)
-			{
-				Debug.LogError("m_EnemyDataList is null");
-				return;
-			}
+			m_EnemyDataList.Clear();
+		}
 
-			if(m_EnemyDataDictionary == null)
-				m_EnemyDataDictionary = new Dictionary<string, EnemyData>();
-
+		public void SaveEnemyData(ref StageData stageData)
+		{
 			for (int i = 0; i < m_EnemyDataList.Count; i++)
 			{
-				if(!m_EnemyDataDictionary.TryAdd(m_EnemyDataList[i].Name, m_EnemyDataList[i]))
-				{
-					Debug.LogError("Scriptable to Dictionary Failed");
-					return;
-				}
+				stageData.AddEnemyData(m_EnemyDataList[i]);
 			}
 		}
 
-		[Button]
-		public void ClearEnemyDictionary()
-		{
-			m_EnemyDataDictionary.Clear();
-		}
+		/*///// <summary>
+		///// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴
+		///// </summary>
+		//public IEnumerator StartEnemyCoroutine()
+		//{
+		//	for (int i = 0; i < m_CurStageData.m_EnemySpawnDataList.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
+		//	{
+		//		StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyDataList, m_CurStageData.m_EnemySpawnDataList));
+		//	}
+		//	yield return null;
+		//}
 
-		/// <summary>
-		/// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴
-		/// </summary>
-		public IEnumerator StartEnemyCoroutine()
-		{
-			if (m_CurStageData == null)//Init이 실행되지 않았다면 즉시 종료
-			{
-				Debug.LogError("Init doesn't run(CurStageData == null)");
-				yield break;
-			}
-			if (m_CurStageData.m_EnemyDataList.Count == 0 ||
-			m_CurStageData.m_EnemySpawnDataList.Count == 0)//현재 스테이지 정보가 비어있다면 즉시 종료
-			{
-				Debug.LogError("StageData is Empty(data.Count == 0)");
-				yield break;
-			}
+		///// <summary>
+		///// 적을 무리 단위로 스폰하는 코루틴을 실행시킴
+		///// </summary>
+		//public IEnumerator GenerateEnemyGroup(List<EnemyData> enemyData, List<EnemySpawnData> enemySpawnData)
+		//{
+		//	Debug.Log("GenerateEnemyGroup");
+		//	EnemyData curEnemy;
+		//	for (int i = 0; i < enemySpawnData.Count; i++)
+		//	{
+		//		yield return new WaitForSeconds(enemySpawnData[i].Time);
+		//		curEnemy = enemyData.Find(n => n.EngName.Equals(enemySpawnData[i].Name));
+		//		StartCoroutine(GenerateEnemy(curEnemy, enemySpawnData[i]));
+		//	}
+		//}
 
-			for (int i = 0; i < m_CurStageData.m_EnemySpawnDataList.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
-			{
-				StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyDataList, m_CurStageData.m_EnemySpawnDataList));
-			}
-		}
+		///// <summary>
+		///// 적을 오브젝트 풀에서 get해와 enemyData를 넣고 움직이는 코루틴을 실행시킴
+		///// </summary>
+		//public IEnumerator GenerateEnemy(EnemyData enemyData, EnemySpawnData enemySpawnData)
+		//{
+		//	Debug.Log("GenerateEnemy");
+		//	enemySpawnData.StartPos = new Vector3(6, 0, 6);
+		//	enemySpawnData.EndPos = new Vector3(0, 0, 6);
+		//	for (int i = 0; i < enemySpawnData.Amount; i++)
+		//	{
+		//		if (i != 0)
+		//			yield return new WaitForSeconds(enemySpawnData.Interval);
 
-		/// <summary>
-		/// 적을 무리 단위로 스폰하는 코루틴을 실행시킴
-		/// </summary>
-		public IEnumerator GenerateEnemyGroup(List<EnemyData> enemyData, List<EnemySpawnData> enemySpawnData)
-		{
-			Debug.Log("GenerateEnemyGroup");
-			EnemyData curEnemy;
-			for (int i = 0; i < enemySpawnData.Count; i++)
-			{
-				yield return new WaitForSeconds(enemySpawnData[i].Time);
-				curEnemy = enemyData.Find(n => n.Name.Equals(enemySpawnData[i].Name));
-				StartCoroutine(GenerateEnemy(curEnemy, enemySpawnData[i]));
-			}
-		}
+		//		Enemy newEnemy = GetBuilder(enemySpawnData.Name)  //이때 실제 적 오브젝트가 생성됨
+		//			.SetActive(true)
+		//			.SetPosition(enemySpawnData.StartPos)
+		//			.SetAutoInit(true)
+		//			.Spawn();
 
-		/// <summary>
-		/// 적을 오브젝트 풀에서 get해와 enemyData를 넣고 움직이는 코루틴을 실행시킴
-		/// </summary>
-		public IEnumerator GenerateEnemy(EnemyData enemyData, EnemySpawnData enemySpawnData)
-		{
-			Debug.Log("GenerateEnemy");
-			enemySpawnData.StartPos = new Vector3(6, 0, 6);
-			enemySpawnData.EndPos = new Vector3(0, 0, 6);
-			for (int i = 0; i < enemySpawnData.Amount; i++)
-			{
-				if (i != 0)
-					yield return new WaitForSeconds(enemySpawnData.Interval);
+		//		newEnemy.m_EnemyData = enemyData;
+		//		newEnemy.m_CurPos = enemySpawnData.StartPos;
 
-				Enemy newEnemy = GetBuilder(enemySpawnData.Name)  //이때 실제 적 오브젝트가 생성됨
-					.SetActive(true)
-					.SetPosition(enemySpawnData.StartPos)
-					.SetAutoInit(true)
-					.Spawn();
+		//		m_EnemyList.Add(newEnemy);
 
-				newEnemy.m_EnemyData = enemyData;
-				newEnemy.m_CurPos = enemySpawnData.StartPos;
+		//		StartCoroutine(EnemyMove(newEnemy, enemySpawnData));
+		//	}
+		//}
 
-				m_EnemyList.Add(newEnemy);
+		///// <summary>
+		///// 시작 지점에 나타나 목표 지점 List가 빌 때까지 이동과 대기(0초 가능) 반복
+		///// </summary>
+		//public IEnumerator EnemyMove(Enemy enemy, EnemySpawnData enemySpawnData)
+		//{
+		//	//경유 지점 추가
+		//	List<Vector3> path = PathFinder.FindPath(enemySpawnData.StartPos, enemySpawnData.EndPos, m_TestMap);
+		//	//path[0]은 시작지점임
+		//	for (int i = 1; i < path.Count; i++)
+		//		enemySpawnData.TransitPos.Add(path[i]);
 
-				StartCoroutine(EnemyMove(newEnemy, enemySpawnData));
-			}
-		}
-
-		/// <summary>
-		/// 시작 지점에 나타나 목표 지점 List가 빌 때까지 이동과 대기(0초 가능) 반복
-		/// </summary>
-		public IEnumerator EnemyMove(Enemy enemy, EnemySpawnData enemySpawnData)
-		{
-			//경유 지점 추가
-			List<Vector3> path = PathFinder.FindPath(enemySpawnData.StartPos, enemySpawnData.EndPos, m_TestMap);
-			//path[0]은 시작지점임
-			for (int i = 1; i < path.Count; i++)
-				enemySpawnData.TransitPos.Add(path[i]);
-
-			for (int i = 0; i < enemySpawnData.TransitPos.Count; i++)
-			{
-				enemy.m_TargetPos = enemySpawnData.TransitPos[i];
-				enemy.m_CurEnemyState = E_EnemyState.Move;
-				yield return new WaitUntil(() => enemy.m_CurEnemyState != E_EnemyState.Move);
-			}
-			yield break;
-		}
+		//	for (int i = 0; i < enemySpawnData.TransitPos.Count; i++)
+		//	{
+		//		enemy.m_TargetPos = enemySpawnData.TransitPos[i];
+		//		enemy.m_CurEnemyState = E_EnemyState.Move;
+		//		yield return new WaitUntil(() => enemy.m_CurEnemyState != E_EnemyState.Move);
+		//	}
+		//	yield break;
+		//}*/
 	}
 }

@@ -112,7 +112,7 @@ namespace AvantGardeMaker.Ceeu
 			#region 적 정보 불러오기
 			foreach (var item in m_EnemyDataList)
 			{
-				m_EnemyDataMap.Add(item.Name, item);
+				m_EnemyDataMap.Add(item.EngName, item);
 			}
 			#endregion
 		}

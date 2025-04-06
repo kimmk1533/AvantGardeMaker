@@ -17,12 +17,12 @@ namespace AvantGardeMaker.ad1a
 		public T CurStat;
 		public E_EnemyRankType Rank;
 
-		public VariableCombatStatValue(T val, E_EnemyRankType rankType)
+		public VariableCombatStatValue(T val, E_EnemyRankType rankType = E_EnemyRankType.E)
 		{
 			InitStat = CurStat = val;
 			Rank = rankType;
 		}
-		public VariableCombatStatValue(T initVal, T curVal, E_EnemyRankType rankType)
+		public VariableCombatStatValue(T initVal, T curVal, E_EnemyRankType rankType = E_EnemyRankType.E)
 		{
 			InitStat = initVal;
 			CurStat = curVal;

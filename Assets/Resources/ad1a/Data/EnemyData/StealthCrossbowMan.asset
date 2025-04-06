@@ -12,24 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef381811585a4294cb0a90d73b3a5bf0, type: 3}
   m_Name: StealthCrossbowMan
   m_EditorClassIdentifier: 
-  Name: 
+  EngName: StealthCrossbowMan
+  KorName: "\uC740\uC2E0\uC11D\uAD81\uBCD1"
   FixedData:
     RaceType: 0
-    Code: 
-    AtkPattern: 0
+    Code: C1
+    AtkPattern: 2
     DmgType: 0
     EnemyType: 0
-    LossHp: 0
+    LossHp: 1
     Flyable: 0
     PortraitImagePath: 
     Weight:
-      InitStat: 0
-      CurStat: 0
+      InitStat: 1
+      CurStat: 1
     Range:
-      InitStat: 0
-      CurStat: 0
-    Description: 
-    Trait: 
+      InitStat: 2.2
+      CurStat: 2.2
+    Description: "\uAE38\uB9AC\uC288\uD2B8\uCC98\uB7FC \uBCF4\uC774\uB294 \uBC29\uC5B4\uAD6C\uB97C
+      \uC785\uC740 \uB9AC\uC720\uB2C8\uC628\uC758 \uC6D0\uAC70\uB9AC \uC804\uD22C\uC6D0.
+      \uAD50\uC804\uD558\uAE30 \uC804\uAE4C\uC9C4 \uB2E4\uB978 \uC720\uB2DB\uB4E4\uC740
+      \uACF5\uACA9 \uBAA9\uD45C\uB85C \uC0BC\uC744 \uC218 \uC5C6\uC73C\uB2C8, \uC81C\uB300\uB85C
+      \uC0C1\uB300\uD558\uACE0\uC790 \uD55C\uB2E4\uBA74 \uC8FC\uBCC0\uC758 \uD611\uB825\uC774
+      \uD544\uC218\uB2E4."
+    Trait: "\u2022<indent=15><line-height=25>[\uC740\uC2E0]: \uC800\uC9C0\uB418\uC9C0
+      \uC54A\uC558\uC744 \uB54C \uACF5\uACA9 \uBAA9\uD45C\uAC00 \uB418\uC9C0 \uC54A\uB294\uB2E4.</line-height></indent>"
     ImmuneType: 0
   VariableData:
     Hp:
