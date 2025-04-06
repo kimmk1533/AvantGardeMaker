@@ -24,13 +24,13 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트 함수
 		public void OnButtonClicked()
 		{
-			M_EditMode.SetTileType(m_TileType);
+			M_MapEditor.SetTileType(m_TileType);
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_EditMode => MapEditorManager.Instance;
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

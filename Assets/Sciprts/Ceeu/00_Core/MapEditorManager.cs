@@ -33,13 +33,10 @@ namespace AvantGardeMaker.Ceeu
 		// 타일 배치 가능 여부
 		private bool m_TilePlacementFlag = true;
 
-		// 생성한 타일 부모
-		private GameObject m_TileParent = null;
-
 		private Vector3 m_HighGroundTileOffset = Vector3.back * 0.2f;
 
 		// 현재 타일 타입
-		private E_TileType m_TileType = E_TileType.LowGroundTile;
+		private E_TileType m_CurrentTileType = E_TileType.LowGroundTile;
 		// 타일 프리뷰 오브젝트
 		private Tile m_TilePreview = null;
 		// 타일 프리뷰 오브젝트 맵
@@ -62,16 +59,6 @@ namespace AvantGardeMaker.Ceeu
 
 		[SerializeField]
 		private TMP_FontAsset m_UIFont = null;
-
-		// 생성한 타일 맵
-		private Dictionary<Vector2Int, (E_TileType tileType, Tile tile)> m_TileMap = null;
-		// 적 데이터 맵
-		[SerializeField, ReadOnly]
-		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
-		// 적 스폰 데이터 맵
-		// <웨이브, 소환 데이터 리스트>
-		[SerializeField, ReadOnly]
-		private Dictionary<int, List<EnemySpawnData>> m_EnemySpawnDataMap = null;
 		#endregion
 		#endregion
 
@@ -88,8 +75,6 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 타일 관련 프로퍼티
-		public GameObject tileParent => m_TileParent;
-
 		private bool tilePreviewActive =>
 			m_CameraMode == E_CameraMode.EditMode &&
 			m_IsCameraSwitching == false;
@@ -126,6 +111,8 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static TileManager M_Tile => TileManager.Instance;
+		private static EnemyManager M_Enemy => EnemyManager.Instance;
+		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -175,10 +162,6 @@ namespace AvantGardeMaker.Ceeu
 			}
 			#endregion
 
-			m_TileMap = new Dictionary<Vector2Int, (E_TileType, Tile)>();
-			m_EnemyDataMap = new Dictionary<string, EnemyData>();
-			m_EnemySpawnDataMap = new Dictionary<int, List<EnemySpawnData>>();
-
 			onCameraSwitcingFinished += OnCameraSwitchingFinished;
 
 			gameObject.SetActive(false);
@@ -197,9 +180,6 @@ namespace AvantGardeMaker.Ceeu
 		public void InitializeMain()
 		{
 			m_TilePlacementFlag = true;
-
-			m_TileParent = new GameObject("Tile Parent");
-			m_TileParent.transform.position = Vector3.zero;
 
 			if (m_TilePreviewMap == null)
 			{
@@ -223,9 +203,11 @@ namespace AvantGardeMaker.Ceeu
 			}
 
 			m_EditModeType = E_EditModeType.Tile;
-			m_TileType = E_TileType.LowGroundTile;
+			m_CurrentTileType = E_TileType.LowGroundTile;
 
-			m_TilePreview = m_TilePreviewMap[m_TileType];
+			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
+
+			LoadData();
 
 			gameObject.SetActive(true);
 		}
@@ -234,7 +216,7 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void FinallizeMain()
 		{
-			m_TileParent = null;
+
 		}
 		#endregion
 
@@ -330,19 +312,21 @@ namespace AvantGardeMaker.Ceeu
 				m_TilePreview.transform.position = (Vector3Int)mousePosition;
 				m_TilePreview.gameObject.SetActive(true);
 
+				(E_TileType tileType, Tile tile) tileValue = M_Tile.GetTileValue(mousePosition);
+
 				// 타일 배치
 				if (Input.GetMouseButton(0) == true)
 				{
-					if (m_TileMap.TryGetValue(mousePosition, out (E_TileType tileType, Tile tile) value) == false)
-						AddTile(mousePosition);
-					else if (value.tileType != m_TileType)
-						ReplaceTile(mousePosition);
+					if (tileValue.tile == null)
+						M_Tile.AddTile(mousePosition, m_CurrentTileType);
+					else if (tileValue.tileType != m_CurrentTileType)
+						M_Tile.ReplaceTile(mousePosition, m_CurrentTileType);
 				}
 				// 타일 제거
 				if (Input.GetMouseButton(1) == true &&
-					m_TileMap.ContainsKey(mousePosition) == true)
+					tileValue.tile != null)
 				{
-					RemoveTile(mousePosition);
+					M_Tile.RemoveTile(mousePosition);
 				}
 			}
 			else
@@ -365,76 +349,42 @@ namespace AvantGardeMaker.Ceeu
 
 			return mousePositionInt;
 		}
-		private void AddTile(Vector2Int tilePos)
+		public Vector3 GetTileOffset(E_TileType tileType)
 		{
-			AddTile(tilePos, m_TileType);
+			if (tileType == E_TileType.HighGroundTile)
+				return m_HighGroundTileOffset;
+
+			return Vector3.zero;
 		}
-		public void AddTile(Vector2Int tilePos, E_TileType tileType)
-		{
-			string tileKey = tileType.ToString().Replace('_', ' ');
 
-			Vector3 tilePosition = new Vector3(tilePos.x, tilePos.y);
-			tilePosition += (tileType == E_TileType.HighGroundTile ? m_HighGroundTileOffset : Vector3.zero);
-
-			Tile newTile = M_Tile.GetBuilder(tileKey)
-				.SetPosition(tilePosition)
-				.SetActive(true)
-				.SetParent(m_TileParent.transform)
-				.SetName(tilePos.ToString())
-				.SetAutoInit(true)
-				.Spawn();
-
-			m_TileMap.Add(tilePos, (tileType, newTile));
-		}
-		private void RemoveTile(Vector2Int tilePos)
-		{
-			Tile removeTile = m_TileMap[tilePos].tile;
-
-			M_Tile.Despawn(removeTile);
-
-			m_TileMap.Remove(tilePos);
-		}
-		private void ReplaceTile(Vector2Int tilePos)
-		{
-			RemoveTile(tilePos);
-
-			AddTile(tilePos);
-		}
 		public void SetTileType(E_TileType tileType)
 		{
-			m_TileType = tileType;
-			m_TilePreview = m_TilePreviewMap[m_TileType];
-		}
-		public Material GetTileMaterial(string tileKey)
-		{
-			return m_MaterialMap[tileKey];
+			m_CurrentTileType = tileType;
+			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
 		}
 		#endregion
 
 		#region 적 관련 함수
-		public void AddEnemyData(EnemyData enemyData)
-		{
-			m_EnemyDataMap.TryAdd(enemyData.EngName, enemyData);
-		}
 		#endregion
 
 		#region 저장 & 불러오기 관련 함수
 		[Button]
 		public void SaveData()
 		{
-			m_EditingStageData.InitializeBeforeSave();
+			m_EditingStageData.Initialize();
 
-			foreach (var item in m_TileMap)
-			{
-				m_EditingStageData.AddTile(item.Key, item.Value.tileType);
-			}
-			foreach (var item in m_EnemyDataMap)
-			{
-				m_EditingStageData.AddEnemyData(item.Value);
-			}
+			#region 타일 저장
+			M_Tile.SaveTileData(ref m_EditingStageData);
+			#endregion
 
-			JsonBuilder.Serialize(mapDataSavingFilePath, m_EditingStageData);
+			#region 적 저장
+			M_MapEditorUI.SaveEnemyDataUI(ref m_EditingStageData);
+			M_MapEditorUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
+			#endregion
 
+			JsonBuilder.Serialize<StageData>(mapDataSavingFilePath, m_EditingStageData);
+
+			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = m_UIFont,
@@ -445,6 +395,7 @@ namespace AvantGardeMaker.Ceeu
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 
 			Debug.Log("[Json 저장 완료]: " + mapDataSavingFilePath);
+			#endregion
 		}
 		[Button]
 		public void LoadData()
@@ -455,21 +406,13 @@ namespace AvantGardeMaker.Ceeu
 				return;
 			}
 
-			List<Tile> tileList = new List<Tile>();
-			foreach (var item in m_TileMap)
-			{
-				tileList.Add(item.Value.tile);
-			}
-			int count = tileList.Count;
-			for (int i = 0; i < count; ++i)
-			{
-				M_Tile.Despawn(tileList[i]);
-			}
-			m_TileMap.Clear();
-
 			m_EditingStageData = JsonBuilder.Deserialize<StageData>(mapDataSavingFilePath);
-			m_EditingStageData.InitializeAfterLoad();
 
+			M_Tile.LoadTileData(ref m_EditingStageData);
+			M_Enemy.LoadEnemyData(ref m_EditingStageData);
+			M_MapEditorUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
+
+			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = m_UIFont,
@@ -480,6 +423,7 @@ namespace AvantGardeMaker.Ceeu
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 
 			Debug.Log("[Json 로드 완료]: " + mapDataSavingFilePath);
+			#endregion
 		}
 		#endregion
 	}

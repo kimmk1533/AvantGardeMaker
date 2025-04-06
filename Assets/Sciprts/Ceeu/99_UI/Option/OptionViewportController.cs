@@ -68,5 +68,13 @@ namespace AvantGardeMaker.Ceeu
 			m_OptionViewportMap.Clear();
 		}
 		#endregion
+
+		public IEnumerable<OptionViewport> GetOptionViewportEnumerator()
+		{
+			foreach (var item in m_OptionViewportMap)
+			{
+				yield return item.Value;
+			}
+		}
 	}
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
@@ -19,13 +20,16 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 옵션 패널 관련 변수
-
+		private int m_MaxWave;
 		#endregion
 
 		private Stack<Panel> m_PanelStack = null;
 
 		[SerializeField, ReadOnly(true)]
 		private EnemyData m_TestEnemyData = null;
+
+		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
+		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -44,12 +48,33 @@ namespace AvantGardeMaker.Ceeu
 		public RectTransform enemyDataUIParent { get; set; }
 		public RectTransform enemyWayPointDataUIParent { get; set; }
 		public RectTransform enemyImmuneDescriptionParent { get; set; }
+
+		public int maxWave { get => m_MaxWave; }
 		#endregion
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
+		private void OnEnemySpawnDataUISpawned(ObjectPoolItemBase objectPoolItem)
+		{
+			EnemySpawnDataUI enemySpawnDataUI = objectPoolItem as EnemySpawnDataUI;
+
+			if (m_SpawnedEnemySpawnDataUIList.Contains(enemySpawnDataUI) == true)
+				return;
+
+			m_SpawnedEnemySpawnDataUIList.Add(enemySpawnDataUI);
+
+			ReorderEnemySpawnDataUI();
+		}
+		private void OnEnemySpawnDataUIDespawned(ObjectPoolItemBase objectPoolItem)
+		{
+			EnemySpawnDataUI enemySpawnDataUI = objectPoolItem as EnemySpawnDataUI;
+
+			m_SpawnedEnemySpawnDataUIList.Remove(enemySpawnDataUI);
+
+			ReorderEnemySpawnDataUI();
+		}
 		#endregion
 		#endregion
 
@@ -76,6 +101,12 @@ namespace AvantGardeMaker.Ceeu
 
 			m_PanelStack = new Stack<Panel>();
 
+			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
+			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
+
+			GetPool("Enemy Spawn Data UI").onSpawned += OnEnemySpawnDataUISpawned;
+			GetPool("Enemy Spawn Data UI").onDespawned += OnEnemySpawnDataUIDespawned;
+
 			gameObject.SetActive(false);
 		}
 		/// <summary>
@@ -98,18 +129,9 @@ namespace AvantGardeMaker.Ceeu
 			optionPanel.Initialize();
 			enemyDataSettingPanel.Initialize();
 
-			//foreach (var item in M_Enemy.GetAllEnemyData())
-			{
-				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
-					.SetScale(Vector3.one)
-					.SetParent(enemyDataUIParent)
-					.SetAutoInit(true)
-					.SetActive(true)
-					.Spawn() as EnemyDataUI;
+			m_MaxWave = 0;
 
-				//enemyDataUI.enemyData = item;
-				enemyDataUI.enemyData = m_TestEnemyData;
-			}
+			LoadEnemyDataUI();
 
 			gameObject.SetActive(true);
 		}
@@ -121,6 +143,17 @@ namespace AvantGardeMaker.Ceeu
 			base.FinallizeMain();
 
 			m_PanelStack.Clear();
+
+			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
+			{
+				Despawn(m_SpawnedEnemyDataUIList[i]);
+			}
+			m_SpawnedEnemyDataUIList.Clear();
+			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
+			{
+				Despawn(m_SpawnedEnemySpawnDataUIList[i]);
+			}
+			m_SpawnedEnemySpawnDataUIList.Clear();
 
 			menuPanel.Finallize();
 
@@ -163,6 +196,128 @@ namespace AvantGardeMaker.Ceeu
 				return;
 
 			m_PanelStack.Push(panel);
+		}
+
+		public void SaveEnemyDataUI(ref StageData stageData)
+		{
+			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
+			{
+				EnemyDataUI enemyDataUI = m_SpawnedEnemyDataUIList[i];
+
+				stageData.AddEnemyData(enemyDataUI.enemyData);
+			}
+		}
+		public void SaveEnemySpawnDataUI(ref StageData stageData)
+		{
+			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
+			{
+				EnemySpawnDataUI enemySpawnDataUI = m_SpawnedEnemySpawnDataUIList[i];
+
+				stageData.AddEnemySpawnData(enemySpawnDataUI.MakeSpawnData());
+			}
+		}
+
+		private void LoadEnemyDataUI()
+		{
+			ClearEnemyDataUI();
+
+			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
+			for (int i = 0; i < enemyDataList.Count; ++i)
+			{
+				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
+					.SetParent(enemyDataUIParent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn() as EnemyDataUI;
+
+				enemyDataUI.enemyData = enemyDataList[i];
+				enemyDataUI.debugText = enemyDataList[i].KrName;
+
+				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
+			}
+		}
+		public void LoadEnemySpawnDataUI(ref StageData stageData)
+		{
+			LoadEnemyDataUI();
+
+			ClearEnemySpawnDataUI();
+
+			List<EnemySpawnData> enemySpawnDataList = stageData.enemySpawnDataList;
+			for (int i = 0; i < enemySpawnDataList.Count; ++i)
+			{
+				EnemySpawnDataUI enemySpawnDataUI = GetBuilder("Enemy Spawn Data UI")
+					.SetParent(enemySpawnDataUIParent)
+					.SetScale(Vector3.one)
+					.SetActive(true)
+					.SetAutoInit(true)
+					.Spawn() as EnemySpawnDataUI;
+
+				EnemySpawnData enemySpawnData = enemySpawnDataList[i];
+
+				enemySpawnDataUI.enemyData = M_Enemy.GetEnemyData(enemySpawnData.Name);
+
+				enemySpawnDataUI.debugText = enemySpawnData.Name;
+				enemySpawnDataUI.count = enemySpawnData.Amount;
+				enemySpawnDataUI.interval = enemySpawnData.Interval;
+				enemySpawnDataUI.time = enemySpawnData.Time;
+				enemySpawnDataUI.wave = enemySpawnData.Wave;
+				enemySpawnDataUI.waveTime = enemySpawnData.WaveTime;
+			}
+			ReorderEnemySpawnDataUI();
+		}
+
+		public void ClearEnemyDataUI()
+		{
+			int count = m_SpawnedEnemyDataUIList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Despawn(m_SpawnedEnemyDataUIList[i]);
+			}
+			m_SpawnedEnemyDataUIList.Clear();
+		}
+		public void ClearEnemySpawnDataUI()
+		{
+			int count = m_SpawnedEnemySpawnDataUIList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Despawn(m_SpawnedEnemySpawnDataUIList[0]);
+			}
+			m_SpawnedEnemySpawnDataUIList.Clear();
+		}
+
+		public void ReorderEnemySpawnDataUI()
+		{
+			float waveTime = 0f;
+			int wave = 0;
+			EnemySpawnDataUI prevSpawnDataUI = null;
+
+			m_SpawnedEnemySpawnDataUIList = m_SpawnedEnemySpawnDataUIList
+				.OrderBy(enemySpawnDataUI => enemySpawnDataUI.wave)
+				.ThenBy(enemySpawnDataUI => enemySpawnDataUI.time)
+				.ToList();
+
+			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
+			{
+				EnemySpawnDataUI enemySpawnDataUI = m_SpawnedEnemySpawnDataUIList[i];
+
+				enemySpawnDataUI.transform.SetSiblingIndex(i);
+				enemySpawnDataUI.index = i;
+
+				waveTime = enemySpawnDataUI.waveTime;
+				if (wave < enemySpawnDataUI.wave)
+				{
+					if (wave + 1 != enemySpawnDataUI.wave)
+						enemySpawnDataUI.wave = wave + 1;
+					wave = enemySpawnDataUI.wave;
+					waveTime += (prevSpawnDataUI == null) ? 0f : prevSpawnDataUI.time;
+					m_MaxWave = wave;
+				}
+
+				enemySpawnDataUI.time = waveTime;
+
+				prevSpawnDataUI = enemySpawnDataUI;
+			}
 		}
 	}
 }

@@ -290,7 +290,7 @@ namespace AvantGardeMaker.Ceeu
 			/// 
 			/// 한섭 기준: 이름
 			/// 
-			m_NameText.text = enemyData.EngName;
+			m_NameText.text = enemyData.KrName;
 
 			/// 
 			/// 한섭 기준: 공격 방식

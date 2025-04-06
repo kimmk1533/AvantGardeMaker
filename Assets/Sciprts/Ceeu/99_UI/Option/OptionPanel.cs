@@ -19,8 +19,8 @@ namespace AvantGardeMaker.Ceeu
 		private Scrollbar m_ScrollBar = null;
 		private Button m_CloseButton = null;
 
-		private SaveButton m_SaveButton = null;
-		private LoadButton m_LoadButton = null;
+		private Button m_SaveButton = null;
+		private Button m_LoadButton = null;
 		#endregion
 
 		#region 프로퍼티
@@ -31,12 +31,12 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
-		public void OnChangedViewport(OptionViewport viewport)
+		private void OnChangedViewport(OptionViewport viewport)
 		{
 			m_ViewportParent.viewport = viewport.rectTransform;
 			m_ViewportParent.content = viewport.content;
 		}
-		public void OnCloseButtonClicked()
+		private void OnCloseButtonClicked()
 		{
 			gameObject.SetActive(false);
 
@@ -44,10 +44,20 @@ namespace AvantGardeMaker.Ceeu
 				m_CurrentViewport.gameObject.SetActive(false);
 			m_CurrentViewport = null;
 		}
+
+		private void OnSaveButtonClicked()
+		{
+			M_MapEditor.SaveData();
+		}
+		private void OnLoadButtonClicked()
+		{
+			M_MapEditor.LoadData();
+		}
 		#endregion
 		#endregion
 
 		#region 매니저
+		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -71,6 +81,11 @@ namespace AvantGardeMaker.Ceeu
 			{
 				m_ViewportController = m_ViewportParent.GetComponent<OptionViewportController>();
 				m_ViewportController.Initialize(this);
+
+				foreach (var item in m_ViewportController.GetOptionViewportEnumerator())
+				{
+					item.onViewportTurnOn += OnChangedViewport;
+				}
 			}
 
 			m_CurrentViewport = null;
@@ -85,15 +100,15 @@ namespace AvantGardeMaker.Ceeu
 
 			if (m_SaveButton == null)
 			{
-				m_SaveButton = m_RectTransform.FindInChildren<SaveButton>("Save Button");
+				m_SaveButton = m_RectTransform.FindInChildren<Button>("Save Button");
 
-				m_SaveButton.Initialize();
+				m_SaveButton.onClick.AddListener(OnSaveButtonClicked);
 			}
 			if (m_LoadButton == null)
 			{
-				m_LoadButton = m_RectTransform.FindInChildren<LoadButton>("Load Button");
+				m_LoadButton = m_RectTransform.FindInChildren<Button>("Load Button");
 
-				m_LoadButton.Initialize();
+				m_LoadButton.onClick.AddListener(OnLoadButtonClicked);
 			}
 
 			gameObject.SetActive(false);
@@ -101,12 +116,9 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void Finallize()
 		{
 			base.Finallize();
-
-			m_LoadButton.Finallize();
-			m_SaveButton.Finallize();
 
 			m_ViewportController.Finallize();
 		}

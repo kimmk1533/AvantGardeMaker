@@ -12,19 +12,61 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		private Button m_OptionButton = null;
-		private TMP_Text m_EnemyNameText = null;
+		private TMP_Text m_IndexText = null;
+		private Image m_EnemyPortraitImage = null;
+		private TMP_Text m_DebugText = null;
+		private TMP_InputField m_EnemyCountInputField = null;
 		private TMP_InputField m_IntervalInputField = null;
-		private TMP_InputField m_TimeStampInputField = null;
+		private TMP_Text m_TimeStampText = null;
+		private TMP_InputField m_WaveInputField = null;
 		private TMP_InputField m_WaveTimeInputField = null;
 		private Button m_DeleteButton = null;
 
 		private List<Vector2> m_EnemyWayPointList = null;
+		private List<float> m_EnemyWayPointDelayTimeList = null;
 		#endregion
 
 		#region 프로퍼티
 		public EnemyData enemyData { get; set; }
-		public EnemySpawnData enemySpawnData { get; set; }
+
+		public int index
+		{
+			get => int.Parse(m_IndexText.text);
+			set => m_IndexText.text = value.ToString();
+		}
+		public string debugText
+		{
+			get => m_DebugText.text;
+			set => m_DebugText.text = value;
+		}
+		public int count
+		{
+			get => int.Parse(m_EnemyCountInputField.text);
+			set => m_EnemyCountInputField.text = value.ToString();
+		}
+		public float interval
+		{
+			get => float.Parse(m_IntervalInputField.text);
+			set => m_IntervalInputField.SetTextWithoutNotify(value.ToString());
+		}
+		public float time
+		{
+			get => float.Parse(m_TimeStampText.text);
+			set => m_TimeStampText.text = value.ToString();
+		}
+		public int wave
+		{
+			get => int.Parse(m_WaveInputField.text);
+			set => m_WaveInputField.SetTextWithoutNotify(value.ToString());
+		}
+		public float waveTime
+		{
+			get => float.Parse(m_WaveTimeInputField.text);
+			set => m_WaveTimeInputField.SetTextWithoutNotify(value.ToString());
+		}
+
 		public List<Vector2> enemyWayPointList => m_EnemyWayPointList;
+		public List<float> enemyWayPointDelayTimeList => m_EnemyWayPointDelayTimeList;
 		#endregion
 
 		#region 이벤트
@@ -39,47 +81,34 @@ namespace AvantGardeMaker.Ceeu
 			settingPanel.gameObject.SetActive(true);
 		}
 
-		private void OnInputFieldFocused(string inputString, TMP_InputField inputField)
+		private void OnEnemyCountInputFieldSubmit(string inputString)
 		{
-			int index = inputString.IndexOf('s');
-			if (index == -1)
-				return;
+			int.TryParse(inputString, out int inputValue);
 
-			int count = inputString.LastIndexOf('s') - index + 1;
+			m_EnemyCountInputField.SetTextWithoutNotify(Mathf.Max(1, inputValue).ToString("#,###"));
+		}
+		private void OnIntervalInputFieldSubmit(string inputString)
+		{
+			int.TryParse(inputString, out int inputValue);
 
-			inputField.text = inputString.Remove(index, count);
+			m_IntervalInputField.SetTextWithoutNotify(Mathf.Max(1, inputValue).ToString("#,###"));
 		}
-		private void OnIntervalInputFieldFocused(string inputString)
+		private void OnWaveInputFieldSubmint(string inputString)
 		{
-			OnInputFieldFocused(inputString, m_IntervalInputField);
-		}
-		private void OnTimeStampInputFieldFocused(string inputString)
-		{
-			OnInputFieldFocused(inputString, m_TimeStampInputField);
-		}
-		private void OnWaveTimeInputFieldFocused(string inputString)
-		{
-			OnInputFieldFocused(inputString, m_WaveTimeInputField);
-		}
+			int.TryParse(inputString, out int inputValue);
 
-		private void OnInputFieldUnfocused(string inputString, TMP_InputField inputField)
-		{
-			if (inputField.text.EndsWith('s') == true)
-				return;
+			if (inputValue <= M_MapEditorUI.maxWave)
+				m_WaveInputField.SetTextWithoutNotify(inputValue.ToString());
 
-			inputField.text = inputString + "s";
+			M_MapEditorUI.ReorderEnemySpawnDataUI();
 		}
-		private void OnIntervalInputFieldUnfocused(string inputString)
+		private void OnWaveTimeInputFieldSubmit(string inputString)
 		{
-			OnInputFieldUnfocused(inputString, m_IntervalInputField);
-		}
-		private void OnTimeStampInputFieldUnfocused(string inputString)
-		{
-			OnInputFieldUnfocused(inputString, m_TimeStampInputField);
-		}
-		private void OnWaveTimeInputFieldUnfocused(string inputString)
-		{
-			OnInputFieldUnfocused(inputString, m_WaveTimeInputField);
+			float.TryParse(inputString, out float inputValue);
+			float.TryParse(m_TimeStampText.text, out float time);
+			m_TimeStampText.text = (time + inputValue).ToString();
+
+			M_MapEditorUI.ReorderEnemySpawnDataUI();
 		}
 
 		private void OnDeleteButtonClicked()
@@ -111,33 +140,50 @@ namespace AvantGardeMaker.Ceeu
 
 				m_OptionButton.onClick.AddListener(OnOptionButtonClicked);
 			}
-			if (m_EnemyNameText == null)
+
+			if (m_IndexText == null)
 			{
-				m_EnemyNameText = transform.Find<TMP_Text>("Enemy Name Text");
+				m_IndexText = transform.Find<TMP_Text>("Index Text");
 			}
+			if (m_EnemyPortraitImage == null)
+			{
+				m_EnemyPortraitImage = transform.Find("Enemy Portrait & Count").Find<Image>("Enemy Portrait");
+
+				//m_EnemyPortraitImage.sprite = 
+			}
+			if (m_DebugText == null)
+			{
+				m_DebugText = m_EnemyPortraitImage.GetComponentInChildren<TMP_Text>();
+			}
+			if (m_EnemyCountInputField == null)
+			{
+				m_EnemyCountInputField = transform.Find("Enemy Portrait & Count").Find<TMP_InputField>("Count InputField");
+
+				m_EnemyCountInputField.onSubmit.AddListener(OnEnemyCountInputFieldSubmit);
+			}
+			m_EnemyCountInputField.SetTextWithoutNotify(1.ToString());
+
 			if (m_IntervalInputField == null)
 			{
 				m_IntervalInputField = transform.Find<TMP_InputField>("Interval InputField");
 
-				m_IntervalInputField.onSelect.AddListener(OnIntervalInputFieldFocused);
-				m_IntervalInputField.onDeselect.AddListener(OnIntervalInputFieldUnfocused);
-				m_IntervalInputField.onEndEdit.AddListener(OnIntervalInputFieldUnfocused);
+				m_IntervalInputField.onSubmit.AddListener(OnIntervalInputFieldSubmit);
 			}
-			if (m_TimeStampInputField == null)
+			if (m_TimeStampText == null)
 			{
-				m_TimeStampInputField = transform.Find<TMP_InputField>("Time Stamp InputField");
+				m_TimeStampText = transform.Find("Time Stamp").Find<TMP_Text>("Time Stamp Text");
+			}
+			if (m_WaveInputField == null)
+			{
+				m_WaveInputField = transform.Find<TMP_InputField>("Wave InputField");
 
-				m_TimeStampInputField.onSelect.AddListener(OnTimeStampInputFieldFocused);
-				m_TimeStampInputField.onDeselect.AddListener(OnTimeStampInputFieldUnfocused);
-				m_TimeStampInputField.onEndEdit.AddListener(OnTimeStampInputFieldUnfocused);
+				m_WaveInputField.onSubmit.AddListener(OnWaveInputFieldSubmint);
 			}
 			if (m_WaveTimeInputField == null)
 			{
 				m_WaveTimeInputField = transform.Find<TMP_InputField>("Wave Time InputField");
 
-				m_WaveTimeInputField.onSelect.AddListener(OnWaveTimeInputFieldFocused);
-				m_WaveTimeInputField.onDeselect.AddListener(OnWaveTimeInputFieldUnfocused);
-				m_WaveTimeInputField.onEndEdit.AddListener(OnWaveTimeInputFieldUnfocused);
+				m_WaveTimeInputField.onSubmit.AddListener(OnWaveTimeInputFieldSubmit);
 			}
 			if (m_DeleteButton == null)
 			{
@@ -148,6 +194,8 @@ namespace AvantGardeMaker.Ceeu
 
 			if (m_EnemyWayPointList == null)
 				m_EnemyWayPointList = new List<Vector2>();
+			if (m_EnemyWayPointDelayTimeList == null)
+				m_EnemyWayPointDelayTimeList = new List<float>();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -156,12 +204,50 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizePoolItem();
 
-			//for (int i = 0; i < m_EnemyWayPointDataUIList.Count; ++i)
-			//{
-			//	M_MapEditorUI.Despawn(m_EnemyWayPointDataUIList[i]);
-			//}
+			m_IndexText.text = "0";
+			//m_EnemyPortraitImage.sprite = 
+			m_EnemyCountInputField.SetTextWithoutNotify("1");
+			m_IntervalInputField.SetTextWithoutNotify("0");
+			m_TimeStampText.text = "0";
+			m_WaveInputField.SetTextWithoutNotify("0");
+			m_WaveTimeInputField.SetTextWithoutNotify("0");
+
 			m_EnemyWayPointList.Clear();
+			m_EnemyWayPointDelayTimeList.Clear();
 		}
 		#endregion
+
+		public EnemySpawnData MakeSpawnData()
+		{
+			EnemySpawnData enemySpawnData = new EnemySpawnData();
+
+			//스폰시킬 적의 이름
+			enemySpawnData.Name = enemyData.KrName;
+
+			//수량(일괄 스폰 시 사용)
+			enemySpawnData.Amount = count;
+
+			//생성 간격(일괄 스폰 시 사용)
+			enemySpawnData.Interval = interval;
+
+			//작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
+			enemySpawnData.Time = time;
+
+			//웨이브(특정 몹이 죽어야 진행될 경우 사용)
+			enemySpawnData.Wave = wave;
+
+			enemySpawnData.WaveTime = waveTime;
+
+			//최초 스폰 지점
+			//public Vector3 StartPos;
+			//최종 도착 지점
+			//public Vector3 EndPos;
+			//경유 지점
+			//public List<Vector3> TransitPos;
+			//경유 지점에서 n초 대기(0초면 딜레이 x)
+			//public List<float> WaitTime;
+
+			return enemySpawnData;
+		}
 	}
 }

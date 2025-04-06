@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.ad1a;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,17 +12,25 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		private Button m_Button = null;
+
+		private TMP_Text m_DebugText = null;
 		#endregion
 
 		#region 프로퍼티
 		[field: SerializeField]
 		public EnemyData enemyData { get; set; }
+
+		public string debugText
+		{
+			get => m_DebugText.text;
+			set => m_DebugText.text = value;
+		}
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
-		public void OnAddButtonClicked()
+		private void OnAddButtonClicked()
 		{
 			EnemySpawnDataUI enemySpawnDataUI = M_MapEditorUI.GetBuilder("Enemy Spawn Data UI")
 				.SetParent(M_MapEditorUI.enemySpawnDataUIParent.transform)
@@ -31,7 +40,7 @@ namespace AvantGardeMaker.Ceeu
 				.Spawn() as EnemySpawnDataUI;
 
 			enemySpawnDataUI.enemyData = enemyData;
-			M_MapEditor.AddEnemyData(enemyData);
+			enemySpawnDataUI.debugText = enemyData.KrName;
 		}
 		#endregion
 		#endregion
@@ -57,6 +66,11 @@ namespace AvantGardeMaker.Ceeu
 				m_Button = GetComponent<Button>();
 
 				m_Button.onClick.AddListener(OnAddButtonClicked);
+			}
+
+			if (m_DebugText == null)
+			{
+				m_DebugText = transform.GetComponentInChildren<TMP_Text>();
 			}
 		}
 		/// <summary>

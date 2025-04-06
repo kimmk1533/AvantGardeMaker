@@ -73,7 +73,6 @@ namespace AvantGardeMaker.Ceeu
 		public void Initialize(OptionPanel optionPanel)
 		{
 			m_OptionPanel = optionPanel;
-			onViewportTurnOn += m_OptionPanel.OnChangedViewport;
 
 			m_RectTransform = GetComponent<RectTransform>();
 
@@ -89,7 +88,7 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
-			onViewportTurnOn -= m_OptionPanel.OnChangedViewport;
+
 		}
 		#endregion
 

@@ -32,36 +32,37 @@ namespace AvantGardeMaker.Ceeu
 		#region 적 관련 변수
 		#region 저장&불러오기
 		[SerializeField, ReadOnly]
-		private List<EnemyData> m_EnemyDataList;
+		private List<string> m_EnemyKeyList;
+		[SerializeField, ReadOnly]
+		private List<EnemyFixedData> m_EnemyFixedDataList;
+		[SerializeField, ReadOnly]
+		private List<EnemyVariableData> m_EnemyVariableDataList;
 		[SerializeField, ReadOnly]
 		private List<EnemySpawnData> m_EnemySpawnDataList;
 		#endregion
 
-		private Dictionary<string, EnemyData> m_EnemyDataMap;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
 		#region 타일 관련 프로퍼티
+		public List<Vector2Int> tilePointList => new List<Vector2Int>(m_TilePointList);
+		public List<E_TileType> tileTypeList => new List<E_TileType>(m_TileTypeList);
+
 		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
 		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 		#endregion
 
 		#region 적 관련 프로퍼티
-
+		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		#endregion
-		#endregion
-
-		#region 매니져
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 		#endregion
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
-		/// 저장 이전의 초기화 (기존 데이터 삭제)
+		/// 초기화 함수
 		/// </summary>
-		public void InitializeBeforeSave()
+		public void Initialize()
 		{
 			#region 타일 관련 초기화
 			if (m_TilePointList == null)
@@ -77,43 +78,21 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region 적 관련 초기화
-			if (m_EnemyDataList == null)
-				m_EnemyDataList = new List<EnemyData>();
+			if (m_EnemyKeyList == null)
+				m_EnemyKeyList = new List<string>();
+			if (m_EnemyFixedDataList == null)
+				m_EnemyFixedDataList = new List<EnemyFixedData>();
+			if (m_EnemyVariableDataList == null)
+				m_EnemyVariableDataList = new List<EnemyVariableData>();
+
 			if (m_EnemySpawnDataList == null)
 				m_EnemySpawnDataList = new List<EnemySpawnData>();
-			if (m_EnemyDataMap == null)
-				m_EnemyDataMap = new Dictionary<string, EnemyData>();
 
-			m_EnemyDataList.Clear();
+			m_EnemyKeyList.Clear();
+			m_EnemyFixedDataList.Clear();
+			m_EnemyVariableDataList.Clear();
+
 			m_EnemySpawnDataList.Clear();
-			m_EnemyDataMap.Clear();
-			#endregion
-		}
-		/// <summary>
-		/// 불러오기 이후의 초기화 (새로운 데이터 적용)
-		/// </summary>
-		public void InitializeAfterLoad()
-		{
-			#region 타일 배치
-			int count = m_TilePointList.Count;
-
-			if (count != m_TileTypeList.Count)
-				Debug.LogError("저장한 위치와 타일의 갯수가 다름");
-
-			for (int i = 0; i < count; ++i)
-			{
-				Vector2Int tilePos = m_TilePointList[i];
-				E_TileType tileType = m_TileTypeList[i];
-
-				M_MapEditor.AddTile(tilePos, tileType);
-			}
-			#endregion
-
-			#region 적 정보 불러오기
-			foreach (var item in m_EnemyDataList)
-			{
-				m_EnemyDataMap.Add(item.EngName, item);
-			}
 			#endregion
 		}
 		#endregion
@@ -131,7 +110,38 @@ namespace AvantGardeMaker.Ceeu
 		}
 		public void AddEnemyData(EnemyData enemyData)
 		{
+			m_EnemyKeyList.Add(enemyData.KrName);
+			m_EnemyFixedDataList.Add(enemyData.FixedData);
+			m_EnemyVariableDataList.Add(enemyData.VariableData);
+		}
+		public void AddEnemySpawnData(EnemySpawnData enemySpawnData)
+		{
+			m_EnemySpawnDataList.Add(enemySpawnData);
+		}
 
+		public List<EnemyData> GetEnemyDataList()
+		{
+			List<EnemyData> enemyDataList = new List<EnemyData>();
+
+			int count = m_EnemyKeyList.Count;
+
+			if (count != m_EnemyFixedDataList.Count ||
+				count != m_EnemyVariableDataList.Count)
+				throw new System.Exception("EnemyData 갯수 다름");
+
+			for (int i = 0; i < count; ++i)
+			{
+				EnemyData enemyData = ScriptableObject.CreateInstance<EnemyData>();
+
+				//enemyData.EngName = m_EnemyKeyList[i];
+				enemyData.KrName = m_EnemyKeyList[i];
+				enemyData.FixedData = m_EnemyFixedDataList[i];
+				enemyData.VariableData = m_EnemyVariableDataList[i];
+
+				enemyDataList.Add(enemyData);
+			}
+
+			return enemyDataList;
 		}
 	}
 }

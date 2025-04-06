@@ -144,8 +144,6 @@ public class ObjectPool<TItem> : System.IDisposable where TItem : ObjectPoolItem
 
 		m_SpawnedItemList.Add(item);
 
-		onSpawned?.Invoke(item);
-
 		//item.name = item.name + m_Count.ToString("_00");
 
 		return item;
@@ -324,6 +322,8 @@ public class ObjectPool<TItem> : System.IDisposable where TItem : ObjectPoolItem
 			if (m_AutoInit.isUse &&
 				m_AutoInit.value)
 				item.InitializePoolItem();
+
+			m_Pool.onSpawned?.Invoke(item);
 
 			if (autoReset)
 				Reset();

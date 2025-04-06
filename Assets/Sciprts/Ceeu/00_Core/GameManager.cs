@@ -29,7 +29,7 @@ namespace AvantGardeMaker.Ceeu
 		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
 		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
 
-		//private static EnemyManager M_EnemyGenerate => EnemyManager.Instance;
+		private static EnemyManager M_EnemyManager => EnemyManager.Instance;
 
 		//private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
 
@@ -62,15 +62,15 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditorUI.Initialize();
 
 			//ad1a
-			//M_EnemyGenerate.Initialize();
+			M_EnemyManager.Initialize();
 
 			//MikangMark
 			//M_Operator.Initialize();
 			//M_Yaml.Initialize();
 			//M_InGamePlay.Initialize();
-			
-			
-			
+
+
+
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -82,15 +82,15 @@ namespace AvantGardeMaker.Ceeu
 			M_Tile.Finallize();
 
 			//ad1a
-			//M_EnemyGenerate.Finallize();
+			M_EnemyManager.Finallize();
 
 			//MikangMark
 			//M_Operator.Finallize();
 			//M_Yaml.Finallize();
 			//M_InGamePlay.Finallize();
-			
-			
-			
+
+
+
 		}
 
 		/// <summary>
@@ -98,20 +98,19 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void InitializeGame()
 		{
-			
 			m_GameStageData = M_MapEditor.currentStageData;
 			m_IsGameMode = true;
 
 			//ad1a
-			//M_EnemyGenerate.InitializeMain();
+			//M_EnemyManager.InitializeMain();
 
 			//MikangMark
 			//M_Operator.InitializeMain();
 			//M_Yaml.InitializeMain();
 			//M_InGamePlay.InitializeMain();
-			
-			
-			
+
+
+
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (In Game Scene 나갈 시 호출)
@@ -121,15 +120,15 @@ namespace AvantGardeMaker.Ceeu
 			m_IsGameMode = false;
 
 			//ad1a
-			//M_EnemyGenerate.FinallizeMain();
+			//M_EnemyManager.FinallizeMain();
 
 			//MikangMark
 			//M_Operator.FinallizeMain();
 			//M_Yaml.FinallizeMain();
 			//M_InGamePlay.FinallizeMain();
-			
-			
-			
+
+
+
 		}
 
 		/// <summary>
@@ -138,16 +137,20 @@ namespace AvantGardeMaker.Ceeu
 		public void InitializeMapEditor()
 		{
 			M_Tile.InitializeMain();
-			M_MapEditor.InitializeMain();
+			M_EnemyManager.InitializeMain();
+
 			M_MapEditorUI.InitializeMain();
+			M_MapEditor.InitializeMain();
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Map Editor Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeMapEditor()
 		{
-			M_MapEditorUI.FinallizeMain();
 			M_MapEditor.FinallizeMain();
+			M_MapEditorUI.FinallizeMain();
+
+			M_EnemyManager.FinallizeMain();
 			M_Tile.FinallizeMain();
 		}
 		#endregion

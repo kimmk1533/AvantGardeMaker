@@ -27,6 +27,7 @@ namespace AvantGardeMaker.ad1a
 	{
 		#region 기본 템플릿
 		#region 변수
+		[SerializeField]
 		private string m_ForderPath;
 
 		private bool[,] m_TestMap;
@@ -49,17 +50,17 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Start()
-		{
-			Initialize();
-			InitializeMain();
-		}
+		//private void Start()
+		//{
+		//	Initialize();
+		//	InitializeMain();
+		//}
 
 		//void Update()
 		//{
 		//	if (Input.GetKeyDown(KeyCode.S))
 		//	{
-		//		SaveEnemyData();
+		//		SaveEnemyDataUI();
 		//		Debug.Log("데이터 저장 완료");
 		//	}
 
@@ -112,7 +113,7 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.InitializeMain();
 
-			//LoadEnemyData();
+			LoadEnemyData();
 
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
 			//StartCoroutine(StartEnemyCoroutine());
@@ -138,9 +139,14 @@ namespace AvantGardeMaker.ad1a
 			m_EnemyDataList.Clear();
 			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>(m_ForderPath));
 		}
-		public EnemyData GetEnemyData(string name)
+		public void LoadEnemyData(ref StageData stageData)
 		{
-			return m_EnemyDataList.Find(n => n.name == name);
+			m_EnemyDataList.Clear();
+			m_EnemyDataList.AddRange(stageData.GetEnemyDataList());
+		}
+		public EnemyData GetEnemyData(string krName)
+		{
+			return m_EnemyDataList.Find(n => n.KrName == krName);
 		}
 
 		public List<EnemyData> GetAllEnemyData()
@@ -152,14 +158,6 @@ namespace AvantGardeMaker.ad1a
 		public void ClearEnemyDataList()
 		{
 			m_EnemyDataList.Clear();
-		}
-
-		public void SaveEnemyData(ref StageData stageData)
-		{
-			for (int i = 0; i < m_EnemyDataList.Count; i++)
-			{
-				stageData.AddEnemyData(m_EnemyDataList[i]);
-			}
 		}
 
 		/*///// <summary>
