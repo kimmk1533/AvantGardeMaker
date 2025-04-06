@@ -66,48 +66,6 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
-		#region Enemy Stat
-		private void OnStatInputFieldValueChanged(DataUI dataUI, string inputString)
-		{
-			int.TryParse(inputString.Replace(",", ""), out int inputValue);
-			dataUI.inputField.text = string.Format("{0:#,###}", inputValue);
-			dataUI.inputField.stringPosition = dataUI.inputField.text.Length;
-		}
-		private void OnHpInputFieldValueChanged(string inputString)
-		{
-			//OnStatInputFieldValueChanged(m_HpDataUI, inputString);
-			Debug.Log("Hp");
-		}
-		private void OnAtkInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_AtkDataUI, inputString);
-		}
-		private void OnDefInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_DefDataUI, inputString);
-		}
-		private void OnResInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_ResDataUI, inputString);
-		}
-		private void OnMovementSpeedInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_MovementSpeedDataUI, inputString);
-		}
-		private void OnAspdInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_AspdDataUI, inputString);
-		}
-		private void OnElementalResInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_ElementalResDataUI, inputString);
-		}
-		private void OnEffectResistanceInputFieldValueChanged(string inputString)
-		{
-			OnStatInputFieldValueChanged(m_EffectResistanceDataUI, inputString);
-		}
-		#endregion
-
 		#region WayPoint
 		private void OnAddButtonClicked()
 		{
@@ -192,49 +150,49 @@ namespace AvantGardeMaker.Ceeu
 			{
 				m_HpDataUI = new DataUI(transform, "HP");
 
-				m_HpDataUI.inputField.onValueChanged.AddListener(OnHpInputFieldValueChanged);
+
 			}
 			if (m_AtkDataUI == null)
 			{
 				m_AtkDataUI = new DataUI(transform, "ATK");
 
-				m_AtkDataUI.inputField.onValueChanged.AddListener(OnAtkInputFieldValueChanged);
+
 			}
 			if (m_DefDataUI == null)
 			{
 				m_DefDataUI = new DataUI(transform, "DEF");
 
-				m_DefDataUI.inputField.onValueChanged.AddListener(OnDefInputFieldValueChanged);
+
 			}
 			if (m_ResDataUI == null)
 			{
 				m_ResDataUI = new DataUI(transform, "RES");
 
-				m_ResDataUI.inputField.onValueChanged.AddListener(OnResInputFieldValueChanged);
+
 			}
 			if (m_MovementSpeedDataUI == null)
 			{
 				m_MovementSpeedDataUI = new DataUI(transform, "Movement Speed");
 
-				m_MovementSpeedDataUI.inputField.onValueChanged.AddListener(OnMovementSpeedInputFieldValueChanged);
+
 			}
 			if (m_AspdDataUI == null)
 			{
 				m_AspdDataUI = new DataUI(transform, "ASPD");
 
-				m_AspdDataUI.inputField.onValueChanged.AddListener(OnAspdInputFieldValueChanged);
+
 			}
 			if (m_ElementalResDataUI == null)
 			{
 				m_ElementalResDataUI = new DataUI(transform, "Elemental RES");
 
-				m_ElementalResDataUI.inputField.onValueChanged.AddListener(OnElementalResInputFieldValueChanged);
+
 			}
 			if (m_EffectResistanceDataUI == null)
 			{
 				m_EffectResistanceDataUI = new DataUI(transform, "Effect Resistance");
 
-				m_EffectResistanceDataUI.inputField.onValueChanged.AddListener(OnEffectResistanceInputFieldValueChanged);
+
 			}
 			#endregion
 
@@ -524,13 +482,32 @@ namespace AvantGardeMaker.Ceeu
 			public DataUI(Transform transform, string dataName)
 			{
 				inputField = transform.FindInChildren<TMP_InputField>(dataName + " InputField");
+				inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
+
 				rankText = transform.FindInChildren<TMP_Text>(dataName + " Rank Text");
 				rankDropdown = transform.FindInChildren<TMP_Dropdown>(dataName + " Rank Dropdown");
 			}
 
+			private void OnInputFieldValueChanged(string inputString)
+			{
+				//int.TryParse(inputString.Replace(",", ""), out int inputValue);
+				//inputField.text = string.Format("{0:#,###}", inputValue);
+				//inputField.stringPosition = inputField.text.Length;
+
+				int stringPosition = inputField.selectionStringAnchorPosition;
+
+				float.TryParse(inputString, out float inputValue);
+				inputField.SetTextWithoutNotify(inputValue.ToString("#,###"));
+
+				int stringOffset = 0; //inputField.text.Split(',').Length - 1;
+
+				inputField.selectionStringAnchorPosition = stringPosition + stringOffset;
+				inputField.selectionStringFocusPosition = stringPosition + stringOffset;
+				//inputField.characterLimit
+			}
 			public void UpdateUI(VariableCombatStatValue<float> statValue)
 			{
-				inputField.text = ((int)statValue.InitStat).ToString();
+				inputField.SetTextWithoutNotify(statValue.InitStat.ToString("N"));
 				rankText.text = statValue.Rank.ToString().Replace("plus", "+");
 				rankDropdown.value = (int)statValue.Rank;
 			}
