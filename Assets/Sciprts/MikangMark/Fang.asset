@@ -32,6 +32,7 @@ MonoBehaviour:
   Potential: 0
   Job: 0
   MaxHp: 742
+  RealHp: 742
   Atk: 157
   Def: 132
   Res: 0

@@ -56,6 +56,11 @@ namespace AvantGardeMaker.MikangMark
 			m_OperData.SaveJsonData(m_FilePath, OperName + ".Json", m_OperData);
 			m_OperData = m_OperData.LoadJsonData(m_FilePath, OperName + ".Json");
 		}
+		//오퍼가 공격 및 힐을 당했을경우
+		public void ChangeHp(float _Value)
+		{
+			m_OperData.RealHp += _Value;
+		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>

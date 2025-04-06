@@ -40,6 +40,7 @@ namespace AvantGardeMaker.MikangMark
 		public float opset = 0;
 
 		public GameObject m_AttackRangeHighlight;
+		public List<GameObject> m_CreatedATKRangeHighlights;
 		#endregion
 
 		#region 프로퍼티
@@ -55,6 +56,7 @@ namespace AvantGardeMaker.MikangMark
 
 		private void Start()
 		{
+			m_CreatedATKRangeHighlights = new List<GameObject>();
 			OperStatUISetActive(false);
 			//디폴트로 선택된 첫번째 오퍼
 			m_SelectOperator = new Operator();
@@ -79,6 +81,31 @@ namespace AvantGardeMaker.MikangMark
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
 		/// 
+		bool IsMouseOverObject(out RaycastHit hitInfo)
+		{
+			// 마우스 위치에서 Ray 생성
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			// Raycast 실행 (충돌 여부 검사)
+			return Physics.Raycast(ray, out hitInfo);
+		}
+		public void OperATKRangeHighlightCreate(Vector2[] _ATKRange)
+		{
+			for (int i = 0; i < _ATKRange.Length+1; i++)
+			{
+				m_CreatedATKRangeHighlights.Add(Instantiate(m_AttackRangeHighlight));
+				if (i == 0)
+				{
+					//m_CreatedATKRangeHighlights[i].transform.position = new Vector3(m_SelectOperator., 0.5f, _ATKRange[i].y);
+				}
+				else
+				{
+					
+					m_CreatedATKRangeHighlights[i].transform.position = new Vector3(_ATKRange[i-1].x, 0.5f, _ATKRange[i-1].y);
+				}
+				
+			}
+		}
 		//공격범위 UI생성함수
 		public void OperATKRangeCreate(Vector2[] _ATKRange)
 		{
@@ -139,6 +166,7 @@ namespace AvantGardeMaker.MikangMark
 			m_StatMagicDefence.text = m_SelectOperator.m_OperData.Res.ToString();
 			m_StatBlock.text = m_SelectOperator.m_OperData.BlockCount.ToString();
 			#endregion
+
 		}
 		public void OperStatUISetActive(bool is_Active)
 		{
