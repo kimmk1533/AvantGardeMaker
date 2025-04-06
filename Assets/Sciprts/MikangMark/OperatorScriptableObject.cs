@@ -21,9 +21,9 @@ namespace AvantGardeMaker.MikangMark
 		//현재레벨
 		public int Level;
 		//현재레벨 최대경험치
-		public int MaxExp;
+		public float MaxExp;
 		//현재경험치
-		public int Exp;
+		public float Exp;
 		//특성
 		public int Elite;
 		//재능
@@ -31,13 +31,15 @@ namespace AvantGardeMaker.MikangMark
 		//직군
 		public E_Jop Job;
 		//최대체력
-		public int MaxHp;
+		public float MaxHp;
+		//현재체력
+		public float RealHp;
 		//공격력
-		public int Atk;
+		public float Atk;
 		//방어력
-		public int Def;
+		public float Def;
 		//마항
-		public int Res;
+		public float Res;
 		//재배치속도
 		public E_ResetSpeed ReSet;
 		//배치코스트

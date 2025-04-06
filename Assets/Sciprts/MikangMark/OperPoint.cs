@@ -10,8 +10,6 @@ namespace AvantGardeMaker
 	public class OperPoint : SerializedMonoBehaviour
 	{
 		#region 변수
-		public Camera uiCamera=null;
-		public LayerMask cubeLayer;
 		public bool IsOnTile = false;
 
 		public OperDrag box;
@@ -37,7 +35,6 @@ namespace AvantGardeMaker
 			{
 				IsOnTile = true;
 				Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.transform.position);
-
 				// UI 위치 업데이트
 				if (box.isDragging)
 				{
