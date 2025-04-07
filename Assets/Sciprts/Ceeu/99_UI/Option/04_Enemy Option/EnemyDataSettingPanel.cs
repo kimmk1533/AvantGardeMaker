@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.ad1a;
+using AvantGardeMaker.ad1a.Enum;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -271,7 +272,7 @@ namespace AvantGardeMaker.Ceeu
 			/// 한섭 기준: 지위
 			/// 
 			/// 값: 일반, 정예, 리더
-			string enemyType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
+			string enemyType = EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
 			m_EnemyTypeImage.sprite = null;
 
 			/// 
@@ -279,7 +280,7 @@ namespace AvantGardeMaker.Ceeu
 			/// 
 			/// 값: 감염생물, 드론, 살카즈, 숙주, 바다 괴물, 아츠 피조물, 요괴, 기계, 야생동물, 붕괴체, 기타
 			/// 
-			string raceText = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.RaceType);
+			string raceText = EnumUtil.EnumToKorString(enemyData.FixedData.RaceType);
 			m_RaceText.text = raceText;
 
 			/// 
@@ -297,13 +298,13 @@ namespace AvantGardeMaker.Ceeu
 			/// 
 			/// 값: 비공격, 근거리, 원거리
 			/// 
-			string atkPattern = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.AtkPattern);
+			string atkPattern = EnumUtil.EnumToKorString(enemyData.FixedData.AtkPattern);
 			/// 
 			/// 한섭 기준: 대미지 타입
 			/// 
 			/// 값: 물리, 마법, 치료, 없음
 			/// 
-			string dmgType = ad1a.Enum.EnumUtil.EnumToKorString(enemyData.FixedData.DmgType);
+			string dmgType = EnumUtil.EnumToKorString(enemyData.FixedData.DmgType);
 			m_AttackInfoText.text = atkPattern + " " + dmgType;
 
 			/// 
@@ -369,7 +370,7 @@ namespace AvantGardeMaker.Ceeu
 			// 내성 패널 On / Off
 			immuneParent.parent.gameObject.SetActive(enemyData.FixedData.ImmuneType > 0);
 
-			string[] immuneKorStringArr = ad1a.Enum.EnumUtil.EnumFlagToKorString(enemyData.FixedData.ImmuneType);
+			string[] immuneKorStringArr = EnumUtil.EnumFlagToKorString(enemyData.FixedData.ImmuneType);
 
 			for (int i = 0; i < immuneKorStringArr.Length; ++i)
 			{
@@ -386,6 +387,12 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void UpdateWayPointUI()
 		{
+			ClearWayPointUI();
+
+			m_CurrentEnemySpawnDataUI.UpdateWayPointUI();
+		}
+		private void ClearWayPointUI()
+		{
 			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
 			for (int i = 0; i < count; ++i)
@@ -397,21 +404,8 @@ namespace AvantGardeMaker.Ceeu
 
 				M_MapEditorUI.Despawn(wayPointDataUI);
 			}
-
-			count = m_CurrentEnemySpawnDataUI.enemyWayPointList.Count;
-			for (int i = 0; i < count; ++i)
-			{
-				Vector2 wayPoint = m_CurrentEnemySpawnDataUI.enemyWayPointList[i];
-				EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
-					.SetParent(wayPointDataUIParent)
-					.SetScale(Vector3.one)
-					.SetActive(true)
-					.SetAutoInit(true)
-					.Spawn() as EnemyWayPointDataUI;
-
-				wayPointDataUI.position = wayPoint;
-			}
 		}
+
 		private void SaveEnemyDataUI()
 		{
 			#region Datas
@@ -419,56 +413,47 @@ namespace AvantGardeMaker.Ceeu
 
 			string hpText = m_HpDataUI.inputField.text.Replace(",", "");
 			float.TryParse(hpText, out float hpValue);
-			ad1a.Enum.E_EnemyRankType hpRankType = (ad1a.Enum.E_EnemyRankType)m_HpDataUI.rankDropdown.value;
+			E_EnemyRankType hpRankType = (E_EnemyRankType)m_HpDataUI.rankDropdown.value;
 			enemyData.VariableData.Hp = new VariableCombatStatValue<float>(hpValue, hpRankType);
 
 			string atkText = m_AtkDataUI.inputField.text.Replace(",", "");
 			float.TryParse(atkText, out float atkValue);
-			ad1a.Enum.E_EnemyRankType atkRankType = (ad1a.Enum.E_EnemyRankType)m_AtkDataUI.rankDropdown.value;
+			E_EnemyRankType atkRankType = (E_EnemyRankType)m_AtkDataUI.rankDropdown.value;
 			enemyData.VariableData.Atk = new VariableCombatStatValue<float>(atkValue, atkRankType);
 
 			string defText = m_DefDataUI.inputField.text.Replace(",", "");
 			float.TryParse(defText, out float defValue);
-			ad1a.Enum.E_EnemyRankType defRankType = (ad1a.Enum.E_EnemyRankType)m_DefDataUI.rankDropdown.value;
+			E_EnemyRankType defRankType = (E_EnemyRankType)m_DefDataUI.rankDropdown.value;
 			enemyData.VariableData.Def = new VariableCombatStatValue<float>(defValue, defRankType);
 
 			string resText = m_ResDataUI.inputField.text.Replace(",", "");
 			float.TryParse(resText, out float resValue);
-			ad1a.Enum.E_EnemyRankType resRankType = (ad1a.Enum.E_EnemyRankType)m_ResDataUI.rankDropdown.value;
+			E_EnemyRankType resRankType = (E_EnemyRankType)m_ResDataUI.rankDropdown.value;
 			enemyData.VariableData.Res = new VariableCombatStatValue<float>(resValue, resRankType);
 
 			string movementSpeedText = m_MovementSpeedDataUI.inputField.text.Replace(",", "");
 			float.TryParse(movementSpeedText, out float movementSpeedValue);
-			ad1a.Enum.E_EnemyRankType movementSpeedRankType = (ad1a.Enum.E_EnemyRankType)m_MovementSpeedDataUI.rankDropdown.value;
+			E_EnemyRankType movementSpeedRankType = (E_EnemyRankType)m_MovementSpeedDataUI.rankDropdown.value;
 			enemyData.VariableData.MovementSpeed = new VariableCombatStatValue<float>(movementSpeedValue, movementSpeedRankType);
 
 			string aspdText = m_AspdDataUI.inputField.text.Replace(",", "");
 			float.TryParse(aspdText, out float aspdValue);
-			ad1a.Enum.E_EnemyRankType aspdRankType = (ad1a.Enum.E_EnemyRankType)m_AspdDataUI.rankDropdown.value;
+			E_EnemyRankType aspdRankType = (E_EnemyRankType)m_AspdDataUI.rankDropdown.value;
 			enemyData.VariableData.Aspd = new VariableCombatStatValue<float>(aspdValue, aspdRankType);
 
 			string elementalResText = m_ElementalResDataUI.inputField.text.Replace(",", "");
 			float.TryParse(elementalResText, out float elementalResValue);
-			ad1a.Enum.E_EnemyRankType elementalResRankType = (ad1a.Enum.E_EnemyRankType)m_ElementalResDataUI.rankDropdown.value;
+			E_EnemyRankType elementalResRankType = (E_EnemyRankType)m_ElementalResDataUI.rankDropdown.value;
 			enemyData.VariableData.ElementalRes = new VariableCombatStatValue<float>(elementalResValue, elementalResRankType);
 
 			string effectResistanceText = m_EffectResistanceDataUI.inputField.text.Replace(",", "");
 			float.TryParse(effectResistanceText, out float effectResistanceValue);
-			ad1a.Enum.E_EnemyRankType effectResistanceRankType = (ad1a.Enum.E_EnemyRankType)m_EffectResistanceDataUI.rankDropdown.value;
+			E_EnemyRankType effectResistanceRankType = (E_EnemyRankType)m_EffectResistanceDataUI.rankDropdown.value;
 			enemyData.VariableData.EffectResistance = new VariableCombatStatValue<float>(effectResistanceValue, effectResistanceRankType);
 			#endregion
 
 			#region WayPoints
-			m_CurrentEnemySpawnDataUI.enemyWayPointList.Clear();
-
-			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
-			int count = wayPointDataUIParent.childCount;
-			for (int i = 0; i < count; ++i)
-			{
-				EnemyWayPointDataUI wayPointDataUI = wayPointDataUIParent.GetChild<EnemyWayPointDataUI>(i);
-
-				m_CurrentEnemySpawnDataUI.enemyWayPointList.Add(wayPointDataUI.position);
-			}
+			m_CurrentEnemySpawnDataUI.SaveWayPointUI();
 			#endregion
 		}
 

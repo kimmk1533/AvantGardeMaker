@@ -64,9 +64,6 @@ namespace AvantGardeMaker.Ceeu
 			get => float.Parse(m_WaveTimeInputField.text);
 			set => m_WaveTimeInputField.SetTextWithoutNotify(value.ToString());
 		}
-
-		public List<Vector2> enemyWayPointList => m_EnemyWayPointList;
-		public List<float> enemyWayPointDelayTimeList => m_EnemyWayPointDelayTimeList;
 		#endregion
 
 		#region 이벤트
@@ -236,18 +233,51 @@ namespace AvantGardeMaker.Ceeu
 			//웨이브(특정 몹이 죽어야 진행될 경우 사용)
 			enemySpawnData.Wave = wave;
 
+			//웨이브 시간(같은 웨이브에서 스폰까지 걸리는 시간)
 			enemySpawnData.WaveTime = waveTime;
 
-			//최초 스폰 지점
-			//public Vector3 StartPos;
-			//최종 도착 지점
-			//public Vector3 EndPos;
 			//경유 지점
-			//public List<Vector3> TransitPos;
+			for (int i = 0; i < m_EnemyWayPointList.Count; ++i)
+			{
+				enemySpawnData.TransitPosList.Add(m_EnemyWayPointList[i]);
+			}
+
 			//경유 지점에서 n초 대기(0초면 딜레이 x)
-			//public List<float> WaitTime;
+			for (int i = 0; i < m_EnemyWayPointDelayTimeList.Count; ++i)
+			{
+				enemySpawnData.DelayTimeList.Add(m_EnemyWayPointDelayTimeList[i]);
+			}
 
 			return enemySpawnData;
+		}
+		public void UpdateWayPointUI()
+		{
+			count = m_EnemyWayPointList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Vector2 wayPoint = m_EnemyWayPointList[i];
+				EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
+					.SetParent(M_MapEditorUI.enemyWayPointDataUIParent)
+					.SetScale(Vector3.one)
+					.SetActive(true)
+					.SetAutoInit(true)
+					.Spawn() as EnemyWayPointDataUI;
+
+				wayPointDataUI.position = wayPoint;
+			}
+		}
+		public void SaveWayPointUI()
+		{
+			m_EnemyWayPointList.Clear();
+
+			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
+			int count = wayPointDataUIParent.childCount;
+			for (int i = 0; i < count; ++i)
+			{
+				EnemyWayPointDataUI wayPointDataUI = wayPointDataUIParent.GetChild<EnemyWayPointDataUI>(i);
+
+				m_EnemyWayPointList.Add(wayPointDataUI.position);
+			}
 		}
 	}
 }

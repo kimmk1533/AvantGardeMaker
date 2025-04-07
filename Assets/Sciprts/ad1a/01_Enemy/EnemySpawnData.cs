@@ -22,14 +22,15 @@ namespace AvantGardeMaker.ad1a
 		public float WaveTime = 0f;
 		//작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
 		public float Time = 0f;
-		//최초 스폰 지점
-		public Vector3 StartPos = Vector3.zero;
-		//최종 도착 지점
-		public Vector3 EndPos = Vector3.zero;
 		//경유 지점
-		public List<Vector3> TransitPos = null;
+		public List<Vector2> TransitPosList = null;
 		//경유 지점에서 n초 대기(0초면 딜레이 x)
-		public List<float> WaitTime = null;
+		public List<float> DelayTimeList = null;
+
+		//최초 스폰 지점
+		public Vector2 startPos => TransitPosList[0];
+		//최종 도착 지점
+		public Vector2 endPos => TransitPosList[TransitPosList.Count - 1];
 
 		public EnemySpawnData()
 		{
@@ -41,10 +42,8 @@ namespace AvantGardeMaker.ad1a
 			WaveTime = 0f;
 			Time = 0f;
 
-			StartPos = EndPos = Vector3.zero;
-
-			TransitPos = new List<Vector3>();
-			WaitTime = new List<float>();
+			TransitPosList = new List<Vector2>();
+			DelayTimeList = new List<float>();
 		}
 	}
 }
