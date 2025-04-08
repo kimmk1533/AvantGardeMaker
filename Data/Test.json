@@ -1,4 +1,6 @@
 {
+    "m_InitCost": 0,
+    "m_IncreaseCostTime": 0.0,
     "m_TilePointList": [],
     "m_TileTypeList": [],
     "m_MinTile": {

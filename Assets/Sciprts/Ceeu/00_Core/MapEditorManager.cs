@@ -51,7 +51,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 저장 & 불러오기 관련 변수
-		[SerializeField]
+		[SerializeField, Sirenix.OdinInspector.ReadOnly]
 		private StageData m_EditingStageData = default;
 
 		[SerializeField]
@@ -371,6 +371,7 @@ namespace AvantGardeMaker.Ceeu
 		[Button]
 		public void SaveData()
 		{
+			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
 
 			#region 타일 저장
@@ -381,8 +382,9 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditorUI.SaveEnemyDataUI(ref m_EditingStageData);
 			M_MapEditorUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
 			#endregion
+			#endregion
 
-			JsonBuilder.Serialize<StageData>(mapDataSavingFilePath, m_EditingStageData);
+			SLManager.Serialize<StageData>(mapDataSavingFilePath, m_StageName + ".json", m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
@@ -406,7 +408,7 @@ namespace AvantGardeMaker.Ceeu
 				return;
 			}
 
-			m_EditingStageData = JsonBuilder.Deserialize<StageData>(mapDataSavingFilePath);
+			m_EditingStageData = SLManager.Deserialize<StageData>(mapDataSavingFilePath);
 
 			M_Tile.LoadTileData(ref m_EditingStageData);
 			M_Enemy.LoadEnemyData(ref m_EditingStageData);

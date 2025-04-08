@@ -25,9 +25,6 @@ namespace AvantGardeMaker.Ceeu
 
 		private Stack<Panel> m_PanelStack = null;
 
-		[SerializeField, ReadOnly(true)]
-		private EnemyData m_TestEnemyData = null;
-
 		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
 		#endregion

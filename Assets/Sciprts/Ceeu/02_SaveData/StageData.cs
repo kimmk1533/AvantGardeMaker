@@ -11,33 +11,51 @@ namespace AvantGardeMaker.Ceeu
 	public struct StageData
 	{
 		#region 변수
-		#region 타일 관련 변수
+		#region 1. 시스템 관련 변수
+		[SerializeField]
+		[FoldoutGroup("System")]
+		private int m_InitCost;
+		[SerializeField]
+		[FoldoutGroup("System")]
+		private float m_IncreaseCostTime;
+
+		#endregion
+
+		#region 2. 타일 관련 변수
 		#region 저장&불러오기
-		[SerializeField, ReadOnly]
-		[FoldoutGroup("Tiles")]
+		[SerializeField]
+		[FoldoutGroup("Tile")]
 		private List<Vector2Int> m_TilePointList;
-		[SerializeField, ReadOnly]
-		[FoldoutGroup("Tiles")]
+		[SerializeField]
+		[FoldoutGroup("Tile")]
 		private List<E_TileType> m_TileTypeList;
 		#endregion
 
 		[SerializeField, ReadOnly]
-		[FoldoutGroup("Infos")]
+		[FoldoutGroup("Tile/Info")]
 		private Vector2Int m_MinTile;
 		[SerializeField, ReadOnly]
-		[FoldoutGroup("Infos")]
+		[FoldoutGroup("Tile/Info")]
 		private Vector2Int m_MaxTile;
 		#endregion
 
-		#region 적 관련 변수
+		#region 3. 오퍼레이터 관련 변수
+
+		#endregion
+
+		#region 4. 적 관련 변수
 		#region 저장&불러오기
-		[SerializeField, ReadOnly]
+		[SerializeField]
+		[FoldoutGroup("Enemy")]
 		private List<string> m_EnemyKeyList;
-		[SerializeField, ReadOnly]
+		[SerializeField]
+		[FoldoutGroup("Enemy")]
 		private List<EnemyFixedData> m_EnemyFixedDataList;
-		[SerializeField, ReadOnly]
+		[SerializeField]
+		[FoldoutGroup("Enemy")]
 		private List<EnemyVariableData> m_EnemyVariableDataList;
-		[SerializeField, ReadOnly]
+		[SerializeField]
+		[FoldoutGroup("Enemy")]
 		private List<EnemySpawnData> m_EnemySpawnDataList;
 		#endregion
 
@@ -142,6 +160,18 @@ namespace AvantGardeMaker.Ceeu
 			}
 
 			return enemyDataList;
+		}
+
+		public Dictionary<string, object> GetSaveData()
+		{
+			Dictionary<string, object> saveData = new Dictionary<string, object>();
+
+			saveData.Add("initCost", m_InitCost);
+			saveData.Add("increaseCostTime", m_IncreaseCostTime);
+
+			saveData.Add("tilePointList", m_TilePointList);
+
+			return saveData;
 		}
 	}
 }

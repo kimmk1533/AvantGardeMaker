@@ -552,7 +552,6 @@ MonoBehaviour:
   - Enemy
   - Save&Load
   - Help
-  m_TestEnemyData: {fileID: 11400000, guid: c3eaadf5fd7e65842b0cd33054f9e0a5, type: 2}
 --- !u!1 &2021308433
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +668,8 @@ MonoBehaviour:
   m_CameraMode: 1
   m_IsCameraSwitching: 0
   m_EditingStageData:
+    m_InitCost: 0
+    m_IncreaseCostTime: 0
     m_TilePointList: []
     m_TileTypeList: 
     m_MinTile: {x: 0, y: 0}
