@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -41,6 +42,13 @@ namespace AvantGardeMaker.MikangMark
 
 		public GameObject m_AttackRangeHighlight;
 		public List<GameObject> m_CreatedATKRangeHighlights;
+		public GameObject m_AttackRangeHighlight_Parent;
+
+		public bool m_Setting = false;
+		private GameObject m_TileTarget;
+
+
+
 		#endregion
 
 		#region 프로퍼티
@@ -50,6 +58,9 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+
+		private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
+		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -60,20 +71,25 @@ namespace AvantGardeMaker.MikangMark
 			OperStatUISetActive(false);
 			//디폴트로 선택된 첫번째 오퍼
 			m_SelectOperator = new Operator();
-			m_SelectOperator = InGamePlayManager.Instance.GetOperInfo(0);
-			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			m_SelectOperator = M_InGamePlay.GetOperInfo(0);
+			for (int i = 0; i < M_OperatorJson.m_OperInfoList.Count; i++)
 			{
-				if (m_SelectOperator.OperName == OperatorJsonManager.Instance.m_OperInfoList[i].EngOperName)
+				if (m_SelectOperator.OperName == M_OperatorJson.m_OperInfoList[i].EngOperName)
 				{
-					m_SelectOperator.m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+					m_SelectOperator.m_OperData = M_OperatorJson.m_OperInfoList[i];
 				}
 			}
 			OperATKRangeCreate(m_SelectOperator.m_OperData.AttackPos);
 			AlignChildren();
 		}
-		private void FixedUpdate()
+		private void Update()
 		{
 			UpdateUI();
+			if (m_Setting)
+			{
+				MouseRealPoint();
+			}
+			
 		}
 		#endregion
 
@@ -81,29 +97,67 @@ namespace AvantGardeMaker.MikangMark
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
 		/// 
-		bool IsMouseOverObject(out RaycastHit hitInfo)
+		public void MouseRealPoint()
 		{
-			// 마우스 위치에서 Ray 생성
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			// Raycast 실행 (충돌 여부 검사)
-			return Physics.Raycast(ray, out hitInfo);
-		}
-		public void OperATKRangeHighlightCreate(Vector2[] _ATKRange)
-		{
-			for (int i = 0; i < _ATKRange.Length+1; i++)
+			// 마우스 왼쪽 버튼을 누르고 있는 동안 (드래그)
+			if (Input.GetMouseButton(0)) 
 			{
-				m_CreatedATKRangeHighlights.Add(Instantiate(m_AttackRangeHighlight));
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit hit;
+
+				if (Physics.Raycast(ray, out hit))
+				{
+					Tile target = hit.collider.GetComponent<Tile>();
+					if (target != null)
+					{
+						if(m_TileTarget != hit.collider.gameObject)
+						{
+							if (m_CreatedATKRangeHighlights.Count > 0)
+							{
+								for(int i = 0; i < m_CreatedATKRangeHighlights.Count; i++)
+								{
+									Destroy(m_CreatedATKRangeHighlights[i]);
+								}
+								m_CreatedATKRangeHighlights = null;
+								m_CreatedATKRangeHighlights = new List<GameObject>();
+							}
+
+							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, 180), hit.collider.gameObject);
+						}
+						m_TileTarget = hit.collider.gameObject;
+						
+					}
+				}
+			}
+		}
+		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, float angleDeg)//회전각도 ex)90
+		{
+			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
+
+			float cos = Mathf.Cos(angleRad);
+			float sin = Mathf.Sin(angleRad);
+
+			
+			Vector2[] temp = new Vector2[_OperAtkRange.Length];
+			for(int i=0; i<temp.Length; i++)
+			{
+				temp[i] = new Vector2(_OperAtkRange[i].x * cos - _OperAtkRange[i].y * sin, _OperAtkRange[i].x * sin + _OperAtkRange[i].y * cos);
+			}
+			return temp;
+		}
+		public void OperAtkRangeHighlight(Vector2[] _OperAtkRange, GameObject _FindTile)
+		{
+			for (int i = 0; i < _OperAtkRange.Length + 1; i++)
+			{
+				m_CreatedATKRangeHighlights.Add(Instantiate(m_AttackRangeHighlight, m_AttackRangeHighlight_Parent.transform));
 				if (i == 0)
 				{
-					//m_CreatedATKRangeHighlights[i].transform.position = new Vector3(m_SelectOperator., 0.5f, _ATKRange[i].y);
+					m_CreatedATKRangeHighlights[i].transform.position = new Vector3(_FindTile.transform.position.x, 0.2f, _FindTile.transform.position.z);
 				}
 				else
 				{
-					
-					m_CreatedATKRangeHighlights[i].transform.position = new Vector3(_ATKRange[i-1].x, 0.5f, _ATKRange[i-1].y);
+					m_CreatedATKRangeHighlights[i].transform.position = new Vector3(_FindTile.transform.position.x + _OperAtkRange[i - 1].x, 0.2f, _FindTile.transform.position.z + _OperAtkRange[i - 1].y);
 				}
-				
 			}
 		}
 		//공격범위 UI생성함수
@@ -154,9 +208,9 @@ namespace AvantGardeMaker.MikangMark
 		public void UpdateUI()
 		{
 			#region 코스트 관련UI
-			m_Timer = InGamePlayManager.Instance.GetRealTime();
+			m_Timer = M_InGamePlay.GetRealTime();
 			m_CostImage.fillAmount = m_Timer;
-			m_Cost.text = InGamePlayManager.Instance.GetCost().ToString();
+			m_Cost.text = M_InGamePlay.GetCost().ToString();
 			#endregion
 			#region 활성화된 오퍼스텟정보UI
 			m_OperKorName.text = m_SelectOperator.m_OperData.KorOperName;

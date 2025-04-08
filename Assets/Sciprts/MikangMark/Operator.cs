@@ -25,6 +25,7 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -44,14 +45,14 @@ namespace AvantGardeMaker.MikangMark
 		public void SetData()
 		{
 			string m_FilePath;
-			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			for (int i = 0; i < M_OperatorJson.m_OperInfoList.Count; i++)
 			{
-				if (OperName == OperatorJsonManager.Instance.m_OperInfoList[i].EngOperName)
+				if (OperName == M_OperatorJson.m_OperInfoList[i].EngOperName)
 				{
-					m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+					m_OperData = M_OperatorJson.m_OperInfoList[i];
 				}
 			}
-			m_FilePath = OperatorJsonManager.Instance.m_FileSaveDirectory;
+			m_FilePath = M_OperatorJson.m_FileSaveDirectory;
 			//Json파일 생성
 			m_OperData.SaveJsonData(m_FilePath, OperName + ".Json", m_OperData);
 			m_OperData = m_OperData.LoadJsonData(m_FilePath, OperName + ".Json");
