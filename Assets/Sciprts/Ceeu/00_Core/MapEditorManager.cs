@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
@@ -207,7 +208,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
 
-			LoadData();
+			//LoadData();
 
 			gameObject.SetActive(true);
 		}
@@ -369,7 +370,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 저장 & 불러오기 관련 함수
 		[Button]
-		public void SaveData()
+		public async Task SaveData()
 		{
 			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
@@ -384,7 +385,7 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 			#endregion
 
-			SLManager.Serialize<StageData>(mapDataSavingFilePath, m_StageName + ".json", m_EditingStageData);
+			await SaveLoadUtility.SaveData<StageData>(m_StageName, m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
@@ -400,20 +401,13 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 		}
 		[Button]
-		public void LoadData()
+		public async void LoadData()
 		{
-			if (File.Exists(mapDataSavingFilePath) == false)
-			{
-				Debug.LogError("파일이 존재하지 않습니다. 경로: " + mapDataSavingFilePath);
-				return;
-			}
-
-			m_EditingStageData = SLManager.Deserialize<StageData>(mapDataSavingFilePath);
+			m_EditingStageData = await SaveLoadUtility.LoadData<StageData>(m_StageName);
 
 			M_Tile.LoadTileData(ref m_EditingStageData);
 			M_Enemy.LoadEnemyData(ref m_EditingStageData);
 
-			M_MapEditorUI.LoadEnemyDataUI();
 			M_MapEditorUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
 
 			#region Debug

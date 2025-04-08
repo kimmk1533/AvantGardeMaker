@@ -128,8 +128,21 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MaxWave = 0;
 
-			LoadEnemyDataUI();
+			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
+			for (int i = 0; i < enemyDataList.Count; ++i)
+			{
+				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
+					.SetParent(enemyDataUIParent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn() as EnemyDataUI;
 
+				enemyDataUI.enemyData = enemyDataList[i];
+				enemyDataUI.debugText = enemyDataList[i].KrName;
+
+				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
+			}
 			gameObject.SetActive(true);
 		}
 		/// <summary>
@@ -214,26 +227,6 @@ namespace AvantGardeMaker.Ceeu
 			}
 		}
 
-		public void LoadEnemyDataUI()
-		{
-			ClearEnemyDataUI();
-
-			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
-			for (int i = 0; i < enemyDataList.Count; ++i)
-			{
-				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
-					.SetParent(enemyDataUIParent)
-					.SetScale(Vector3.one)
-					.SetAutoInit(true)
-					.SetActive(true)
-					.Spawn() as EnemyDataUI;
-
-				enemyDataUI.enemyData = enemyDataList[i];
-				enemyDataUI.debugText = enemyDataList[i].KrName;
-
-				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
-			}
-		}
 		public void LoadEnemySpawnDataUI(ref StageData stageData)
 		{
 			ClearEnemySpawnDataUI();
