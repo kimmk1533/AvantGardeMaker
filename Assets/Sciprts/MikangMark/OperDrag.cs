@@ -29,6 +29,7 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+		private static UIManager M_UI => UIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -53,7 +54,7 @@ namespace AvantGardeMaker.MikangMark
 		public void OnBeginDrag(PointerEventData eventData)
 		{
 			isDragging = true;
-
+			M_UI.m_Setting = isDragging;
 			// B가 없으면 생성 (한 번만)
 			if (B == null)
 			{
@@ -63,7 +64,7 @@ namespace AvantGardeMaker.MikangMark
 				newB.GetComponent<Operator>().m_OperData = GetComponent<Operator>().m_OperData;
 				newB.GetComponent<Operator>().OperName = GetComponent<Operator>().OperName;
 				newB.name = GetComponent<Operator>().OperName;
-				UIManager.Instance.OperStatUISetActive(true);
+				M_UI.OperStatUISetActive(true);
 			}
 		}
 		public void OnDrag(PointerEventData eventData)
@@ -76,16 +77,17 @@ namespace AvantGardeMaker.MikangMark
 		public void OnEndDrag(PointerEventData eventData)
 		{
 			isDragging = false;
+			M_UI.m_Setting = isDragging;
 			if (GameObject.Find("Fang").GetComponent<OperPoint>().IsOnTile)
 			{
 				gameObject.SetActive(false);
-				UIManager.Instance.OperStatUISetActive(false);
+				M_UI.OperStatUISetActive(false);
 				newB.GetComponent<DragOperSetPos>().enabled = true;
 			}
 			else
 			{
 				Destroy(newB);
-				UIManager.Instance.OperStatUISetActive(false);
+				M_UI.OperStatUISetActive(false);
 			}
 
 		}

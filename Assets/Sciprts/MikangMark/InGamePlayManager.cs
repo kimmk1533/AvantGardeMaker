@@ -44,6 +44,7 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -51,7 +52,7 @@ namespace AvantGardeMaker.MikangMark
 		{
 			Initialize();
 		}
-		private void FixedUpdate()
+		private void Update()
 		{
 			m_RealTime += Time.deltaTime;
 			m_ClearSecond = m_RealTime;
@@ -129,7 +130,7 @@ namespace AvantGardeMaker.MikangMark
 				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox).GetComponent<Operator>());
 				m_ReadyOperator[i].OperName = m_ReceivePlayOperator[i];
 				m_ReadyOperator[i].gameObject.name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
-				m_ReadyOperator[i].m_OperData = OperatorJsonManager.Instance.m_OperInfoList[i];
+				m_ReadyOperator[i].m_OperData = M_OperatorJson.m_OperInfoList[i];
 			}
 		}
 

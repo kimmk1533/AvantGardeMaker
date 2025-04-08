@@ -18,6 +18,7 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+		private static UIManager M_UI => UIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -33,14 +34,14 @@ namespace AvantGardeMaker.MikangMark
 		}
 		public void OnPointerDown()
 		{
-			UIManager.Instance.m_SelectOperator.m_OperData = GetComponent<Operator>().m_OperData;
-			if (UIManager.Instance.m_OperStatUI.activeSelf == false)
+			M_UI.m_SelectOperator.m_OperData = GetComponent<Operator>().m_OperData;
+			if (M_UI.m_OperStatUI.activeSelf == false)
 			{
-				UIManager.Instance.OperStatUISetActive(true);
+				M_UI.OperStatUISetActive(true);
 			}
 			else
 			{
-				UIManager.Instance.OperStatUISetActive(false);
+				M_UI.OperStatUISetActive(false);
 			}
 			
 		}

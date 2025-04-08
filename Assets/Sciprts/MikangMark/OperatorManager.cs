@@ -23,14 +23,15 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 매니저
+		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			for (int i = 0; i < OperatorJsonManager.Instance.m_OperInfoList.Count; i++)
+			for (int i = 0; i < M_OperatorJson.m_OperInfoList.Count; i++)
 			{
-				m_ReciveOper.Add(OperatorJsonManager.Instance.m_OperInfoList[i]);
+				m_ReciveOper.Add(M_OperatorJson.m_OperInfoList[i]);
 			}
 			//Initialize();
 		}
@@ -46,7 +47,7 @@ namespace AvantGardeMaker.MikangMark
 			/*
 			for(int i=0;i< m_ReciveOper.Count; i++)
 			{
-				m_ReciveOper[i] = OperatorJsonManager.Instance.m_OperInfoList[i];
+				m_ReciveOper[i] = M_OperatorJson.m_OperInfoList[i];
 			}
 			*/
 		}
