@@ -17,9 +17,9 @@ namespace AvantGardeMaker.Ceeu
 		private TMP_Text m_DebugText = null;
 		private TMP_InputField m_EnemyCountInputField = null;
 		private TMP_InputField m_IntervalInputField = null;
-		private TMP_Text m_TimeStampText = null;
 		private TMP_InputField m_WaveInputField = null;
 		private TMP_InputField m_WaveTimeInputField = null;
+		private TMP_Text m_TimeStampText = null;
 		private Button m_DeleteButton = null;
 
 		private List<Vector2> m_EnemyWayPointList = null;
@@ -49,11 +49,6 @@ namespace AvantGardeMaker.Ceeu
 			get => float.Parse(m_IntervalInputField.text);
 			set => m_IntervalInputField.SetTextWithoutNotify(value.ToString());
 		}
-		public float time
-		{
-			get => float.Parse(m_TimeStampText.text);
-			set => m_TimeStampText.text = value.ToString();
-		}
 		public int wave
 		{
 			get => int.Parse(m_WaveInputField.text);
@@ -63,6 +58,30 @@ namespace AvantGardeMaker.Ceeu
 		{
 			get => float.Parse(m_WaveTimeInputField.text);
 			set => m_WaveTimeInputField.SetTextWithoutNotify(value.ToString());
+		}
+		public float time
+		{
+			get => float.Parse(m_TimeStampText.text);
+			set => m_TimeStampText.text = value.ToString();
+		}
+
+		public List<Vector2> enemyWayPointList
+		{
+			get => new List<Vector2>(m_EnemyWayPointList);
+			set
+			{
+				m_EnemyWayPointList?.Clear();
+				m_EnemyWayPointList = value;
+			}
+		}
+		public List<float> enemyWayPointDelayTimeList
+		{
+			get => new List<float>(m_EnemyWayPointDelayTimeList);
+			set
+			{
+				m_EnemyWayPointDelayTimeList?.Clear();
+				m_EnemyWayPointDelayTimeList = value;
+			}
 		}
 		#endregion
 
@@ -250,12 +269,15 @@ namespace AvantGardeMaker.Ceeu
 
 			return enemySpawnData;
 		}
-		public void UpdateWayPointUI()
+		public void LoadWayPointUI()
 		{
-			count = m_EnemyWayPointList.Count;
+			int count = m_EnemyWayPointList.Count;
+
+			if (count != m_EnemyWayPointDelayTimeList.Count)
+				throw new System.Exception("List 갯수 다름");
+
 			for (int i = 0; i < count; ++i)
 			{
-				Vector2 wayPoint = m_EnemyWayPointList[i];
 				EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
 					.SetParent(M_MapEditorUI.enemyWayPointDataUIParent)
 					.SetScale(Vector3.one)
@@ -263,12 +285,17 @@ namespace AvantGardeMaker.Ceeu
 					.SetAutoInit(true)
 					.Spawn() as EnemyWayPointDataUI;
 
+				Vector2 wayPoint = m_EnemyWayPointList[i];
 				wayPointDataUI.position = wayPoint;
+
+				float delayTime = m_EnemyWayPointDelayTimeList[i];
+				wayPointDataUI.delayTime = delayTime;
 			}
 		}
 		public void SaveWayPointUI()
 		{
 			m_EnemyWayPointList.Clear();
+			m_EnemyWayPointDelayTimeList.Clear();
 
 			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
@@ -277,6 +304,7 @@ namespace AvantGardeMaker.Ceeu
 				EnemyWayPointDataUI wayPointDataUI = wayPointDataUIParent.GetChild<EnemyWayPointDataUI>(i);
 
 				m_EnemyWayPointList.Add(wayPointDataUI.position);
+				m_EnemyWayPointDelayTimeList.Add(wayPointDataUI.delayTime);
 			}
 		}
 	}

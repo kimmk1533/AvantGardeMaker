@@ -410,6 +410,8 @@ namespace AvantGardeMaker.Ceeu
 
 			M_Tile.LoadTileData(ref m_EditingStageData);
 			M_Enemy.LoadEnemyData(ref m_EditingStageData);
+
+			M_MapEditorUI.LoadEnemyDataUI();
 			M_MapEditorUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
 
 			#region Debug

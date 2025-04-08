@@ -30,14 +30,14 @@ namespace AvantGardeMaker.Ceeu
 
 		private TMP_Text m_WeightValueText = null;
 
-		private DataUI m_HpDataUI = null;
-		private DataUI m_AtkDataUI = null;
-		private DataUI m_DefDataUI = null;
-		private DataUI m_ResDataUI = null;
-		private DataUI m_MovementSpeedDataUI = null;
-		private DataUI m_AspdDataUI = null;
-		private DataUI m_ElementalResDataUI = null;
-		private DataUI m_EffectResistanceDataUI = null;
+		private StatDataUI m_HpDataUI = null;
+		private StatDataUI m_AtkDataUI = null;
+		private StatDataUI m_DefDataUI = null;
+		private StatDataUI m_ResDataUI = null;
+		private StatDataUI m_MovementSpeedDataUI = null;
+		private StatDataUI m_AspdDataUI = null;
+		private StatDataUI m_ElementalResDataUI = null;
+		private StatDataUI m_EffectResistanceDataUI = null;
 		#endregion
 
 		#region Descriptions 변수
@@ -149,49 +149,49 @@ namespace AvantGardeMaker.Ceeu
 
 			if (m_HpDataUI == null)
 			{
-				m_HpDataUI = new DataUI(transform, "HP");
+				m_HpDataUI = new StatDataUI(transform, "HP");
 
 
 			}
 			if (m_AtkDataUI == null)
 			{
-				m_AtkDataUI = new DataUI(transform, "ATK");
+				m_AtkDataUI = new StatDataUI(transform, "ATK");
 
 
 			}
 			if (m_DefDataUI == null)
 			{
-				m_DefDataUI = new DataUI(transform, "DEF");
+				m_DefDataUI = new StatDataUI(transform, "DEF");
 
 
 			}
 			if (m_ResDataUI == null)
 			{
-				m_ResDataUI = new DataUI(transform, "RES");
+				m_ResDataUI = new StatDataUI(transform, "RES");
 
 
 			}
 			if (m_MovementSpeedDataUI == null)
 			{
-				m_MovementSpeedDataUI = new DataUI(transform, "Movement Speed");
+				m_MovementSpeedDataUI = new StatDataUI(transform, "Movement Speed");
 
 
 			}
 			if (m_AspdDataUI == null)
 			{
-				m_AspdDataUI = new DataUI(transform, "ASPD");
+				m_AspdDataUI = new StatDataUI(transform, "ASPD");
 
 
 			}
 			if (m_ElementalResDataUI == null)
 			{
-				m_ElementalResDataUI = new DataUI(transform, "Elemental RES");
+				m_ElementalResDataUI = new StatDataUI(transform, "Elemental RES");
 
 
 			}
 			if (m_EffectResistanceDataUI == null)
 			{
-				m_EffectResistanceDataUI = new DataUI(transform, "Effect Resistance");
+				m_EffectResistanceDataUI = new StatDataUI(transform, "Effect Resistance");
 
 
 			}
@@ -389,7 +389,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			ClearWayPointUI();
 
-			m_CurrentEnemySpawnDataUI.UpdateWayPointUI();
+			m_CurrentEnemySpawnDataUI.LoadWayPointUI();
 		}
 		private void ClearWayPointUI()
 		{
@@ -457,14 +457,14 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 		}
 
-		private class DataUI
+		private class StatDataUI
 		{
 			public TMP_InputField inputField { get; }
 			[System.Obsolete("현재는 사용X, 이후 추가 가능성 있음")]
 			public TMP_Text rankText { get; }
 			public TMP_Dropdown rankDropdown { get; }
 
-			public DataUI(Transform transform, string dataName)
+			public StatDataUI(Transform transform, string dataName)
 			{
 				inputField = transform.FindInChildren<TMP_InputField>(dataName + " InputField");
 				inputField.onValueChanged.AddListener(OnInputFieldValueChanged);

@@ -338,63 +338,45 @@
     "m_EnemySpawnDataList": [
         {
             "Name": "석궁병",
-            "Amount": 1,
+            "Amount": 2,
             "Interval": 2.0,
             "Wave": 0,
             "WaveTime": 5.0,
             "Time": 5.0,
-            "StartPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "EndPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "TransitPos": [],
-            "WaitTime": []
+            "TransitPosList": [
+                {
+                    "x": 10.0,
+                    "y": 0.0
+                },
+                {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            ],
+            "DelayTimeList": [
+                0.0,
+                0.0
+            ]
         },
         {
             "Name": "'요마'",
-            "Amount": 1,
+            "Amount": 0,
             "Interval": 3.0,
             "Wave": 1,
             "WaveTime": 10.0,
             "Time": 15.0,
-            "StartPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "EndPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "TransitPos": [],
-            "WaitTime": []
+            "TransitPosList": [],
+            "DelayTimeList": []
         },
         {
             "Name": "석궁병",
-            "Amount": 1,
+            "Amount": 0,
             "Interval": 1.0,
             "Wave": 2,
             "WaveTime": 2.0,
             "Time": 17.0,
-            "StartPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "EndPos": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "TransitPos": [],
-            "WaitTime": []
+            "TransitPosList": [],
+            "DelayTimeList": []
         }
     ]
 }

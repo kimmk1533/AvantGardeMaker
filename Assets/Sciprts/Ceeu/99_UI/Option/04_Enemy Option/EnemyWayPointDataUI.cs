@@ -13,6 +13,7 @@ namespace AvantGardeMaker.Ceeu
 		private Button m_TileSelectButton = null;
 		private TMP_InputField m_XInputField = null;
 		private TMP_InputField m_YInputField = null;
+		private TMP_InputField m_DelayTimeInputField = null;
 		private Button m_DeleteButton = null;
 		#endregion
 
@@ -60,6 +61,11 @@ namespace AvantGardeMaker.Ceeu
 				y = value.y;
 			}
 		}
+		public float delayTime
+		{
+			get => float.Parse(m_DelayTimeInputField.text);
+			set => m_DelayTimeInputField.SetTextWithoutNotify(value.ToString());
+		}
 		#endregion
 
 		#region 이벤트
@@ -99,6 +105,10 @@ namespace AvantGardeMaker.Ceeu
 			{
 				m_YInputField = transform.FindInChildren<TMP_InputField>("Y InputField");
 			}
+			if (m_DelayTimeInputField == null)
+			{
+				m_DelayTimeInputField = transform.FindInChildren<TMP_InputField>("DelayTime InputField");
+			}
 			if (m_DeleteButton == null)
 			{
 				m_DeleteButton = transform.Find<Button>("Delete Button");
@@ -115,6 +125,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_XInputField.text = string.Empty;
 			m_YInputField.text = string.Empty;
+			m_DelayTimeInputField.text = string.Empty;
 		}
 		#endregion
 	}

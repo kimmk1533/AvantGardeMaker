@@ -217,7 +217,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 		}
 
-		private void LoadEnemyDataUI()
+		public void LoadEnemyDataUI()
 		{
 			ClearEnemyDataUI();
 
@@ -239,8 +239,6 @@ namespace AvantGardeMaker.Ceeu
 		}
 		public void LoadEnemySpawnDataUI(ref StageData stageData)
 		{
-			LoadEnemyDataUI();
-
 			ClearEnemySpawnDataUI();
 
 			List<EnemySpawnData> enemySpawnDataList = stageData.enemySpawnDataList;
@@ -263,6 +261,10 @@ namespace AvantGardeMaker.Ceeu
 				enemySpawnDataUI.time = enemySpawnData.Time;
 				enemySpawnDataUI.wave = enemySpawnData.Wave;
 				enemySpawnDataUI.waveTime = enemySpawnData.WaveTime;
+
+				enemySpawnDataUI.enemyWayPointList = enemySpawnData.TransitPosList;
+				enemySpawnDataUI.enemyWayPointDelayTimeList = enemySpawnData.DelayTimeList;
+				enemySpawnDataUI.LoadWayPointUI();
 			}
 			ReorderEnemySpawnDataUI();
 		}
