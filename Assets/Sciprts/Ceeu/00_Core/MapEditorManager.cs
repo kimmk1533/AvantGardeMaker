@@ -370,7 +370,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 저장 & 불러오기 관련 함수
 		[Button]
-		public async Task SaveData()
+		public async void SaveData()
 		{
 			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
@@ -396,8 +396,6 @@ namespace AvantGardeMaker.Ceeu
 				duration = 1f,
 			});
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
-
-			Debug.Log("[Json 저장 완료]: " + mapDataSavingFilePath);
 			#endregion
 		}
 		[Button]
@@ -419,8 +417,6 @@ namespace AvantGardeMaker.Ceeu
 				duration = 1f,
 			});
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
-
-			Debug.Log("[Json 로드 완료]: " + mapDataSavingFilePath);
 			#endregion
 		}
 		#endregion

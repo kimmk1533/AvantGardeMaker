@@ -19,7 +19,6 @@ namespace AvantGardeMaker.Ceeu
 		private OptionPanel m_OptionPanel = null;
 
 		private RectTransform m_RectTransform = null;
-		[SerializeField]
 		private RectTransform m_Content = null;
 		#endregion
 

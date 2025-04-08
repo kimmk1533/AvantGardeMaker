@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
+using Unity.Services.CloudSave.Models;
+using Unity.Services.CloudSave.Models.Data.Player;
 using Unity.Services.Core;
 using UnityEngine;
+using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 
 namespace AvantGardeMaker.Ceeu
 {
-	/// <summary>
-	/// Save & Load Manager
-	/// </summary>
 	public static class SaveLoadUtility
 	{
 		static SaveLoadUtility()
@@ -37,10 +37,12 @@ namespace AvantGardeMaker.Ceeu
 			};
 		}
 
-		public static async Task SaveData<T>(string dataName, T value)
+		public static async Awaitable SaveData<T>(string dataName, T value)
 		{
 			try
 			{
+				SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
+
 				// 유니티 서비스 로그인
 				await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
@@ -51,10 +53,20 @@ namespace AvantGardeMaker.Ceeu
 				byte[] compressedJson = await Compression.Compress(json);
 
 				Dictionary<string, object> data = new Dictionary<string, object>();
+
+				//string makingMapNameList = await GetMakingMapNameList();
+				//if (makingMapNameList == null ||
+				//	makingMapNameList == string.Empty)
+				//	makingMapNameList = dataName;
+				//else
+				//	makingMapNameList += ", " + dataName;
+
+				//data.Add("MakingMapNameList", makingMapNameList);
+				data.Add("isUse", true);
 				data.Add(dataName, compressedJson);
 
 				// 데이터 저장
-				await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+				await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
 			}
 			finally
 			{
@@ -71,18 +83,23 @@ namespace AvantGardeMaker.Ceeu
 				// 유니티 서비스 로그인
 				await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
+				//string playerId = await GetPlayerIdList(dataName);
+				string playerId = "";
+
+				LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
+
 				// 데이터 불러오기
-				var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync();
+				var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
 
 				if (loadData.TryGetValue(dataName, out var value) == false)
 					throw new System.Exception("Failed To Load Data");
 
-				// 압축 해제
 				byte[] compressedJson = value.Value.GetAs<byte[]>();
 
-				// Json 변환
+				// 압축 해제
 				string json = await Compression.Decompress(compressedJson);
 
+				// Json 변환
 				data = JsonUtility.FromJson<T>(json);
 			}
 			finally
@@ -92,6 +109,44 @@ namespace AvantGardeMaker.Ceeu
 			}
 
 			return data;
+		}
+
+		private static async Awaitable<string> GetMakingMapNameList()
+		{
+			LoadOptions loadOption = new LoadOptions(new PublicReadAccessClassOptions());
+
+			// 본인이 기존에 만든 맵 이름 리스트 가져오기
+			HashSet<string> keySet = new HashSet<string>() { "MakingMapNameList" };
+			var loadData = await CloudSaveService.Instance.Data.Player.LoadAsync(keySet, loadOption);
+			loadData.TryGetValue("MakingMapNameList", out Item mapNameListItem);
+
+			string mapNameList = mapNameListItem.Value.GetAsString();
+
+			return mapNameList;
+		}
+		private static async Awaitable<List<string>> GetPlayerIdList(string dataName)
+		{
+			var query = new Query(
+				new List<FieldFilter>()
+				{
+					new FieldFilter("isUse", true, FieldFilter.OpOptions.EQ, true)
+				},
+				new HashSet<string> { dataName }
+			);
+
+			var results = await CloudSaveService.Instance.Data.Player.QueryAsync(query, new QueryOptions());
+
+			List<string> playerIdList = new List<string>();
+
+			Debug.Log("Number of players found: " + results.Count);
+			for (int i = 0; i < results.Count; ++i)
+			{
+				playerIdList.Add(results[i].Id);
+
+				Debug.Log(results[i].Id);
+			}
+
+			return playerIdList;
 		}
 
 		public static class Compression
