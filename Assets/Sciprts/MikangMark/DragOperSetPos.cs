@@ -72,24 +72,19 @@ namespace AvantGardeMaker.MikangMark
 			switch (direction)
 			{
 				case "Up":
-					OnDragUp();
+					GetComponent<Operator>().SetDirection(Enum.E_OperatorDirection.Up);
 					break;
 				case "Down":
-					OnDragDown();
+					GetComponent<Operator>().SetDirection(Enum.E_OperatorDirection.Down);
 					break;
 				case "Left":
-					OnDragLeft();
+					GetComponent<Operator>().SetDirection(Enum.E_OperatorDirection.Left);
 					break;
 				case "Right":
-					OnDragRight();
+					GetComponent<Operator>().SetDirection(Enum.E_OperatorDirection.Right);
 					break;
 			}
 		}
-
-		void OnDragUp() => Debug.Log("↑ 실시간 위쪽 드래그");
-		void OnDragDown() => Debug.Log("↓ 실시간 아래쪽 드래그");
-		void OnDragLeft() => Debug.Log("← 실시간 왼쪽 드래그");
-		void OnDragRight() => Debug.Log("→ 실시간 오른쪽 드래그");
 		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수

@@ -4,6 +4,7 @@ using System.IO;
 using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.MikangMark
 {
@@ -56,6 +57,13 @@ namespace AvantGardeMaker.MikangMark
 		public int SkillLevel;
 		//공격범위좌표
 		public Vector2[] AttackPos;
+		//오퍼 방향 디폴트 왼쪽
+		public E_OperatorDirection E_OperDirection;
+
+		public Sprite RightDownImg;
+		public Sprite LeftDownImg;
+		public Sprite RightUpImg;
+		public Sprite LeftUpImg;
 		public void SaveJsonData(string directory, string fileName, OperInfo operData)
 		{
 			if (!Directory.Exists(directory))
