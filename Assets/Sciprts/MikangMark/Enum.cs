@@ -24,5 +24,6 @@ namespace AvantGardeMaker.MikangMark.Enum
 
 	public enum E_TileAttackRange { OutRange=1, OperPos, InRange }
 
-	public enum E_OperatorDirection { Right, Left, Down, Up }
+	
+	public enum E_OperatorDirection { Right, Left = 180, Down = 90, Up = 270 }
 }

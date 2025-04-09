@@ -38,5 +38,19 @@
             "x": 1.0,
             "y": 0.0
         }
-    ]
+    ],
+    "E_OperDirection_H": 0,
+    "E_OperDirection_V": 270,
+    "RightDownImg": {
+        "instanceID": 46490
+    },
+    "LeftDownImg": {
+        "instanceID": 46668
+    },
+    "RightUpImg": {
+        "instanceID": 46494
+    },
+    "LeftUpImg": {
+        "instanceID": 46664
+    }
 }

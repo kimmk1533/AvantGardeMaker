@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.Ceeu;
+using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -122,7 +123,7 @@ namespace AvantGardeMaker.MikangMark
 								m_CreatedATKRangeHighlights = new List<GameObject>();
 							}
 
-							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, 180), hit.collider.gameObject);
+							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, E_OperatorDirection.Left), hit.collider.gameObject);
 						}
 						m_TileTarget = hit.collider.gameObject;
 						
@@ -130,9 +131,9 @@ namespace AvantGardeMaker.MikangMark
 				}
 			}
 		}
-		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, float angleDeg)//회전각도 ex)90
+		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, E_OperatorDirection angleDeg)//회전각도 ex)90
 		{
-			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
+			float angleRad = (float)angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
 
 			float cos = Mathf.Cos(angleRad);
 			float sin = Mathf.Sin(angleRad);

@@ -28,6 +28,7 @@ namespace AvantGardeMaker.MikangMark
 
 		#region 매니저
 		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
+		private static UIManager M_UI => UIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -60,38 +61,76 @@ namespace AvantGardeMaker.MikangMark
 			m_OperData = m_OperData.LoadJsonData(m_FilePath, OperName + ".Json");
 		}
 		public void SetDirection(E_OperatorDirection _Direction)
-		{
+		{//수정
 			switch (_Direction)
 			{
 				case E_OperatorDirection.Left:
-					GetComponent<Image>().sprite = m_OperData.LeftDownImg;
+					if (m_OperData.E_OperDirection_V == E_OperatorDirection.Up)
+					{
+						GetComponent<Image>().sprite = m_OperData.LeftUpImg;
+					}
+					else
+					{
+						GetComponent<Image>().sprite = m_OperData.LeftDownImg;
+					}
+					RotateAtkRange(m_OperData.AttackPos, E_OperatorDirection.Left);
+					m_OperData.E_OperDirection_H = E_OperatorDirection.Left;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, m_OperData.E_OperDirection_H), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Right:
+					if (m_OperData.E_OperDirection_V == E_OperatorDirection.Up)
+					{
+						GetComponent<Image>().sprite = m_OperData.RightUpImg;
+					}
+					else
+					{
+						GetComponent<Image>().sprite = m_OperData.RightDownImg;
+					}
+					RotateAtkRange(m_OperData.AttackPos, E_OperatorDirection.Right);
+					m_OperData.E_OperDirection_H = E_OperatorDirection.Right;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, m_OperData.E_OperDirection_H), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Down:
+					if (m_OperData.E_OperDirection_H == E_OperatorDirection.Left)
+					{
+						GetComponent<Image>().sprite = m_OperData.LeftDownImg;
+					}
+					else
+					{
+						GetComponent<Image>().sprite = m_OperData.RightDownImg;
+					}
+					RotateAtkRange(m_OperData.AttackPos, E_OperatorDirection.Down);
+					m_OperData.E_OperDirection_V = E_OperatorDirection.Down;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, m_OperData.E_OperDirection_V), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Up:
+					if (m_OperData.E_OperDirection_H == E_OperatorDirection.Left)
+					{
+						GetComponent<Image>().sprite = m_OperData.LeftUpImg;
+					}
+					else
+					{
+						GetComponent<Image>().sprite = m_OperData.RightUpImg;
+					}
+					RotateAtkRange(m_OperData.AttackPos, E_OperatorDirection.Up);
+					m_OperData.E_OperDirection_V = E_OperatorDirection.Up;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, m_OperData.E_OperDirection_V), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 
 			}
 		}
 		public void RotateAtkRange(Vector2[] _AtkRange, E_OperatorDirection _Direction)
 		{
-			//시작
-			/*
-			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
+			//기본 오른쪽
+			float angleRad = (int)_Direction * Mathf.Deg2Rad; // 라디안으로 변환
 
 			float cos = Mathf.Cos(angleRad);
 			float sin = Mathf.Sin(angleRad);
 
-
-			Vector2[] temp = new Vector2[_OperAtkRange.Length];
-			for (int i = 0; i < temp.Length; i++)
+			for (int i = 0; i < _AtkRange.Length; i++)
 			{
-				temp[i] = new Vector2(_OperAtkRange[i].x * cos - _OperAtkRange[i].y * sin, _OperAtkRange[i].x * sin + _OperAtkRange[i].y * cos);
+				_AtkRange[i] = new Vector2(_AtkRange[i].x * cos - _AtkRange[i].y * sin, _AtkRange[i].x * sin + _AtkRange[i].y * cos);
 			}
-			return temp;
-			*/
 		}
 		//오퍼가 공격 및 힐을 당했을경우
 		public void ChangeHp(float _Value)

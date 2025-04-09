@@ -44,8 +44,9 @@ MonoBehaviour:
   Provocation: 0
   SkillLevel: 1
   AttackPos:
-  - {x: 1, y: 0}
-  E_OperDirection: 1
+  - {x: 0.0000007033704, y: -1}
+  E_OperDirection_H: 180
+  E_OperDirection_V: 90
   RightDownImg: {fileID: 21300000, guid: 3df984489f3d7de47841e330cd5c36b0, type: 3}
   LeftDownImg: {fileID: 21300000, guid: 700113e89a41faa4c93baf21ea48542a, type: 3}
   RightUpImg: {fileID: 21300000, guid: f26ce54b7155fca4a9ff9cebc80e3720, type: 3}

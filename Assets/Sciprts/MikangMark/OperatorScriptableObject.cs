@@ -58,7 +58,8 @@ namespace AvantGardeMaker.MikangMark
 		//공격범위좌표
 		public Vector2[] AttackPos;
 		//오퍼 방향 디폴트 왼쪽
-		public E_OperatorDirection E_OperDirection;
+		public E_OperatorDirection E_OperDirection_H;
+		public E_OperatorDirection E_OperDirection_V;
 
 		public Sprite RightDownImg;
 		public Sprite LeftDownImg;
