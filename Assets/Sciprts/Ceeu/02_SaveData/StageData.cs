@@ -161,17 +161,5 @@ namespace AvantGardeMaker.Ceeu
 
 			return enemyDataList;
 		}
-
-		public Dictionary<string, object> GetSaveData()
-		{
-			Dictionary<string, object> saveData = new Dictionary<string, object>();
-
-			saveData.Add("initCost", m_InitCost);
-			saveData.Add("increaseCostTime", m_IncreaseCostTime);
-
-			saveData.Add("tilePointList", m_TilePointList);
-
-			return saveData;
-		}
 	}
 }
