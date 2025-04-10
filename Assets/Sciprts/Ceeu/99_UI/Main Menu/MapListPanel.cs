@@ -74,7 +74,7 @@ namespace AvantGardeMaker.Ceeu
 		private async void CreateMapListItem()
 		{
 			Transform itemParent = M_MainMenuUI.mapListItemParent;
-			List<StageData> stageDataList = await SaveLoadUtility.LoadAllStageData();
+			List<StageData> stageDataList = await SaveLoadUtility.LoadAllStageData(M_MainMenuUI.testFilter);
 
 			for (int i = 0; i < stageDataList.Count; ++i)
 			{

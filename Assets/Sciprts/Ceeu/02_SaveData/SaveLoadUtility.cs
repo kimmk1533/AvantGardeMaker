@@ -197,6 +197,9 @@ namespace AvantGardeMaker.Ceeu
 		{
 			string mapTitleStr = await GetMakingMapTitleStr(playerId);
 
+			if (mapTitleStr == string.Empty)
+				return new List<string>();
+
 			List<string> mapTitleList = new List<string>(mapTitleStr.Split(", "));
 
 			return mapTitleList;
