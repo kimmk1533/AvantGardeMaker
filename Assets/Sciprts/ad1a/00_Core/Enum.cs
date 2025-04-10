@@ -114,10 +114,13 @@ namespace AvantGardeMaker.ad1a.Enum
 
 	public enum E_EnemyState
 	{
+		//생성 전
 		None,
+		//멀뚱히 서있음(== move가 아님 && attack이 아님 && 살아있음)
 		Idle,
 		Move,
 		Attack,
+		//생성 후 죽음
 		Dead,
 	}
 	public class EnumUtil

@@ -105,6 +105,8 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 4. 적 관련 프로퍼티
 		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
+		public List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
+		public List<EnemyVariableData> enemyVariableDataList => new List<EnemyVariableData>(m_EnemyVariableDataList);
 		#endregion
 		#endregion
 

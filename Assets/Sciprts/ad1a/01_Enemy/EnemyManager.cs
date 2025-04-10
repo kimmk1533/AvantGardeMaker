@@ -31,13 +31,15 @@ namespace AvantGardeMaker.ad1a
 		private string m_ForderPath;
 
 		private bool[,] m_TestMap;
+		private bool m_IsStageStart;
 
 		//생성한 enemy 목록
-		private List<Enemy> m_EnemyList;
+		private List<Enemy> m_EnemyList = null;
 
 		//스크립터블 오브젝트 추가용
 		[SerializeField]
 		private List<EnemyData> m_EnemyDataList = null;
+		private List<EnemySpawnData> m_EnemySpawnDataList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -50,30 +52,44 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-		//private void Start()
-		//{
-		//	Initialize();
-		//	InitializeMain();
-		//}
+		private void Update()
+		{
+			if (!m_IsStageStart)
+				return;
 
-		//void Update()
-		//{
-		//	if (Input.GetKeyDown(KeyCode.S))
-		//	{
-		//		SaveEnemyDataUI();
-		//		Debug.Log("데이터 저장 완료");
-		//	}
+			if (m_EnemyDataList == null || m_EnemySpawnDataList == null)
+				return;
 
-		//	//죽은 적을 오브젝트 풀에 반환
-		//	for (int i = 0; i < m_EnemyList.Count; i++)
-		//	{
-		//		if (m_EnemyList[i].m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
-		//		{
-		//			Despawn(m_EnemyList[i]);
-		//			m_EnemyList.RemoveAt(i);
-		//		}
-		//	}
-		//}
+			//생성
+			for (int i = m_EnemyList.Count; i < m_EnemySpawnDataList.Count; i++)
+			{
+				if (true)//스테이지 시작 시 n초가 경과했다면
+				{
+					Enemy enemy = GetBuilder(m_EnemySpawnDataList[i].Name)
+									.SetActive(true)
+									.SetPosition(m_EnemySpawnDataList[i].startPos)
+									.SetAutoInit(true)
+									.Spawn();
+					enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == m_EnemySpawnDataList[i].Name));
+
+					m_EnemyList.Add(enemy);
+				}
+			}
+
+			//소멸(사망)
+			for (int i = 0; i < m_EnemyList.Count; i++)
+			{
+				if (m_EnemyList[i].IsAlive)
+					continue;
+
+				m_EnemyList[i].Dead();
+				//enemylist에서 remove하지 않음. dead 상태로 들고 있음
+			}
+
+			//공격
+
+			//이동
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -93,10 +109,11 @@ namespace AvantGardeMaker.ad1a
 			  { true,false,true,false,true,false,true},
 			  { true,false,true,true,true,false,true},};
 
+			//스크립터블 오브젝트 경로
 			m_ForderPath = "ad1a/Data/EnemyData";
 
-			//json에서 EnemyData를 꺼내와 저장
 			m_EnemyDataList = new List<EnemyData>();
+			m_EnemySpawnDataList = new List<EnemySpawnData>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -116,7 +133,7 @@ namespace AvantGardeMaker.ad1a
 			LoadEnemyData();
 
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
-			//StartCoroutine(StartEnemyCoroutine());
+			m_IsStageStart = true;
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -129,7 +146,7 @@ namespace AvantGardeMaker.ad1a
 		}
 		#endregion
 		#endregion
-
+		#region Save & Load
 		[Button("Load EnemyData")]
 		///<summary>
 		/// Resources 폴더에 있는 EnemyData 스크립터블 오브젝트를 List에 저장
@@ -139,10 +156,27 @@ namespace AvantGardeMaker.ad1a
 			m_EnemyDataList.Clear();
 			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>(m_ForderPath));
 		}
+		/// <summary>
+		/// 스크립터블 데이터를 들고 있는 m_EnemyDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
+		/// </summary>
 		public void LoadEnemyData(ref StageData stageData)
 		{
-			m_EnemyDataList.Clear();
-			m_EnemyDataList.AddRange(stageData.GetEnemyDataList());
+			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
+			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
+
+			int count = m_EnemyDataList.Count;
+
+			if (count != fixedDataList.Count ||
+				count != variableDataList.Count)
+				throw new System.Exception("적 데이터 갯수 다름");
+
+			for (int i = 0; i < count; ++i)
+			{
+				EnemyData enemyData = m_EnemyDataList[i];
+
+				enemyData.FixedData = fixedDataList[i];
+				enemyData.VariableData = variableDataList[i];
+			}
 		}
 		public EnemyData GetEnemyData(string krName)
 		{
@@ -159,6 +193,7 @@ namespace AvantGardeMaker.ad1a
 		{
 			m_EnemyDataList.Clear();
 		}
+		#endregion
 
 		/*///// <summary>
 		///// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴
