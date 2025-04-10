@@ -31,7 +31,7 @@ namespace AvantGardeMaker.MikangMark
 		{
 			for (int i = 0; i < M_OperatorJson.m_OperInfoList.Count; i++)
 			{
-				m_ReciveOper.Add(M_OperatorJson.m_OperInfoList[i]);
+				m_ReciveOper.Add(M_OperatorJson.m_OperInfoList[i].Clone());
 			}
 			//Initialize();
 		}

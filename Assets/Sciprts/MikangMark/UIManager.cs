@@ -44,11 +44,13 @@ namespace AvantGardeMaker.MikangMark
 		public GameObject m_AttackRangeHighlight;
 		public List<GameObject> m_CreatedATKRangeHighlights;
 		public GameObject m_AttackRangeHighlight_Parent;
-
+		//OperDrag에서 컨트롤중
 		public bool m_Setting = false;
 		private GameObject m_TileTarget;
 
+		private bool m_TurnOff = false;
 
+		public Button CancelSetOperBtn;
 
 		#endregion
 
@@ -68,6 +70,7 @@ namespace AvantGardeMaker.MikangMark
 
 		private void Start()
 		{
+			CancelSetOperBtn.gameObject.SetActive(false);
 			m_CreatedATKRangeHighlights = new List<GameObject>();
 			OperStatUISetActive(false);
 			//디폴트로 선택된 첫번째 오퍼
@@ -89,8 +92,19 @@ namespace AvantGardeMaker.MikangMark
 			if (m_Setting)
 			{
 				MouseRealPoint();
+				m_TurnOff = true;
 			}
-			
+			else
+			{
+				if (m_TurnOff)
+				{
+					for (int i = 0; i < m_CreatedATKRangeHighlights.Count; i++)
+					{
+						m_CreatedATKRangeHighlights[i].SetActive(m_TurnOff = false);
+					}
+				}
+				
+			}
 		}
 		#endregion
 
@@ -105,7 +119,6 @@ namespace AvantGardeMaker.MikangMark
 			{
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
-
 				if (Physics.Raycast(ray, out hit))
 				{
 					Tile target = hit.collider.GetComponent<Tile>();
@@ -113,27 +126,17 @@ namespace AvantGardeMaker.MikangMark
 					{
 						if(m_TileTarget != hit.collider.gameObject)
 						{
-							if (m_CreatedATKRangeHighlights.Count > 0)
-							{
-								for(int i = 0; i < m_CreatedATKRangeHighlights.Count; i++)
-								{
-									Destroy(m_CreatedATKRangeHighlights[i]);
-								}
-								m_CreatedATKRangeHighlights = null;
-								m_CreatedATKRangeHighlights = new List<GameObject>();
-							}
-
-							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, E_OperatorDirection.Left), hit.collider.gameObject);
+							//한번만들어오도록 수정
+							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, 180), hit.collider.gameObject);
 						}
 						m_TileTarget = hit.collider.gameObject;
-						
 					}
 				}
 			}
 		}
-		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, E_OperatorDirection angleDeg)//회전각도 ex)90
+		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, float angleDeg)//회전각도 ex)90
 		{
-			float angleRad = (float)angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
+			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
 
 			float cos = Mathf.Cos(angleRad);
 			float sin = Mathf.Sin(angleRad);
@@ -142,12 +145,21 @@ namespace AvantGardeMaker.MikangMark
 			Vector2[] temp = new Vector2[_OperAtkRange.Length];
 			for(int i=0; i<temp.Length; i++)
 			{
-				temp[i] = new Vector2(_OperAtkRange[i].x * cos - _OperAtkRange[i].y * sin, _OperAtkRange[i].x * sin + _OperAtkRange[i].y * cos);
+				temp[i] = new Vector2((int)(_OperAtkRange[i].x * cos - _OperAtkRange[i].y * sin), (int)(_OperAtkRange[i].x * sin + _OperAtkRange[i].y * cos));
 			}
 			return temp;
 		}
 		public void OperAtkRangeHighlight(Vector2[] _OperAtkRange, GameObject _FindTile)
 		{
+			if (m_CreatedATKRangeHighlights.Count > 0)
+			{
+				for (int i = 0; i < m_CreatedATKRangeHighlights.Count; i++)
+				{
+					Destroy(m_CreatedATKRangeHighlights[i]);
+				}
+				m_CreatedATKRangeHighlights = null;
+				m_CreatedATKRangeHighlights = new List<GameObject>();
+			}
 			for (int i = 0; i < _OperAtkRange.Length + 1; i++)
 			{
 				m_CreatedATKRangeHighlights.Add(Instantiate(m_AttackRangeHighlight, m_AttackRangeHighlight_Parent.transform));

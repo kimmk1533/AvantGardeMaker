@@ -32,8 +32,6 @@ namespace AvantGardeMaker.MikangMark
 		Transform m_OperBox;
 
 		public List<Operator> m_PlayingOpers;
-
-		
 		public List<Operator> m_ReadyOperator;
 		#endregion
 
@@ -130,7 +128,7 @@ namespace AvantGardeMaker.MikangMark
 				m_ReadyOperator.Add(Instantiate(m_OperPannel, m_OperBox).GetComponent<Operator>());
 				m_ReadyOperator[i].OperName = m_ReceivePlayOperator[i];
 				m_ReadyOperator[i].gameObject.name = m_ReadyOperator[i].GetComponent<Operator>().OperName + "_InBox";
-				m_ReadyOperator[i].m_OperData = M_OperatorJson.m_OperInfoList[i];
+				m_ReadyOperator[i].m_OperData = M_OperatorJson.m_OperInfoList[i].Clone();
 			}
 		}
 

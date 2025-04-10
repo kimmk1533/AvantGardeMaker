@@ -195,10 +195,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  uiCamera: {fileID: 0}
-  cubeLayer:
-    serializedVersion: 2
-    m_Bits: 0
   IsOnTile: 0
   box: {fileID: 0}
 --- !u!114 &-7239862314741184774
@@ -245,3 +241,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  dragThreshold: 150
+  currentDirection: 0

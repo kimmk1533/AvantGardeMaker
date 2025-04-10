@@ -1,6 +1,6 @@
 {
     "serializationData": {
-        "SerializedFormat": 2,
+        "SerializedFormat": 0,
         "SerializedBytes": [],
         "ReferencedUnityObjects": [],
         "SerializedBytesString": "",
@@ -37,10 +37,14 @@
         {
             "x": 1.0,
             "y": 0.0
+        },
+        {
+            "x": 2.0,
+            "y": 0.0
         }
     ],
-    "E_OperDirection_H": 0,
-    "E_OperDirection_V": 270,
+    "E_OperDirection_H": 180,
+    "E_OperDirection_V": 90,
     "RightDownImg": {
         "instanceID": 46490
     },

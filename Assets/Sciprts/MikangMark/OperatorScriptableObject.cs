@@ -65,6 +65,43 @@ namespace AvantGardeMaker.MikangMark
 		public Sprite LeftDownImg;
 		public Sprite RightUpImg;
 		public Sprite LeftUpImg;
+
+		public OperInfo Clone()
+		{
+			return new OperInfo
+			{
+				EngOperName = this.EngOperName,
+				KorOperName = this.KorOperName,
+				Rate = this.Rate,
+				MaxLevel = this.MaxLevel,
+				Level = this.Level,
+				MaxExp = this.MaxExp,
+				Exp = this.Exp,
+				Elite = this.Elite,
+				Potential = this.Potential,
+				Job = this.Job,
+				MaxHp = this.MaxHp,
+				RealHp = this.RealHp,
+				Atk = this.Atk,
+				Def = this.Def,
+				Res = this.Res,
+				ReSet = this.ReSet,
+				SetCost = this.SetCost,
+				BlockCount = this.BlockCount,
+				AtkSpeed = this.AtkSpeed,
+				AtkRange = this.AtkRange,
+				Provocation = this.Provocation,
+				SkillLevel = this.SkillLevel,
+				AttackPos = (Vector2[])this.AttackPos.Clone(), // 배열은 복사
+				E_OperDirection_H = this.E_OperDirection_H,
+				E_OperDirection_V = this.E_OperDirection_V,
+				RightDownImg = this.RightDownImg,
+				LeftDownImg = this.LeftDownImg,
+				RightUpImg = this.RightUpImg,
+				LeftUpImg = this.LeftUpImg
+			};
+		}
+		
 		public void SaveJsonData(string directory, string fileName, OperInfo operData)
 		{
 			if (!Directory.Exists(directory))
