@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class MainMenuSceneLoadingEventReceiver : SceneEventReceiver
+	public class MainMenuSceneEventController : SceneEventController
 	{
 		#region 변수
+		[SerializeField]
+		private Camera m_MainMenuCamera = null;
+
 		[SerializeField]
 		private Button m_MapListButton = null;
 		[SerializeField]
@@ -31,6 +35,13 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 이벤트
+
+		#region 이벤트 함수
+		private void TurnOffMainMenuCamera()
+		{
+			m_MainMenuCamera.gameObject.SetActive(false);
+		}
+		#endregion
 		#endregion
 
 		#region 매니저
@@ -39,6 +50,10 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void OnApplicationQuit()
+		{
+			M_Game.FinallizeMainMenu();
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -59,7 +74,15 @@ namespace AvantGardeMaker.Ceeu
 
 			M_MainMenuUI.mapListItemParent = m_MapListItemParent;
 
-			M_Game.InitializeMainMenu();
+			// 씬 전환하기 전에 메인 메뉴 카메라 끄기
+			AddBeforeEvent("Map Editing Scene", TurnOffMainMenuCamera);
+			AddBeforeEvent("Map Editing Scene", M_Game.FinallizeMainMenu);
+
+			AddBeforeEvent("Game Playing Scene", TurnOffMainMenuCamera);
+			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMainMenu);
+
+			AddAfterEvent("Map Editing Scene", M_Game.InitializeMapEditing);
+			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlaying);
 		}
 		/// <summary>
 		/// 마무리화 함수

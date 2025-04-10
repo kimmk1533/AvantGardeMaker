@@ -24,8 +24,8 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니져
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -41,7 +41,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_OptionViewportMap = new Dictionary<string, OptionViewport>();
 
-			foreach (string key in M_MapEditorUI.keyList)
+			foreach (string key in M_MapEditingUI.keyList)
 			{
 				string viewportName = key + " Option Viewport";
 

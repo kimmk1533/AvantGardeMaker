@@ -37,11 +37,11 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void OnMapEditorButtonClicked()
 		{
-			SceneLoader.LoadScene("Map Editor Scene");
+			SceneLoader.LoadScene("Map Editing Scene");
 		}
 		private void OnOptionButtonClicked()
 		{
-
+			optionPanel.gameObject.SetActive(true);
 		}
 		private void OnQuitButtonClicked()
 		{
@@ -103,6 +103,11 @@ namespace AvantGardeMaker.Ceeu
 		public override void FinallizeMain()
 		{
 			base.FinallizeMain();
+
+			mapListButton.onClick.RemoveListener(OnMapListButtonClicked);
+			mapEditorButton.onClick.RemoveListener(OnMapEditorButtonClicked);
+			optionButton.onClick.RemoveListener(OnOptionButtonClicked);
+			quitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
 			mapListPanel.Finallize();
 

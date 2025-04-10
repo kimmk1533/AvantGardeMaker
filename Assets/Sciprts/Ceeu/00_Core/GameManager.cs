@@ -30,8 +30,8 @@ namespace AvantGardeMaker.Ceeu
 		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
 
 		private static TileManager M_Tile => TileManager.Instance;
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 
 		private static EnemyManager M_EnemyManager => EnemyManager.Instance;
 
@@ -68,8 +68,8 @@ namespace AvantGardeMaker.Ceeu
 			M_MainMenuUI.Initialize();
 
 			M_Tile.Initialize();
-			M_MapEditor.Initialize();
-			M_MapEditorUI.Initialize();
+			M_MapEditing.Initialize();
+			M_MapEditingUI.Initialize();
 
 			//ad1a
 			M_EnemyManager.Initialize();
@@ -79,8 +79,7 @@ namespace AvantGardeMaker.Ceeu
 			//M_Yaml.Initialize();
 			//M_InGamePlay.Initialize();
 
-
-
+			Debug.Log("Initialize");
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -89,8 +88,8 @@ namespace AvantGardeMaker.Ceeu
 		{
 			SaveLoadUtility.Finallize();
 
-			M_MapEditorUI.Finallize();
-			M_MapEditor.Finallize();
+			M_MapEditingUI.Finallize();
+			M_MapEditing.Finallize();
 			M_Tile.Finallize();
 
 			//ad1a
@@ -104,6 +103,8 @@ namespace AvantGardeMaker.Ceeu
 			M_MainMenuUI.Finallize();
 
 			M_Panel.Finallize();
+
+			Debug.Log("Finallize");
 		}
 
 		/// <summary>
@@ -114,6 +115,8 @@ namespace AvantGardeMaker.Ceeu
 			M_Panel.InitializeMain();
 
 			M_MainMenuUI.InitializeMain();
+
+			Debug.Log("Initialize Main Menu");
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (Main Menu Scene 나갈 시 호출)
@@ -123,14 +126,16 @@ namespace AvantGardeMaker.Ceeu
 			M_MainMenuUI.FinallizeMain();
 
 			M_Panel.FinallizeMain();
+
+			Debug.Log("Finallize Main Menu");
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (In Game Scene 진입 시 호출)
+		/// 게임 초기화 함수 (Game Playing Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeGame()
+		public void InitializeGamePlaying()
 		{
-			m_GameStageData = M_MapEditor.currentStageData;
+			SynchronizeStageData();
 			m_IsGameMode = true;
 
 			//ad1a
@@ -140,11 +145,13 @@ namespace AvantGardeMaker.Ceeu
 			//M_Operator.InitializeMain();
 			//M_Yaml.InitializeMain();
 			//M_InGamePlay.InitializeMain();
+
+			Debug.Log("Initialize Game Playing");
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (In Game Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (Game Playing Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeGame()
+		public void FinallizeGamePlaying()
 		{
 			m_IsGameMode = false;
 
@@ -155,39 +162,46 @@ namespace AvantGardeMaker.Ceeu
 			//M_Operator.FinallizeMain();
 			//M_Yaml.FinallizeMain();
 			//M_InGamePlay.FinallizeMain();
+
+			Debug.Log("Finallize Game Playing");
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (Map Editor Scene 진입 시 호출)
+		/// 게임 초기화 함수 (Map Editing Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeMapEditor()
+		public void InitializeMapEditing()
 		{
 			M_Panel.InitializeMain();
 
 			M_Tile.InitializeMain();
-			M_EnemyManager.InitializeMain();
 
-			M_MapEditorUI.InitializeMain();
-			M_MapEditor.InitializeMain();
+			M_MapEditingUI.InitializeMain();
+			M_MapEditing.InitializeMain();
+
+			M_EnemyManager.gameObject.SetActive(false);
+
+			Debug.Log("Initialize Map Editing");
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (Map Editor Scene 나갈 시 호출)
+		/// 게임 마무리화 함수 (Map Editing Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeMapEditor()
+		public void FinallizeMapEditing()
 		{
-			M_MapEditor.FinallizeMain();
-			M_MapEditorUI.FinallizeMain();
+			M_MapEditing.FinallizeMain();
+			M_MapEditingUI.FinallizeMain();
 
 			M_EnemyManager.FinallizeMain();
 			M_Tile.FinallizeMain();
 
 			M_Panel.FinallizeMain();
+
+			Debug.Log("Finallize Map Editing");
 		}
 		#endregion
 
 		public void SynchronizeStageData()
 		{
-			m_GameStageData = M_MapEditor.currentStageData;
+			m_GameStageData = M_MapEditing.currentStageData;
 		}
 	}
 }

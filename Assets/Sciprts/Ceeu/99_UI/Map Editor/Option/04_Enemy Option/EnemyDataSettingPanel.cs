@@ -70,9 +70,9 @@ namespace AvantGardeMaker.Ceeu
 		#region WayPoint
 		private void OnAddButtonClicked()
 		{
-			EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
+			EnemyWayPointDataUI wayPointDataUI = M_MapEditingUI.GetBuilder("Enemy WayPoint Data UI")
 				.SetScale(Vector3.one)
-				.SetParent(M_MapEditorUI.enemyWayPointDataUIParent)
+				.SetParent(M_MapEditingUI.enemyWayPointDataUIParent)
 				.SetAutoInit(true)
 				.SetActive(true)
 				.Spawn() as EnemyWayPointDataUI;
@@ -108,7 +108,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -291,7 +291,7 @@ namespace AvantGardeMaker.Ceeu
 			/// 
 			/// 한섭 기준: 이름
 			/// 
-			m_NameText.text = enemyData.KrName;
+			m_NameText.text = enemyData.KorName;
 
 			/// 
 			/// 한섭 기준: 공격 방식
@@ -354,12 +354,12 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region Descriptions
-			Transform immuneParent = M_MapEditorUI.enemyImmuneDescriptionParent;
+			Transform immuneParent = M_MapEditingUI.enemyImmuneDescriptionParent;
 
 			int count = immuneParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{
-				M_MapEditorUI.Despawn(immuneParent.GetChild<EnemyImmuneOption>(0));
+				M_MapEditingUI.Despawn(immuneParent.GetChild<EnemyImmuneOption>(0));
 			}
 
 			m_EnemyDescriptionText.text = enemyData.FixedData.Description;
@@ -374,7 +374,7 @@ namespace AvantGardeMaker.Ceeu
 
 			for (int i = 0; i < immuneKorStringArr.Length; ++i)
 			{
-				EnemyImmuneOption enemyImmuneOption = M_MapEditorUI.GetBuilder("Enemy Immune Option")
+				EnemyImmuneOption enemyImmuneOption = M_MapEditingUI.GetBuilder("Enemy Immune Option")
 					.SetParent(immuneParent)
 					.SetScale(Vector3.one)
 					.SetActive(true)
@@ -393,7 +393,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void ClearWayPointUI()
 		{
-			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
+			RectTransform wayPointDataUIParent = M_MapEditingUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{
@@ -402,7 +402,7 @@ namespace AvantGardeMaker.Ceeu
 				if (wayPointDataUI == null)
 					continue;
 
-				M_MapEditorUI.Despawn(wayPointDataUI);
+				M_MapEditingUI.Despawn(wayPointDataUI);
 			}
 		}
 

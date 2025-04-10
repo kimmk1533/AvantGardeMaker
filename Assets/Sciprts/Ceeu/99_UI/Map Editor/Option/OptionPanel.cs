@@ -45,7 +45,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

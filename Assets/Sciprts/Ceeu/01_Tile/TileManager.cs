@@ -24,7 +24,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -48,8 +48,6 @@ namespace AvantGardeMaker.Ceeu
 		public override void Finallize()
 		{
 			base.Finallize();
-
-
 		}
 
 		/// <summary>
@@ -71,7 +69,11 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizeMain();
 
+			m_TileMap.Clear();
+
 			m_TileParent = null;
+
+			gameObject.SetActive(false);
 		}
 		#endregion
 
@@ -79,7 +81,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			string tileKey = tileType.ToString().Replace('_', ' ');
 
-			Vector3 tilePosition = new Vector3(tilePos.x, tilePos.y) + M_MapEditor.GetTileOffset(tileType);
+			Vector3 tilePosition = new Vector3(tilePos.x, tilePos.y) + M_MapEditing.GetTileOffset(tileType);
 
 			Tile newTile = GetBuilder(tileKey)
 				.SetPosition(tilePosition)

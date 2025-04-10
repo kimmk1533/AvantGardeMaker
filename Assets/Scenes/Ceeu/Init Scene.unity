@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 1529448360}
   - component: {fileID: 1529448361}
   m_Layer: 0
-  m_Name: Init Scene Event Sender
+  m_Name: Init Scene Event Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1529448358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e29d20c47fb8a4c458fce64c872d1491, type: 3}
+  m_Script: {fileID: 11500000, guid: 89a7b737fc99f354e91112920c56b9bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -434,7 +434,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: m_OnBeforeSceneLoadingEventMap
+    - Name: m_OnSceneSwitchingBeforeEventMap
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Events.UnityEvent,
         UnityEngine.CoreModule]], mscorlib
@@ -445,6 +445,22 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: m_OnSceneSwitchingAfterEventMap
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Events.UnityEvent,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
     - Name: 
       Entry: 12
       Data: 0
@@ -520,7 +536,7 @@ MonoBehaviour:
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
-    <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
+    <origin>k__BackingField: {fileID: 3517390410534930288, guid: 1bca4103252419f48b44396adf68a65f, type: 3}
   - <key>k__BackingField: Protection Objective
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
@@ -743,7 +759,7 @@ MonoBehaviour:
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
     m_EnemySpawnDataList: []
-  m_StageName: Test
+  m_StageName: 
   m_UIFont: {fileID: 11400000, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
 --- !u!4 &2021308435
 Transform:

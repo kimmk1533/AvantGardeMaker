@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public sealed class MapEditorManager : SerializedSingleton<MapEditorManager>
+	public sealed class MapEditingManager : SerializedSingleton<MapEditingManager>
 	{
 		#region 변수
 		#region 카메라 관련 변수
@@ -86,7 +86,6 @@ namespace AvantGardeMaker.Ceeu
 		public StageData currentStageData => m_EditingStageData;
 
 		public string stageName { get => m_StageName; set => m_StageName = value; }
-		private string mapDataSavingFilePath => Path.Combine(Application.dataPath, "..", "Data", m_StageName) + (m_StageName.EndsWith(".json") == false ? ".json" : "");
 		#endregion
 		#endregion
 
@@ -114,7 +113,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 매니저
 		private static TileManager M_Tile => TileManager.Instance;
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -209,7 +208,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
 
-			//LoadData();
+			LoadData();
 
 			gameObject.SetActive(true);
 		}
@@ -218,7 +217,21 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void FinallizeMain()
 		{
+			foreach (var item in m_TilePreviewMap)
+			{
+				string key = item.Key.ToString().Replace('_', ' ');
 
+				item.Value.GetComponent<MeshRenderer>().material = m_MaterialMap[key];
+
+				M_Tile.Despawn(item.Value);
+			}
+			m_TilePreviewMap.Clear();
+			m_TilePreviewMap = null;
+
+			m_EditingStageData = default;
+			m_StageName = string.Empty;
+
+			gameObject.SetActive(false);
 		}
 		#endregion
 
@@ -343,7 +356,7 @@ namespace AvantGardeMaker.Ceeu
 
 		private Vector2Int GetMousePositionInt()
 		{
-			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D();
+			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D(mapEditorCamera);
 			Vector2Int mousePositionInt = new Vector2Int(
 				Mathf.RoundToInt(mousePosition.x),
 				Mathf.RoundToInt(mousePosition.y)
@@ -396,8 +409,8 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region 적 저장
-			M_MapEditorUI.SaveEnemyDataUI(ref m_EditingStageData);
-			M_MapEditorUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
+			M_MapEditingUI.SaveEnemyDataUI(ref m_EditingStageData);
+			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
 			#endregion
 			#endregion
 
@@ -415,14 +428,16 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 		}
 		[Button]
-		public async void LoadData()
+		public void LoadData()
 		{
-			//m_EditingStageData = await SaveLoadUtility.LoadData<StageData>(m_StageName);
+			if (m_EditingStageData.title == null ||
+				m_EditingStageData.title.Equals(string.Empty) == true)
+				return;
 
 			M_Tile.LoadTileData(ref m_EditingStageData);
-			M_Enemy.LoadEnemyData(ref m_EditingStageData);
+			//M_Enemy.LoadEnemyData(ref m_EditingStageData);
 
-			M_MapEditorUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
+			M_MapEditingUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
@@ -434,6 +449,13 @@ namespace AvantGardeMaker.Ceeu
 			});
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 			#endregion
+		}
+
+		public void SynchronizeStageData(StageData stageData)
+		{
+			m_EditingStageData = stageData;
+
+			m_StageName = stageData.title;
 		}
 		#endregion
 	}

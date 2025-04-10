@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class MapEditorSceneEvenetReceiver : SceneEventReceiver
+	public class MapEditingSceneEventController : SceneEventController
 	{
 		#region 변수
 		[SerializeField]
@@ -54,29 +55,21 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
-		private void OnMainMenuButtonClicked()
-		{
-			SceneLoader.LoadScene("Main Menu Scene");
-		}
-		private void OnSaveButtonClicked()
-		{
-			M_MapEditor.SaveData();
-		}
-		private void OnPlayButtonClicked()
-		{
-			Debug.Log("Play");
-		}
 		#endregion
 		#endregion
 
 		#region 매니저
 		private static GameManager M_Game => GameManager.Instance;
 
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void OnApplicationQuit()
+		{
+			M_Game.FinallizeMapEditing();
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -87,29 +80,33 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
-			m_MainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
-			m_SaveButton.onClick.AddListener(OnSaveButtonClicked);
-			m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
-
 			#region 멤버 변수 링킹
-			M_MapEditor.mapEditorCamera = m_MapEditorCamera;
-			M_MapEditor.thumnailCamera = m_ThumnailCamera;
+			M_MapEditing.mapEditorCamera = m_MapEditorCamera;
+			M_MapEditing.thumnailCamera = m_ThumnailCamera;
 
-			M_MapEditor.editModeCameraTransform = m_EditModeCameraTransform;
-			M_MapEditor.gameModeCameraTransform = m_GameModeCameraTransform;
+			M_MapEditing.editModeCameraTransform = m_EditModeCameraTransform;
+			M_MapEditing.gameModeCameraTransform = m_GameModeCameraTransform;
 
-			M_MapEditorUI.menuPanel = m_MenuPanel;
-			M_MapEditorUI.optionPanel = m_OptionPanel;
+			M_MapEditingUI.mainMenuButton = m_MainMenuButton;
+			M_MapEditingUI.saveButton = m_SaveButton;
+			M_MapEditingUI.playButton = m_PlayButton;
 
-			M_MapEditorUI.enemyDataSettingPanel = m_EnemyDataSettingPanel;
+			M_MapEditingUI.menuPanel = m_MenuPanel;
+			M_MapEditingUI.optionPanel = m_OptionPanel;
 
-			M_MapEditorUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
-			M_MapEditorUI.enemyDataUIParent = m_EnemyDataUIParent;
-			M_MapEditorUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
-			M_MapEditorUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
+			M_MapEditingUI.enemyDataSettingPanel = m_EnemyDataSettingPanel;
+
+			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
+			M_MapEditingUI.enemyDataUIParent = m_EnemyDataUIParent;
+			M_MapEditingUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
+			M_MapEditingUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
 			#endregion
 
-			M_Game.InitializeMapEditor();
+			AddBeforeEvent("Main Menu Scene", M_Game.FinallizeMapEditing);
+			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMapEditing);
+
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
+			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlaying);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -118,7 +115,6 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Finallize();
 
-			M_Game.FinallizeMapEditor();
 		}
 		#endregion
 	}

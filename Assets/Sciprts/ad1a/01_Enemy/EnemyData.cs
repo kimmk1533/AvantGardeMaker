@@ -88,7 +88,7 @@ namespace AvantGardeMaker.ad1a
 	{
 		//이름(키 값임)
 		public string EngName = string.Empty;
-		public string KrName = string.Empty;
+		public string KorName = string.Empty;
 
 		//고정된 값
 		public EnemyFixedData FixedData = new EnemyFixedData();

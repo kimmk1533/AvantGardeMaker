@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class InitSceneEventSender : SceneEventSender
+	public class InitSceneEventController : SceneEventController
 	{
 		#region 변수
 		#endregion
@@ -17,9 +17,14 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
+		private static GameManager M_Game => GameManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void OnApplicationQuit()
+		{
+			M_Game.Finallize();
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -29,6 +34,8 @@ namespace AvantGardeMaker.Ceeu
 		protected override void Initialize()
 		{
 			base.Initialize();
+
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
 
 			SceneLoader.LoadScene("Main Menu Scene");
 		}

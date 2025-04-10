@@ -162,7 +162,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 		public void AddEnemyData(EnemyData enemyData)
 		{
-			m_EnemyKeyList.Add(enemyData.KrName);
+			m_EnemyKeyList.Add(enemyData.KorName);
 			m_EnemyFixedDataList.Add(enemyData.FixedData);
 			m_EnemyVariableDataList.Add(enemyData.VariableData);
 		}
@@ -186,7 +186,7 @@ namespace AvantGardeMaker.Ceeu
 				EnemyData enemyData = ScriptableObject.CreateInstance<EnemyData>();
 
 				//enemyData.EngName = m_EnemyKeyList[i];
-				enemyData.KrName = m_EnemyKeyList[i];
+				enemyData.KorName = m_EnemyKeyList[i];
 				enemyData.FixedData = m_EnemyFixedDataList[i];
 				enemyData.VariableData = m_EnemyVariableDataList[i];
 

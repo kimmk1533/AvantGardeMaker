@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class EnemyWayPointDataUI : MapEditorUI
+	public class EnemyWayPointDataUI : MapEditingUI
 	{
 		#region 변수
 		private Button m_TileSelectButton = null;
@@ -85,13 +85,13 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트 함수
 		private void OnDeleteButtonClicked()
 		{
-			M_MapEditorUI.Despawn(this);
+			M_MapEditingUI.Despawn(this);
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

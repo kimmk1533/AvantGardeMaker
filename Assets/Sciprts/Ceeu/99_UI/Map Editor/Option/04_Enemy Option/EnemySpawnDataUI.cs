@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class EnemySpawnDataUI : MapEditorUI
+	public class EnemySpawnDataUI : MapEditingUI
 	{
 		#region 변수
 		private Button m_OptionButton = null;
@@ -90,7 +90,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트 함수
 		private void OnOptionButtonClicked()
 		{
-			EnemyDataSettingPanel settingPanel = M_MapEditorUI.enemyDataSettingPanel;
+			EnemyDataSettingPanel settingPanel = M_MapEditingUI.enemyDataSettingPanel;
 
 			settingPanel.SetEnemySpawnDataUI(this);
 
@@ -113,10 +113,10 @@ namespace AvantGardeMaker.Ceeu
 		{
 			int.TryParse(inputString, out int inputValue);
 
-			if (inputValue <= M_MapEditorUI.maxWave)
+			if (inputValue <= M_MapEditingUI.maxWave)
 				m_WaveInputField.SetTextWithoutNotify(inputValue.ToString());
 
-			M_MapEditorUI.ReorderEnemySpawnDataUI();
+			M_MapEditingUI.ReorderEnemySpawnDataUI();
 		}
 		private void OnWaveTimeInputFieldSubmit(string inputString)
 		{
@@ -124,18 +124,18 @@ namespace AvantGardeMaker.Ceeu
 			float.TryParse(m_TimeStampText.text, out float time);
 			m_TimeStampText.text = (time + inputValue).ToString();
 
-			M_MapEditorUI.ReorderEnemySpawnDataUI();
+			M_MapEditingUI.ReorderEnemySpawnDataUI();
 		}
 
 		private void OnDeleteButtonClicked()
 		{
-			M_MapEditorUI.Despawn(this);
+			M_MapEditingUI.Despawn(this);
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
@@ -238,7 +238,7 @@ namespace AvantGardeMaker.Ceeu
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
 
 			//스폰시킬 적의 이름
-			enemySpawnData.Name = enemyData.KrName;
+			enemySpawnData.Name = enemyData.KorName;
 
 			//수량(일괄 스폰 시 사용)
 			enemySpawnData.Amount = count;
@@ -278,8 +278,8 @@ namespace AvantGardeMaker.Ceeu
 
 			for (int i = 0; i < count; ++i)
 			{
-				EnemyWayPointDataUI wayPointDataUI = M_MapEditorUI.GetBuilder("Enemy WayPoint Data UI")
-					.SetParent(M_MapEditorUI.enemyWayPointDataUIParent)
+				EnemyWayPointDataUI wayPointDataUI = M_MapEditingUI.GetBuilder("Enemy WayPoint Data UI")
+					.SetParent(M_MapEditingUI.enemyWayPointDataUIParent)
 					.SetScale(Vector3.one)
 					.SetActive(true)
 					.SetAutoInit(true)
@@ -297,7 +297,7 @@ namespace AvantGardeMaker.Ceeu
 			m_EnemyWayPointList.Clear();
 			m_EnemyWayPointDelayTimeList.Clear();
 
-			RectTransform wayPointDataUIParent = M_MapEditorUI.enemyWayPointDataUIParent;
+			RectTransform wayPointDataUIParent = M_MapEditingUI.enemyWayPointDataUIParent;
 			int count = wayPointDataUIParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{

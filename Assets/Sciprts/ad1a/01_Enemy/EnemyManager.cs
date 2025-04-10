@@ -114,6 +114,8 @@ namespace AvantGardeMaker.ad1a
 
 			m_EnemyDataList = new List<EnemyData>();
 			m_EnemySpawnDataList = new List<EnemySpawnData>();
+
+			LoadEnemyData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -129,8 +131,6 @@ namespace AvantGardeMaker.ad1a
 		public override void InitializeMain()
 		{
 			base.InitializeMain();
-
-			LoadEnemyData();
 
 			//스테이지에서 사용할 복사용 적을 1체씩 미리 완성시켜놓아야 함
 			m_IsStageStart = true;
@@ -180,7 +180,7 @@ namespace AvantGardeMaker.ad1a
 		}
 		public EnemyData GetEnemyData(string krName)
 		{
-			return m_EnemyDataList.Find(n => n.KrName == krName);
+			return m_EnemyDataList.Find(n => n.KorName == krName);
 		}
 
 		public List<EnemyData> GetAllEnemyData()

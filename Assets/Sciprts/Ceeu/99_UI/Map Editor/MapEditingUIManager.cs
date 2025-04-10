@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class MapEditorUIManager : ObjectManager<MapEditorUIManager, MapEditorUI>
+	public class MapEditingUIManager : ObjectManager<MapEditingUIManager, MapEditingUI>
 	{
 		#region 변수
 		[PropertySpace]
@@ -29,6 +29,10 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 프로퍼티
 		public List<string> keyList => m_KeyList;
+
+		public Button mainMenuButton { get; set; }
+		public Button saveButton { get; set; }
+		public Button playButton { get; set; }
 
 		#region 메뉴 패널 관련 프로퍼티
 		public MenuPanel menuPanel { get; set; }
@@ -51,6 +55,20 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
+		private void OnMainMenuButtonClicked()
+		{
+			SceneLoader.LoadScene("Main Menu Scene");
+		}
+		private void OnSaveButtonClicked()
+		{
+			M_MapEditing.SaveData();
+		}
+		private void OnPlayButtonClicked()
+		{
+			M_Game.SynchronizeStageData();
+			Debug.Log("Play");
+		}
+
 		private void OnEnemySpawnDataUISpawned(ObjectPoolItemBase objectPoolItem)
 		{
 			EnemySpawnDataUI enemySpawnDataUI = objectPoolItem as EnemySpawnDataUI;
@@ -74,15 +92,16 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static GameManager M_Game => GameManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Update()
-		{
-			//MenuShortcut();
-		}
+		//private void Update()
+		//{
+		//	MenuShortcut();
+		//}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -116,6 +135,10 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.InitializeMain();
 
+			mainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
+			saveButton.onClick.AddListener(OnSaveButtonClicked);
+			playButton.onClick.AddListener(OnPlayButtonClicked);
+
 			menuPanel.Initialize();
 
 			optionPanel.Initialize();
@@ -135,7 +158,7 @@ namespace AvantGardeMaker.Ceeu
 					.Spawn() as EnemyDataUI;
 
 				enemyDataUI.enemyData = enemyDataList[i];
-				enemyDataUI.debugText = enemyDataList[i].KrName;
+				enemyDataUI.debugText = enemyDataList[i].KorName;
 
 				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
 			}
@@ -165,6 +188,8 @@ namespace AvantGardeMaker.Ceeu
 
 			optionPanel.Finallize();
 			enemyDataSettingPanel.Finallize();
+
+			gameObject.SetActive(false);
 		}
 		#endregion
 
@@ -177,7 +202,7 @@ namespace AvantGardeMaker.Ceeu
 				if (Input.GetKeyDown(keyCode) == true)
 				{
 					optionViewport.OnMenuButtonClicked();
-					M_MapEditor.SetEditModeType(optionViewport.editModeType);
+					M_MapEditing.SetEditModeType(optionViewport.editModeType);
 				}
 			}
 		}

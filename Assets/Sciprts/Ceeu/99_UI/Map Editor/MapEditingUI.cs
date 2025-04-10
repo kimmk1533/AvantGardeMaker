@@ -5,12 +5,14 @@ using UnityEngine;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class MapEditorSceneEventSender : SceneEventSender
+	public class MapEditingUI : ObjectPoolItemBase
 	{
 		#region 변수
+		private RectTransform m_RectTransform;
 		#endregion
 
 		#region 프로퍼티
+		protected RectTransform rectTransform => m_RectTransform;
 		#endregion
 
 		#region 이벤트
@@ -26,18 +28,19 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		protected override void Initialize()
+		public override void InitializePoolItem()
 		{
-			base.Initialize();
+			base.InitializePoolItem();
 
+			if (m_RectTransform == null)
+				m_RectTransform = transform as RectTransform;
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		protected override void Finallize()
+		public override void FinallizePoolItem()
 		{
-			base.Finallize();
-
+			base.FinallizePoolItem();
 		}
 		#endregion
 	}

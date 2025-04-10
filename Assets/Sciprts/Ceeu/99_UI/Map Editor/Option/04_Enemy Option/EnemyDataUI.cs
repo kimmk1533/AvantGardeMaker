@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class EnemyDataUI : MapEditorUI
+	public class EnemyDataUI : MapEditingUI
 	{
 		#region 변수
 		private Button m_Button = null;
@@ -32,22 +32,22 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트 함수
 		private void OnAddButtonClicked()
 		{
-			EnemySpawnDataUI enemySpawnDataUI = M_MapEditorUI.GetBuilder("Enemy Spawn Data UI")
-				.SetParent(M_MapEditorUI.enemySpawnDataUIParent.transform)
+			EnemySpawnDataUI enemySpawnDataUI = M_MapEditingUI.GetBuilder("Enemy Spawn Data UI")
+				.SetParent(M_MapEditingUI.enemySpawnDataUIParent.transform)
 				.SetScale(Vector3.one)
 				.SetActive(true)
 				.SetAutoInit(true)
 				.Spawn() as EnemySpawnDataUI;
 
 			enemySpawnDataUI.enemyData = enemyData;
-			enemySpawnDataUI.debugText = enemyData.KrName;
+			enemySpawnDataUI.debugText = enemyData.KorName;
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
-		private static MapEditorUIManager M_MapEditorUI => MapEditorUIManager.Instance;
-		private static MapEditorManager M_MapEditor => MapEditorManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

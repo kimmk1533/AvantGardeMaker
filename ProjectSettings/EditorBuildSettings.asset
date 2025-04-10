@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Init Scene.unity
+    path: Assets/Scenes/Ceeu/Init Scene.unity
     guid: 32112e5df228a2946918433d394886be
   - enabled: 1
-    path: Assets/Scenes/Loading Scene.unity
+    path: Assets/Scenes/Ceeu/Loading Scene.unity
     guid: 312314f7e1886f54484398ed0b0c7abe
   - enabled: 1
-    path: Assets/Scenes/Main Menu Scene.unity
+    path: Assets/Scenes/Ceeu/Main Menu Scene.unity
     guid: 03eeca9fca1da15479c8a81d50536102
   - enabled: 1
-    path: Assets/Scenes/Map Editor Scene.unity
+    path: Assets/Scenes/Ceeu/Map Editing Scene.unity
     guid: ac5ab60e7365ba34c8b4b124a6c15064
   - enabled: 1
-    path: Assets/Scenes/Game Scene.unity
+    path: Assets/Scenes/Ceeu/Game Playing Scene.unity
     guid: fec46f5af58c6024fba4a00cdc174cb1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

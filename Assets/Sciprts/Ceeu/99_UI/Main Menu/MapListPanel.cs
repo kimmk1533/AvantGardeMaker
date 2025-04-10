@@ -26,6 +26,10 @@ namespace AvantGardeMaker.Ceeu
 		private Button m_EnemyInfoButton = null;
 		private TMP_Text m_DescriptionText = null;
 		#endregion
+
+		private Button m_PlayButton = null;
+		private Button m_EditButton = null;
+		private Button m_DeleteButton = null;
 		#endregion
 
 		#region 프로퍼티
@@ -58,11 +62,27 @@ namespace AvantGardeMaker.Ceeu
 		{
 			Debug.Log("Enemy Info Button Clicked.");
 		}
+
+		private void OnPlayButtonClicked()
+		{
+
+		}
+		private void OnEditButtonClicked()
+		{
+			M_MapEditing.SynchronizeStageData(m_CurrentStageData);
+
+			SceneLoader.LoadScene("Map Editing Scene");
+		}
+		private void OnDeleteButtonClicked()
+		{
+
+		}
 		#endregion
 		#endregion
 
 		#region 매니저
 		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -89,40 +109,53 @@ namespace AvantGardeMaker.Ceeu
 
 			if (m_ThumnailImage == null)
 				m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
-
 			if (m_TitleText == null)
 			{
 				m_TitleText = transform.Find("Map Info Panel").Find<TMP_Text>("Title Text");
 			}
-
 			if (m_CreatorText == null)
 			{
 				m_CreatorText = transform.Find("Map Info Panel").Find<TMP_Text>("Creator Text");
 			}
-
 			//if (m_Rating == null)
 			//{
 			//	m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
 			//}
 			//m_Rating.Initialize();
-
 			if (m_OperatorInfoButton == null)
 			{
 				m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
 
 				m_OperatorInfoButton.onClick.AddListener(OnOperatorInfoButtonClicked);
 			}
-
 			if (m_EnemyInfoButton == null)
 			{
 				m_EnemyInfoButton = transform.Find("Map Info Panel").Find<Button>("Enemy Info Button");
 
 				m_EnemyInfoButton.onClick.AddListener(OnEnemyInfoButtonClicked);
 			}
-
 			if (m_DescriptionText == null)
 			{
 				m_DescriptionText = transform.Find("Map Info Panel").FindInChildren<TMP_Text>("Description Text");
+			}
+
+			if (m_PlayButton == null)
+			{
+				m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
+
+				m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
+			}
+			if (m_EditButton == null)
+			{
+				m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");
+
+				m_EditButton.onClick.AddListener(OnEditButtonClicked);
+			}
+			if (m_DeleteButton == null)
+			{
+				m_DeleteButton = transform.Find("Buttons").Find<Button>("Delete Button");
+
+				m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
 			}
 		}
 		/// <summary>

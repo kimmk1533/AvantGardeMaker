@@ -74,10 +74,10 @@ public class SceneLoader : SerializedMonoBehaviour
 
 		yield return null;
 
-		SceneEventSender[] eventSenders = FindObjectsByType<SceneEventSender>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-		for (int i = 0; i < eventSenders.Length; ++i)
+		SceneEventController[] eventControllers = FindObjectsByType<SceneEventController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+		for (int i = 0; i < eventControllers.Length; ++i)
 		{
-			eventSenders[i].OnBeforeSceneLoading(m_NextScene);
+			eventControllers[i].OnBeforeSceneSwitching(m_NextScene);
 		}
 
 		LoadSceneParameters sceneParameters = new LoadSceneParameters(LoadSceneMode.Additive, LocalPhysicsMode.None);
@@ -152,16 +152,18 @@ public class SceneLoader : SerializedMonoBehaviour
 
 	private void OnSceneLoadCompleted(AsyncOperation op)
 	{
+		SceneManager.SetActiveScene(SceneManager.GetSceneByName(m_NextScene));
+
+		SceneEventController[] eventControllers = FindObjectsByType<SceneEventController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+		for (int i = 0; i < eventControllers.Length; ++i)
+		{
+			eventControllers[i].OnAfterSceneSwitching(m_NextScene);
+		}
+
 		AsyncOperation opLoading = SceneManager.UnloadSceneAsync("Loading Scene");
 		AsyncOperation opPrev = SceneManager.UnloadSceneAsync(m_PrevScene);
 
 		m_PrevScene = m_NextScene;
 		m_NextScene = "";
-
-		SceneEventReceiver[] eventReceivers = FindObjectsByType<SceneEventReceiver>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-		for (int i = 0; i < eventReceivers.Length; ++i)
-		{
-			eventReceivers[i].OnAfterSceneLoaded(m_PrevScene);
-		}
 	}
 }
