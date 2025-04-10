@@ -5,12 +5,14 @@ using UnityEngine;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class Panel : SerializedMonoBehaviour
+	public class MainMenuUI : ObjectPoolItemBase
 	{
 		#region 변수
+		private RectTransform m_RectTransform;
 		#endregion
 
 		#region 프로퍼티
+		protected RectTransform rectTransform => m_RectTransform;
 		#endregion
 
 		#region 이벤트
@@ -20,28 +22,28 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
-		private static PanelManager M_Panel => PanelManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		protected virtual void OnEnable()
-		{
-			M_Panel.RegisterPanel(this);
-		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public virtual void Initialize()
+		public override void InitializePoolItem()
 		{
+			base.InitializePoolItem();
+
+			if (m_RectTransform == null)
+				m_RectTransform = transform as RectTransform;
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public virtual void Finallize()
+		public override void FinallizePoolItem()
 		{
+			base.FinallizePoolItem();
 		}
 		#endregion
 	}

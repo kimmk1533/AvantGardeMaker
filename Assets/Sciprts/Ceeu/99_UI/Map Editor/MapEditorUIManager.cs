@@ -23,8 +23,6 @@ namespace AvantGardeMaker.Ceeu
 		private int m_MaxWave;
 		#endregion
 
-		private Stack<Panel> m_PanelStack = null;
-
 		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
 		#endregion
@@ -84,7 +82,6 @@ namespace AvantGardeMaker.Ceeu
 		private void Update()
 		{
 			//MenuShortcut();
-			PanelStackShortcut();
 		}
 		#endregion
 
@@ -95,8 +92,6 @@ namespace AvantGardeMaker.Ceeu
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			m_PanelStack = new Stack<Panel>();
 
 			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
 			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
@@ -152,8 +147,6 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizeMain();
 
-			m_PanelStack.Clear();
-
 			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
 			{
 				Despawn(m_SpawnedEnemyDataUIList[i]);
@@ -184,28 +177,6 @@ namespace AvantGardeMaker.Ceeu
 					M_MapEditor.SetEditModeType(optionViewport.editModeType);
 				}
 			}
-		}
-		private void PanelStackShortcut()
-		{
-			if (m_PanelStack.Count <= 0)
-				return;
-			if (Input.GetKeyDown(KeyCode.Escape) == false)
-				return;
-
-			Panel panel = m_PanelStack.Peek();
-			while (m_PanelStack.Count > 0 &&
-				panel != null &&
-				panel.gameObject.activeSelf == false)
-				panel = m_PanelStack.Pop();
-
-			panel.gameObject.SetActive(false);
-		}
-		public void RegisterPanel(Panel panel)
-		{
-			if (m_PanelStack.Contains(panel) == true)
-				return;
-
-			m_PanelStack.Push(panel);
 		}
 
 		public void SaveEnemyDataUI(ref StageData stageData)

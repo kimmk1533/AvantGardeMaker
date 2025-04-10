@@ -13,6 +13,9 @@ namespace AvantGardeMaker.Ceeu
 		#region 변수
 		#region 1. 시스템 관련 변수
 		[SerializeField]
+		private string m_Title;
+
+		[SerializeField]
 		[FoldoutGroup("System")]
 		private int m_InitCost;
 		[SerializeField]
@@ -63,7 +66,15 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
-		#region 타일 관련 프로퍼티
+		#region 1. 시스템 관련 프로퍼티
+		public string title
+		{
+			get => m_Title;
+			set => m_Title = value;
+		}
+		#endregion
+
+		#region 2. 타일 관련 프로퍼티
 		public List<Vector2Int> tilePointList => new List<Vector2Int>(m_TilePointList);
 		public List<E_TileType> tileTypeList => new List<E_TileType>(m_TileTypeList);
 
@@ -71,7 +82,7 @@ namespace AvantGardeMaker.Ceeu
 		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 		#endregion
 
-		#region 적 관련 프로퍼티
+		#region 4. 적 관련 프로퍼티
 		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		#endregion
 		#endregion

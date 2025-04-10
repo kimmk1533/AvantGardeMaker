@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
@@ -10,7 +11,7 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		[SerializeField]
-		private Button m_MapEditorButton = null;
+		private Camera m_MainMenuCamera = null;
 		#endregion
 
 		#region 프로퍼티
@@ -19,22 +20,6 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
-		public void OnGameButtonClicked()
-		{
-			SceneLoader.LoadScene("Game Scene");
-		}
-		public void OnMapEditorButtonClicked()
-		{
-			SceneLoader.LoadScene("Map Editor Scene");
-		}
-		public void OnQuitButtonClicked()
-		{
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.ExitPlaymode();
-#else
-			Application.Quit();
-#endif
-		}
 		#endregion
 		#endregion
 
@@ -52,7 +37,19 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
-			m_MapEditorButton.onClick.AddListener(OnMapEditorButtonClicked);
+			if (m_MainMenuCamera == null)
+				m_MainMenuCamera = Camera.main;
+
+			// 씬 전환하기 전에 메인 메뉴 카메라 끄기
+			if (m_OnBeforeSceneLoadingEventMap.TryGetValue("Map Editor Scene", out UnityEvent mapEditorSceneEvent) == false)
+			{
+				mapEditorSceneEvent = new UnityEvent();
+				mapEditorSceneEvent.AddListener(() =>
+				{
+					m_MainMenuCamera.gameObject.SetActive(false);
+				});
+				m_OnBeforeSceneLoadingEventMap.Add("Map Editor Scene", mapEditorSceneEvent);
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수

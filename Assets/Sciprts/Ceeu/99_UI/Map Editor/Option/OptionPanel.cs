@@ -18,9 +18,6 @@ namespace AvantGardeMaker.Ceeu
 
 		private Scrollbar m_ScrollBar = null;
 		private Button m_CloseButton = null;
-
-		private Button m_SaveButton = null;
-		private Button m_LoadButton = null;
 		#endregion
 
 		#region 프로퍼티
@@ -43,15 +40,6 @@ namespace AvantGardeMaker.Ceeu
 			if (m_CurrentViewport != null)
 				m_CurrentViewport.gameObject.SetActive(false);
 			m_CurrentViewport = null;
-		}
-
-		private void OnSaveButtonClicked()
-		{
-			M_MapEditor.SaveData();
-		}
-		private void OnLoadButtonClicked()
-		{
-			M_MapEditor.LoadData();
 		}
 		#endregion
 		#endregion
@@ -96,19 +84,6 @@ namespace AvantGardeMaker.Ceeu
 			{
 				m_CloseButton = m_RectTransform.Find<Button>("Close Button");
 				m_CloseButton.onClick.AddListener(OnCloseButtonClicked);
-			}
-
-			if (m_SaveButton == null)
-			{
-				m_SaveButton = m_RectTransform.FindInChildren<Button>("Save Button");
-
-				m_SaveButton.onClick.AddListener(OnSaveButtonClicked);
-			}
-			if (m_LoadButton == null)
-			{
-				m_LoadButton = m_RectTransform.FindInChildren<Button>("Load Button");
-
-				m_LoadButton.onClick.AddListener(OnLoadButtonClicked);
 			}
 
 			gameObject.SetActive(false);

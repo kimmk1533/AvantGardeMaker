@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : SerializedMonoBehaviour
 {
 	#region 변수
 	protected static string m_PrevScene = null;

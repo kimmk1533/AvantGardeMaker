@@ -32,7 +32,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 			set
 			{
-				m_XInputField.text = value.ToString();
+				m_XInputField.SetTextWithoutNotify(value.ToString());
 			}
 		}
 		public float y
@@ -49,7 +49,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 			set
 			{
-				m_YInputField.text = value.ToString();
+				m_YInputField.SetTextWithoutNotify(value.ToString());
 			}
 		}
 		public Vector2 position
@@ -63,8 +63,20 @@ namespace AvantGardeMaker.Ceeu
 		}
 		public float delayTime
 		{
-			get => float.Parse(m_DelayTimeInputField.text);
-			set => m_DelayTimeInputField.SetTextWithoutNotify(value.ToString());
+			get
+			{
+				if (m_DelayTimeInputField.text == string.Empty)
+					return 0f;
+
+				if (float.TryParse(m_DelayTimeInputField.text, out float delayTimeValue) == false)
+					throw new System.Exception("Enemy WayPoint DelayTime InputField의 값을 float로 변환 하는데 실패");
+
+				return delayTimeValue;
+			}
+			set
+			{
+				m_DelayTimeInputField.SetTextWithoutNotify(value.ToString());
+			}
 		}
 		#endregion
 

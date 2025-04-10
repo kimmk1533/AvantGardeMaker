@@ -50,11 +50,6 @@ namespace AvantGardeMaker.Ceeu
 
 				m_OptionViewportMap.Add(key, optionViewport);
 			}
-
-			OptionViewport saveLoadOptionViewport = m_OptionViewportMap["Save&Load"];
-			TMP_InputField stageNameInputField = saveLoadOptionViewport.transform.FindInChildren<TMP_InputField>("Stage Name InputField");
-
-			stageNameInputField.onEndEdit.AddListener((inputString) => M_MapEditor.stageName = inputString);
 		}
 		/// <summary>
 		/// 마무리화 함수

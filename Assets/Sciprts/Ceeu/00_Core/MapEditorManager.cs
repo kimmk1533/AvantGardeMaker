@@ -375,6 +375,8 @@ namespace AvantGardeMaker.Ceeu
 			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
 
+			m_EditingStageData.title = m_StageName;
+
 			#region 타일 저장
 			M_Tile.SaveTileData(ref m_EditingStageData);
 			#endregion
@@ -385,7 +387,7 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 			#endregion
 
-			await SaveLoadUtility.SaveData<StageData>(m_StageName, m_EditingStageData);
+			await SaveLoadUtility.SaveStageData(m_StageName, m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
@@ -401,7 +403,7 @@ namespace AvantGardeMaker.Ceeu
 		[Button]
 		public async void LoadData()
 		{
-			m_EditingStageData = await SaveLoadUtility.LoadData<StageData>(m_StageName);
+			//m_EditingStageData = await SaveLoadUtility.LoadData<StageData>(m_StageName);
 
 			M_Tile.LoadTileData(ref m_EditingStageData);
 			M_Enemy.LoadEnemyData(ref m_EditingStageData);
