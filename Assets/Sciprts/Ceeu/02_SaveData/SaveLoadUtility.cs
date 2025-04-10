@@ -17,11 +17,6 @@ namespace AvantGardeMaker.Ceeu
 {
 	public static class SaveLoadUtility
 	{
-		static SaveLoadUtility()
-		{
-			Initialize();
-		}
-
 		public static async void Initialize()
 		{
 			// 유니티 서비스 초기화
@@ -35,96 +30,82 @@ namespace AvantGardeMaker.Ceeu
 			{
 				Debug.Log("Signed out");
 			};
+
+			// 유니티 서비스 로그인
+			await AuthenticationService.Instance.SignInAnonymouslyAsync();
+		}
+		public static void Finallize()
+		{
+			// 유니티 서비스 로그아웃
+			AuthenticationService.Instance.SignOut(true);
 		}
 
 		public static async Awaitable SaveStageData(string mapTitle, StageData stageData)
 		{
-			try
+			SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
+
+			// Json 변환
+			string json = JsonUtility.ToJson(stageData);
+
+			// 압축
+			byte[] compressedJson = await Compression.Compress(json);
+
+			// 기존 제작한 맵 타이틀 리스트 가져오기
+			List<string> mapTitleList = await GetMakingMapTitleList(AuthenticationService.Instance.PlayerId);
+
+			if (mapTitleList.Contains(mapTitle) == false)
+				mapTitleList.Add(mapTitle);
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mapTitleList.Count - 1; ++i)
 			{
-				SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
-
-				// 유니티 서비스 로그인
-				await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-				// Json 변환
-				string json = JsonUtility.ToJson(stageData);
-
-				// 압축
-				byte[] compressedJson = await Compression.Compress(json);
-
-				// 기존 제작한 맵 타이틀 리스트 가져오기
-				List<string> mapTitleList = await GetMakingMapTitleList(AuthenticationService.Instance.PlayerId);
-
-				if (mapTitleList.Contains(mapTitle) == false)
-					mapTitleList.Add(mapTitle);
-
-				StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < mapTitleList.Count - 1; ++i)
-				{
-					sb.Append(mapTitleList[i]);
-					sb.Append(", ");
-				}
-				sb.Append(mapTitleList[mapTitleList.Count - 1]);
-
-				// 저장할 데이터 만들기
-				Dictionary<string, object> data = new Dictionary<string, object>();
-
-				data.Add("isUse", true);
-				data.Add("makingMapTitleList", sb.ToString());
-				data.Add(mapTitle, compressedJson);
-
-				// 데이터 저장
-				await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
+				sb.Append(mapTitleList[i]);
+				sb.Append(", ");
 			}
-			finally
-			{
-				// 유니티 서비스 로그아웃
-				AuthenticationService.Instance.SignOut();
-			}
+			sb.Append(mapTitleList[mapTitleList.Count - 1]);
+
+			// 저장할 데이터 만들기
+			Dictionary<string, object> data = new Dictionary<string, object>();
+
+			data.Add("isUse", true);
+			data.Add("makingMapTitleList", sb.ToString());
+			data.Add(mapTitle, compressedJson);
+
+			// 데이터 저장
+			await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
 		}
 		public static async Awaitable<List<StageData>> LoadAllStageData()
 		{
 			List<StageData> stageDataList = new List<StageData>();
 
-			try
+			List<string> playerIdList = await GetPlayerIdList();
+
+			for (int i = 0; i < playerIdList.Count; ++i)
 			{
-				// 유니티 서비스 로그인
-				await AuthenticationService.Instance.SignInAnonymouslyAsync();
+				string playerId = playerIdList[i];
 
-				List<string> playerIdList = await GetPlayerIdList();
+				LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
 
-				for (int i = 0; i < playerIdList.Count; ++i)
+				// 데이터 불러오기
+				var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
+
+				foreach (var item in loadData)
 				{
-					string playerId = playerIdList[i];
+					// index 건너뛰기
+					if (item.Key.Equals("isUse") == true ||
+						item.Key.Equals("makingMapTitleList") == true)
+						continue;
 
-					LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
+					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
 
-					// 데이터 불러오기
-					var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
+					// 압축 해제
+					string json = await Compression.ConvertToString(compressedJson);
 
-					foreach (var item in loadData)
-					{
-						// index 건너뛰기
-						if (item.Key.Equals("isUse") == true ||
-							item.Key.Equals("makingMapTitleList") == true)
-							continue;
+					// Json 변환
+					StageData data = JsonUtility.FromJson<StageData>(json);
 
-						byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
-
-						// 압축 해제
-						string json = await Compression.Decompress(compressedJson);
-
-						// Json 변환
-						StageData data = JsonUtility.FromJson<StageData>(json);
-
-						stageDataList.Add(data);
-					}
+					stageDataList.Add(data);
 				}
-			}
-			finally
-			{
-				// 유니티 서비스 로그아웃
-				AuthenticationService.Instance.SignOut();
 			}
 
 			return stageDataList;
@@ -133,46 +114,35 @@ namespace AvantGardeMaker.Ceeu
 		{
 			List<StageData> stageDataList = new List<StageData>();
 
-			try
+			List<string> playerIdList = await GetPlayerIdList(mapTitleFilter);
+
+			for (int i = 0; i < playerIdList.Count; ++i)
 			{
-				// 유니티 서비스 로그인
-				await AuthenticationService.Instance.SignInAnonymouslyAsync();
+				string playerId = playerIdList[i];
 
-				List<string> playerIdList = await GetPlayerIdList(mapTitleFilter);
+				LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
 
-				for (int i = 0; i < playerIdList.Count; ++i)
+				// 데이터 불러오기
+				var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
+
+				foreach (var item in loadData)
 				{
-					string playerId = playerIdList[i];
+					// index 건너뛰기
+					if (item.Key.Equals("isUse") == true || // isUse 인덱스 예외처리
+						item.Key.Equals("makingMapTitleList") == true || // makingMapTitleList 인덱스 예외처리
+						item.Key.Contains(mapTitleFilter) == false) // 검색 필터 예외처리
+						continue;
 
-					LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
+					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
 
-					// 데이터 불러오기
-					var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
+					// 압축 해제
+					string json = await Compression.ConvertToString(compressedJson);
 
-					foreach (var item in loadData)
-					{
-						// index 건너뛰기
-						if (item.Key.Equals("isUse") == true || // isUse 인덱스 예외처리
-							item.Key.Equals("makingMapTitleList") == true || // makingMapTitleList 인덱스 예외처리
-							item.Key.Contains(mapTitleFilter) == false) // 검색 필터 예외처리
-							continue;
+					// Json 변환
+					StageData data = JsonUtility.FromJson<StageData>(json);
 
-						byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
-
-						// 압축 해제
-						string json = await Compression.Decompress(compressedJson);
-
-						// Json 변환
-						StageData data = JsonUtility.FromJson<StageData>(json);
-
-						stageDataList.Add(data);
-					}
+					stageDataList.Add(data);
 				}
-			}
-			finally
-			{
-				// 유니티 서비스 로그아웃
-				AuthenticationService.Instance.SignOut();
 			}
 
 			return stageDataList;
@@ -266,7 +236,19 @@ namespace AvantGardeMaker.Ceeu
 				return output.ToArray();
 			}
 
-			public static async Task<string> Decompress(byte[] compressed)
+			public static async Task<byte[]> Decompress(byte[] compressed)
+			{
+				await using var input = new MemoryStream(compressed);
+				await using var brotliStream = new BrotliStream(input, CompressionMode.Decompress);
+
+				await using var output = new MemoryStream();
+
+				await brotliStream.CopyToAsync(output);
+				await brotliStream.FlushAsync();
+
+				return output.ToArray();
+			}
+			public static async Task<string> ConvertToString(byte[] compressed)
 			{
 				await using var input = new MemoryStream(compressed);
 				await using var brotliStream = new BrotliStream(input, CompressionMode.Decompress);

@@ -365,6 +365,7 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: -7757321047947985049, guid: 65f6c5b23e058ad46918bf1d332fccee, type: 3}
+  m_TestFilter: 
 --- !u!4 &1500438463
 Transform:
   m_ObjectHideFlags: 0
@@ -729,6 +730,9 @@ MonoBehaviour:
   m_IsCameraSwitching: 0
   m_EditingStageData:
     m_Title: 
+    m_Creator: 
+    m_ThumnailTexture: 
+    m_Description: 
     m_InitCost: 0
     m_IncreaseCostTime: 0
     m_TilePointList: []

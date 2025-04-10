@@ -2,15 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
 	public class MapEditorSceneEvenetReceiver : SceneEventReceiver
 	{
 		#region 변수
+		[SerializeField]
+		private Button m_MainMenuButton = null;
+		[SerializeField]
+		private Button m_SaveButton = null;
+		[SerializeField]
+		private Button m_PlayButton = null;
+
 		#region Map Editor Manager 관련 변수
 		[SerializeField]
 		private Camera m_MapEditorCamera = null;
+		[SerializeField]
+		private Camera m_ThumnailCamera = null;
 
 		[SerializeField]
 		private Transform m_EditModeCameraTransform = null;
@@ -42,6 +52,21 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 이벤트
+
+		#region 이벤트 함수
+		private void OnMainMenuButtonClicked()
+		{
+			SceneLoader.LoadScene("Main Menu Scene");
+		}
+		private void OnSaveButtonClicked()
+		{
+			M_MapEditor.SaveData();
+		}
+		private void OnPlayButtonClicked()
+		{
+			Debug.Log("Play");
+		}
+		#endregion
 		#endregion
 
 		#region 매니저
@@ -62,8 +87,14 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
+			m_MainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
+			m_SaveButton.onClick.AddListener(OnSaveButtonClicked);
+			m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
+
 			#region 멤버 변수 링킹
 			M_MapEditor.mapEditorCamera = m_MapEditorCamera;
+			M_MapEditor.thumnailCamera = m_ThumnailCamera;
+
 			M_MapEditor.editModeCameraTransform = m_EditModeCameraTransform;
 			M_MapEditor.gameModeCameraTransform = m_GameModeCameraTransform;
 

@@ -123,6 +123,7 @@ namespace AvantGardeMaker.Ceeu
 
 			m_MaxWave = 0;
 
+			#region Spawn Enemy Data UI
 			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
 			for (int i = 0; i < enemyDataList.Count; ++i)
 			{
@@ -138,6 +139,8 @@ namespace AvantGardeMaker.Ceeu
 
 				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
 			}
+			#endregion
+
 			gameObject.SetActive(true);
 		}
 		/// <summary>

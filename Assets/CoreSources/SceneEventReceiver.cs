@@ -15,11 +15,11 @@ public abstract class SceneEventReceiver : SerializedMonoBehaviour
 	#endregion
 
 	#region 유니티 콜백 함수
-	private void Awake()
+	protected virtual void Awake()
 	{
 		Initialize();
 	}
-	private void OnApplicationQuit()
+	protected virtual void OnDestroy()
 	{
 		Finallize();
 	}

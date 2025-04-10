@@ -61,6 +61,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Initialize()
 		{
+			SaveLoadUtility.Initialize();
+
 			M_Panel.Initialize();
 
 			M_MainMenuUI.Initialize();
@@ -85,6 +87,8 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
+			SaveLoadUtility.Finallize();
+
 			M_MapEditorUI.Finallize();
 			M_MapEditor.Finallize();
 			M_Tile.Finallize();
@@ -129,8 +133,6 @@ namespace AvantGardeMaker.Ceeu
 			m_GameStageData = M_MapEditor.currentStageData;
 			m_IsGameMode = true;
 
-			M_Panel.InitializeMain();
-
 			//ad1a
 			//M_EnemyManager.InitializeMain();
 
@@ -153,8 +155,6 @@ namespace AvantGardeMaker.Ceeu
 			//M_Operator.FinallizeMain();
 			//M_Yaml.FinallizeMain();
 			//M_InGamePlay.FinallizeMain();
-
-			M_Panel.FinallizeMain();
 		}
 
 		/// <summary>

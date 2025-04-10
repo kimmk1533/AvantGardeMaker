@@ -10,26 +10,30 @@ namespace AvantGardeMaker.Ceeu
 	public class MapListItem : MainMenuUI
 	{
 		#region 변수
-		private Image m_ThumnailImage = null;
+		private Button m_SelfButton = null;
+		private RawImage m_ThumnailImage = null;
 		private TMP_Text m_TitleText = null;
-		private Image[] m_RatingImageArr = null;
+		private TMP_Text m_CreatorText = null;
+		//private Rating m_Rating = null;
+
+		private StageData m_StageData = default;
 		#endregion
 
 		#region 프로퍼티
-		public string title
+		public StageData stageData
 		{
-			get
-			{
-				return m_TitleText.text;
-			}
-			set
-			{
-				m_TitleText.text = value;
-			}
+			get => m_StageData;
+			set => m_StageData = value;
 		}
+
+		public Texture thumnailImage => m_ThumnailImage.texture;
+		public string titleText => m_TitleText.text;
+		public string creatorText => m_CreatorText.text;
+		//public Rating rating => m_Rating;
 		#endregion
 
 		#region 이벤트
+		public event System.Action<MapListItem> onClick;
 
 		#region 이벤트 함수
 		#endregion
@@ -49,19 +53,26 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.InitializePoolItem();
 
+			if (m_SelfButton == null)
+			{
+				m_SelfButton = GetComponent<Button>();
+
+				m_SelfButton.onClick.AddListener(() =>
+				{
+					onClick?.Invoke(this);
+				});
+			}
 			if (m_ThumnailImage == null)
-				m_ThumnailImage = transform.Find<Image>("Thumnail Image");
+				m_ThumnailImage = transform.Find<RawImage>("Thumnail Image");
 			if (m_TitleText == null)
 				m_TitleText = transform.Find<TMP_Text>("Title Text");
-			if (m_RatingImageArr == null)
-			{
-				m_RatingImageArr = new Image[5];
-
-				for (int i = 0; i < 5; ++i)
-				{
-					m_RatingImageArr[i] = transform.Find("Rating Images").Find<Image>("Rating Image (" + i.ToString() + ")");
-				}
-			}
+			if (m_CreatorText == null)
+				m_CreatorText = transform.Find<TMP_Text>("Creator Text");
+			//if (m_Rating == null)
+			//{
+			//	m_Rating = transform.Find<Rating>("Rating");
+			//}
+			//m_Rating.Initialize();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -70,13 +81,26 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizePoolItem();
 
-			m_ThumnailImage.sprite = null;
+			m_ThumnailImage.texture = null;
 			m_TitleText.text = "";
-			for (int i = 0; i < 5; ++i)
-			{
-				m_RatingImageArr[i].sprite = null;
-			}
+			m_CreatorText.text = "";
+			//m_Rating.Finallize();
 		}
 		#endregion
+
+		public void UpdateUI()
+		{
+			string creator = string.Empty;
+
+			if (m_StageData.creator == string.Empty)
+				m_StageData.creator = "Unknown Creator";
+
+			if (m_StageData.creator.StartsWith("by. ") == false)
+				creator = m_StageData.creator.Insert(0, "by. ");
+
+			m_ThumnailImage.texture = m_StageData.GetThumnailTexture();
+			m_TitleText.text = m_StageData.title;
+			m_CreatorText.text = creator;
+		}
 	}
 }

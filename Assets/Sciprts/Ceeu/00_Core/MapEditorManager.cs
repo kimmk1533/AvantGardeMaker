@@ -66,6 +66,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 프로퍼티
 		#region 카메라 관련 프로퍼티
 		public Camera mapEditorCamera { get; set; }
+		public Camera thumnailCamera { get; set; }
 
 		public Transform editModeCameraTransform { get; set; }
 		public Transform gameModeCameraTransform { get; set; }
@@ -369,6 +370,15 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 저장 & 불러오기 관련 함수
+		private Texture2D ConvertTexture(RenderTexture renderTexture)
+		{
+			Texture2D tex = new Texture2D(renderTexture.width, renderTexture.height);
+			RenderTexture.active = renderTexture;
+			tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+			tex.Apply();
+			return tex;
+		}
+
 		[Button]
 		public async void SaveData()
 		{
@@ -376,6 +386,10 @@ namespace AvantGardeMaker.Ceeu
 			m_EditingStageData.Initialize();
 
 			m_EditingStageData.title = m_StageName;
+
+			thumnailCamera.Render();
+			Texture2D thumnail = ConvertTexture(thumnailCamera.targetTexture);
+			m_EditingStageData.thumnail = thumnail.GetRawTextureData();
 
 			#region 타일 저장
 			M_Tile.SaveTileData(ref m_EditingStageData);

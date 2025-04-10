@@ -4,21 +4,60 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
 	public class MapListPanel : Panel
 	{
 		#region 변수
+		#region Map Item List 관련 변수
 		private TMP_Text m_LoadingText = null;
+
+		private StageData m_CurrentStageData = default;
+		#endregion
+
+		#region Map Info 관련 변수
+		private RawImage m_ThumnailImage = null;
+		private TMP_Text m_TitleText = null;
+		private TMP_Text m_CreatorText = null;
+		//private Rating m_Rating = null;
+		private Button m_OperatorInfoButton = null;
+		private Button m_EnemyInfoButton = null;
+		private TMP_Text m_DescriptionText = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
+		public StageData currentStageData
+		{
+			get => m_CurrentStageData;
+			set => m_CurrentStageData = value;
+		}
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
+		private void OnMapListItemClicked(MapListItem mapListItem)
+		{
+			m_CurrentStageData = mapListItem.stageData;
+
+			m_ThumnailImage.texture = mapListItem.thumnailImage;
+			m_TitleText.text = mapListItem.titleText;
+			m_CreatorText.text = mapListItem.creatorText;
+			//m_Rating.value = mapListItem.rating.value;
+			m_DescriptionText.text = mapListItem.stageData.description;
+		}
+
+		private void OnOperatorInfoButtonClicked()
+		{
+			Debug.Log("Operator Info Button Clicked.");
+		}
+		private void OnEnemyInfoButtonClicked()
+		{
+			Debug.Log("Enemy Info Button Clicked.");
+		}
 		#endregion
 		#endregion
 
@@ -47,6 +86,44 @@ namespace AvantGardeMaker.Ceeu
 
 			if (m_LoadingText == null)
 				m_LoadingText = transform.FindInChildren<TMP_Text>("Loading Text");
+
+			if (m_ThumnailImage == null)
+				m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
+
+			if (m_TitleText == null)
+			{
+				m_TitleText = transform.Find("Map Info Panel").Find<TMP_Text>("Title Text");
+			}
+
+			if (m_CreatorText == null)
+			{
+				m_CreatorText = transform.Find("Map Info Panel").Find<TMP_Text>("Creator Text");
+			}
+
+			//if (m_Rating == null)
+			//{
+			//	m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
+			//}
+			//m_Rating.Initialize();
+
+			if (m_OperatorInfoButton == null)
+			{
+				m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
+
+				m_OperatorInfoButton.onClick.AddListener(OnOperatorInfoButtonClicked);
+			}
+
+			if (m_EnemyInfoButton == null)
+			{
+				m_EnemyInfoButton = transform.Find("Map Info Panel").Find<Button>("Enemy Info Button");
+
+				m_EnemyInfoButton.onClick.AddListener(OnEnemyInfoButtonClicked);
+			}
+
+			if (m_DescriptionText == null)
+			{
+				m_DescriptionText = transform.Find("Map Info Panel").FindInChildren<TMP_Text>("Description Text");
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -56,6 +133,10 @@ namespace AvantGardeMaker.Ceeu
 			base.Finallize();
 
 			m_LoadingText.text = string.Empty;
+
+			m_ThumnailImage.texture = null;
+
+			//m_Rating.Finallize();
 		}
 		#endregion
 
@@ -66,9 +147,14 @@ namespace AvantGardeMaker.Ceeu
 
 			for (int i = 0; i < childCount; ++i)
 			{
-				M_MainMenuUI.Despawn(itemParent.GetChild<MapListItem>(0));
+				MapListItem mapListItem = itemParent.GetChild<MapListItem>(0);
+
+				mapListItem.onClick -= OnMapListItemClicked;
+
+				M_MainMenuUI.Despawn(mapListItem);
 			}
 
+			m_LoadingText.text = "Loading…";
 			m_LoadingText.gameObject.SetActive(true);
 		}
 		private async void CreateMapListItem()
@@ -86,10 +172,19 @@ namespace AvantGardeMaker.Ceeu
 					.SetAutoInit(true)
 					.Spawn() as MapListItem;
 
-				mapListItem.title = stageDataList[i].title;
+				StageData stageData = stageDataList[i];
+
+				mapListItem.stageData = stageData;
+
+				mapListItem.UpdateUI();
+
+				mapListItem.onClick += OnMapListItemClicked;
 			}
 
-			m_LoadingText.gameObject.SetActive(false);
+			if (stageDataList.Count == 0)
+				m_LoadingText.text = "No Item Founded";
+			else
+				m_LoadingText.gameObject.SetActive(false);
 		}
 	}
 }

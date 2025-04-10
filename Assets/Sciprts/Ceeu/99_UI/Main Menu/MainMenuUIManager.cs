@@ -67,6 +67,8 @@ namespace AvantGardeMaker.Ceeu
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -92,6 +94,8 @@ namespace AvantGardeMaker.Ceeu
 
 			mapListPanel.gameObject.SetActive(false);
 			optionPanel.gameObject.SetActive(false);
+
+			gameObject.SetActive(true);
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -101,6 +105,8 @@ namespace AvantGardeMaker.Ceeu
 			base.FinallizeMain();
 
 			mapListPanel.Finallize();
+
+			gameObject.SetActive(false);
 		}
 		#endregion
 	}

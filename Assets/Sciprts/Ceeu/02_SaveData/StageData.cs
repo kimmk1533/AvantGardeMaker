@@ -14,6 +14,12 @@ namespace AvantGardeMaker.Ceeu
 		#region 1. 시스템 관련 변수
 		[SerializeField]
 		private string m_Title;
+		[SerializeField]
+		private string m_Creator;
+		[SerializeField]
+		private byte[] m_ThumnailTexture;
+		[SerializeField]
+		private string m_Description;
 
 		[SerializeField]
 		[FoldoutGroup("System")]
@@ -71,6 +77,21 @@ namespace AvantGardeMaker.Ceeu
 		{
 			get => m_Title;
 			set => m_Title = value;
+		}
+		public string creator
+		{
+			get => m_Creator;
+			set => m_Creator = value;
+		}
+		public byte[] thumnail
+		{
+			get => m_ThumnailTexture;
+			set => m_ThumnailTexture = value;
+		}
+		public string description
+		{
+			get => m_Description;
+			set => m_Description = value;
 		}
 		#endregion
 
@@ -171,6 +192,14 @@ namespace AvantGardeMaker.Ceeu
 			}
 
 			return enemyDataList;
+		}
+		public Texture2D GetThumnailTexture()
+		{
+			Texture2D thumnail = new Texture2D(256, 256);
+			thumnail.LoadRawTextureData(m_ThumnailTexture);
+			thumnail.Apply();
+
+			return thumnail;
 		}
 	}
 }
