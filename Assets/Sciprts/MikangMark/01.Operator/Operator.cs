@@ -13,9 +13,11 @@ namespace AvantGardeMaker.MikangMark
 	public class Operator : ObjectPoolItemBase
 	{
 		#region 변수
-		public OperInfo m_OperData;
+		public OperInfo OperData;
 		[SerializeField]
 		public string OperName;
+
+		private Image m_ThisImg;
 
 		#endregion
 
@@ -33,7 +35,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-
+			m_ThisImg = GetComponent<Image>();
 		}
 		#endregion
 
@@ -51,13 +53,13 @@ namespace AvantGardeMaker.MikangMark
 			{
 				if (OperName == M_OperatorJson.m_OperInfoList[i].EngOperName)
 				{
-					m_OperData = M_OperatorJson.m_OperInfoList[i].Clone();
+					OperData = M_OperatorJson.m_OperInfoList[i].Clone();
 				}
 			}
 			m_FilePath = M_OperatorJson.m_FileSaveDirectory;
 			//Json파일 생성
-			m_OperData.SaveJsonData(m_FilePath, OperName + ".Json", m_OperData);
-			m_OperData = m_OperData.LoadJsonData(m_FilePath, OperName + ".Json");
+			OperData.SaveJsonData(m_FilePath, OperName + ".Json", OperData);
+			OperData = OperData.LoadJsonData(m_FilePath, OperName + ".Json");
 		}
 		public void SetDirection(E_OperatorDirection _Direction,E_OperatorDirection _LastDirection)
 		{//수정
@@ -65,7 +67,7 @@ namespace AvantGardeMaker.MikangMark
 			switch (_Direction)
 			{
 				case E_OperatorDirection.Left:
-					if (_Direction == m_OperData.E_OperDirection_H)//같은방향으로드래그했을경우
+					if (_Direction == OperData.E_OperDirection_H)//같은방향으로드래그했을경우
 					{
 						return;
 					}
@@ -81,31 +83,32 @@ namespace AvantGardeMaker.MikangMark
 							radian = 270;
 							break;
 						case E_OperatorDirection.Left:
-							radian = 0;
+							//radian = 0;
 							break;
 					}
 					//왼쪽을 드래그
-					if (m_OperData.E_OperDirection_V == E_OperatorDirection.Up)
+					if (OperData.E_OperDirection_V == E_OperatorDirection.Up)
 					{
-						GetComponent<Image>().sprite = m_OperData.LeftUpImg;
+						m_ThisImg.sprite = OperData.LeftUpImg;
 					}
 					else
 					{
-						GetComponent<Image>().sprite = m_OperData.LeftDownImg;
+						m_ThisImg.sprite = OperData.LeftDownImg;
 					}
-					RotateAtkRange(m_OperData.AttackPos, radian);
-					m_OperData.E_OperDirection_H = E_OperatorDirection.Left;
-					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
+					_LastDirection = E_OperatorDirection.Left;
+					RotateAtkRange(OperData.AttackPos, radian);
+					OperData.E_OperDirection_H = E_OperatorDirection.Left;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Right:
-					if (_Direction == m_OperData.E_OperDirection_H)
+					if (_Direction == OperData.E_OperDirection_H)
 					{
 						return;
 					}
 					switch (_LastDirection)
 					{
 						case E_OperatorDirection.Right:
-							radian = 0;
+							//radian = 0;
 							break;
 						case E_OperatorDirection.Up:
 							radian = 90;
@@ -117,20 +120,21 @@ namespace AvantGardeMaker.MikangMark
 							radian = 180;
 							break;
 					}
-					if (m_OperData.E_OperDirection_V == E_OperatorDirection.Up)
+					if (OperData.E_OperDirection_V == E_OperatorDirection.Up)
 					{
-						GetComponent<Image>().sprite = m_OperData.RightUpImg;
+						m_ThisImg.sprite = OperData.RightUpImg;
 					}
 					else
 					{
-						GetComponent<Image>().sprite = m_OperData.RightDownImg;
+						m_ThisImg.sprite = OperData.RightDownImg;
 					}
-					RotateAtkRange(m_OperData.AttackPos, radian);
-					m_OperData.E_OperDirection_H = E_OperatorDirection.Right;
-					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
+					_LastDirection = E_OperatorDirection.Right;
+					RotateAtkRange(OperData.AttackPos, radian);
+					OperData.E_OperDirection_H = E_OperatorDirection.Right;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Down:
-					if (_Direction == m_OperData.E_OperDirection_V)
+					if (_Direction == OperData.E_OperDirection_V)
 					{
 						return;
 					}
@@ -143,26 +147,27 @@ namespace AvantGardeMaker.MikangMark
 							radian = 180;
 							break;
 						case E_OperatorDirection.Down:
-							radian = 0;
+							//radian = 0;
 							break;
 						case E_OperatorDirection.Left:
 							radian = 270;
 							break;
 					}
-					if (m_OperData.E_OperDirection_H == E_OperatorDirection.Left)
+					if (OperData.E_OperDirection_H == E_OperatorDirection.Left)
 					{
-						GetComponent<Image>().sprite = m_OperData.LeftDownImg;
+						m_ThisImg.sprite = OperData.LeftDownImg;
 					}
 					else
 					{
-						GetComponent<Image>().sprite = m_OperData.RightDownImg;
+						m_ThisImg.sprite = OperData.RightDownImg;
 					}
-					RotateAtkRange(m_OperData.AttackPos, radian);
-					m_OperData.E_OperDirection_V = E_OperatorDirection.Down;
-					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
+					_LastDirection = E_OperatorDirection.Down;
+					RotateAtkRange(OperData.AttackPos, radian);
+					OperData.E_OperDirection_V = E_OperatorDirection.Down;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 				case E_OperatorDirection.Up:
-					if (_Direction == m_OperData.E_OperDirection_V)
+					if (_Direction == OperData.E_OperDirection_V)
 					{
 						return;
 					}
@@ -172,7 +177,7 @@ namespace AvantGardeMaker.MikangMark
 							radian = 270;
 							break;
 						case E_OperatorDirection.Up:
-							radian = 0;
+							//radian = 0;
 							break;
 						case E_OperatorDirection.Down:
 							radian = 180;
@@ -181,17 +186,18 @@ namespace AvantGardeMaker.MikangMark
 							radian = 90;
 							break;
 					}
-					if (m_OperData.E_OperDirection_H == E_OperatorDirection.Left)
+					if (OperData.E_OperDirection_H == E_OperatorDirection.Left)
 					{
-						GetComponent<Image>().sprite = m_OperData.LeftUpImg;
+						m_ThisImg.sprite = OperData.LeftUpImg;
 					}
 					else
 					{
-						GetComponent<Image>().sprite = m_OperData.RightUpImg;
+						m_ThisImg.sprite = OperData.RightUpImg;
 					}
-					RotateAtkRange(m_OperData.AttackPos, radian);
-					m_OperData.E_OperDirection_V = E_OperatorDirection.Up;
-					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(m_OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
+					_LastDirection = E_OperatorDirection.Up;
+					RotateAtkRange(OperData.AttackPos, radian);
+					OperData.E_OperDirection_V = E_OperatorDirection.Up;
+					M_UI.OperAtkRangeHighlight(M_UI.RotateViewAtkRange(OperData.AttackPos, radian), M_UI.m_CreatedATKRangeHighlights[0]);
 					break;
 
 			}
@@ -199,6 +205,7 @@ namespace AvantGardeMaker.MikangMark
 		public void RotateAtkRange(Vector2[] _AtkRange, float _Direction)
 		{
 			//기본 오른쪽
+			Debug.Log(_Direction);
 			float angleRad = _Direction * Mathf.Deg2Rad; // 라디안으로 변환
 
 			float cos = Mathf.Cos(angleRad);
@@ -212,7 +219,7 @@ namespace AvantGardeMaker.MikangMark
 		//오퍼가 공격 및 힐을 당했을경우
 		public void ChangeHp(float _Value)
 		{
-			m_OperData.RealHp += _Value;
+			OperData.RealHp += _Value;
 		}
 		/// <summary>
 		/// 마무리화 함수

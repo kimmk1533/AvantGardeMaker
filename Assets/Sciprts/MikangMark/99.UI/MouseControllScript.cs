@@ -10,7 +10,8 @@ namespace AvantGardeMaker.MikangMark
     {
         #region 변수
         private RectTransform m_RectTransform;
-        private CanvasGroup m_CanvasGroup;
+        private RectTransform m_ParentRectTransform;
+		private CanvasGroup m_CanvasGroup;
         private Vector2 m_ClickOffset;
         private Vector3 m_SavePos;
         #endregion
@@ -29,7 +30,9 @@ namespace AvantGardeMaker.MikangMark
         {
             m_RectTransform = GetComponent<RectTransform>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-        }
+            m_ParentRectTransform = m_RectTransform.parent.GetComponent<RectTransform>();
+
+		}
         #endregion
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace AvantGardeMaker.MikangMark
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform.parent.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out Vector2 localMousePosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_ParentRectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localMousePosition);
             m_SavePos = m_RectTransform.localPosition;
             m_ClickOffset = (Vector2)m_RectTransform.localPosition - localMousePosition;
             m_CanvasGroup.blocksRaycasts = false;
@@ -58,7 +61,7 @@ namespace AvantGardeMaker.MikangMark
         public void OnDrag(PointerEventData eventData)
         {
             // 마우스 드래그 이벤트가 발생한 위치를 UI 요소의 부모 객체의 좌표계로 변환합니다.
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_RectTransform.parent.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out Vector2 localMousePosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(m_ParentRectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localMousePosition);
 
             // UI 요소의 위치를 마우스 드래그 이벤트가 발생한 위치로 이동합니다.
             m_RectTransform.localPosition = localMousePosition + m_ClickOffset;

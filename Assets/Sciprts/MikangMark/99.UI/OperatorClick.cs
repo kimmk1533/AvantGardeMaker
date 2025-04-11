@@ -34,7 +34,7 @@ namespace AvantGardeMaker.MikangMark
 		}
 		public void OnPointerDown()
 		{
-			M_UI.m_SelectOperator.m_OperData = GetComponent<Operator>().m_OperData;
+			M_UI.m_SelectOperator.OperData = GetComponent<Operator>().OperData;
 			if (M_UI.m_OperStatUI.activeSelf == false)
 			{
 				M_UI.OperStatUISetActive(true);

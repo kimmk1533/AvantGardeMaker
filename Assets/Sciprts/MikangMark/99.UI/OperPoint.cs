@@ -36,7 +36,7 @@ namespace AvantGardeMaker
 				IsOnTile = true;
 				Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.transform.position);
 				// UI 위치 업데이트
-				if (box.isDragging)
+				if (box.IsDragging)
 				{
 					gameObject.transform.position = screenPosition;
 				}

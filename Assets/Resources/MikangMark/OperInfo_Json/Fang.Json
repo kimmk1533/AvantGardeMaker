@@ -46,15 +46,15 @@
     "E_OperDirection_H": 180,
     "E_OperDirection_V": 90,
     "RightDownImg": {
-        "instanceID": 46490
+        "instanceID": 47358
     },
     "LeftDownImg": {
-        "instanceID": 46668
+        "instanceID": 47542
     },
     "RightUpImg": {
-        "instanceID": 46494
+        "instanceID": 47362
     },
     "LeftUpImg": {
-        "instanceID": 46664
+        "instanceID": 47538
     }
 }

@@ -13,8 +13,8 @@ namespace AvantGardeMaker.MikangMark
 	public class UIManager : SerializedSingleton<UIManager>
 	{
 		#region 변수
-		public TextMeshProUGUI m_Cost;
-		public Image m_CostImage;
+		public TextMeshProUGUI Cost;
+		public Image CostImage;
 
 		float m_Timer = 0f;
 
@@ -22,15 +22,15 @@ namespace AvantGardeMaker.MikangMark
 
 		public Operator m_SelectOperator;
 
-		public Image m_OperImg;
-		public Image m_JobImg;
-		public Image m_Arousal;
-		public TextMeshProUGUI m_OperKorName;
-		public TextMeshProUGUI m_OperLevelValue;
-		public TextMeshProUGUI m_StatAttackValue;
-		public TextMeshProUGUI m_StatDefence;
-		public TextMeshProUGUI m_StatMagicDefence;
-		public TextMeshProUGUI m_StatBlock;
+		public Image OperImg;
+		public Image JobImg;
+		public Image Arousal;
+		public TextMeshProUGUI OperKorName;
+		public TextMeshProUGUI OperLevelValue;
+		public TextMeshProUGUI StatAttackValue;
+		public TextMeshProUGUI StatDefence;
+		public TextMeshProUGUI StatMagicDefence;
+		public TextMeshProUGUI StatBlock;
 
 		public Image m_ATKRangeField;
 		public Image m_OperatorPos_InRange;
@@ -51,6 +51,7 @@ namespace AvantGardeMaker.MikangMark
 		private bool m_TurnOff = false;
 
 		public Button CancelSetOperBtn;
+		private Tile _cachedTile;
 
 		#endregion
 
@@ -62,7 +63,7 @@ namespace AvantGardeMaker.MikangMark
 
 		#region 매니저
 
-		private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
+		private static GamePlayingManager M_InGamePlay => GamePlayingManager.Instance;
 		private static OperatorJsonManager M_OperatorJson => OperatorJsonManager.Instance;
 		#endregion
 
@@ -80,10 +81,10 @@ namespace AvantGardeMaker.MikangMark
 			{
 				if (m_SelectOperator.OperName == M_OperatorJson.m_OperInfoList[i].EngOperName)
 				{
-					m_SelectOperator.m_OperData = M_OperatorJson.m_OperInfoList[i];
+					m_SelectOperator.OperData = M_OperatorJson.m_OperInfoList[i];
 				}
 			}
-			OperATKRangeCreate(m_SelectOperator.m_OperData.AttackPos);
+			OperATKRangeCreate(m_SelectOperator.OperData.AttackPos);
 			AlignChildren();
 		}
 		private void Update()
@@ -115,21 +116,29 @@ namespace AvantGardeMaker.MikangMark
 		public void MouseRealPoint()
 		{
 			// 마우스 왼쪽 버튼을 누르고 있는 동안 (드래그)
-			if (Input.GetMouseButton(0)) 
+			if (Input.GetMouseButton(0))
 			{
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit))
 				{
-					Tile target = hit.collider.GetComponent<Tile>();
-					if (target != null)
+					GameObject hitObj = hit.collider.gameObject;
+
+					// 타겟이 바뀌었을 때만 처리
+					if (m_TileTarget != hitObj)
 					{
-						if(m_TileTarget != hit.collider.gameObject)
+						// 타일 컴포넌트를 캐싱
+						_cachedTile = hit.collider.GetComponent<Tile>();
+
+						if (_cachedTile != null)
 						{
-							//한번만들어오도록 수정
-							OperAtkRangeHighlight(RotateViewAtkRange(m_SelectOperator.m_OperData.AttackPos, 180), hit.collider.gameObject);
+							OperAtkRangeHighlight(
+								RotateViewAtkRange(m_SelectOperator.OperData.AttackPos, 180),
+								hitObj
+							);
 						}
-						m_TileTarget = hit.collider.gameObject;
+
+						m_TileTarget = hitObj;
 					}
 				}
 			}
@@ -179,7 +188,7 @@ namespace AvantGardeMaker.MikangMark
 			//공격범위 이미지 사이의 간격
 			int intervalOpset = 6;
 			m_ATKPosList = new List<Image>();
-			for (int i = 0; i < m_SelectOperator.m_OperData.AttackPos.Length; i++)
+			for (int i = 0; i < m_SelectOperator.OperData.AttackPos.Length; i++)
 			{
 				m_ATKPosList.Add(Instantiate(m_ATKPos, m_ATKRangeField.transform));
 				m_ATKPosList[i].rectTransform.anchoredPosition = m_OperatorPos_InRange.rectTransform.anchoredPosition;
@@ -221,17 +230,17 @@ namespace AvantGardeMaker.MikangMark
 		public void UpdateUI()
 		{
 			#region 코스트 관련UI
-			m_Timer = M_InGamePlay.GetRealTime();
-			m_CostImage.fillAmount = m_Timer;
-			m_Cost.text = M_InGamePlay.GetCost().ToString();
+			m_Timer = M_InGamePlay.costIncreaseTime;
+			CostImage.fillAmount = m_Timer;
+			Cost.text = M_InGamePlay.currentCost.ToString();
 			#endregion
 			#region 활성화된 오퍼스텟정보UI
-			m_OperKorName.text = m_SelectOperator.m_OperData.KorOperName;
-			m_OperLevelValue.text = m_SelectOperator.m_OperData.Level.ToString();
-			m_StatAttackValue.text = m_SelectOperator.m_OperData.Atk.ToString();
-			m_StatDefence.text = m_SelectOperator.m_OperData.Def.ToString();
-			m_StatMagicDefence.text = m_SelectOperator.m_OperData.Res.ToString();
-			m_StatBlock.text = m_SelectOperator.m_OperData.BlockCount.ToString();
+			OperKorName.text = m_SelectOperator.OperData.KorOperName;
+			OperLevelValue.text = m_SelectOperator.OperData.Level.ToString();
+			StatAttackValue.text = m_SelectOperator.OperData.Atk.ToString();
+			StatDefence.text = m_SelectOperator.OperData.Def.ToString();
+			StatMagicDefence.text = m_SelectOperator.OperData.Res.ToString();
+			StatBlock.text = m_SelectOperator.OperData.BlockCount.ToString();
 			#endregion
 
 		}

@@ -14,12 +14,12 @@ namespace AvantGardeMaker.MikangMark
 	public class OperDrag : SerializedMonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
 		#region 변수
-		public GameObject m_OperatorPrefab;
-		public GameObject m_Canvas;
+		public GameObject OperatorPrefab;
+		public GameObject Canvas;
 		// 따라다닐 UI 오브젝트
-		private RectTransform B;
-		public bool isDragging = false;
-		GameObject newB;
+		private RectTransform m_CreatedOperator;
+		public bool IsDragging = false;
+		GameObject m_NewCreatedOperator;
 		#endregion
 
 		#region 프로퍼티
@@ -35,7 +35,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Start()
 		{
-			m_Canvas = GameObject.Find("Canvas");
+			Canvas = GameObject.Find("Canvas");
 
 			Initialize();
 		}
@@ -53,42 +53,42 @@ namespace AvantGardeMaker.MikangMark
 		
 		public void OnBeginDrag(PointerEventData eventData)
 		{
-			isDragging = true;
-			M_UI.m_Setting = isDragging;
-			// B가 없으면 생성 (한 번만)
-			if (B == null)
+			IsDragging = true;
+			M_UI.m_Setting = IsDragging;
+			// m_CreatedOperator가 없으면 생성 (한 번만)
+			if (m_CreatedOperator == null)
 			{
-				newB = Instantiate(m_OperatorPrefab, m_Canvas.transform);
-				newB.GetComponent<DragOperSetPos>().enabled = false;
-				B = newB.GetComponent<RectTransform>();
-				newB.GetComponent<Operator>().m_OperData = GetComponent<Operator>().m_OperData.Clone();
-				newB.GetComponent<Operator>().OperName = GetComponent<Operator>().OperName;
-				newB.name = GetComponent<Operator>().OperName;
+				m_NewCreatedOperator = Instantiate(OperatorPrefab, Canvas.transform);
+				m_NewCreatedOperator.GetComponent<DragOperSetPos>().enabled = false;
+				m_CreatedOperator = m_NewCreatedOperator.GetComponent<RectTransform>();
+				m_NewCreatedOperator.GetComponent<Operator>().OperData = GetComponent<Operator>().OperData.Clone();
+				m_NewCreatedOperator.GetComponent<Operator>().OperName = GetComponent<Operator>().OperName;
+				m_NewCreatedOperator.name = GetComponent<Operator>().OperName;
 				M_UI.OperStatUISetActive(true);
 			}
 		}
 		public void OnDrag(PointerEventData eventData)
 		{
-			if (!isDragging) return;
-			B.position = eventData.position;
+			if (!IsDragging) return;
+			m_CreatedOperator.position = eventData.position;
 
 		}
 
 		public void OnEndDrag(PointerEventData eventData)
 		{
-			isDragging = false;
-			M_UI.m_Setting = isDragging;
+			IsDragging = false;
+			M_UI.m_Setting = IsDragging;
 			if (GameObject.Find("Fang").GetComponent<OperPoint>().IsOnTile)
 			{
 				gameObject.SetActive(false);
 				M_UI.OperStatUISetActive(false);
-				newB.GetComponent<DragOperSetPos>().enabled = true;
+				m_NewCreatedOperator.GetComponent<DragOperSetPos>().enabled = true;
 				M_UI.CancelSetOperBtn.gameObject.SetActive(true);
-				M_UI.CancelSetOperBtn.GetComponent<RectTransform>().position = new Vector3(newB.GetComponent<RectTransform>().position.x - 300, newB.GetComponent<RectTransform>().position.y + 300);
+				M_UI.CancelSetOperBtn.GetComponent<RectTransform>().position = new Vector3(m_NewCreatedOperator.GetComponent<RectTransform>().position.x - 300, m_NewCreatedOperator.GetComponent<RectTransform>().position.y + 300);
 			}
 			else
 			{
-				Destroy(newB);
+				Destroy(m_NewCreatedOperator);
 				M_UI.OperStatUISetActive(false);
 			}
 
