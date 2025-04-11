@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
-using AvantGardeMaker.ad1a;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using System.Text;
-using System.Linq;
 
 namespace AvantGardeMaker.ad1a
 {
@@ -84,7 +79,7 @@ namespace AvantGardeMaker.ad1a
 	[System.Serializable]
 	[CreateAssetMenu(fileName = "ScriptableEnemyData", menuName = "Scriptable Object/ScriptableEnemyData", order = int.MinValue)]
 	//적 스펙, 특성
-	public class EnemyData : ScriptableObject
+	public class EnemyData : SerializedScriptableObject
 	{
 		//이름(키 값임)
 		public string EngName = string.Empty;

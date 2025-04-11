@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
-using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace AvantGardeMaker.ad1a
@@ -12,7 +8,11 @@ namespace AvantGardeMaker.ad1a
 	{
 		#region 변수
 		//자신의 스테이터스 정보
-		private EnemyData m_EnemyData = null;
+		private string m_EngName = string.Empty;
+		private string m_KorName = string.Empty;
+
+		private EnemyFixedData m_FixedData = null;
+		private EnemyVariableData m_VariableData = null;
 
 		//경유지(wayPoint) 인덱스
 		private int m_TransitPosIndex = 0;
@@ -35,21 +35,22 @@ namespace AvantGardeMaker.ad1a
 		private Vector2 CurPos => new Vector2(transform.position.x, transform.position.y);
 		private Vector2 TargetPos => m_TransitPosList[m_TransitPosIndex];
 
-		public bool IsAlive => m_EnemyData.VariableData.Hp.CurStat > 0f;
+		public bool IsAlive => m_VariableData.Hp.CurStat > 0f;
 		#endregion
 
 		#region 이벤트
 		#endregion
 
 		#region 매니저
+		private EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if (m_EnemyData != null)
+			if (m_VariableData != null)
 				//죽음
-				if (m_EnemyData.VariableData.Hp.CurStat <= 0.0f)
+				if (m_VariableData.Hp.CurStat <= 0.0f)
 				{
 					m_CurEnemyState = E_EnemyState.Dead;
 					Dead();
@@ -132,8 +133,11 @@ namespace AvantGardeMaker.ad1a
 		{
 			base.InitializePoolItem();
 
-			if (m_EnemyData == null)
-				m_EnemyData = new EnemyData();
+			if (m_FixedData == null)
+				m_FixedData = new EnemyFixedData();
+
+			if (m_VariableData == null)
+				m_VariableData = new EnemyVariableData();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -145,14 +149,27 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region Get Set
+		public void SetEnemyData(EnemyData enemyData)
+		{
+			m_EngName = enemyData.EngName;
+			m_KorName = enemyData.KorName;
+
+			m_FixedData = enemyData.FixedData;
+			m_VariableData = enemyData.VariableData;
+		}
 		public E_EnemyState GetState()
 		{
 			return m_CurEnemyState;
 		}
 
-		public void SetEnemyData(EnemyData enemyData)
+		public void SetState(E_EnemyState state)
 		{
-			m_EnemyData = enemyData;
+			m_CurEnemyState = state;
+		}
+
+		public float GetRange()
+		{
+			return m_FixedData.Range.CurStat;
 		}
 		#endregion
 
@@ -162,7 +179,7 @@ namespace AvantGardeMaker.ad1a
 				return;
 
 			Vector2 direction = TargetPos - CurPos;
-			float moveAmount = m_EnemyData.VariableData.MovementSpeed.CurStat * Time.deltaTime;
+			float moveAmount = m_VariableData.MovementSpeed.CurStat * Time.deltaTime;
 
 			if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
 			{
@@ -185,7 +202,7 @@ namespace AvantGardeMaker.ad1a
 
 		public void Dead()
 		{
-			this.gameObject.SetActive(false);
+			M_Enemy.Despawn(this);
 		}
 	}
 }

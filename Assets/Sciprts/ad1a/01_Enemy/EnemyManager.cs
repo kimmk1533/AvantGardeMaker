@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using AvantGardeMaker.ad1a.Enum;
 using AvantGardeMaker.Ceeu;
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -20,6 +18,15 @@ SetAutoInit(true) 안해두면 따로 init안해주면 고장남
 
 오브젝트 풀 안에
 public class ItemBuilder : ObjectPool<복사할_스크립트>.ItemBuilder
+
+
+Time.deltaTime처럼 시간 재고 싶을 때
+UtilClass.Timer라고 만들어놨음
+new UtilClass.Timer(float interval)로 생성해주고
+m_Interval이 설정한 시간
+m_Time이 시작하고 지나간 시간
+UtilClass.Timer.Update(float timeScale)하면 됨
+TimeCheck(bool autoClear) 하면 new에서 설정한 시간이 지나면 true를 반환함
  */
 namespace AvantGardeMaker.ad1a
 {
@@ -71,6 +78,15 @@ namespace AvantGardeMaker.ad1a
 									.SetAutoInit(true)
 									.Spawn();
 					enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == m_EnemySpawnDataList[i].Name));
+					enemy.SetState(E_EnemyState.Move);
+
+					//공격 범위 설정
+					if (enemy.GetRange() > 0)
+					{
+						SphereCollider atkRange = enemy.AddComponent<SphereCollider>();
+						atkRange.enabled = true;
+						atkRange.radius = enemy.GetRange();
+					}
 
 					m_EnemyList.Add(enemy);
 				}
@@ -87,6 +103,13 @@ namespace AvantGardeMaker.ad1a
 			}
 
 			//공격
+			for (int i = 0; i < m_EnemyList.Count; i++)
+			{
+				if (!m_EnemyList[i].IsAlive)
+					continue;
+
+
+			}
 
 			//이동
 		}
