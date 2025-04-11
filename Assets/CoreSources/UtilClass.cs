@@ -214,6 +214,7 @@ public static class UtilClass
 			get => m_Time;
 			set => m_Time = value;
 		}
+		public float progress => m_Time / m_Interval;
 		public bool isPaused => m_IsSimulating == false;
 		#endregion
 

@@ -35,7 +35,7 @@ namespace AvantGardeMaker.Ceeu
 
 		private static EnemyManager M_EnemyManager => EnemyManager.Instance;
 
-		//private static InGamePlayManager M_InGamePlay => InGamePlayManager.Instance;
+		//private static InGamePlayManager M_GamePlaying => InGamePlayManager.Instance;
 
 		//private static OperatorManager M_Operator=>OperatorManager.Instance;
 
@@ -77,7 +77,7 @@ namespace AvantGardeMaker.Ceeu
 			//MikangMark
 			//M_Operator.Initialize();
 			//M_Yaml.Initialize();
-			//M_InGamePlay.Initialize();
+			//M_GamePlaying.Initialize();
 
 			Debug.Log("Initialize");
 		}
@@ -98,7 +98,7 @@ namespace AvantGardeMaker.Ceeu
 			//MikangMark
 			//M_Operator.Finallize();
 			//M_Yaml.Finallize();
-			//M_InGamePlay.Finallize();
+			//M_GamePlaying.Finallize();
 
 			M_MainMenuUI.Finallize();
 
@@ -144,7 +144,7 @@ namespace AvantGardeMaker.Ceeu
 			//MikangMark
 			//M_Operator.InitializeMain();
 			//M_Yaml.InitializeMain();
-			//M_InGamePlay.InitializeMain();
+			//M_GamePlaying.InitializeMain();
 
 			Debug.Log("Initialize Game Playing");
 		}
@@ -161,7 +161,7 @@ namespace AvantGardeMaker.Ceeu
 			//MikangMark
 			//M_Operator.FinallizeMain();
 			//M_Yaml.FinallizeMain();
-			//M_InGamePlay.FinallizeMain();
+			//M_GamePlaying.FinallizeMain();
 
 			Debug.Log("Finallize Game Playing");
 		}

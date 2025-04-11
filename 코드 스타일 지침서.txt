@@ -67,6 +67,7 @@
 ==============================================================================================================================
 
 카멜 표기법(camelCase): 여러 단어를 연달아 사용할 때 각 단어의 첫 글자를 대문자로 적되, 맨 앞에 오는 글자는 소문자로 표기하는 것이다.
+ - 지역 변수
  - 모든 매개 변수
  - 모든 프로퍼티
 
@@ -88,6 +89,7 @@
  - 인터페이스: 형용사 형식으로 명명
  
 예시
+ - 지역 변수: int intValue;
  - private 멤버 변수: private int m_PrivateIntValue;
  - protected 멤버 변수: protected int m_ProtectedIntValue;
  - public 멤버 변수: public int PublicIntValue;

@@ -1,0 +1,275 @@
+using System.Collections;
+using System.Collections.Generic;
+using AvantGardeMaker.MikangMark;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using System;
+using System.IO;
+using AvantGardeMaker.MikangMark.Enum;
+using UnityEngine.UI;
+
+namespace AvantGardeMaker.MikangMark
+{
+	public class Operator : ObjectPoolItemBase
+	{
+		#region 변수
+		private SpriteRenderer m_SpriteRenderer = null;
+
+		private OperatorData m_OperatorData = null;
+
+		private E_OperatorMode m_OperatorMode = E_OperatorMode.SetDirection;
+		private E_OperatorDirection m_CurrentDirection = E_OperatorDirection.None;
+		private E_OperatorDirection m_LastDirection = E_OperatorDirection.None;
+
+		private Vector2 m_DragStartPos;
+		private bool m_IsDragging = false;
+		private bool m_IsValidDrag = false;
+
+		// 드래그로 인정할 최소 거리 (픽셀)
+		private float m_DragThreshold = 150f;
+		#endregion
+
+		#region 프로퍼티
+		public string operatorName => m_OperatorData.EngName;
+		#endregion
+
+		#region 이벤트
+		#endregion
+
+		#region 매니저
+		private static OperatorManager M_Operator => OperatorManager.Instance;
+		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		#endregion
+
+		#region 유니티 콜백 함수
+		private void Update()
+		{
+			//클릭했을때
+			if (Input.GetMouseButtonDown(0))
+			{
+				m_DragStartPos = Input.mousePosition;
+				m_IsDragging = true;
+				m_IsValidDrag = false;
+				m_CurrentDirection = E_OperatorDirection.None;
+			}
+
+			//드래그중일때
+			if (Input.GetMouseButton(0) && m_IsDragging)
+			{
+				Vector2 currentPos = Input.mousePosition;
+				Vector2 diff = currentPos - m_DragStartPos;
+
+				if (!m_IsValidDrag)
+				{
+					//일정거리이상 드래그했을떄
+					if (diff.magnitude >= m_DragThreshold)
+					{
+						m_IsValidDrag = true;
+					}
+				}
+
+				if (m_IsValidDrag)
+				{
+					if (Mathf.Abs(diff.x) > Mathf.Abs(diff.y))
+					{
+						m_CurrentDirection = (diff.x > 0) ? E_OperatorDirection.Right : E_OperatorDirection.Left;
+					}
+					else
+					{
+						m_CurrentDirection = (diff.y > 0) ? E_OperatorDirection.Up : E_OperatorDirection.Down;
+					}
+					M_GamePlayingUI.m_DeploymentCancelButton.gameObject.SetActive(false);
+				}
+			}
+			if (Input.GetMouseButtonUp(0))
+			{
+				m_IsDragging = false;
+				m_IsValidDrag = false;
+				m_CurrentDirection = E_OperatorDirection.None;
+				M_GamePlayingUI.m_DeploymentCancelButton.gameObject.SetActive(true);
+			}
+		}
+		#endregion
+
+		#region 초기화 & 마무리화 함수
+		/// <summary>
+		/// 초기화 함수
+		/// </summary>
+		public override void InitializePoolItem()
+		{
+			base.InitializePoolItem();
+
+			if (m_SpriteRenderer == null)
+				m_SpriteRenderer = GetComponent<SpriteRenderer>();
+		}
+		/// <summary>
+		/// 마무리화 함수
+		/// </summary>
+		public override void FinallizePoolItem()
+		{
+			base.FinallizePoolItem();
+		}
+		#endregion
+
+		public void SetDirection(E_OperatorDirection direction, E_OperatorDirection lastDirection)
+		{
+			float radian = 0;
+			switch (direction)
+			{
+				case E_OperatorDirection.Left:
+					if (direction == m_OperatorData.HorizontalDirection)//같은방향으로드래그했을경우
+					{
+						return;
+					}
+					switch (lastDirection)
+					{
+						case E_OperatorDirection.Right:
+							radian = 180;
+							break;
+						case E_OperatorDirection.Up:
+							radian = 90;
+							break;
+						case E_OperatorDirection.Down:
+							radian = 270;
+							break;
+						case E_OperatorDirection.Left:
+							//radian = 0;
+							break;
+					}
+					//왼쪽을 드래그
+					if (m_OperatorData.VerticalDirection == E_OperatorDirection.Up)
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.LeftUpImg;
+					}
+					else
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.LeftDownImg;
+					}
+					lastDirection = E_OperatorDirection.Left;
+					RotateAtkRange(m_OperatorData.AttackPos, radian);
+					m_OperatorData.HorizontalDirection = E_OperatorDirection.Left;
+					M_GamePlayingUI.OperAtkRangeHighlight(M_GamePlayingUI.RotateViewAtkRange(m_OperatorData.AttackPos, radian), M_GamePlayingUI.m_CreatedAttackRangeHighlightList[0]);
+					break;
+				case E_OperatorDirection.Right:
+					if (direction == m_OperatorData.HorizontalDirection)
+					{
+						return;
+					}
+					switch (lastDirection)
+					{
+						case E_OperatorDirection.Right:
+							//radian = 0;
+							break;
+						case E_OperatorDirection.Up:
+							radian = 90;
+							break;
+						case E_OperatorDirection.Down:
+							radian = 180;
+							break;
+						case E_OperatorDirection.Left:
+							radian = 180;
+							break;
+					}
+					if (m_OperatorData.VerticalDirection == E_OperatorDirection.Up)
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.RightUpImg;
+					}
+					else
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.RightDownImg;
+					}
+					lastDirection = E_OperatorDirection.Right;
+					RotateAtkRange(m_OperatorData.AttackPos, radian);
+					m_OperatorData.HorizontalDirection = E_OperatorDirection.Right;
+					M_GamePlayingUI.OperAtkRangeHighlight(M_GamePlayingUI.RotateViewAtkRange(m_OperatorData.AttackPos, radian), M_GamePlayingUI.m_CreatedAttackRangeHighlightList[0]);
+					break;
+				case E_OperatorDirection.Down:
+					if (direction == m_OperatorData.VerticalDirection)
+					{
+						return;
+					}
+					switch (lastDirection)
+					{
+						case E_OperatorDirection.Right:
+							radian = 90;
+							break;
+						case E_OperatorDirection.Up:
+							radian = 180;
+							break;
+						case E_OperatorDirection.Down:
+							//radian = 0;
+							break;
+						case E_OperatorDirection.Left:
+							radian = 270;
+							break;
+					}
+					if (m_OperatorData.HorizontalDirection == E_OperatorDirection.Left)
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.LeftDownImg;
+					}
+					else
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.RightDownImg;
+					}
+					lastDirection = E_OperatorDirection.Down;
+					RotateAtkRange(m_OperatorData.AttackPos, radian);
+					m_OperatorData.VerticalDirection = E_OperatorDirection.Down;
+					M_GamePlayingUI.OperAtkRangeHighlight(M_GamePlayingUI.RotateViewAtkRange(m_OperatorData.AttackPos, radian), M_GamePlayingUI.m_CreatedAttackRangeHighlightList[0]);
+					break;
+				case E_OperatorDirection.Up:
+					if (direction == m_OperatorData.VerticalDirection)
+					{
+						return;
+					}
+					switch (lastDirection)
+					{
+						case E_OperatorDirection.Right:
+							radian = 270;
+							break;
+						case E_OperatorDirection.Up:
+							//radian = 0;
+							break;
+						case E_OperatorDirection.Down:
+							radian = 180;
+							break;
+						case E_OperatorDirection.Left:
+							radian = 90;
+							break;
+					}
+					if (m_OperatorData.HorizontalDirection == E_OperatorDirection.Left)
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.LeftUpImg;
+					}
+					else
+					{
+						m_SpriteRenderer.sprite = m_OperatorData.RightUpImg;
+					}
+					lastDirection = E_OperatorDirection.Up;
+					RotateAtkRange(m_OperatorData.AttackPos, radian);
+					m_OperatorData.VerticalDirection = E_OperatorDirection.Up;
+					M_GamePlayingUI.OperAtkRangeHighlight(M_GamePlayingUI.RotateViewAtkRange(m_OperatorData.AttackPos, radian), M_GamePlayingUI.m_CreatedAttackRangeHighlightList[0]);
+					break;
+
+			}
+		}
+		public void RotateAtkRange(Vector2[] _AtkRange, float _Direction)
+		{
+			//기본 오른쪽
+			Debug.Log(_Direction);
+			float angleRad = _Direction * Mathf.Deg2Rad; // 라디안으로 변환
+
+			float cos = Mathf.Cos(angleRad);
+			float sin = Mathf.Sin(angleRad);
+
+			for (int i = 0; i < _AtkRange.Length; i++)
+			{
+				_AtkRange[i] = new Vector2(_AtkRange[i].x * cos - _AtkRange[i].y * sin, _AtkRange[i].x * sin + _AtkRange[i].y * cos);
+			}
+		}
+		//오퍼가 공격 및 힐을 당했을경우
+		public void ChangeHp(float _Value)
+		{
+			m_OperatorData.RealHp += _Value;
+		}
+	}
+}
