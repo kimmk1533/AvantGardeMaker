@@ -12,18 +12,28 @@ namespace AvantGardeMaker.MikangMark
 	public class GamePlayingUIManager : ObjectManager<GamePlayingUIManager, GamePlayingUI>
 	{
 		#region 변수
+		#region 코스트 관련 UI
 		public TextMeshProUGUI m_CostText = null;
 		public Image m_CostImage = null;
+		#endregion
 
+		[SerializeField]
+		private RectTransform m_OperatorSquadUIParent = null;
+		[SerializeField, ReadOnly]
+		private OperatorSquadUI m_SelectedOperatorSquadUI = null;
+		[SerializeField, ReadOnly]
+		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
+
+		[SerializeField]
+		private Button m_DeploymentCancelButton = null;
+
+		#region 오퍼레이터 스탯 관련 UI
 		public GameObject m_OperStatUIParent = null;
-
-		public OperatorSquadUI m_SelectedOperatorSquadUI = null;
 
 		private Image OperImg = null;
 		private Image JobImg = null;
 		private Image Arousal = null;
 
-		#region 오퍼레이터 스탯 UI
 		[SerializeField]
 		private TextMeshProUGUI m_OperatorKorNameText = null;
 		[SerializeField]
@@ -36,13 +46,14 @@ namespace AvantGardeMaker.MikangMark
 		private TextMeshProUGUI m_ResText = null;
 		[SerializeField]
 		private TextMeshProUGUI m_BlockText = null;
-		#endregion
 
 		public Image m_ATKRangeField;
 		public Image m_OperatorPos_InRange;
 		public Image m_ATKPos;
 		public List<Image> m_ATKPosList;
+		#endregion
 
+		#region MikangMark
 		public float minChildren_x = 0;
 		public float maxChildren_x = 0;
 		public float m_offset = 0;
@@ -50,20 +61,7 @@ namespace AvantGardeMaker.MikangMark
 		public GameObject m_AttackRangeHighlight;
 		public List<GameObject> m_CreatedAttackRangeHighlightList;
 		public GameObject m_AttackRangeHighlightParent;
-		//OperDrag에서 컨트롤중
-		public bool m_IsDragging = false;
-		private GameObject m_TileTarget;
-
-		private bool m_TurnOff = false;
-
-		public Button m_DeploymentCancelButton;
-		private Tile _cachedTile;
-
-		[SerializeField]
-		private RectTransform m_OperatorSquadUIParent = null;
-
-		[SerializeField, ReadOnly]
-		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -72,19 +70,31 @@ namespace AvantGardeMaker.MikangMark
 		#region 이벤트
 
 		#region 이벤트 함수
-		private void OnOperatorSquadUIClicked(OperatorSquadUI operatorSquadUI)
+		public void OnOperatorSquadUIClicked(OperatorSquadUI operatorSquadUI)
 		{
 			// 이미 선택된 오퍼레이터 UI 클릭 시 클릭 취소
 			if (m_SelectedOperatorSquadUI == operatorSquadUI)
 			{
-				SetActiveOperatorStatUI(false);
+				m_OperStatUIParent.SetActive(false);
+
 				m_SelectedOperatorSquadUI = null;
+
 				return;
 			}
 
 			m_SelectedOperatorSquadUI = operatorSquadUI;
 
-			SetActiveOperatorStatUI(true);
+			m_OperStatUIParent.SetActive(true);
+		}
+
+		public void OnDeploymentCancelButtonClicked()
+		{
+			m_DeploymentCancelButton.gameObject.SetActive(false);
+
+			m_SelectedOperatorSquadUI.CancelDeployment();
+			m_SelectedOperatorSquadUI = null;
+
+			m_OperStatUIParent.gameObject.SetActive(false);
 		}
 		#endregion
 		#endregion
@@ -101,8 +111,6 @@ namespace AvantGardeMaker.MikangMark
 			//m_CreatedAttackRangeHighlightList = new List<GameObject>();
 			//SetActiveOperatorStatUI(false);
 
-			m_SelectedOperatorSquadUI = null;
-
 			//OperATKRangeCreate(m_SelectedOperatorSquadUI.operatorData.AttackPos);
 			//AlignChildren();
 
@@ -113,22 +121,22 @@ namespace AvantGardeMaker.MikangMark
 		{
 			UpdateUI();
 
-			if (m_IsDragging)
-			{
-				MouseRealPoint();
-				m_TurnOff = true;
-			}
-			else
-			{
-				if (m_TurnOff)
-				{
-					for (int i = 0; i < m_CreatedAttackRangeHighlightList.Count; i++)
-					{
-						m_CreatedAttackRangeHighlightList[i].SetActive(m_TurnOff = false);
-					}
-				}
+			//if (m_IsDragging)
+			//{
+			//	MouseRealPoint();
+			//	m_TurnOff = true;
+			//}
+			//else
+			//{
+			//	if (m_TurnOff)
+			//	{
+			//		for (int i = 0; i < m_CreatedAttackRangeHighlightList.Count; i++)
+			//		{
+			//			m_CreatedAttackRangeHighlightList[i].SetActive(m_TurnOff = false);
+			//		}
+			//	}
 
-			}
+			//}
 		}
 		#endregion
 
@@ -163,6 +171,8 @@ namespace AvantGardeMaker.MikangMark
 			base.InitializeMain();
 
 			CreateOperatorSquadUI();
+
+			m_DeploymentCancelButton.onClick.AddListener(OnDeploymentCancelButtonClicked);
 		}
 		/// <summary>
 		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -172,6 +182,8 @@ namespace AvantGardeMaker.MikangMark
 			base.FinallizeMain();
 
 			DestroyOperatorSquadUI();
+
+			m_DeploymentCancelButton.onClick.RemoveListener(OnDeploymentCancelButtonClicked);
 		}
 		#endregion
 
@@ -208,37 +220,39 @@ namespace AvantGardeMaker.MikangMark
 			m_OperatorSquadUIList.Clear();
 		}
 
-		public void MouseRealPoint()
+		private void UpdateUI()
 		{
-			// 마우스 왼쪽 버튼을 누르고 있는 동안 (드래그)
-			if (Input.GetMouseButton(0))
-			{
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit))
-				{
-					GameObject hitObj = hit.collider.gameObject;
+			#region 코스트 관련 UI
+			m_CostImage.fillAmount = M_GamePlaying.costTimer.progress;
+			m_CostText.text = M_GamePlaying.currentCost.ToString();
+			#endregion
 
-					// 타겟이 바뀌었을 때만 처리
-					if (m_TileTarget != hitObj)
-					{
-						// 타일 컴포넌트를 캐싱
-						_cachedTile = hit.collider.GetComponent<Tile>();
-
-						if (_cachedTile != null)
-						{
-							OperAtkRangeHighlight(
-								RotateViewAtkRange(m_SelectedOperatorSquadUI.operatorData.AttackPos, 180),
-								hitObj
-							);
-						}
-
-						m_TileTarget = hitObj;
-					}
-				}
-			}
+			#region 활성화된 오퍼레이터 스탯 정보 UI
+			//m_OperatorKorNameText.text = m_SelectedOperatorSquadUI.operatorData.KorName;
+			//m_OperatorLevelText.text = m_SelectedOperatorSquadUI.operatorData.Level.ToString();
+			//m_AtkText.text = m_SelectedOperatorSquadUI.operatorData.Atk.ToString();
+			//m_DefText.text = m_SelectedOperatorSquadUI.operatorData.Def.ToString();
+			//m_ResText.text = m_SelectedOperatorSquadUI.operatorData.Res.ToString();
+			//m_BlockText.text = m_SelectedOperatorSquadUI.operatorData.BlockCount.ToString();
+			#endregion
 		}
-		public Vector2[] RotateViewAtkRange(Vector2[] _OperAtkRange, float angleDeg)//회전각도 ex)90
+
+		public void OnSettingDirectionStart()
+		{
+			m_DeploymentCancelButton.gameObject.SetActive(true);
+		}
+		public void OnSettingDirectionEnd()
+		{
+			m_DeploymentCancelButton.gameObject.SetActive(false);
+
+			m_SelectedOperatorSquadUI.gameObject.SetActive(false);
+			m_SelectedOperatorSquadUI = null;
+
+			m_OperStatUIParent.gameObject.SetActive(false);
+		}
+
+		#region MikangMark
+		public Vector2[] RotateViewAtkRange(Vector2[] operatorAttackRange, float angleDeg)//회전각도 ex)90
 		{
 			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
 
@@ -246,10 +260,10 @@ namespace AvantGardeMaker.MikangMark
 			float sin = Mathf.Sin(angleRad);
 
 
-			Vector2[] temp = new Vector2[_OperAtkRange.Length];
+			Vector2[] temp = new Vector2[operatorAttackRange.Length];
 			for (int i = 0; i < temp.Length; i++)
 			{
-				temp[i] = new Vector2((int)(_OperAtkRange[i].x * cos - _OperAtkRange[i].y * sin), (int)(_OperAtkRange[i].x * sin + _OperAtkRange[i].y * cos));
+				temp[i] = new Vector2((int)(operatorAttackRange[i].x * cos - operatorAttackRange[i].y * sin), (int)(operatorAttackRange[i].x * sin + operatorAttackRange[i].y * cos));
 			}
 			return temp;
 		}
@@ -296,7 +310,6 @@ namespace AvantGardeMaker.MikangMark
 		//생성된 공격범위 가운데 정렬
 		public void AlignChildren()
 		{
-
 			int childCount = m_ATKRangeField.transform.childCount;
 			if (childCount == 0)
 				return;
@@ -322,25 +335,6 @@ namespace AvantGardeMaker.MikangMark
 				}
 			}
 		}
-		public void UpdateUI()
-		{
-			#region 코스트 관련UI
-			m_CostImage.fillAmount = M_GamePlaying.costTimer.progress;
-			m_CostText.text = M_GamePlaying.currentCost.ToString();
-			#endregion
-
-			#region 활성화된 오퍼스텟정보UI
-			//m_OperatorKorNameText.text = m_SelectedOperatorSquadUI.operatorData.KorName;
-			//m_OperatorLevelText.text = m_SelectedOperatorSquadUI.operatorData.Level.ToString();
-			//m_AtkText.text = m_SelectedOperatorSquadUI.operatorData.Atk.ToString();
-			//m_DefText.text = m_SelectedOperatorSquadUI.operatorData.Def.ToString();
-			//m_ResText.text = m_SelectedOperatorSquadUI.operatorData.Res.ToString();
-			//m_BlockText.text = m_SelectedOperatorSquadUI.operatorData.BlockCount.ToString();
-			#endregion
-		}
-		public void SetActiveOperatorStatUI(bool active)
-		{
-			m_OperStatUIParent.SetActive(active);
-		}
+		#endregion
 	}
 }

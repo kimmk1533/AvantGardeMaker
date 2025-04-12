@@ -5,12 +5,6 @@ using UnityEngine;
 
 namespace AvantGardeMaker.MikangMark.Enum
 {
-	public enum E_OperatorMode
-	{
-		SetDirection,
-		Combat,
-	}
-
 	public enum E_JopType
 	{
 		VanGuard,

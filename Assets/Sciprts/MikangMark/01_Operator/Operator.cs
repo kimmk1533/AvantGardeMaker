@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using AvantGardeMaker.MikangMark;
+using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using System;
-using System.IO;
-using AvantGardeMaker.MikangMark.Enum;
-using UnityEngine.UI;
 
 namespace AvantGardeMaker.MikangMark
 {
@@ -17,20 +13,20 @@ namespace AvantGardeMaker.MikangMark
 
 		private OperatorData m_OperatorData = null;
 
-		private E_OperatorMode m_OperatorMode = E_OperatorMode.SetDirection;
+		private Sprite m_FrontSprite = null;
+		private Sprite m_BackSprite = null;
+
 		private E_OperatorDirection m_CurrentDirection = E_OperatorDirection.None;
-		private E_OperatorDirection m_LastDirection = E_OperatorDirection.None;
+		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
 
-		private Vector2 m_DragStartPos;
 		private bool m_IsDragging = false;
-		private bool m_IsValidDrag = false;
-
+		private Vector2 m_DragStartPos;
 		// 드래그로 인정할 최소 거리 (픽셀)
 		private float m_DragThreshold = 150f;
 		#endregion
 
 		#region 프로퍼티
-		public string operatorName => m_OperatorData.EngName;
+		private bool isSettedDirection => m_CurrentDirection != E_OperatorDirection.None;
 		#endregion
 
 		#region 이벤트
@@ -44,50 +40,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			//클릭했을때
-			if (Input.GetMouseButtonDown(0))
-			{
-				m_DragStartPos = Input.mousePosition;
-				m_IsDragging = true;
-				m_IsValidDrag = false;
-				m_CurrentDirection = E_OperatorDirection.None;
-			}
-
-			//드래그중일때
-			if (Input.GetMouseButton(0) && m_IsDragging)
-			{
-				Vector2 currentPos = Input.mousePosition;
-				Vector2 diff = currentPos - m_DragStartPos;
-
-				if (!m_IsValidDrag)
-				{
-					//일정거리이상 드래그했을떄
-					if (diff.magnitude >= m_DragThreshold)
-					{
-						m_IsValidDrag = true;
-					}
-				}
-
-				if (m_IsValidDrag)
-				{
-					if (Mathf.Abs(diff.x) > Mathf.Abs(diff.y))
-					{
-						m_CurrentDirection = (diff.x > 0) ? E_OperatorDirection.Right : E_OperatorDirection.Left;
-					}
-					else
-					{
-						m_CurrentDirection = (diff.y > 0) ? E_OperatorDirection.Up : E_OperatorDirection.Down;
-					}
-					M_GamePlayingUI.m_DeploymentCancelButton.gameObject.SetActive(false);
-				}
-			}
-			if (Input.GetMouseButtonUp(0))
-			{
-				m_IsDragging = false;
-				m_IsValidDrag = false;
-				m_CurrentDirection = E_OperatorDirection.None;
-				M_GamePlayingUI.m_DeploymentCancelButton.gameObject.SetActive(true);
-			}
+			SettingDirectionProcess();
 		}
 		#endregion
 
@@ -100,7 +53,10 @@ namespace AvantGardeMaker.MikangMark
 			base.InitializePoolItem();
 
 			if (m_SpriteRenderer == null)
-				m_SpriteRenderer = GetComponent<SpriteRenderer>();
+				m_SpriteRenderer = transform.Find<SpriteRenderer>("Renderer");
+
+			m_FrontSprite = M_Operator.GetOperatorFrontSprite(m_OperatorData.EngName);
+			m_BackSprite = M_Operator.GetOperatorBackSprite(m_OperatorData.EngName);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -111,6 +67,73 @@ namespace AvantGardeMaker.MikangMark
 		}
 		#endregion
 
+		public void SetOperatorData(OperatorData operatorData)
+		{
+			m_OperatorData = operatorData;
+		}
+
+		private void SettingDirectionProcess()
+		{
+			if (isSettedDirection == true)
+				return;
+
+			//클릭했을때
+			if (Input.GetMouseButtonDown(0))
+			{
+				m_DragStartPos = Input.mousePosition;
+				m_IsDragging = true;
+
+				M_GamePlayingUI.OnSettingDirectionStart();
+			}
+
+			//드래그중일때
+			if (Input.GetMouseButton(0) && m_IsDragging)
+			{
+				Vector2 currentPos = Input.mousePosition;
+				Vector2 diff = currentPos - m_DragStartPos;
+
+				//일정거리이상 드래그했을떄
+				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
+					return;
+
+				UpdateDraggingDirection(diff);
+			}
+
+			if (Input.GetMouseButtonUp(0) && m_IsDragging)
+			{
+				m_IsDragging = false;
+
+				Vector2 currentPos = Input.mousePosition;
+				Vector2 diff = currentPos - m_DragStartPos;
+
+				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
+				{
+					m_SettingDirection = E_OperatorDirection.None;
+
+					M_GamePlayingUI.OnDeploymentCancelButtonClicked();
+					return;
+				}
+
+				m_CurrentDirection = m_SettingDirection;
+				M_GamePlayingUI.OnSettingDirectionEnd();
+			}
+		}
+		private void UpdateDraggingDirection(Vector2 diff)
+		{
+			if (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
+			{
+				m_SettingDirection = (diff.x > 0) ? E_OperatorDirection.Right : E_OperatorDirection.Down;
+			}
+			else
+			{
+				m_SettingDirection = (diff.y > 0) ? E_OperatorDirection.Up : E_OperatorDirection.Down;
+			}
+
+			m_SpriteRenderer.sprite = (diff.y > 0) ? m_BackSprite : m_FrontSprite;
+			m_SpriteRenderer.flipX = diff.x > 0;
+		}
+
+		#region MikangMark
 		public void SetDirection(E_OperatorDirection direction, E_OperatorDirection lastDirection)
 		{
 			float radian = 0;
@@ -266,10 +289,12 @@ namespace AvantGardeMaker.MikangMark
 				_AtkRange[i] = new Vector2(_AtkRange[i].x * cos - _AtkRange[i].y * sin, _AtkRange[i].x * sin + _AtkRange[i].y * cos);
 			}
 		}
+
 		//오퍼가 공격 및 힐을 당했을경우
 		public void ChangeHp(float _Value)
 		{
 			m_OperatorData.RealHp += _Value;
 		}
+		#endregion
 	}
 }

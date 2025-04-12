@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -255,9 +256,12 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 		*/
 		private static readonly string s_DataPath = "MikangMark/Datas/OperatorDatas";
+		private static readonly string s_SpritePath = "MikangMark/Test Images";
 
 		#region 변수
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
+		private Dictionary<string, Sprite> m_OperatorFrontSpriteMap = null;
+		private Dictionary<string, Sprite> m_OperatorBackSpriteMap = null;
 		private Dictionary<string, Sprite> m_OperatorPortraitMap = null;
 		#endregion
 
@@ -289,6 +293,8 @@ namespace AvantGardeMaker.MikangMark
 			base.Initialize();
 
 			m_OperatorDataMap = new Dictionary<string, OperatorData>();
+			m_OperatorFrontSpriteMap = new Dictionary<string, Sprite>();
+			m_OperatorBackSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorPortraitMap = new Dictionary<string, Sprite>();
 
 			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(s_DataPath);
@@ -298,6 +304,8 @@ namespace AvantGardeMaker.MikangMark
 				string key = operatorDatas[i].EngName;
 
 				m_OperatorDataMap.Add(key, operatorDatas[i]);
+				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Front")));
+				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Back")));
 				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].PortraitPath));
 			}
 		}
@@ -337,6 +345,20 @@ namespace AvantGardeMaker.MikangMark
 				return null;
 
 			return info;
+		}
+		public Sprite GetOperatorFrontSprite(string key)
+		{
+			if (m_OperatorFrontSpriteMap.TryGetValue(key, out Sprite frontSprite) == false)
+				return null;
+
+			return frontSprite;
+		}
+		public Sprite GetOperatorBackSprite(string key)
+		{
+			if (m_OperatorBackSpriteMap.TryGetValue(key, out Sprite backSprite) == false)
+				return null;
+
+			return backSprite;
 		}
 		public Sprite GetOperatorPortrait(string key)
 		{

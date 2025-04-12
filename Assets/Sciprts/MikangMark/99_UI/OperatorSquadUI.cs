@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu;
+using AvantGardeMaker.Ceeu.Enum;
 using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,6 +14,8 @@ namespace AvantGardeMaker.MikangMark
 	{
 		#region 변수
 		private Button m_Button = null;
+
+		private Operator m_PreviewOperator = null;
 		#endregion
 
 		#region 프로퍼티
@@ -31,6 +35,7 @@ namespace AvantGardeMaker.MikangMark
 
 		#region 매니저
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static OperatorManager M_Operator => OperatorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -62,58 +67,62 @@ namespace AvantGardeMaker.MikangMark
 
 		public void OnBeginDrag(PointerEventData eventData)
 		{
-			Debug.Log("Begin Drag");
+			Vector3 mousePos = Input.mousePosition;
+			mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+			mousePos.z = 0f;
 
-			//M_GamePlayingUI.m_IsDragging = IsDragging;
+			m_PreviewOperator = M_Operator.GetBuilder(operatorData.EngName)
+				.SetPosition(mousePos)
+				.SetAutoInit(false)
+				.SetActive(true)
+				.Spawn();
 
-			//// m_CreatedOperator가 없으면 생성 (한 번만)
-			//if (m_CreatedOperator == null)
-			//{
-			//	m_NewCreatedOperator = Instantiate(OperatorPrefab, Canvas.transform);
+			m_PreviewOperator.SetOperatorData(operatorData);
+			m_PreviewOperator.InitializePoolItem();
 
-			//	m_NewCreatedOperator.GetComponent<DragOperSetPos>().enabled = false;
-
-			//	m_CreatedOperator = m_NewCreatedOperator.GetComponent<RectTransform>();
-
-			//	m_NewCreatedOperator.GetComponent<Operator>().m_OperatorData = GetComponent<Operator>().m_OperData.Clone();
-			//	m_NewCreatedOperator.GetComponent<Operator>().operatorName = GetComponent<Operator>().operatorName;
-			//	m_NewCreatedOperator.name = GetComponent<Operator>().operatorName;
-
-			//	M_GamePlayingUI.SetActiveOperatorStatUI(true);
-			//}
+			M_GamePlayingUI.OnOperatorSquadUIClicked(this);
 		}
 		public void OnDrag(PointerEventData eventData)
 		{
-			Debug.Log("Drag");
-			//m_CreatedOperator.position = eventData.position;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			if (Physics.Raycast(ray, out RaycastHit hit) == false)
+			{
+				Vector3 mousePos = Input.mousePosition;
+				mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+				mousePos.z = 0f;
+
+				m_PreviewOperator.transform.position = mousePos;
+			}
+			else
+			{
+				m_PreviewOperator.transform.position = hit.transform.position;
+			}
 		}
 		public void OnEndDrag(PointerEventData eventData)
 		{
-			Debug.Log("End Drag");
-			//M_GamePlayingUI.m_IsDragging = IsDragging;
-
-			//if (GameObject.Find("Fang").GetComponent<OperPoint>().IsOnTile)
-			//{
-			//	gameObject.SetActive(false);
-			//	M_GamePlayingUI.SetActiveOperatorStatUI(false);
-			//	m_NewCreatedOperator.GetComponent<DragOperSetPos>().enabled = true;
-			//	M_GamePlayingUI.m_DeploymentCancelButton.gameObject.SetActive(true);
-			//	M_GamePlayingUI.m_DeploymentCancelButton.GetComponent<RectTransform>().position = new Vector3(m_NewCreatedOperator.GetComponent<RectTransform>().position.x - 300, m_NewCreatedOperator.GetComponent<RectTransform>().position.y + 300);
-			//}
-			//else
-			//{
-			//	Destroy(m_NewCreatedOperator);
-			//	M_GamePlayingUI.SetActiveOperatorStatUI(false);
-			//}
-		}
-
-		private bool IsMouseOverObject(out RaycastHit hitInfo)
-		{
-			// 마우스 위치에서 Ray 생성
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-			// Raycast 실행 (충돌 여부 검사)
-			return Physics.Raycast(ray, out hitInfo);
+			if (Physics.Raycast(ray, out RaycastHit hit) == false)
+			{
+				M_Operator.Despawn(m_PreviewOperator);
+
+				return;
+			}
+
+			GameObject hitObj = hit.collider.gameObject;
+
+			Tile tile = hitObj.GetComponent<Tile>();
+			if (tile == null)
+				return;
+
+			m_PreviewOperator.transform.position = tile.transform.position;
+		}
+
+		public void CancelDeployment()
+		{
+			M_Operator.Despawn(m_PreviewOperator);
+			m_PreviewOperator = null;
 		}
 	}
 }
