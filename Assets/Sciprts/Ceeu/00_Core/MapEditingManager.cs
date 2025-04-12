@@ -312,7 +312,11 @@ namespace AvantGardeMaker.Ceeu
 				return;
 
 			// 마우스 위치 가져오기
-			Vector2Int mousePosition = GetMousePositionInt();
+			Vector2 mousePosition = UtilClass.GetMouseWorldPosition2D(mapEditorCamera);
+			Vector2Int mousePositionInt = new Vector2Int(
+				Mathf.RoundToInt(mousePosition.x),
+				Mathf.RoundToInt(mousePosition.y)
+				);
 
 			if (Input.GetMouseButtonUp(0) == true ||
 				Input.GetMouseButtonUp(1) == true)
@@ -324,24 +328,24 @@ namespace AvantGardeMaker.Ceeu
 				if (m_TilePlacementFlag == false)
 					return;
 
-				m_TilePreview.transform.position = (Vector3Int)mousePosition;
+				m_TilePreview.transform.position = (Vector3Int)mousePositionInt;
 				m_TilePreview.gameObject.SetActive(true);
 
-				(E_TileType tileType, Tile tile) tileValue = M_Tile.GetTileValue(mousePosition);
+				(E_TileType tileType, Tile tile) tileValue = M_Tile.GetTileValue(mousePositionInt);
 
 				// 타일 배치
 				if (Input.GetMouseButton(0) == true)
 				{
 					if (tileValue.tile == null)
-						M_Tile.AddTile(mousePosition, m_CurrentTileType);
+						M_Tile.AddTile(mousePositionInt, m_CurrentTileType);
 					else if (tileValue.tileType != m_CurrentTileType)
-						M_Tile.ReplaceTile(mousePosition, m_CurrentTileType);
+						M_Tile.ReplaceTile(mousePositionInt, m_CurrentTileType);
 				}
 				// 타일 제거
 				if (Input.GetMouseButton(1) == true &&
 					tileValue.tile != null)
 				{
-					M_Tile.RemoveTile(mousePosition);
+					M_Tile.RemoveTile(mousePositionInt);
 				}
 			}
 			else
@@ -354,16 +358,6 @@ namespace AvantGardeMaker.Ceeu
 			}
 		}
 
-		private Vector2Int GetMousePositionInt()
-		{
-			Vector3 mousePosition = UtilClass.GetMouseWorldPosition3D(mapEditorCamera);
-			Vector2Int mousePositionInt = new Vector2Int(
-				Mathf.RoundToInt(mousePosition.x),
-				Mathf.RoundToInt(mousePosition.y)
-				);
-
-			return mousePositionInt;
-		}
 		public Vector3 GetTileOffset(E_TileType tileType)
 		{
 			if (tileType == E_TileType.HighGroundTile)

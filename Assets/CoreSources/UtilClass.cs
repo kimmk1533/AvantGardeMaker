@@ -48,6 +48,7 @@ public static class UtilClass
 	public static Vector2 GetMouseWorldPosition2D(Vector3 screenPosition, Camera worldCamera)
 	{
 		Vector2 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
+
 		return worldPosition;
 	}
 	public static Vector3 GetMouseWorldPosition3D()
@@ -60,12 +61,9 @@ public static class UtilClass
 	}
 	public static Vector3 GetMouseWorldPosition3D(Vector3 screenPosition, Camera worldCamera)
 	{
-		Ray ray = worldCamera.ScreenPointToRay(screenPosition);
+		Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
 
-		RaycastHit hit;
-		Physics.Raycast(ray, out hit);
-
-		return hit.point;
+		return worldPosition;
 	}
 
 	public static bool IsPointerOnUI()
