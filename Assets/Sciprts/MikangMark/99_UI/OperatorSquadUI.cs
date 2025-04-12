@@ -36,6 +36,7 @@ namespace AvantGardeMaker.MikangMark
 		#region 매니저
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
 		private static OperatorManager M_Operator => OperatorManager.Instance;
+		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -64,7 +65,7 @@ namespace AvantGardeMaker.MikangMark
 			m_Button.onClick.RemoveListener(OnOperatorSquadUIButtonClicked);
 		}
 		#endregion
-
+		//오퍼레이터 프리뷰 생성
 		public void OnBeginDrag(PointerEventData eventData)
 		{
 			Vector3 mousePos = Input.mousePosition;
@@ -117,6 +118,7 @@ namespace AvantGardeMaker.MikangMark
 				return;
 
 			m_PreviewOperator.transform.position = tile.transform.position;
+			M_GamePlaying.setPreViewOperatorOnTile = tile;
 		}
 
 		public void CancelDeployment()

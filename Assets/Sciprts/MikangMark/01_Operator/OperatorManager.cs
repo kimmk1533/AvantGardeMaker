@@ -306,7 +306,7 @@ namespace AvantGardeMaker.MikangMark
 				m_OperatorDataMap.Add(key, operatorDatas[i]);
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Front")));
 				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Back")));
-				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].PortraitPath));
+				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].VariableData.PortraitPath));
 			}
 		}
 		/// <summary>

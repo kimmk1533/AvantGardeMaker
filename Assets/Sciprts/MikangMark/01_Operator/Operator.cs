@@ -35,6 +35,8 @@ namespace AvantGardeMaker.MikangMark
 		#region 매니저
 		private static OperatorManager M_Operator => OperatorManager.Instance;
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+
+		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -92,7 +94,7 @@ namespace AvantGardeMaker.MikangMark
 				Vector2 currentPos = Input.mousePosition;
 				Vector2 diff = currentPos - m_DragStartPos;
 
-				//일정거리이상 드래그했을떄
+				//일정거리이상 드래그하지못했을때
 				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
 					return;
 
@@ -106,6 +108,7 @@ namespace AvantGardeMaker.MikangMark
 				Vector2 currentPos = Input.mousePosition;
 				Vector2 diff = currentPos - m_DragStartPos;
 
+				//드래그가 일정범위를 벗어나지않은상태에서 해제되었을때
 				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
 				{
 					m_SettingDirection = E_OperatorDirection.None;
@@ -116,6 +119,8 @@ namespace AvantGardeMaker.MikangMark
 
 				m_CurrentDirection = m_SettingDirection;
 				M_GamePlayingUI.OnSettingDirectionEnd();
+				//tile.tileOnOperator = m_PreviewOperator;
+				M_GamePlaying.SettingOperatorOnTile(this);
 			}
 		}
 		private void UpdateDraggingDirection(Vector2 diff)
@@ -134,13 +139,14 @@ namespace AvantGardeMaker.MikangMark
 		}
 
 		#region MikangMark
+		/*
 		public void SetDirection(E_OperatorDirection direction, E_OperatorDirection lastDirection)
 		{
 			float radian = 0;
 			switch (direction)
 			{
 				case E_OperatorDirection.Left:
-					if (direction == m_OperatorData.HorizontalDirection)//같은방향으로드래그했을경우
+					if (direction == m_OperatorData.FixedData.HorizontalDirection)//같은방향으로드래그했을경우
 					{
 						return;
 					}
@@ -160,7 +166,7 @@ namespace AvantGardeMaker.MikangMark
 							break;
 					}
 					//왼쪽을 드래그
-					if (m_OperatorData.VerticalDirection == E_OperatorDirection.Up)
+					if (m_OperatorData.FixedData.VerticalDirection == E_OperatorDirection.Up)
 					{
 						m_SpriteRenderer.sprite = m_OperatorData.LeftUpImg;
 					}
@@ -295,6 +301,8 @@ namespace AvantGardeMaker.MikangMark
 		{
 			m_OperatorData.RealHp += _Value;
 		}
+		*/
 		#endregion
 	}
+
 }

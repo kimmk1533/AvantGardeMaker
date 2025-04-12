@@ -47,6 +47,14 @@ namespace AvantGardeMaker.MikangMark
 		[SerializeField]
 		private TextMeshProUGUI m_BlockText = null;
 
+		[SerializeField]
+		private Button OperatorRetreateButton = null;
+		[SerializeField]
+		private bool isActiveRetreateButton = false;
+
+		[SerializeField]
+		private Camera mainCamera = null;
+
 		public Image m_ATKRangeField;
 		public Image m_OperatorPos_InRange;
 		public Image m_ATKPos;
@@ -65,11 +73,17 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 프로퍼티
+		public bool activeRetreateButton
+		{
+			get => isActiveRetreateButton;
+			set => isActiveRetreateButton = value;
+		}
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
+		//오퍼레이터 초상화 클릭
 		public void OnOperatorSquadUIClicked(OperatorSquadUI operatorSquadUI)
 		{
 			// 이미 선택된 오퍼레이터 UI 클릭 시 클릭 취소
@@ -86,7 +100,7 @@ namespace AvantGardeMaker.MikangMark
 
 			m_OperStatUIParent.SetActive(true);
 		}
-
+		//배치취소버튼클릭
 		public void OnDeploymentCancelButtonClicked()
 		{
 			m_DeploymentCancelButton.gameObject.SetActive(false);
@@ -297,7 +311,7 @@ namespace AvantGardeMaker.MikangMark
 			//공격범위 이미지 사이의 간격
 			int intervalOpset = 6;
 			m_ATKPosList = new List<Image>();
-			for (int i = 0; i < m_SelectedOperatorSquadUI.operatorData.AttackPos.Length; i++)
+			for (int i = 0; i < m_SelectedOperatorSquadUI.operatorData.FixedData.AttackPos.Count; i++)
 			{
 				m_ATKPosList.Add(Instantiate(m_ATKPos, m_ATKRangeField.transform));
 				m_ATKPosList[i].rectTransform.anchoredPosition = m_OperatorPos_InRange.rectTransform.anchoredPosition;
@@ -334,6 +348,13 @@ namespace AvantGardeMaker.MikangMark
 					m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition -= temp;
 				}
 			}
+		}
+
+		public void OperatorRetreateButtonActive(bool activeFlag)
+		{
+			Vector3 screenPos = mainCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			OperatorRetreateButton.GetComponent<RectTransform>().position = new Vector3(screenPos.x - 200, screenPos.y + 200);
+			OperatorRetreateButton.gameObject.SetActive(activeFlag);
 		}
 		#endregion
 	}

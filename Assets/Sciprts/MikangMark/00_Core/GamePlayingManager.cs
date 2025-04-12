@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -18,6 +19,14 @@ namespace AvantGardeMaker.MikangMark
 
 		private int m_MaxLocationCount;
 		private int m_LocationCount;
+
+		private List<Tile> m_PlayGroundTileList = new List<Tile>();
+		[SerializeField]
+		private Transform m_PlayGroundTileParent;
+
+		private Tile m_SetPreviewOperatorOnTile = new Tile();
+
+		private Operator m_SettedOperatorSelect = null;
 
 		//게임들어오기전 편성한 오퍼레이터들의 이름 받기
 		[SerializeField]
@@ -46,12 +55,25 @@ namespace AvantGardeMaker.MikangMark
 		}
 
 		public List<string> operatorSquadKeyList => new List<string>(m_OperatorSquadKeyList);
+
+		public Tile setPreViewOperatorOnTile
+		{
+			get => m_SetPreviewOperatorOnTile;
+			set => m_SetPreviewOperatorOnTile = value;
+		}
+
+		public Operator settedOperatorSelect
+		{
+			get => m_SettedOperatorSelect;
+			set => m_SettedOperatorSelect = value;
+		}
 		#endregion
 
 		#region 이벤트
 		#endregion
 
 		#region 매니저
+		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -62,6 +84,20 @@ namespace AvantGardeMaker.MikangMark
 		private void Update()
 		{
 			CostIncreaseProcess();
+			if (Input.GetMouseButtonDown(0)) // 좌클릭
+			{
+				m_SettedOperatorSelect = CheckTileInOperator();
+				if (m_SettedOperatorSelect == null)
+					return;
+				if (M_GamePlayingUI.activeRetreateButton == true)
+					M_GamePlayingUI.activeRetreateButton = false;
+				else
+					M_GamePlayingUI.activeRetreateButton = true;
+				//오퍼레이터 스탯창열기
+				//M_GamePlayingUI.m_OperStatUIParent.SetActive(true);
+				//퇴각버튼 활성화하기
+				M_GamePlayingUI.OperatorRetreateButtonActive(M_GamePlayingUI.activeRetreateButton);
+			}
 		}
 		#endregion
 
@@ -75,6 +111,11 @@ namespace AvantGardeMaker.MikangMark
 			m_CurrentCost = 10;
 
 			m_CostTimer = new UtilClass.Timer(1f);
+
+			for (int i = 0; i < m_PlayGroundTileParent.childCount; i++)
+			{
+				m_PlayGroundTileList.Add(m_PlayGroundTileParent.GetChild(i).GetComponent<Tile>());
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -107,6 +148,32 @@ namespace AvantGardeMaker.MikangMark
 			{
 				++m_CurrentCost;
 			}
+		}
+
+
+		public void SettingOperatorOnTile(Operator operatorPreview)
+		{
+			m_SetPreviewOperatorOnTile.tileOnOperator = operatorPreview;
+		}
+
+		public Operator CheckTileInOperator()
+		{
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+
+			if (Physics.Raycast(ray, out hit))
+			{
+				GameObject target = hit.collider.gameObject;
+				Tile tile = target.GetComponent<Tile>();
+				if (tile == null)
+					return null;
+				if (tile.tileOnOperator == null)
+					return null;
+				return tile.tileOnOperator;
+				//tile.RetreatOperatorOnTile();
+			}
+			return null;
+
 		}
 	}
 }
