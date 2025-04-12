@@ -52,6 +52,12 @@ namespace AvantGardeMaker.Ceeu
 			m_CreatorText.text = mapListItem.creatorText;
 			//m_Rating.value = mapListItem.rating.value;
 			m_DescriptionText.text = mapListItem.stageData.description;
+
+			string playerId = SaveLoadUtility.GetPlayerId();
+
+			m_PlayButton.interactable = true;
+			m_EditButton.interactable = playerId.Equals(m_CurrentStageData.createdPlayerId);
+			m_DeleteButton.interactable = playerId.Equals(m_CurrentStageData.createdPlayerId);
 		}
 
 		private void OnOperatorInfoButtonClicked()
@@ -73,9 +79,23 @@ namespace AvantGardeMaker.Ceeu
 
 			SceneLoader.LoadScene("Map Editing Scene");
 		}
-		private void OnDeleteButtonClicked()
+		private async void OnDeleteButtonClicked()
 		{
+			await SaveLoadUtility.DeleteStageData(m_CurrentStageData.title);
 
+			UpdateMapListItem();
+
+			m_CurrentStageData = default;
+
+			m_ThumnailImage.texture = null;
+			m_TitleText.text = string.Empty;
+			m_CreatorText.text = string.Empty;
+			//m_Rating.value = 0f;
+			m_DescriptionText.text = string.Empty;
+
+			m_PlayButton.interactable = false;
+			m_EditButton.interactable = false;
+			m_DeleteButton.interactable = false;
 		}
 		#endregion
 		#endregion
@@ -90,9 +110,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.OnEnable();
 
-			ClearMapListItem();
-
-			CreateMapListItem();
+			UpdateMapListItem();
 		}
 		#endregion
 
@@ -144,18 +162,21 @@ namespace AvantGardeMaker.Ceeu
 				m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
 
 				m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
+				m_PlayButton.interactable = false;
 			}
 			if (m_EditButton == null)
 			{
 				m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");
 
 				m_EditButton.onClick.AddListener(OnEditButtonClicked);
+				m_EditButton.interactable = false;
 			}
 			if (m_DeleteButton == null)
 			{
 				m_DeleteButton = transform.Find("Buttons").Find<Button>("Delete Button");
 
 				m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
+				m_DeleteButton.interactable = false;
 			}
 		}
 		/// <summary>
@@ -190,7 +211,7 @@ namespace AvantGardeMaker.Ceeu
 			m_LoadingText.text = "Loading…";
 			m_LoadingText.gameObject.SetActive(true);
 		}
-		private async void CreateMapListItem()
+		private async Awaitable CreateMapListItem()
 		{
 			Transform itemParent = M_MainMenuUI.mapListItemParent;
 			List<StageData> stageDataList = await SaveLoadUtility.LoadAllStageData(M_MainMenuUI.testFilter);
@@ -218,6 +239,11 @@ namespace AvantGardeMaker.Ceeu
 				m_LoadingText.text = "No Item Founded";
 			else
 				m_LoadingText.gameObject.SetActive(false);
+		}
+		private async void UpdateMapListItem()
+		{
+			ClearMapListItem();
+			await CreateMapListItem();
 		}
 	}
 }

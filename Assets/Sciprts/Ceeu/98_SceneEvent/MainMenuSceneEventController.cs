@@ -14,13 +14,9 @@ namespace AvantGardeMaker.Ceeu
 		private Camera m_MainMenuCamera = null;
 
 		[SerializeField]
-		private Button m_MapListButton = null;
+		private RectTransform m_MainMenuInitPanel = null;
 		[SerializeField]
-		private Button m_MapEditorButton = null;
-		[SerializeField]
-		private Button m_OptionButton = null;
-		[SerializeField]
-		private Button m_QuitButton = null;
+		private RectTransform m_MainMenuButtonsPanel = null;
 
 		[SerializeField]
 		private MapListPanel m_MapListPanel = null;
@@ -64,15 +60,15 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
-			M_MainMenuUI.mapListButton = m_MapListButton;
-			M_MainMenuUI.mapEditorButton = m_MapEditorButton;
-			M_MainMenuUI.optionButton = m_OptionButton;
-			M_MainMenuUI.quitButton = m_QuitButton;
+			#region 변수 링킹
+			M_MainMenuUI.mainMenuInitPanel = m_MainMenuInitPanel;
+			M_MainMenuUI.mainMenuButtonsPanel = m_MainMenuButtonsPanel;
 
 			M_MainMenuUI.mapListPanel = m_MapListPanel;
 			M_MainMenuUI.optionPanel = m_OptionPanel;
 
 			M_MainMenuUI.mapListItemParent = m_MapListItemParent;
+			#endregion
 
 			// 씬 전환하기 전에 메인 메뉴 카메라 끄기
 			AddBeforeEvent("Map Editing Scene", TurnOffMainMenuCamera);

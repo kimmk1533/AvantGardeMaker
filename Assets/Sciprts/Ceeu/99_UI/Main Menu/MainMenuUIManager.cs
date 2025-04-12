@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,15 +13,25 @@ namespace AvantGardeMaker.Ceeu
 		#region 변수
 		[SerializeField]
 		private string m_TestFilter = string.Empty;
+
+		#region Init Panel
+		private TMP_InputField m_NickNameInputField = null;
+		private Button m_NickNameConfirmButton = null;
+		#endregion
+
+		#region MainMenu Buttons
+		private Button m_MapListButton = null;
+		private Button m_MapEditorButton = null;
+		private Button m_OptionButton = null;
+		private Button m_QuitButton = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
 		public string testFilter => m_TestFilter;
 
-		public Button mapListButton { get; set; }
-		public Button mapEditorButton { get; set; }
-		public Button optionButton { get; set; }
-		public Button quitButton { get; set; }
+		public RectTransform mainMenuInitPanel { get; set; }
+		public RectTransform mainMenuButtonsPanel { get; set; }
 
 		public MapListPanel mapListPanel { get; set; }
 		public RectTransform optionPanel { get; set; }
@@ -31,6 +42,19 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
+		private async void OnNicknameConfirmButtonClicked()
+		{
+			if (CheckNickName() == false)
+				return;
+
+			string nickName = m_NickNameInputField.text;
+			await SaveLoadUtility.SaveData("nickName", nickName);
+			M_MapEditing.creatorNickName = nickName;
+
+			mainMenuInitPanel.gameObject.SetActive(false);
+			mainMenuButtonsPanel.gameObject.SetActive(true);
+		}
+
 		private void OnMapListButtonClicked()
 		{
 			mapListPanel.gameObject.SetActive(true);
@@ -55,6 +79,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -85,10 +110,25 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.InitializeMain();
 
-			mapListButton.onClick.AddListener(OnMapListButtonClicked);
-			mapEditorButton.onClick.AddListener(OnMapEditorButtonClicked);
-			optionButton.onClick.AddListener(OnOptionButtonClicked);
-			quitButton.onClick.AddListener(OnQuitButtonClicked);
+			m_MapListButton = mainMenuButtonsPanel.Find<Button>("Map List Button");
+			m_MapEditorButton = mainMenuButtonsPanel.Find<Button>("Map Editor Button");
+			m_OptionButton = mainMenuButtonsPanel.Find<Button>("Option Button");
+			m_QuitButton = mainMenuButtonsPanel.Find<Button>("Quit Button");
+
+			m_MapListButton.onClick.AddListener(OnMapListButtonClicked);
+			m_MapEditorButton.onClick.AddListener(OnMapEditorButtonClicked);
+			m_OptionButton.onClick.AddListener(OnOptionButtonClicked);
+			m_QuitButton.onClick.AddListener(OnQuitButtonClicked);
+
+			mainMenuInitPanel.gameObject.SetActive(false);
+			mainMenuButtonsPanel.gameObject.SetActive(false);
+
+			m_NickNameInputField = mainMenuInitPanel.Find<TMP_InputField>("NickName InputField");
+			m_NickNameConfirmButton = mainMenuInitPanel.Find<Button>("Confirm Button");
+
+			m_NickNameConfirmButton.onClick.AddListener(OnNicknameConfirmButtonClicked);
+
+			InitProcess();
 
 			mapListPanel.Initialize();
 
@@ -104,15 +144,43 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.FinallizeMain();
 
-			mapListButton.onClick.RemoveListener(OnMapListButtonClicked);
-			mapEditorButton.onClick.RemoveListener(OnMapEditorButtonClicked);
-			optionButton.onClick.RemoveListener(OnOptionButtonClicked);
-			quitButton.onClick.RemoveListener(OnQuitButtonClicked);
-
 			mapListPanel.Finallize();
+
+			m_NickNameConfirmButton.onClick.RemoveListener(OnNicknameConfirmButtonClicked);
+
+			m_NickNameConfirmButton = null;
+			m_NickNameInputField = null;
+
+			m_MapListButton.onClick.RemoveListener(OnMapListButtonClicked);
+			m_MapEditorButton.onClick.RemoveListener(OnMapEditorButtonClicked);
+			m_OptionButton.onClick.RemoveListener(OnOptionButtonClicked);
+			m_QuitButton.onClick.RemoveListener(OnQuitButtonClicked);
+
+			m_MapListButton = null;
+			m_MapEditorButton = null;
+			m_OptionButton = null;
+			m_QuitButton = null;
 
 			gameObject.SetActive(false);
 		}
 		#endregion
+
+		private async void InitProcess()
+		{
+			string nickName = await SaveLoadUtility.LoadData<string>("nickName");
+
+			if (string.IsNullOrEmpty(nickName) == true)
+			{
+				mainMenuInitPanel.gameObject.SetActive(true);
+				return;
+			}
+
+			mainMenuButtonsPanel.gameObject.SetActive(true);
+			M_MapEditing.creatorNickName = nickName;
+		}
+		private bool CheckNickName()
+		{
+			return true;
+		}
 	}
 }

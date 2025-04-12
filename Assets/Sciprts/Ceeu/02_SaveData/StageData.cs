@@ -15,7 +15,9 @@ namespace AvantGardeMaker.Ceeu
 		[SerializeField]
 		private string m_Title;
 		[SerializeField]
-		private string m_Creator;
+		private string m_CreatorNickName;
+		[SerializeField]
+		private string m_CreatedPlayerId;
 		[SerializeField]
 		private byte[] m_ThumnailTexture;
 		[SerializeField]
@@ -78,10 +80,15 @@ namespace AvantGardeMaker.Ceeu
 			get => m_Title;
 			set => m_Title = value;
 		}
-		public string creator
+		public string creatorNickName
 		{
-			get => m_Creator;
-			set => m_Creator = value;
+			get => m_CreatorNickName;
+			set => m_CreatorNickName = value;
+		}
+		public string createdPlayerId
+		{
+			get => m_CreatedPlayerId;
+			set => m_CreatedPlayerId = value;
 		}
 		public byte[] thumnail
 		{

@@ -90,13 +90,13 @@ namespace AvantGardeMaker.Ceeu
 
 		public void UpdateUI()
 		{
-			string creator = string.Empty;
+			string creator = m_StageData.creatorNickName;
 
-			if (m_StageData.creator == string.Empty)
-				m_StageData.creator = "Unknown Creator";
+			if (creator == string.Empty)
+				creator = "Unknown Creator";
 
-			if (m_StageData.creator.StartsWith("by. ") == false)
-				creator = m_StageData.creator.Insert(0, "by. ");
+			if (creator.StartsWith("by. ") == false)
+				creator = creator.Insert(0, "by. ");
 
 			m_ThumnailImage.texture = m_StageData.GetThumnailTexture();
 			m_TitleText.text = m_StageData.title;

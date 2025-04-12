@@ -12,6 +12,7 @@ using Unity.Services.CloudSave.Models.Data.Player;
 using Unity.Services.Core;
 using UnityEngine;
 using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
+using DeleteOptions = Unity.Services.CloudSave.Models.Data.Player.DeleteOptions;
 
 namespace AvantGardeMaker.Ceeu
 {
@@ -37,7 +38,83 @@ namespace AvantGardeMaker.Ceeu
 		public static void Finallize()
 		{
 			// 유니티 서비스 로그아웃
-			AuthenticationService.Instance.SignOut(true);
+			AuthenticationService.Instance.SignOut();
+		}
+
+		public static async Awaitable SaveData<T>(string key, T value)
+		{
+			SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
+
+			// 저장할 데이터 만들기
+			Dictionary<string, object> data = new Dictionary<string, object>();
+
+			data.Add(key, value);
+
+			// 데이터 저장
+			await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
+
+			Debug.Log(key + " 저장 완료");
+		}
+		public static async Awaitable SaveJsonData<T>(string key, T value)
+		{
+			SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
+
+			// Json 변환
+			string json = JsonUtility.ToJson(value);
+
+			// 저장할 데이터 만들기
+			Dictionary<string, object> data = new Dictionary<string, object>();
+
+			data.Add(key, json);
+
+			// 데이터 저장
+			await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
+
+			Debug.Log(key + " 저장 완료");
+		}
+		public static async Awaitable<T> LoadData<T>(string key)
+		{
+			LoadOptions loadOption = new LoadOptions(new PublicReadAccessClassOptions());
+
+			HashSet<string> loadKeySet = new HashSet<string>()
+			{
+				key,
+			};
+
+			// 데이터 불러오기
+			Dictionary<string, Item> loadData = await CloudSaveService.Instance.Data.Player.LoadAsync(loadKeySet, loadOption);
+
+			if (loadData.TryGetValue(key, out Item item) == false)
+				return default;
+
+			Debug.Log(key.ToString() + " 로드 완료");
+
+			return item.Value.GetAs<T>();
+		}
+		public static async Awaitable<T> LoadJsonData<T>(string key)
+		{
+			LoadOptions loadOption = new LoadOptions(new PublicReadAccessClassOptions());
+
+			HashSet<string> loadKeySet = new HashSet<string>()
+			{
+				key,
+			};
+
+			// 데이터 불러오기
+			Dictionary<string, Item> loadData = await CloudSaveService.Instance.Data.Player.LoadAsync(loadKeySet, loadOption);
+
+			if (loadData.TryGetValue(key, out Item item) == false)
+				return default;
+
+			Debug.Log(key.ToString() + " 로드 완료");
+
+			return JsonUtility.FromJson<T>(item.Value.GetAsString());
+		}
+		public static async Awaitable DeleteData(string key)
+		{
+			DeleteOptions deleteOption = new DeleteOptions(new PublicWriteAccessClassOptions());
+
+			await CloudSaveService.Instance.Data.Player.DeleteAsync(key, deleteOption);
 		}
 
 		public static async Awaitable SaveStageData(string mapTitle, StageData stageData)
@@ -56,24 +133,34 @@ namespace AvantGardeMaker.Ceeu
 			if (mapTitleList.Contains(mapTitle) == false)
 				mapTitleList.Add(mapTitle);
 
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < mapTitleList.Count - 1; ++i)
-			{
-				sb.Append(mapTitleList[i]);
-				sb.Append(", ");
-			}
-			sb.Append(mapTitleList[mapTitleList.Count - 1]);
+			string mapTitlListData = string.Join(", ", mapTitleList);
 
 			// 저장할 데이터 만들기
 			Dictionary<string, object> data = new Dictionary<string, object>();
 
 			data.Add("isUse", true);
-			data.Add("makingMapTitleList", sb.ToString());
+			data.Add("makingMapTitleList", mapTitlListData);
 			data.Add(mapTitle, compressedJson);
 
 			// 데이터 저장
 			await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
 		}
+		public static async Awaitable DeleteStageData(string mapTitle)
+		{
+			DeleteOptions deleteOption = new DeleteOptions(new PublicWriteAccessClassOptions());
+
+			await CloudSaveService.Instance.Data.Player.DeleteAsync(mapTitle, deleteOption);
+
+			// 기존 제작한 맵 타이틀 리스트 가져오기
+			List<string> mapTitleList = await GetMakingMapTitleList(AuthenticationService.Instance.PlayerId);
+
+			mapTitleList.Remove(mapTitle);
+
+			string mapTitlListData = string.Join(", ", mapTitleList);
+
+			await SaveData<string>("makingMapTitleList", mapTitlListData);
+		}
+
 		public static async Awaitable<List<StageData>> LoadAllStageData()
 		{
 			List<StageData> stageDataList = new List<StageData>();
@@ -92,8 +179,7 @@ namespace AvantGardeMaker.Ceeu
 				foreach (var item in loadData)
 				{
 					// index 건너뛰기
-					if (item.Key.Equals("isUse") == true ||
-						item.Key.Equals("makingMapTitleList") == true)
+					if (IsIndexKey(item.Key)) // 인덱스 예외처리
 						continue;
 
 					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
@@ -128,8 +214,7 @@ namespace AvantGardeMaker.Ceeu
 				foreach (var item in loadData)
 				{
 					// index 건너뛰기
-					if (item.Key.Equals("isUse") == true || // isUse 인덱스 예외처리
-						item.Key.Equals("makingMapTitleList") == true || // makingMapTitleList 인덱스 예외처리
+					if (IsIndexKey(item.Key) || // 인덱스 예외처리
 						item.Key.Contains(mapTitleFilter) == false) // 검색 필터 예외처리
 						continue;
 
@@ -175,6 +260,10 @@ namespace AvantGardeMaker.Ceeu
 			return mapTitleList;
 		}
 
+		public static string GetPlayerId()
+		{
+			return AuthenticationService.Instance.PlayerId;
+		}
 		private static async Awaitable<List<string>> GetPlayerIdList()
 		{
 			var query = new Query(
@@ -218,6 +307,13 @@ namespace AvantGardeMaker.Ceeu
 			}
 
 			return playerIdList;
+		}
+
+		private static bool IsIndexKey(string key)
+		{
+			return key.Equals("isUse") || // isUse 인덱스 예외처리
+				key.Equals("makingMapTitleList") || // makingMapTitleList 인덱스 예외처리
+				key.Equals("nickName"); // nickName 인덱스 예외처리
 		}
 
 		public static class Compression

@@ -56,9 +56,6 @@ namespace AvantGardeMaker.Ceeu
 		private StageData m_EditingStageData = default;
 
 		[SerializeField]
-		private string m_StageName = string.Empty;
-
-		[SerializeField]
 		private TMP_FontAsset m_UIFont = null;
 		#endregion
 		#endregion
@@ -85,7 +82,9 @@ namespace AvantGardeMaker.Ceeu
 		#region 저장 & 불러오기 관련 프로퍼티
 		public StageData currentStageData => m_EditingStageData;
 
-		public string stageName { get => m_StageName; set => m_StageName = value; }
+		[field: SerializeField]
+		public string stageName { get; set; }
+		public string creatorNickName { get; set; }
 		#endregion
 		#endregion
 
@@ -229,7 +228,7 @@ namespace AvantGardeMaker.Ceeu
 			m_TilePreviewMap = null;
 
 			m_EditingStageData = default;
-			m_StageName = string.Empty;
+			stageName = string.Empty;
 
 			gameObject.SetActive(false);
 		}
@@ -392,7 +391,9 @@ namespace AvantGardeMaker.Ceeu
 			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
 
-			m_EditingStageData.title = m_StageName;
+			m_EditingStageData.title = stageName;
+			m_EditingStageData.creatorNickName = creatorNickName;
+			m_EditingStageData.createdPlayerId = SaveLoadUtility.GetPlayerId();
 
 			thumnailCamera.Render();
 			Texture2D thumnail = ConvertTexture(thumnailCamera.targetTexture);
@@ -408,10 +409,10 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 			#endregion
 
-			await SaveLoadUtility.SaveStageData(m_StageName, m_EditingStageData);
+			await SaveLoadUtility.SaveStageData(stageName, m_EditingStageData);
 
 			#region Debug
-			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = m_UIFont,
 				fontSize = 20,
@@ -434,7 +435,7 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditingUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
 
 			#region Debug
-			TextMeshPro textMesh = UtilClass.CreateWorldText(null, m_StageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = m_UIFont,
 				fontSize = 20,
@@ -449,7 +450,7 @@ namespace AvantGardeMaker.Ceeu
 		{
 			m_EditingStageData = stageData;
 
-			m_StageName = stageData.title;
+			stageName = stageData.title;
 		}
 		#endregion
 	}
