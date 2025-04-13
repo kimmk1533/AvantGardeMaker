@@ -43,6 +43,7 @@ public abstract class SceneEventController : SerializedMonoBehaviour
 	{
 		Finallize();
 	}
+	protected abstract void OnApplicationQuit();
 	#endregion
 
 	#region 초기화 & 마무리화 함수

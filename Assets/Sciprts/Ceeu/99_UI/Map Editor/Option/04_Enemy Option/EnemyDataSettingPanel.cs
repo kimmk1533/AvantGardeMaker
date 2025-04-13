@@ -75,7 +75,7 @@ namespace AvantGardeMaker.Ceeu
 				.SetParent(M_MapEditingUI.enemyWayPointDataUIParent)
 				.SetAutoInit(true)
 				.SetActive(true)
-				.Spawn() as EnemyWayPointDataUI;
+				.Spawn<EnemyWayPointDataUI>();
 		}
 		private void OnCopyButtonClicked()
 		{
@@ -359,7 +359,7 @@ namespace AvantGardeMaker.Ceeu
 			int count = immuneParent.childCount;
 			for (int i = 0; i < count; ++i)
 			{
-				M_MapEditingUI.Despawn(immuneParent.GetChild<EnemyImmuneOption>(0));
+				M_MapEditingUI.Despawn(immuneParent.GetChild<EnemyImmuneOptionUI>(0));
 			}
 
 			m_EnemyDescriptionText.text = enemyData.FixedData.Description;
@@ -374,12 +374,12 @@ namespace AvantGardeMaker.Ceeu
 
 			for (int i = 0; i < immuneKorStringArr.Length; ++i)
 			{
-				EnemyImmuneOption enemyImmuneOption = M_MapEditingUI.GetBuilder("Enemy Immune Option")
+				EnemyImmuneOptionUI enemyImmuneOption = M_MapEditingUI.GetBuilder("Enemy Immune Option UI")
 					.SetParent(immuneParent)
 					.SetScale(Vector3.one)
 					.SetActive(true)
 					.SetAutoInit(true)
-					.Spawn() as EnemyImmuneOption;
+					.Spawn<EnemyImmuneOptionUI>();
 
 				enemyImmuneOption.text = immuneKorStringArr[i] + " 면역";
 			}

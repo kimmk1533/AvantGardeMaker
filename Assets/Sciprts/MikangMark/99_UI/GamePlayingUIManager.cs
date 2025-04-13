@@ -213,7 +213,7 @@ namespace AvantGardeMaker.MikangMark
 					.SetAutoInit(false)
 					.SetActive(true)
 					.SetName(operatorKey)
-					.Spawn() as OperatorSquadUI;
+					.Spawn<OperatorSquadUI>();
 
 				operatorSquadUI.onOperatorSquadUIClicked += OnOperatorSquadUIClicked;
 				operatorSquadUI.operatorData = M_Operator.GetOperatorData(operatorKey);

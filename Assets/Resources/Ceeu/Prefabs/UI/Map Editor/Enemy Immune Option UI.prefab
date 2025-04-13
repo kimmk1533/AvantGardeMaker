@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.05
+  m_fontSize: 10
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -147,9 +147,9 @@ GameObject:
   - component: {fileID: 7341179605804724535}
   - component: {fileID: 1985328499059387558}
   - component: {fileID: 2429516580758893053}
-  - component: {fileID: 3863129643304799288}
+  - component: {fileID: 8470797493107848387}
   m_Layer: 5
-  m_Name: Enemy Immune Option
+  m_Name: Enemy Immune Option UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3863129643304799288
+--- !u!114 &8470797493107848387
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2999346875244135563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e23a7e6f12d317049a4061d89d08e7ee, type: 3}
+  m_Script: {fileID: 11500000, guid: eaaa7389ad3bdfa4bb3bb1aa4a5db8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:

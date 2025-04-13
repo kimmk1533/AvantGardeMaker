@@ -41,6 +41,10 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	/// </summary>
 	public virtual void Finallize()
 	{
+		foreach (var item in m_ObjectPoolMap)
+		{
+			item.Value.Dispose();
+		}
 	}
 
 	/// <summary>
@@ -123,7 +127,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 		if (pool == null)
 			throw new System.NullReferenceException(transform.name + ": Pool이 null 입니다. key는 \"" + key + "\" 였습니다.");
 
-		return pool.GetBuilder();
+		return pool.builder;
 	}
 	public bool Despawn(TItem item, bool autoFinal = true)
 	{

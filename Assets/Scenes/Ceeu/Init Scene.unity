@@ -619,11 +619,11 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 6102094215302992146, guid: 959d8b1ca6acaa0458091a89703ba599, type: 3}
-  - <key>k__BackingField: Enemy Immune Option
+  - <key>k__BackingField: Enemy Immune Option UI
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
-    <origin>k__BackingField: {fileID: 3863129643304799288, guid: 3e7c092d873f555478d0529053a79f57, type: 3}
+    <origin>k__BackingField: {fileID: 8470797493107848387, guid: 3e7c092d873f555478d0529053a79f57, type: 3}
   m_KeyList:
   - System
   - Tile
@@ -746,7 +746,8 @@ MonoBehaviour:
   m_IsCameraSwitching: 0
   m_EditingStageData:
     m_Title: 
-    m_Creator: 
+    m_CreatorNickName: 
+    m_CreatedPlayerId: 
     m_ThumnailTexture: 
     m_Description: 
     m_InitCost: 0
@@ -759,8 +760,8 @@ MonoBehaviour:
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
     m_EnemySpawnDataList: []
-  m_StageName: 
   m_UIFont: {fileID: 11400000, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
+  <stageName>k__BackingField: 
 --- !u!4 &2021308435
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.Ceeu
 {
-	public class EnemyImmuneOption : MapEditingUI
+	public class EnemyImmuneOptionUI : MapEditingUI
 	{
 		#region 변수
 		private Image m_ImmuneIconImage = null;

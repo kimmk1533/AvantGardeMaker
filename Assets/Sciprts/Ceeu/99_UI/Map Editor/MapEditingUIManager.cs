@@ -69,9 +69,9 @@ namespace AvantGardeMaker.Ceeu
 			Debug.Log("Play");
 		}
 
-		private void OnEnemySpawnDataUISpawned(ObjectPoolItemBase objectPoolItem)
+		private void OnEnemySpawnDataUISpawned(MapEditingUI mapEditingUI)
 		{
-			EnemySpawnDataUI enemySpawnDataUI = objectPoolItem as EnemySpawnDataUI;
+			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 
 			if (m_SpawnedEnemySpawnDataUIList.Contains(enemySpawnDataUI) == true)
 				return;
@@ -80,9 +80,9 @@ namespace AvantGardeMaker.Ceeu
 
 			ReorderEnemySpawnDataUI();
 		}
-		private void OnEnemySpawnDataUIDespawned(ObjectPoolItemBase objectPoolItem)
+		private void OnEnemySpawnDataUIDespawned(MapEditingUI mapEditingUI)
 		{
-			EnemySpawnDataUI enemySpawnDataUI = objectPoolItem as EnemySpawnDataUI;
+			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 
 			m_SpawnedEnemySpawnDataUIList.Remove(enemySpawnDataUI);
 
@@ -115,8 +115,8 @@ namespace AvantGardeMaker.Ceeu
 			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
 			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
 
-			GetPool("Enemy Spawn Data UI").onSpawned += OnEnemySpawnDataUISpawned;
-			GetPool("Enemy Spawn Data UI").onDespawned += OnEnemySpawnDataUIDespawned;
+			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
+			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
 
 			gameObject.SetActive(false);
 		}
@@ -155,7 +155,7 @@ namespace AvantGardeMaker.Ceeu
 					.SetScale(Vector3.one)
 					.SetAutoInit(true)
 					.SetActive(true)
-					.Spawn() as EnemyDataUI;
+					.Spawn<EnemyDataUI>();
 
 				enemyDataUI.enemyData = enemyDataList[i];
 				enemyDataUI.debugText = enemyDataList[i].KorName;
@@ -238,7 +238,7 @@ namespace AvantGardeMaker.Ceeu
 					.SetScale(Vector3.one)
 					.SetActive(true)
 					.SetAutoInit(true)
-					.Spawn() as EnemySpawnDataUI;
+					.Spawn<EnemySpawnDataUI>();
 
 				EnemySpawnData enemySpawnData = enemySpawnDataList[i];
 

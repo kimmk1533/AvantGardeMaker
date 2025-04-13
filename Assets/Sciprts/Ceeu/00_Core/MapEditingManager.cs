@@ -171,7 +171,7 @@ namespace AvantGardeMaker.Ceeu
 		/// </summary>
 		public void Finallize()
 		{
-			onCameraSwitcingFinished = null;
+			onCameraSwitcingFinished -= OnCameraSwitchingFinished;
 		}
 
 		/// <summary>

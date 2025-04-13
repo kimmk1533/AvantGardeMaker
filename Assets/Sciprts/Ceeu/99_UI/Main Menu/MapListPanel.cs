@@ -224,7 +224,7 @@ namespace AvantGardeMaker.Ceeu
 					.SetLocalPosition(Vector3.zero)
 					.SetActive(true)
 					.SetAutoInit(true)
-					.Spawn() as MapListItem;
+					.Spawn<MapListItem>();
 
 				StageData stageData = stageDataList[i];
 

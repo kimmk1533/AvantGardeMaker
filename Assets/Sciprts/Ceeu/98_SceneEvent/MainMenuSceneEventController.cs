@@ -46,9 +46,11 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void OnApplicationQuit()
+		protected override void OnApplicationQuit()
 		{
 			M_Game.FinallizeMainMenu();
+
+			M_Game.Finallize();
 		}
 		#endregion
 

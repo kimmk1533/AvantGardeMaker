@@ -37,7 +37,7 @@ namespace AvantGardeMaker.Ceeu
 				.SetScale(Vector3.one)
 				.SetActive(true)
 				.SetAutoInit(true)
-				.Spawn() as EnemySpawnDataUI;
+				.Spawn<EnemySpawnDataUI>();
 
 			enemySpawnDataUI.enemyData = enemyData;
 			enemySpawnDataUI.debugText = enemyData.KorName;

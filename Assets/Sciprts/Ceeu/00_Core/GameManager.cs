@@ -43,16 +43,6 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 유니티 콜백 함수
-		protected override void Awake()
-		{
-			base.Awake();
-
-			Initialize();
-		}
-		private void OnApplicationQuit()
-		{
-			Finallize();
-		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수

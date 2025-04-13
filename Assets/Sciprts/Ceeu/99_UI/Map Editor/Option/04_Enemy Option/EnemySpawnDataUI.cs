@@ -237,31 +237,31 @@ namespace AvantGardeMaker.Ceeu
 		{
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
 
-			//스폰시킬 적의 이름
+			// 스폰시킬 적의 이름
 			enemySpawnData.Name = enemyData.KorName;
 
-			//수량(일괄 스폰 시 사용)
+			// 수량(일괄 스폰 시 사용)
 			enemySpawnData.Amount = count;
 
-			//생성 간격(일괄 스폰 시 사용)
+			// 생성 간격(일괄 스폰 시 사용)
 			enemySpawnData.Interval = interval;
 
-			//작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
+			// 작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
 			enemySpawnData.Time = time;
 
-			//웨이브(특정 몹이 죽어야 진행될 경우 사용)
+			// 웨이브(특정 몹이 죽어야 진행될 경우 사용)
 			enemySpawnData.Wave = wave;
 
-			//웨이브 시간(같은 웨이브에서 스폰까지 걸리는 시간)
+			// 웨이브 시간(같은 웨이브에서 스폰까지 걸리는 시간)
 			enemySpawnData.WaveTime = waveTime;
 
-			//경유 지점
+			// 경유 지점
 			for (int i = 0; i < m_EnemyWayPointList.Count; ++i)
 			{
 				enemySpawnData.TransitPosList.Add(m_EnemyWayPointList[i]);
 			}
 
-			//경유 지점에서 n초 대기(0초면 딜레이 x)
+			// 경유 지점에서 n초 대기(0초면 딜레이 x)
 			for (int i = 0; i < m_EnemyWayPointDelayTimeList.Count; ++i)
 			{
 				enemySpawnData.DelayTimeList.Add(m_EnemyWayPointDelayTimeList[i]);
@@ -283,7 +283,7 @@ namespace AvantGardeMaker.Ceeu
 					.SetScale(Vector3.one)
 					.SetActive(true)
 					.SetAutoInit(true)
-					.Spawn() as EnemyWayPointDataUI;
+					.Spawn<EnemyWayPointDataUI>();
 
 				Vector2 wayPoint = m_EnemyWayPointList[i];
 				wayPointDataUI.position = wayPoint;

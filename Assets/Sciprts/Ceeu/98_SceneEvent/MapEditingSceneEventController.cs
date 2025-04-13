@@ -10,12 +10,14 @@ namespace AvantGardeMaker.Ceeu
 	public class MapEditingSceneEventController : SceneEventController
 	{
 		#region 변수
+		#region UI Button 관련 변수
 		[SerializeField]
 		private Button m_MainMenuButton = null;
 		[SerializeField]
 		private Button m_SaveButton = null;
 		[SerializeField]
 		private Button m_PlayButton = null;
+		#endregion
 
 		#region Map Editor Manager 관련 변수
 		[SerializeField]
@@ -66,9 +68,11 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void OnApplicationQuit()
+		protected override void OnApplicationQuit()
 		{
 			M_Game.FinallizeMapEditing();
+
+			M_Game.Finallize();
 		}
 		#endregion
 
