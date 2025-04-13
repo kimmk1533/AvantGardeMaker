@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 4541851373704043085}
   - component: {fileID: 3527384160403384460}
   m_Layer: 0
-  m_Name: Response_Image
+  m_Name: ResponeTimer Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -490,7 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3746038049985728749}
   m_Layer: 0
-  m_Name: Dieset_EmptyGameObject
+  m_Name: Redeployment Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -963,7 +963,7 @@ GameObject:
   - component: {fileID: 6721004743858962494}
   - component: {fileID: 6160469151362271207}
   m_Layer: 0
-  m_Name: RespnseTime_Text (TMP)
+  m_Name: ResponeTimer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

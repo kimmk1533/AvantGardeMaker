@@ -25,50 +25,30 @@ namespace AvantGardeMaker.MikangMark
 		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
 
 		[SerializeField]
+		private OperatorStatusUI m_OperatorStatusUI = null;
+
+		[SerializeField]
 		private Button m_DeploymentCancelButton = null;
 
 		#region 오퍼레이터 스탯 관련 UI
-		public GameObject m_OperStatUIParent = null;
-
-		private Image OperImg = null;
-		private Image JobImg = null;
-		private Image Arousal = null;
-
-		[SerializeField]
-		private TextMeshProUGUI m_OperatorKorNameText = null;
-		[SerializeField]
-		private TextMeshProUGUI m_OperatorLevelText = null;
-		[SerializeField]
-		private TextMeshProUGUI m_AtkText = null;
-		[SerializeField]
-		private TextMeshProUGUI m_DefText = null;
-		[SerializeField]
-		private TextMeshProUGUI m_ResText = null;
-		[SerializeField]
-		private TextMeshProUGUI m_BlockText = null;
 
 		[SerializeField]
 		private Button OperatorRetreateButton = null;
-		[SerializeField]
-		private bool isActiveRetreateButton = false;
+		
 
 		[SerializeField]
 		private Camera mainCamera = null;
 
-		public Image m_ATKRangeField;
-		public Image m_OperatorPos_InRange;
-		public Image m_ATKPos;
-		public List<Image> m_ATKPosList;
+		private Dictionary<string, Sprite> m_OperatorFullshotSpriteMap = null;
 		#endregion
 
-		#region MikangMark
-		public float minChildren_x = 0;
-		public float maxChildren_x = 0;
-		public float m_offset = 0;
+		[SerializeField]
+		private bool isActiveRetreateButton = false;
 
-		public GameObject m_AttackRangeHighlight;
-		public List<GameObject> m_CreatedAttackRangeHighlightList;
-		public GameObject m_AttackRangeHighlightParent;
+		#region MikangMark
+		
+
+		
 		#endregion
 		#endregion
 
@@ -77,6 +57,10 @@ namespace AvantGardeMaker.MikangMark
 		{
 			get => isActiveRetreateButton;
 			set => isActiveRetreateButton = value;
+		}
+		public OperatorSquadUI selectedOperatorSquadUI
+		{
+			get => m_SelectedOperatorSquadUI;
 		}
 		#endregion
 
@@ -89,7 +73,7 @@ namespace AvantGardeMaker.MikangMark
 			// 이미 선택된 오퍼레이터 UI 클릭 시 클릭 취소
 			if (m_SelectedOperatorSquadUI == operatorSquadUI)
 			{
-				m_OperStatUIParent.SetActive(false);
+				m_OperatorStatusUI.gameObject.SetActive(false);
 
 				m_SelectedOperatorSquadUI = null;
 
@@ -97,8 +81,9 @@ namespace AvantGardeMaker.MikangMark
 			}
 
 			m_SelectedOperatorSquadUI = operatorSquadUI;
-
-			m_OperStatUIParent.SetActive(true);
+			m_OperatorStatusUI.selectedOperator = m_SelectedOperatorSquadUI.operatorData;
+			m_OperatorStatusUI.ChangeOperatorStatusUI(m_OperatorStatusUI.selectedOperator);
+			m_OperatorStatusUI.gameObject.SetActive(true);
 		}
 		//배치취소버튼클릭
 		public void OnDeploymentCancelButtonClicked()
@@ -108,7 +93,7 @@ namespace AvantGardeMaker.MikangMark
 			m_SelectedOperatorSquadUI.CancelDeployment();
 			m_SelectedOperatorSquadUI = null;
 
-			m_OperStatUIParent.gameObject.SetActive(false);
+			m_OperatorStatusUI.gameObject.gameObject.SetActive(false);
 		}
 		#endregion
 		#endregion
@@ -161,11 +146,17 @@ namespace AvantGardeMaker.MikangMark
 		public override void Initialize()
 		{
 			base.Initialize();
-
+			Sprite[] m_OperatorFullshotImg = null;
 			if (m_OperatorSquadUIParent == null)
 				m_OperatorSquadUIParent = GameObject.Find("OperBox").transform as RectTransform;
 
 			m_OperatorSquadUIList = new List<OperatorSquadUI>();
+			m_OperatorFullshotSpriteMap = new Dictionary<string, Sprite>();
+			m_OperatorFullshotImg = Resources.LoadAll<Sprite>("MikangMark/Test Images/OperatorFullImg");
+			for(int i = 0;i< m_OperatorFullshotImg.Length; i++)
+			{
+				m_OperatorFullshotSpriteMap.Add(m_OperatorFullshotImg[i].name, m_OperatorFullshotImg[i]);
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -242,12 +233,7 @@ namespace AvantGardeMaker.MikangMark
 			#endregion
 
 			#region 활성화된 오퍼레이터 스탯 정보 UI
-			//m_OperatorKorNameText.text = m_SelectedOperatorSquadUI.operatorData.KorName;
-			//m_OperatorLevelText.text = m_SelectedOperatorSquadUI.operatorData.Level.ToString();
-			//m_AtkText.text = m_SelectedOperatorSquadUI.operatorData.Atk.ToString();
-			//m_DefText.text = m_SelectedOperatorSquadUI.operatorData.Def.ToString();
-			//m_ResText.text = m_SelectedOperatorSquadUI.operatorData.Res.ToString();
-			//m_BlockText.text = m_SelectedOperatorSquadUI.operatorData.BlockCount.ToString();
+			
 			#endregion
 		}
 
@@ -262,99 +248,35 @@ namespace AvantGardeMaker.MikangMark
 			m_SelectedOperatorSquadUI.gameObject.SetActive(false);
 			m_SelectedOperatorSquadUI = null;
 
-			m_OperStatUIParent.gameObject.SetActive(false);
+			m_OperatorStatusUI.gameObject.SetActive(false);
 		}
 
 		#region MikangMark
-		public Vector2[] RotateViewAtkRange(Vector2[] operatorAttackRange, float angleDeg)//회전각도 ex)90
+		public void OperatorRetreateButtonSetPosition()
 		{
-			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
-
-			float cos = Mathf.Cos(angleRad);
-			float sin = Mathf.Sin(angleRad);
-
-
-			Vector2[] temp = new Vector2[operatorAttackRange.Length];
-			for (int i = 0; i < temp.Length; i++)
-			{
-				temp[i] = new Vector2((int)(operatorAttackRange[i].x * cos - operatorAttackRange[i].y * sin), (int)(operatorAttackRange[i].x * sin + operatorAttackRange[i].y * cos));
-			}
-			return temp;
-		}
-		public void OperAtkRangeHighlight(Vector2[] _OperAtkRange, GameObject _FindTile)
-		{
-			if (m_CreatedAttackRangeHighlightList.Count > 0)
-			{
-				for (int i = 0; i < m_CreatedAttackRangeHighlightList.Count; i++)
-				{
-					Destroy(m_CreatedAttackRangeHighlightList[i]);
-				}
-				m_CreatedAttackRangeHighlightList = null;
-				m_CreatedAttackRangeHighlightList = new List<GameObject>();
-			}
-			for (int i = 0; i < _OperAtkRange.Length + 1; i++)
-			{
-				m_CreatedAttackRangeHighlightList.Add(Instantiate(m_AttackRangeHighlight, m_AttackRangeHighlightParent.transform));
-				if (i == 0)
-				{
-					m_CreatedAttackRangeHighlightList[i].transform.position = new Vector3(_FindTile.transform.position.x, 0.2f, _FindTile.transform.position.z);
-				}
-				else
-				{
-					m_CreatedAttackRangeHighlightList[i].transform.position = new Vector3(_FindTile.transform.position.x + _OperAtkRange[i - 1].x, 0.2f, _FindTile.transform.position.z + _OperAtkRange[i - 1].y);
-				}
-			}
-		}
-		//공격범위 UI생성함수
-		public void OperATKRangeCreate(Vector2[] _ATKRange)
-		{
-			//공격범위 이미지 사이의 간격
-			int intervalOpset = 6;
-			m_ATKPosList = new List<Image>();
-			for (int i = 0; i < m_SelectedOperatorSquadUI.operatorData.FixedData.AttackPos.Count; i++)
-			{
-				m_ATKPosList.Add(Instantiate(m_ATKPos, m_ATKRangeField.transform));
-				m_ATKPosList[i].rectTransform.anchoredPosition = m_OperatorPos_InRange.rectTransform.anchoredPosition;
-			}
-			for (int i = 0; i < _ATKRange.Length; i++)
-			{
-				m_ATKPosList[i].rectTransform.anchoredPosition += _ATKRange[i] * intervalOpset;
-			}
-		}
-		//생성된 공격범위 가운데 정렬
-		public void AlignChildren()
-		{
-			int childCount = m_ATKRangeField.transform.childCount;
-			if (childCount == 0)
-				return;
-			if (childCount > 1)
-			{
-				for (int i = 0; i < childCount; i++)
-				{
-					if (m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition.x < minChildren_x)
-					{
-						minChildren_x = m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition.x;
-					}
-					if (m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition.x > maxChildren_x)
-					{
-						maxChildren_x = m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition.x;
-					}
-				}
-
-				m_offset = (maxChildren_x + minChildren_x) / 2.0f;
-				Vector2 temp = new Vector2(m_offset, 0);
-				for (int i = 0; i < childCount; i++)
-				{
-					m_ATKRangeField.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition -= temp;
-				}
-			}
+			Vector3 screenPos = mainCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			OperatorRetreateButton.GetComponent<RectTransform>().position = new Vector3(screenPos.x - 200, screenPos.y + 200);
 		}
 
 		public void OperatorRetreateButtonActive(bool activeFlag)
 		{
-			Vector3 screenPos = mainCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
-			OperatorRetreateButton.GetComponent<RectTransform>().position = new Vector3(screenPos.x - 200, screenPos.y + 200);
 			OperatorRetreateButton.gameObject.SetActive(activeFlag);
+		}
+
+		public void SettingOperatorRetreateButton(Tile selectedTile)
+		{
+			OperatorRetreateButton.onClick.AddListener(selectedTile.RetreatOperatorOnTile);
+		}
+
+		public void OperatorSquadUIReDeploymentActive(OperatorSquadUI targetOperatorSquadUI)
+		{
+			targetOperatorSquadUI.gameObject.SetActive(true);
+			targetOperatorSquadUI.ReDeploymentActiveObject();
+		}
+
+		public Sprite GetOperatorFullshotSprite(string key)
+		{
+			return m_OperatorFullshotSpriteMap[key];
 		}
 		#endregion
 	}

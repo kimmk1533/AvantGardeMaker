@@ -5664,26 +5664,11 @@ MonoBehaviour:
   m_OperatorSquadUIParent: {fileID: 0}
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
+  m_OperatorStatusUI: {fileID: 1626726308}
   m_DeploymentCancelButton: {fileID: 141244310}
-  m_OperStatUIParent: {fileID: 1626726304}
-  m_OperatorKorNameText: {fileID: 0}
-  m_OperatorLevelText: {fileID: 0}
-  m_AtkText: {fileID: 0}
-  m_DefText: {fileID: 0}
-  m_ResText: {fileID: 0}
-  m_BlockText: {fileID: 0}
   OperatorRetreateButton: {fileID: 55487446}
   mainCamera: {fileID: 1368605186}
-  m_ATKRangeField: {fileID: 1890398031}
-  m_OperatorPos_InRange: {fileID: 1736211685}
-  m_ATKPos: {fileID: 2488971022794504553, guid: 77915de2e29673e4985318eb22bac782, type: 3}
-  m_ATKPosList: []
-  minChildren_x: 0
-  maxChildren_x: 0
-  m_offset: 0
-  m_AttackRangeHighlight: {fileID: 7324110389715306264, guid: 59e840707769c5941a60fc2535212ac0, type: 3}
-  m_CreatedAttackRangeHighlightList: []
-  m_AttackRangeHighlightParent: {fileID: 0}
+  isActiveRetreateButton: 0
 --- !u!4 &1324118280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6699090971738483618, guid: fa02f73474d208049828fa8bc455b775, type: 3}
@@ -6392,6 +6377,7 @@ GameObject:
   - component: {fileID: 1626726305}
   - component: {fileID: 1626726307}
   - component: {fileID: 1626726306}
+  - component: {fileID: 1626726308}
   m_Layer: 0
   m_Name: OperStat_Image
   m_TagString: Untagged
@@ -6464,6 +6450,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626726304}
   m_CullTransparentMesh: 1
+--- !u!114 &1626726308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626726304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9a98f4f52c5034eab0d3838d1dc7dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  m_SelectedOperator: {fileID: 0}
+  m_OperatorKorNameText: {fileID: 601353513}
+  m_OperatorHpText: {fileID: 106225947}
+  m_OperatorLevelText: {fileID: 1043344993}
+  m_AtkText: {fileID: 1027499913}
+  m_DefText: {fileID: 1185770996}
+  m_ResText: {fileID: 254996060}
+  m_BlockText: {fileID: 503959821}
+  OperImg: {fileID: 1384588356}
+  JobImg: {fileID: 2033714251}
+  Arousal: {fileID: 1790653485}
+  m_AttackRangeFieldParent: {fileID: 1890398031}
+  m_OperatorPosAttackRangeUI: {fileID: 1736211685}
+  m_ATKPos: {fileID: 2488971022794504553, guid: 77915de2e29673e4985318eb22bac782, type: 3}
 --- !u!4 &1693032010 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6699090971738483618, guid: fa02f73474d208049828fa8bc455b775, type: 3}

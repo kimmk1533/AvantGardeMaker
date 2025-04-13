@@ -24,6 +24,51 @@ MonoBehaviour:
     - Name: FixedData
       Entry: 7
       Data: 0|AvantGardeMaker.MikangMark.OperatorFixedData, Assembly-CSharp
+    - Name: Rate
+      Entry: 3
+      Data: 3
+    - Name: MaxLevel
+      Entry: 3
+      Data: 40
+    - Name: Level
+      Entry: 3
+      Data: 1
+    - Name: MaxExp
+      Entry: 4
+      Data: 40
+    - Name: Exp
+      Entry: 4
+      Data: 0
+    - Name: Elite
+      Entry: 3
+      Data: 3
+    - Name: Potential
+      Entry: 3
+      Data: 0
+    - Name: Job
+      Entry: 3
+      Data: 0
+    - Name: AtkSpeed
+      Entry: 3
+      Data: 1
+    - Name: AtkRange
+      Entry: 3
+      Data: 0
+    - Name: SkillLevel
+      Entry: 3
+      Data: 1
+    - Name: PortraitPath
+      Entry: 1
+      Data: MikangMark\Test Images\OperatorFaceImg\Fang
+    - Name: FullShotPath
+      Entry: 1
+      Data: MikangMark\Test Images\OperatorFullImg\Fang
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VariableData
+      Entry: 7
+      Data: 1|AvantGardeMaker.MikangMark.OperatorVariableData, Assembly-CSharp
     - Name: MaxHp
       Entry: 4
       Data: 742
@@ -42,9 +87,9 @@ MonoBehaviour:
     - Name: RedeploySpeed
       Entry: 3
       Data: 0
-    - Name: RedeploySpeedTime
+    - Name: RedeploymentInterval
       Entry: 4
-      Data: 70
+      Data: 5
     - Name: DeploymentCost
       Entry: 3
       Data: 9
@@ -56,10 +101,10 @@ MonoBehaviour:
       Data: 106
     - Name: Provocation
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: AttackPos
       Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[UnityEngine.Vector2, UnityEngine.CoreModule]],
+      Data: 2|System.Collections.Generic.List`1[[UnityEngine.Vector2, UnityEngine.CoreModule]],
         mscorlib
     - Name: 
       Entry: 12
@@ -82,61 +127,8 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: HorizontalDirection
-      Entry: 3
-      Data: 0
-    - Name: VerticalDirection
-      Entry: 3
-      Data: 90
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VariableData
-      Entry: 7
-      Data: 2|AvantGardeMaker.MikangMark.OperatorVariableData, Assembly-CSharp
-    - Name: EngName
-      Entry: 1
-      Data: Fang
-    - Name: KorName
-      Entry: 1
-      Data: "\uD33D"
-    - Name: Rate
-      Entry: 3
-      Data: 3
-    - Name: MaxLevel
-      Entry: 3
-      Data: 40
-    - Name: Level
-      Entry: 3
-      Data: 1
-    - Name: MaxExp
-      Entry: 4
-      Data: 40
-    - Name: Exp
-      Entry: 4
-      Data: 0
-    - Name: Elite
-      Entry: 3
-      Data: 0
-    - Name: Potential
-      Entry: 3
-      Data: 0
-    - Name: Job
-      Entry: 3
-      Data: 0
-    - Name: AtkSpeed
-      Entry: 3
-      Data: 2
-    - Name: AtkRange
-      Entry: 3
-      Data: 0
-    - Name: SkillLevel
-      Entry: 3
-      Data: 1
-    - Name: PortraitPath
-      Entry: 1
-      Data: MikangMark\Test Images\Fang
     - Name: 
       Entry: 8
       Data: 
   EngName: Fang
+  KorName: "\uD33D"

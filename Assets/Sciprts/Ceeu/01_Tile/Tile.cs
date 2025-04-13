@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.Ceeu.Enum;
 using AvantGardeMaker.MikangMark;
+using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,14 +12,21 @@ namespace AvantGardeMaker.Ceeu
 	{
 		#region 변수
 		[SerializeField, ReadOnly]
-		private Operator m_TileOnOperator = null;
+		private Operator m_OperatorOnTile = null;
+
+		private OperatorSquadUI m_OperatorSquadUI = null;
 		#endregion
 
 		#region 프로퍼티
 		public Operator tileOnOperator
 		{
-			get => m_TileOnOperator;
-			set => m_TileOnOperator = value;
+			get => m_OperatorOnTile;
+			set => m_OperatorOnTile = value;
+		}
+		public OperatorSquadUI operatorSquadUI
+		{
+			get => m_OperatorSquadUI;
+			set => m_OperatorSquadUI = value;
 		}
 		#endregion
 
@@ -27,6 +35,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private OperatorManager M_Operator => OperatorManager.Instance;
+		private GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -51,9 +60,13 @@ namespace AvantGardeMaker.Ceeu
 
 		public void RetreatOperatorOnTile()
 		{
-			if (m_TileOnOperator == null)
+			if (m_OperatorOnTile == null)
 				return;
-			M_Operator.Despawn(m_TileOnOperator);
+			M_GamePlayingUI.OperatorRetreateButtonActive(false);
+			M_GamePlayingUI.OperatorSquadUIReDeploymentActive(m_OperatorSquadUI);
+			m_OperatorOnTile.ResetDirection();
+			m_OperatorOnTile.currentDirection = E_OperatorDirection.None;
+			M_Operator.Despawn(m_OperatorOnTile);
 		}
 	}
 }

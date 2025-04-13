@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.Ceeu;
 using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace AvantGardeMaker.MikangMark
 
 		private Sprite m_FrontSprite = null;
 		private Sprite m_BackSprite = null;
+		private bool m_IsFlipSprite = false;
 
 		private E_OperatorDirection m_CurrentDirection = E_OperatorDirection.None;
 		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
@@ -23,10 +25,26 @@ namespace AvantGardeMaker.MikangMark
 		private Vector2 m_DragStartPos;
 		// 드래그로 인정할 최소 거리 (픽셀)
 		private float m_DragThreshold = 150f;
+
+		private Tile m_DeploymentTile = null;
 		#endregion
 
 		#region 프로퍼티
 		private bool isSettedDirection => m_CurrentDirection != E_OperatorDirection.None;
+		public E_OperatorDirection currentDirection
+		{
+			get => m_CurrentDirection;
+			set => m_CurrentDirection = value;
+		}
+		public OperatorData operatorData
+		{
+			get => m_OperatorData;
+		}
+		public Tile deploymentTile
+		{
+			get => m_DeploymentTile;
+			set => m_DeploymentTile = value;
+		}
 		#endregion
 
 		#region 이벤트
@@ -43,6 +61,8 @@ namespace AvantGardeMaker.MikangMark
 		private void Update()
 		{
 			SettingDirectionProcess();
+			UpdateDeadOperator();
+
 		}
 		#endregion
 
@@ -119,8 +139,7 @@ namespace AvantGardeMaker.MikangMark
 
 				m_CurrentDirection = m_SettingDirection;
 				M_GamePlayingUI.OnSettingDirectionEnd();
-				//tile.tileOnOperator = m_PreviewOperator;
-				M_GamePlaying.SettingOperatorOnTile(this);
+				M_GamePlaying.DeploymentOperatorOnTile(this);
 			}
 		}
 		private void UpdateDraggingDirection(Vector2 diff)
@@ -136,6 +155,29 @@ namespace AvantGardeMaker.MikangMark
 
 			m_SpriteRenderer.sprite = (diff.y > 0) ? m_BackSprite : m_FrontSprite;
 			m_SpriteRenderer.flipX = diff.x > 0;
+		}
+
+		private bool UpdateIsAlive()
+		{
+			if (m_OperatorData.VariableData.RealHp <= 0)
+				return false;
+			else
+				return true;
+		}
+		private void UpdateDeadOperator()
+		{
+			//체력이 0되었을때
+			if (UpdateIsAlive() == true)
+				return;
+			if (m_DeploymentTile.tileOnOperator == null)
+				return;
+			m_DeploymentTile.RetreatOperatorOnTile();
+		}
+
+		public void ResetDirection()
+		{
+			m_SpriteRenderer.sprite = m_FrontSprite;
+			m_SpriteRenderer.flipX = false;
 		}
 
 		#region MikangMark

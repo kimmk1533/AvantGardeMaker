@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 namespace AvantGardeMaker.MikangMark
 {
@@ -16,6 +17,14 @@ namespace AvantGardeMaker.MikangMark
 		private Button m_Button = null;
 
 		private Operator m_PreviewOperator = null;
+		private RectTransform m_ReDeploymentParent = null;
+		private bool m_CanDeployment = true;
+
+		private UtilClass.Timer m_ReDeploymentTimer = null;
+		private TextMeshProUGUI m_ReDeploymentTimerText = null;
+		[SerializeField,ReadOnly]
+		private Image m_ReDeploymentTimerImage = null;
+
 		#endregion
 
 		#region 프로퍼티
@@ -40,6 +49,10 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void Update()
+		{
+			UpdateReDeploymentTimer();
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -52,8 +65,17 @@ namespace AvantGardeMaker.MikangMark
 
 			if (m_Button == null)
 				m_Button = GetComponent<Button>();
-
 			m_Button.onClick.AddListener(OnOperatorSquadUIButtonClicked);
+			if(m_ReDeploymentParent == null)
+				m_ReDeploymentParent = transform.Find<RectTransform>("Redeployment Parent");
+			m_ReDeploymentTimerImage = m_ReDeploymentParent.transform.Find<Image>("ResponeTimer Image");
+			m_ReDeploymentTimerText = m_ReDeploymentParent.transform.Find<TextMeshProUGUI>("ResponeTimer Text");
+			if (m_ReDeploymentTimer == null)
+			{
+				m_ReDeploymentTimer = new UtilClass.Timer();
+			}
+			m_ReDeploymentTimer.interval = operatorData.VariableData.RedeploymentInterval;
+			
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -68,9 +90,12 @@ namespace AvantGardeMaker.MikangMark
 		//오퍼레이터 프리뷰 생성
 		public void OnBeginDrag(PointerEventData eventData)
 		{
-			Vector3 mousePos = Input.mousePosition;
-			mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-			mousePos.z = 0f;
+			M_GamePlayingUI.OnOperatorSquadUIClicked(this);
+
+			if (m_CanDeployment == false)
+				return;
+
+			Vector3 mousePos = UtilClass.GetMouseWorldPosition2D();
 
 			m_PreviewOperator = M_Operator.GetBuilder(operatorData.EngName)
 				.SetPosition(mousePos)
@@ -80,18 +105,17 @@ namespace AvantGardeMaker.MikangMark
 
 			m_PreviewOperator.SetOperatorData(operatorData);
 			m_PreviewOperator.InitializePoolItem();
-
-			M_GamePlayingUI.OnOperatorSquadUIClicked(this);
 		}
 		public void OnDrag(PointerEventData eventData)
 		{
+			if (m_CanDeployment == false)
+				return;
+
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
 			{
-				Vector3 mousePos = Input.mousePosition;
-				mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-				mousePos.z = 0f;
+				Vector3 mousePos = UtilClass.GetMouseWorldPosition2D();
 
 				m_PreviewOperator.transform.position = mousePos;
 			}
@@ -102,6 +126,9 @@ namespace AvantGardeMaker.MikangMark
 		}
 		public void OnEndDrag(PointerEventData eventData)
 		{
+			if (m_CanDeployment == false)
+				return;
+
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
@@ -116,7 +143,7 @@ namespace AvantGardeMaker.MikangMark
 			Tile tile = hitObj.GetComponent<Tile>();
 			if (tile == null)
 				return;
-
+			tile.operatorSquadUI = this;
 			m_PreviewOperator.transform.position = tile.transform.position;
 			M_GamePlaying.setPreViewOperatorOnTile = tile;
 		}
@@ -125,6 +152,28 @@ namespace AvantGardeMaker.MikangMark
 		{
 			M_Operator.Despawn(m_PreviewOperator);
 			m_PreviewOperator = null;
+		}
+
+		public void ReDeploymentActiveObject()
+		{
+			m_ReDeploymentParent.gameObject.SetActive(true);
+			m_CanDeployment = false;
+		}
+
+		private void UpdateReDeploymentTimer()
+		{
+			if (m_CanDeployment == true)
+				return;
+
+			m_ReDeploymentTimer.Update();
+			m_ReDeploymentTimerImage.fillAmount = (operatorData.VariableData.RedeploymentInterval / operatorData.VariableData.RedeploymentInterval) - m_ReDeploymentTimer.progress;//1~0 실제 5.0~0.0
+			m_ReDeploymentTimerText.text = (operatorData.VariableData.RedeploymentInterval - (m_ReDeploymentTimer.progress * operatorData.VariableData.RedeploymentInterval)).ToString("F1");
+			if (m_ReDeploymentTimer.TimeCheck(true))
+			{
+				Debug.Log("ReadyOperator");
+				m_CanDeployment = true;
+				m_ReDeploymentParent.gameObject.SetActive(false);
+			}
 		}
 	}
 }

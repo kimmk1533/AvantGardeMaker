@@ -11,8 +11,10 @@ namespace AvantGardeMaker.MikangMark
 	[CreateAssetMenu(fileName = "OperatorInfo", menuName = "Scriptable Object/OperatorInfo", order = int.MinValue)]
 	public class OperatorData : SerializedScriptableObject
 	{
-		//키값
+		//영어이름
 		public string EngName;
+		//한글이름
+		public string KorName;
 
 		public OperatorFixedData FixedData = new OperatorFixedData();
 		public OperatorVariableData VariableData = new OperatorVariableData();
@@ -53,7 +55,7 @@ namespace AvantGardeMaker.MikangMark
 		*/
 	}
 	[SerializeField]
-	public class OperatorFixedData
+	public class OperatorVariableData
 	{
 		//최대체력
 		public float MaxHp;
@@ -68,7 +70,7 @@ namespace AvantGardeMaker.MikangMark
 		//재배치속도
 		public E_RedeploySpeed RedeploySpeed;
 		//재배치 실제 속도
-		public float RedeploySpeedTime;
+		public float RedeploymentInterval;
 		//배치코스트
 		public int DeploymentCost;
 		//저지
@@ -79,17 +81,11 @@ namespace AvantGardeMaker.MikangMark
 		public int Provocation;
 		//공격범위좌표
 		public List<Vector2> AttackPos;
-		//오퍼 방향 디폴트 왼쪽
-		public E_OperatorDirection HorizontalDirection;
-		public E_OperatorDirection VerticalDirection;
 	}
 	[SerializeField]
-	public class OperatorVariableData
+	public class OperatorFixedData
 	{
-		//영어이름
-		public string EngName;
-		//한글이름
-		public string KorName;
+		
 		//레어도
 		public int Rate;
 		//최대레벨
@@ -114,5 +110,7 @@ namespace AvantGardeMaker.MikangMark
 		public int SkillLevel;
 		//초상화 에셋경로
 		public string PortraitPath;
+		//전신 이미지 에셋경로
+		public string FullShotPath;
 	}
 }

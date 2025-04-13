@@ -24,9 +24,11 @@ namespace AvantGardeMaker.MikangMark
 		[SerializeField]
 		private Transform m_PlayGroundTileParent;
 
-		private Tile m_SetPreviewOperatorOnTile = new Tile();
-
+		private Tile m_DeployPreviewOperatorOnTile = new Tile();
+		//선택된 오퍼레이터
 		private Operator m_SettedOperatorSelect = null;
+		//선택된 오퍼레이터가있는 타일
+		private Tile m_SelectedTile = null;
 
 		//게임들어오기전 편성한 오퍼레이터들의 이름 받기
 		[SerializeField]
@@ -58,8 +60,8 @@ namespace AvantGardeMaker.MikangMark
 
 		public Tile setPreViewOperatorOnTile
 		{
-			get => m_SetPreviewOperatorOnTile;
-			set => m_SetPreviewOperatorOnTile = value;
+			get => m_DeployPreviewOperatorOnTile;
+			set => m_DeployPreviewOperatorOnTile = value;
 		}
 
 		public Operator settedOperatorSelect
@@ -84,20 +86,7 @@ namespace AvantGardeMaker.MikangMark
 		private void Update()
 		{
 			CostIncreaseProcess();
-			if (Input.GetMouseButtonDown(0)) // 좌클릭
-			{
-				m_SettedOperatorSelect = CheckTileInOperator();
-				if (m_SettedOperatorSelect == null)
-					return;
-				if (M_GamePlayingUI.activeRetreateButton == true)
-					M_GamePlayingUI.activeRetreateButton = false;
-				else
-					M_GamePlayingUI.activeRetreateButton = true;
-				//오퍼레이터 스탯창열기
-				//M_GamePlayingUI.m_OperStatUIParent.SetActive(true);
-				//퇴각버튼 활성화하기
-				M_GamePlayingUI.OperatorRetreateButtonActive(M_GamePlayingUI.activeRetreateButton);
-			}
+			ClickTileProcess();
 		}
 		#endregion
 
@@ -150,10 +139,29 @@ namespace AvantGardeMaker.MikangMark
 			}
 		}
 
-
-		public void SettingOperatorOnTile(Operator operatorPreview)
+		public void ClickTileProcess()
 		{
-			m_SetPreviewOperatorOnTile.tileOnOperator = operatorPreview;
+			if (Input.GetMouseButtonDown(0)) // 좌클릭
+			{
+				m_SettedOperatorSelect = CheckTileInOperator();
+				if (m_SettedOperatorSelect == null)
+					return;
+				if (M_GamePlayingUI.activeRetreateButton == true)
+					M_GamePlayingUI.activeRetreateButton = false;
+				else
+					M_GamePlayingUI.activeRetreateButton = true;
+				//오퍼레이터 스탯창열기
+				//M_GamePlayingUI.m_OperStatUIParent.SetActive(true);
+				//퇴각버튼 활성화하기
+				M_GamePlayingUI.OperatorRetreateButtonSetPosition();
+				M_GamePlayingUI.OperatorRetreateButtonActive(M_GamePlayingUI.activeRetreateButton);
+				M_GamePlayingUI.SettingOperatorRetreateButton(m_SelectedTile);
+			}
+		}
+		public void DeploymentOperatorOnTile(Operator operatorPreview)
+		{
+			m_DeployPreviewOperatorOnTile.tileOnOperator = operatorPreview;
+			operatorPreview.deploymentTile = m_DeployPreviewOperatorOnTile;
 		}
 
 		public Operator CheckTileInOperator()
@@ -169,8 +177,8 @@ namespace AvantGardeMaker.MikangMark
 					return null;
 				if (tile.tileOnOperator == null)
 					return null;
+				m_SelectedTile = tile;
 				return tile.tileOnOperator;
-				//tile.RetreatOperatorOnTile();
 			}
 			return null;
 
