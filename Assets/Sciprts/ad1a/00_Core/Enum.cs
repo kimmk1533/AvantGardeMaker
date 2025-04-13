@@ -122,8 +122,6 @@ namespace AvantGardeMaker.ad1a.Enum
 		//저지됨
 		Block,
 		Attack,
-		//생성 후 죽음
-		Dead,
 	}
 	public class EnumUtil
 	{

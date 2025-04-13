@@ -41,11 +41,13 @@ namespace AvantGardeMaker.ad1a
 		private bool m_IsStageStart;
 
 		//생성한 enemy 목록
+		[SerializeField]
 		private List<Enemy> m_EnemyList = null;
 
 		//스크립터블 오브젝트 추가용
 		[SerializeField]
 		private List<EnemyData> m_EnemyDataList = null;
+		[SerializeField]
 		private List<EnemySpawnData> m_EnemySpawnDataList = null;
 		#endregion
 
@@ -59,16 +61,25 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
+
+		private void Start()
+		{
+			Initialize();
+			InitializeMain();
+		}
+
 		private void Update()
 		{
 			if (!m_IsStageStart)
 				return;
 
-			if (m_EnemyDataList == null || m_EnemySpawnDataList == null)
+			if (m_EnemyList == null || m_EnemyDataList == null || m_EnemySpawnDataList == null)
 				return;
 
+			int spawnDataListCnt = m_EnemySpawnDataList.Count;
+
 			//생성
-			for (int i = m_EnemyList.Count; i < m_EnemySpawnDataList.Count; i++)
+			for (int i = 0; i < spawnDataListCnt; ++i)
 			{
 				if (true)//스테이지 시작 시 n초가 경과했다면
 				{
@@ -83,35 +94,39 @@ namespace AvantGardeMaker.ad1a
 					//공격 범위 설정
 					if (enemy.GetRange() > 0)
 					{
-						SphereCollider atkRange = enemy.AddComponent<SphereCollider>();
-						atkRange.enabled = true;
-						atkRange.radius = enemy.GetRange();
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.enabled = true;
+						enemyCollider.radius = enemy.GetRange();
+					}
+
+					//히트박스 크기 설정
+					switch (enemy.GetRank())
+					{
+						//기본 0.25
+						default:
+						case E_EnemyType.Normal:
+							break;
+						case E_EnemyType.Elite:
+							{
+								CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+								enemyCollider.radius = 0.4f;
+								break;
+							}
+						case E_EnemyType.Leader:
+							{
+								CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+								enemyCollider.radius = 0.5f;
+								break;
+							}
 					}
 
 					m_EnemyList.Add(enemy);
+					//list에서 제거했으니 i 감소, cnt 감소
+					m_EnemySpawnDataList.RemoveAt(i--);
+					--spawnDataListCnt;
+					Debug.Log("적 생성");
 				}
 			}
-
-			//소멸(사망)
-			for (int i = 0; i < m_EnemyList.Count; i++)
-			{
-				if (m_EnemyList[i].IsAlive)
-					continue;
-
-				m_EnemyList[i].Dead();
-				//enemylist에서 remove하지 않음. dead 상태로 들고 있음
-			}
-
-			//공격
-			for (int i = 0; i < m_EnemyList.Count; i++)
-			{
-				if (!m_EnemyList[i].IsAlive)
-					continue;
-
-
-			}
-
-			//이동
 		}
 		#endregion
 
@@ -135,8 +150,19 @@ namespace AvantGardeMaker.ad1a
 			//스크립터블 오브젝트 경로
 			m_ForderPath = "ad1a/Data/EnemyData";
 
+			m_EnemyList = new List<Enemy>();
 			m_EnemyDataList = new List<EnemyData>();
 			m_EnemySpawnDataList = new List<EnemySpawnData>();
+
+			//디버깅용//
+			EnemySpawnData spawnData = new EnemySpawnData();
+
+			spawnData.Name = "OriginiumSlug";
+			spawnData.TransitPosList.Add(new Vector2(0, 0));
+			spawnData.TransitPosList.Add(new Vector2(3, 2));
+
+			m_EnemySpawnDataList.Add(spawnData);
+			//디버깅용//
 
 			LoadEnemyData();
 		}

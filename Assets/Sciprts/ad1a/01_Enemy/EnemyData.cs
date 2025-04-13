@@ -26,8 +26,6 @@ namespace AvantGardeMaker.ad1a
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲적 정보 상단▲▲▲▲▲▲▲▲▲▲▲▲//
 
-		//적 초상화 경로
-		public string PortraitImagePath = string.Empty;
 		//무게
 		public FixedCombatStatValue<int> Weight = new FixedCombatStatValue<int>(0);
 
@@ -84,6 +82,9 @@ namespace AvantGardeMaker.ad1a
 		//이름(키 값임)
 		public string EngName = string.Empty;
 		public string KorName = string.Empty;
+
+		//적 초상화 경로
+		public string PortraitImagePath = string.Empty;
 
 		//고정된 값
 		public EnemyFixedData FixedData = new EnemyFixedData();

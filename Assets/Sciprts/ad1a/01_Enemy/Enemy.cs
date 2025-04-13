@@ -1,15 +1,24 @@
 using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
+using AvantGardeMaker.MikangMark;
 using UnityEngine;
 
 namespace AvantGardeMaker.ad1a
 {
+	/*최상위 개체에 콜라이더
+	 * 아래에 렌더러
+	 * 
+	 */
+
+
 	public class Enemy : ObjectPoolItemBase
 	{
 		#region 변수
 		//자신의 스테이터스 정보
 		private string m_EngName = string.Empty;
 		private string m_KorName = string.Empty;
+
+		private string m_PortraitImagePath = string.Empty;
 
 		private EnemyFixedData m_FixedData = null;
 		private EnemyVariableData m_VariableData = null;
@@ -24,21 +33,46 @@ namespace AvantGardeMaker.ad1a
 		//직전 상태(공격하기 전 상태)
 		private E_EnemyState m_PrevEnemyState;
 
-		//public BoxCollider m_Collider;
-		//public SphereCollider m_AtkRangeCollider;
-
-		//public List<GameObject> m_TargetOperList = null;   //공격 범위 내 오퍼들
-		//public GameObject m_TargetOper;             //공격할 오퍼
+		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
+		private CircleCollider2D m_BodyCollider = null;
+		//공격 오브젝터 콜라이더를 가진 자식
+		private EnemyAtkRange m_AtkRange = null;
+		//공격 범위 내 오퍼들
+		public List<Operator> m_TargetOperList = null;
+		//공격할 오퍼
+		public GameObject m_TargetOper;
 		#endregion
 
 		#region 프로퍼티
 		private Vector2 CurPos => new Vector2(transform.position.x, transform.position.y);
-		private Vector2 TargetPos => m_TransitPosList[m_TransitPosIndex];
+		private Vector2 TargetPos => m_TransitPosList[Mathf.Min(m_TransitPosIndex, m_TransitPosList.Count)];
 
 		public bool IsAlive => m_VariableData.Hp.CurStat > 0f;
 		#endregion
 
 		#region 이벤트
+
+		#region 이벤트 함수
+		//공격범위 내에 적이 들어올 경우
+		private void OnOperatorEnterRange(Operator oper)
+		{
+			if (oper == null)
+				return;
+
+			m_TargetOperList.Add(oper);
+			Debug.Log("오퍼가 사정거리 내에 들어옴");
+		}
+		//공격범위 내에서 적이 나갈 경우
+		private void OnOperatorExitRange(Operator oper)
+		{
+			if (oper == null)
+				return;
+
+			m_TargetOperList.Remove(oper);
+			Debug.Log("오퍼가 사정거리에서 나감");
+		}
+		#endregion
+
 		#endregion
 
 		#region 매니저
@@ -46,81 +80,33 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
+		//public void OnDrawGizmos()
+		//{
+		//	Gizmos.color = Color.red;
+		//	Gizmos.DrawWireSphere(transform.position, m_FixedData.Range.CurStat);
+		//}
 		private void Update()
 		{
-			if (m_VariableData != null)
-				//죽음
-				if (m_VariableData.Hp.CurStat <= 0.0f)
-				{
-					m_CurEnemyState = E_EnemyState.Dead;
-					Dead();
-				}
+			if (!IsAlive)
+				Dead();
 
-			//이동
+			Attack();
 			Move();
-
-			/*//공격
-			//if (m_CurEnemyState == E_EnemyState.Attack)
-			//{
-			//	if (m_TargetOperList.Count == 0)
-			//	{
-			//		m_CurEnemyState = m_PrevEnemyState;
-			//		m_PrevEnemyState = E_EnemyState.Attack;
-			//		return;
-			//	}
-
-			//int targetIndex = 0;
-			//int lastestDeploy = 0;
-			//int maxProvoke = 0;
-			//for (int i = 1; i < m_TargetOperList.Count; i++)
-			//{
-			//	if (m_TargetOperList[i].도발랭크 > maxProvoke)   //해당 오퍼레이터의 도발 랭크 확인
-			//	{
-			//		maxProvoke = m_TargetOperList[i].도발랭크;
-			//		targetIndex = i;
-			//	}
-			//	else if (m_TargetOperList[i].배치순서 > lastestDeploy)   //해당 오퍼레이터의 배치 순서 확인
-			//	{
-			//		lastestDeploy = m_TargetOperList[i].배치순서;
-			//		targetIndex = i;
-			//	}
-			//}
-
-			//Attack(m_TargetOperList[targetIndex]);
-			//}
-			*/
 		}
 
-		//private void OnCollisionEnter(Collision collision)
+		//저지당할 때
+		//private void OnTriggerEnter2D(Collider2D collider)
 		//{
-		//	//공격 범위 내에 오퍼레이터가 있으면 공격
-		//	if (collision.collider.gameObject.CompareTag("Oper"))
+		//	if (collider.gameObject.CompareTag("Operator"))
 		//	{
-		//		//여러명일 경우 배치 순서와 도발 랭크를 확인해야 함
-		//		m_TargetOperList.Add(collision.gameObject);
-
-		//		if (m_CurEnemyState != E_EnemyState.Attack)
-		//		{
-		//			m_PrevEnemyState = m_CurEnemyState;
-		//			m_CurEnemyState = E_EnemyState.Attack;
-		//		}
 		//	}
 		//}
 
-		//private void OnCollisionExit(Collision collision)
+		//저지가 풀렸을 때
+		//private void OnTriggerExit2D(Collider2D collider)
 		//{
-		//	//오퍼레이터가 공격 범위를 벗어나면
-		//	if (collision.collider.gameObject.CompareTag("Oper"))
+		//	if (collider.gameObject.CompareTag("Operator"))
 		//	{
-		//		//해당 오퍼레이터를 공격 목록에서 제거
-		//		m_TargetOperList.Remove(collision.gameObject);
-
-		//		//공격 범위 내에 오퍼레이터가 없으면 공격 상태 해제
-		//		if (m_TargetOperList.Count == 0)
-		//		{
-		//			m_CurEnemyState = m_PrevEnemyState;
-		//			m_PrevEnemyState = E_EnemyState.Attack;
-		//		}
 		//	}
 		//}
 		#endregion
@@ -135,9 +121,22 @@ namespace AvantGardeMaker.ad1a
 
 			if (m_FixedData == null)
 				m_FixedData = new EnemyFixedData();
-
 			if (m_VariableData == null)
 				m_VariableData = new EnemyVariableData();
+
+			if (m_BodyCollider == null)
+				m_BodyCollider = gameObject.GetComponent<CircleCollider2D>();
+			if (m_AtkRange == null)
+				m_AtkRange = GetComponentInChildren<EnemyAtkRange>();
+
+			m_AtkRange.onOperatorEnterRange += OnOperatorEnterRange;
+			m_AtkRange.onOperatorExitRange += OnOperatorExitRange;
+
+			if (m_TransitPosList == null)
+			{
+				m_TransitPosList = new List<Vector2>();
+				m_TransitPosList.Add(CurPos);
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -154,8 +153,20 @@ namespace AvantGardeMaker.ad1a
 			m_EngName = enemyData.EngName;
 			m_KorName = enemyData.KorName;
 
+			m_PortraitImagePath = enemyData.PortraitImagePath;
+
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
+
+			SetRange();
+		}
+		private void SetRange()
+		{
+			if (m_AtkRange == null)
+				throw new System.Exception("m_AtkRange is null.");
+
+			CircleCollider2D atkRangeCollider = m_AtkRange.GetComponent<CircleCollider2D>();
+			atkRangeCollider.radius = m_FixedData.Range.CurStat;
 		}
 		public E_EnemyState GetState()
 		{
@@ -164,6 +175,12 @@ namespace AvantGardeMaker.ad1a
 
 		public void SetState(E_EnemyState state)
 		{
+			//최초로 공격 상태가 될 경우 직전 상태 저장
+			if (state == E_EnemyState.Attack && m_CurEnemyState != E_EnemyState.Attack)
+			{
+				m_PrevEnemyState = m_CurEnemyState;
+			}
+
 			m_CurEnemyState = state;
 		}
 
@@ -171,12 +188,21 @@ namespace AvantGardeMaker.ad1a
 		{
 			return m_FixedData.Range.CurStat;
 		}
+
+		public E_EnemyType GetRank()
+		{
+			return m_FixedData.EnemyType;
+		}
 		#endregion
 
-		private void Move()
+		public void Move()
 		{
-			if (m_CurEnemyState != E_EnemyState.Move)
+			//공격중 or 저지중이면 움직일 수 없음
+			if (m_CurEnemyState == E_EnemyState.Attack ||
+				m_CurEnemyState == E_EnemyState.Block)
 				return;
+
+			SetState(E_EnemyState.Move);
 
 			Vector2 direction = TargetPos - CurPos;
 			float moveAmount = m_VariableData.MovementSpeed.CurStat * Time.deltaTime;
@@ -187,21 +213,42 @@ namespace AvantGardeMaker.ad1a
 				Vector2 moveVector = direction * moveAmount;
 				//direction 방향으로 moveAmount만큼 이동
 				transform.position = CurPos + moveVector;
+				Debug.Log("이동");
 			}
 			else
 			{
 				transform.position = TargetPos;
-				m_CurEnemyState = E_EnemyState.Idle;
+				SetState(E_EnemyState.Idle);
+				Debug.Log("경유지까지 이동 완료");
 			}
 		}
 
-		public void Attack(GameObject target)
+		public void Attack()
 		{
+			//어떤 경우에도 공격 상태로는 전환 가능
 
+			//저지당한 경우
+			if (m_CurEnemyState == E_EnemyState.Block)
+			{
+				SetState(E_EnemyState.Attack);
+				Debug.Log("공격");
+			}
+			//공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
+			else if (m_TargetOperList.Count > 0)
+			{
+				SetState(E_EnemyState.Attack);
+				Debug.Log("공격");
+			}
+			else
+			{
+				SetState(m_PrevEnemyState);
+				Debug.Log("공격 중지");
+			}
 		}
 
 		public void Dead()
 		{
+			Debug.Log("사망");
 			M_Enemy.Despawn(this);
 		}
 	}

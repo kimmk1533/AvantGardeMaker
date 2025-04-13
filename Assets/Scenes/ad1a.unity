@@ -159,14 +159,17 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
-  m_CommonPath: ad1a\Prefab\
+  m_CommonPath: ad1a\Prefab
   m_Origins:
-  - <key>k__BackingField: DummyEnemy
+  - <key>k__BackingField: OriginiumSlug
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 2
     <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
+  m_ForderPath: 
+  m_EnemyList: []
   m_EnemyDataList: []
+  m_EnemySpawnDataList: []
 --- !u!4 &286487759
 Transform:
   m_ObjectHideFlags: 0
@@ -490,9 +493,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8314005692601211280, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8314005692601211280, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
+      propertyPath: m_Simulated
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 530588475315072068, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
       propertyPath: m_Name
       value: DummyEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 530588475315072068, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
       propertyPath: serializationData.Prefab
@@ -539,7 +554,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1905874929412699700, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
