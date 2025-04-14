@@ -286,4 +286,12 @@ namespace AvantGardeMaker.ad1a.Enum
 			return string.Empty;
 		}
 	}
+
+	//임시
+	public enum E_OperatorDmgType
+	{
+		Physics,
+		Magic,
+		True,
+	}
 }

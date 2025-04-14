@@ -10,7 +10,6 @@ namespace AvantGardeMaker.ad1a
 	 * 
 	 */
 
-
 	public class Enemy : ObjectPoolItemBase
 	{
 		#region 변수
@@ -30,17 +29,16 @@ namespace AvantGardeMaker.ad1a
 
 		//현재 상태
 		private E_EnemyState m_CurEnemyState;
-		//직전 상태(공격하기 전 상태)
-		private E_EnemyState m_PrevEnemyState;
 
 		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
 		private CircleCollider2D m_BodyCollider = null;
 		//공격 오브젝터 콜라이더를 가진 자식
+		[SerializeField]
 		private EnemyAtkRange m_AtkRange = null;
 		//공격 범위 내 오퍼들
 		public List<Operator> m_TargetOperList = null;
 		//공격할 오퍼
-		public GameObject m_TargetOper;
+		public Operator m_TargetOper;
 		#endregion
 
 		#region 프로퍼티
@@ -80,11 +78,6 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-		//public void OnDrawGizmos()
-		//{
-		//	Gizmos.color = Color.red;
-		//	Gizmos.DrawWireSphere(transform.position, m_FixedData.Range.CurStat);
-		//}
 		private void Update()
 		{
 			if (!IsAlive)
@@ -95,20 +88,25 @@ namespace AvantGardeMaker.ad1a
 		}
 
 		//저지당할 때
-		//private void OnTriggerEnter2D(Collider2D collider)
-		//{
-		//	if (collider.gameObject.CompareTag("Operator"))
-		//	{
-		//	}
-		//}
+		private void OnTriggerEnter2D(Collider2D collider)
+		{
+			if (collider.gameObject.CompareTag("Operator"))
+			{
+				SetState(E_EnemyState.Block);
+				//오퍼의 배치 순서에 관계없이 본인을 저지한 오퍼를 때림
+				m_TargetOper = collider.gameObject.GetComponent<Operator>();
+			}
+		}
 
 		//저지가 풀렸을 때
-		//private void OnTriggerExit2D(Collider2D collider)
-		//{
-		//	if (collider.gameObject.CompareTag("Operator"))
-		//	{
-		//	}
-		//}
+		private void OnTriggerExit2D(Collider2D collider)
+		{
+			if (collider.gameObject.CompareTag("Operator"))
+			{
+				//update에서 move보다 attack을 먼저 판정하기 때문에 move로 설정
+				SetState(E_EnemyState.Move);
+			}
+		}
 		#endregion
 
 		#region 초기화 & 마무리
@@ -175,12 +173,6 @@ namespace AvantGardeMaker.ad1a
 
 		public void SetState(E_EnemyState state)
 		{
-			//최초로 공격 상태가 될 경우 직전 상태 저장
-			if (state == E_EnemyState.Attack && m_CurEnemyState != E_EnemyState.Attack)
-			{
-				m_PrevEnemyState = m_CurEnemyState;
-			}
-
 			m_CurEnemyState = state;
 		}
 
@@ -195,6 +187,7 @@ namespace AvantGardeMaker.ad1a
 		}
 		#endregion
 
+		#region 기본 행동
 		public void Move()
 		{
 			//공격중 or 저지중이면 움직일 수 없음
@@ -202,13 +195,12 @@ namespace AvantGardeMaker.ad1a
 				m_CurEnemyState == E_EnemyState.Block)
 				return;
 
-			SetState(E_EnemyState.Move);
-
 			Vector2 direction = TargetPos - CurPos;
 			float moveAmount = m_VariableData.MovementSpeed.CurStat * Time.deltaTime;
 
 			if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
 			{
+				SetState(E_EnemyState.Move);
 				direction.Normalize();
 				Vector2 moveVector = direction * moveAmount;
 				//direction 방향으로 moveAmount만큼 이동
@@ -230,18 +222,28 @@ namespace AvantGardeMaker.ad1a
 			//저지당한 경우
 			if (m_CurEnemyState == E_EnemyState.Block)
 			{
-				SetState(E_EnemyState.Attack);
-				Debug.Log("공격");
+				//BodyTrigger에 맞닿은 오퍼를 공격
+				//m_TargetOper.TakeDamage();//<== 수도 코드임
+				Debug.Log("저지 공격");
 			}
 			//공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
 			else if (m_TargetOperList.Count > 0)
 			{
-				SetState(E_EnemyState.Attack);
-				Debug.Log("공격");
+				if (GetState() != E_EnemyState.Attack)
+					SetState(E_EnemyState.Attack);
+
+				int targetIndex = 0;
+				for (int i = 0; i < m_TargetOperList.Count; ++i)
+				{
+					//오퍼레이터의 배치 순서를 Get해 가장 마지막에 배치된 오퍼를
+					//m_TargetOper에 저장함
+				}
+				//m_TargetOper.TakeDamage();//<== 수도 코드임
+				Debug.Log("원거리 공격");
 			}
 			else
 			{
-				SetState(m_PrevEnemyState);
+				SetState(E_EnemyState.Move);
 				Debug.Log("공격 중지");
 			}
 		}
@@ -250,6 +252,33 @@ namespace AvantGardeMaker.ad1a
 		{
 			Debug.Log("사망");
 			M_Enemy.Despawn(this);
+		}
+		#endregion
+
+		/// <summary>
+		/// Type의 데미지를 val만큼 입음(방어력 pierce% 무시)
+		/// </summary>
+		public void TakeDamage(E_OperatorDmgType dmgType, float val, float piercePercentage = 0)
+		{
+			switch (dmgType)
+			{
+				case E_OperatorDmgType.Physics:
+					//물리딜: 공격력 - 방어력/방어 관통 vs 공격력의 5%
+					SubHp(Mathf.Max(val - m_VariableData.Def.CurStat * (piercePercentage / 100), val * 0.05f));
+					break;
+				case E_OperatorDmgType.Magic:
+					//마법딜: 공격력 / 마법 저항 vs 공격력의 5%
+					SubHp(Mathf.Max(val / m_VariableData.Res.CurStat * (piercePercentage / 100), val * 0.05f));
+					break;
+				case E_OperatorDmgType.True:
+					SubHp(val);
+					break;
+			}
+		}
+
+		private void SubHp(float val)
+		{
+			m_VariableData.Hp.CurStat -= val;
 		}
 	}
 }
