@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using AvantGardeMaker;
 using AvantGardeMaker.ad1a.Enum;
 using AvantGardeMaker.MikangMark;
 using UnityEngine;
+using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.ad1a
 {
@@ -32,13 +32,10 @@ namespace AvantGardeMaker.ad1a
 		private E_EnemyState m_CurEnemyState;
 
 		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
-		[SerializeField]
 		private CircleCollider2D m_BodyCollider = null;
-		public float m_BodySize;
 		//공격 오브젝터 콜라이더를 가진 자식
 		[SerializeField]
 		private EnemyAtkRange m_AtkRange = null;
-		public float m_RangeSize;
 		//공격 범위 내 오퍼들
 		public List<Operator> m_TargetOperList = null;
 		//공격할 오퍼
@@ -48,6 +45,7 @@ namespace AvantGardeMaker.ad1a
 		#region 프로퍼티
 		private Vector2 CurPos => new Vector2(transform.position.x, transform.position.y);
 		private Vector2 TargetPos => m_TransitPosList[Mathf.Min(m_TransitPosIndex, m_TransitPosList.Count)];
+
 		public bool IsAlive => m_VariableData.Hp.CurStat > 0f;
 		#endregion
 
@@ -60,7 +58,6 @@ namespace AvantGardeMaker.ad1a
 			if (oper == null)
 				return;
 
-			SetState(E_EnemyState.Attack);
 			m_TargetOperList.Add(oper);
 			Debug.Log("오퍼가 사정거리 내에 들어옴");
 		}
@@ -71,8 +68,6 @@ namespace AvantGardeMaker.ad1a
 				return;
 
 			m_TargetOperList.Remove(oper);
-			if (m_TargetOperList.Count == 0)
-				SetState(E_EnemyState.Move);
 			Debug.Log("오퍼가 사정거리에서 나감");
 		}
 		#endregion
@@ -80,8 +75,7 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 매니저
-		private static EnemyManager M_Enemy => EnemyManager.Instance;
-		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+		private EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -99,7 +93,7 @@ namespace AvantGardeMaker.ad1a
 		{
 			if (collider.gameObject.CompareTag("Operator"))
 			{
-				//SetState(E_EnemyState.Block);
+				SetState(E_EnemyState.Block);
 				//오퍼의 배치 순서에 관계없이 본인을 저지한 오퍼를 때림
 				m_TargetOper = collider.gameObject.GetComponent<Operator>();
 			}
@@ -110,7 +104,6 @@ namespace AvantGardeMaker.ad1a
 		{
 			if (collider.gameObject.CompareTag("Operator"))
 			{
-				m_TargetOper = null;
 				//update에서 move보다 attack을 먼저 판정하기 때문에 move로 설정
 				SetState(E_EnemyState.Move);
 			}
@@ -141,7 +134,6 @@ namespace AvantGardeMaker.ad1a
 			if (m_TransitPosList == null)
 			{
 				m_TransitPosList = new List<Vector2>();
-				//list 0이라 터지는것 방지
 				m_TransitPosList.Add(CurPos);
 			}
 		}
@@ -165,22 +157,15 @@ namespace AvantGardeMaker.ad1a
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
 
-			UpdateRange();
+			SetRange();
 		}
-		public void SetTransitPosList(List<Vector2> transitPosList)
-		{
-			m_TransitPosList = transitPosList;
-		}
-		public void SetRange(float range)
+		private void SetRange()
 		{
 			if (m_AtkRange == null)
 				throw new System.Exception("m_AtkRange is null.");
 
 			CircleCollider2D atkRangeCollider = m_AtkRange.GetComponent<CircleCollider2D>();
-			atkRangeCollider.radius = range;
-
-			m_BodySize = m_BodyCollider.radius;
-			m_RangeSize = m_AtkRange.GetComponent<CircleCollider2D>().radius;
+			atkRangeCollider.radius = m_FixedData.Range.CurStat;
 		}
 		public E_EnemyState GetState()
 		{
@@ -228,14 +213,6 @@ namespace AvantGardeMaker.ad1a
 				transform.position = TargetPos;
 				SetState(E_EnemyState.Idle);
 				Debug.Log("경유지까지 이동 완료");
-
-				++m_TransitPosIndex;
-				if (m_TransitPosIndex >= m_TransitPosList.Count)
-				{
-					Debug.Log("이동 완료");
-					Dead();
-					return;
-				}
 			}
 		}
 
@@ -247,7 +224,7 @@ namespace AvantGardeMaker.ad1a
 			if (m_CurEnemyState == E_EnemyState.Block)
 			{
 				//BodyTrigger에 맞닿은 오퍼를 공격
-				m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat, 0);
+				//m_TargetOper.TakeDamage();//<== 수도 코드임
 				Debug.Log("저지 공격");
 			}
 			//공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
@@ -256,8 +233,13 @@ namespace AvantGardeMaker.ad1a
 				if (GetState() != E_EnemyState.Attack)
 					SetState(E_EnemyState.Attack);
 
-				m_TargetOper = M_GamePlaying.CompareDeployOrder(m_TargetOperList)[0];
-
+				int targetIndex = 0;
+				for (int i = 0; i < m_TargetOperList.Count; ++i)
+				{
+					//오퍼레이터의 배치 순서를 Get해 가장 마지막에 배치된 오퍼를
+					//m_TargetOper에 저장함
+				}
+				//m_TargetOper.TakeDamage();//<== 수도 코드임
 				Debug.Log("원거리 공격");
 			}
 			else
@@ -274,31 +256,22 @@ namespace AvantGardeMaker.ad1a
 		}
 		#endregion
 
-		public void UpdateRange()
-		{
-			if (m_AtkRange == null)
-				throw new System.Exception("m_AtkRange is null.");
-
-			CircleCollider2D atkRangeCollider = m_AtkRange.GetComponent<CircleCollider2D>();
-			atkRangeCollider.radius = m_FixedData.Range.CurStat;
-		}
-
 		/// <summary>
 		/// Type의 데미지를 val만큼 입음(방어력 pierce% 무시)
 		/// </summary>
-		public void TakeDamage(E_DamageType dmgType, float val, float piercePercentage = 0)
+		public void TakeDamage(E_OperatorDmgType dmgType, float val, float piercePercentage = 0)
 		{
 			switch (dmgType)
 			{
-				case E_DamageType.Physics:
+				case E_OperatorDmgType.Physics:
 					//물리딜: 공격력 - 방어력/방어 관통 vs 공격력의 5%
 					SubHp(Mathf.Max(val - m_VariableData.Def.CurStat * (piercePercentage / 100), val * 0.05f));
 					break;
-				case E_DamageType.Magic:
+				case E_OperatorDmgType.Magic:
 					//마법딜: 공격력 / 마법 저항 vs 공격력의 5%
 					SubHp(Mathf.Max(val / m_VariableData.Res.CurStat * (piercePercentage / 100), val * 0.05f));
 					break;
-				case E_DamageType.True:
+				case E_OperatorDmgType.True:
 					SubHp(val);
 					break;
 			}

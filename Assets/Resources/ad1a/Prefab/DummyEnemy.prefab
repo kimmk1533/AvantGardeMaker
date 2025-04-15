@@ -112,7 +112,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_AtkRange: {fileID: 0}
   m_TargetOperList: []
   m_TargetOper: {fileID: 0}
 --- !u!58 &-1793374903507223745

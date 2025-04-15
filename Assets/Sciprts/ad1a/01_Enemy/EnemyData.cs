@@ -50,9 +50,6 @@ namespace AvantGardeMaker.ad1a
 		public E_EnemyImmuneType ImmuneType = 0;
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲내성▲▲▲▲▲▲▲▲▲▲▲▲//
-
-		//필터에 표시되지 않는 공격 타입
-		public E_DamageType DamageType = E_DamageType.Physics;
 	}
 
 	[System.Serializable]

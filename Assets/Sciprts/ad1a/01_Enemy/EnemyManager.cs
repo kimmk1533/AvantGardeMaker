@@ -89,8 +89,6 @@ namespace AvantGardeMaker.ad1a
 									.SetAutoInit(true)
 									.Spawn();
 					enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == m_EnemySpawnDataList[i].Name));
-					enemy.SetRange(1.9f);
-					enemy.SetTransitPosList(m_EnemySpawnDataList[i].TransitPosList);
 					enemy.SetState(E_EnemyState.Move);
 
 					//공격 범위 설정
@@ -141,13 +139,13 @@ namespace AvantGardeMaker.ad1a
 			base.Initialize();
 
 			m_TestMap = new bool[7, 7]
-			{ { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},};
+			{ { true,true,true,false,true,true,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,false,true,false,true},
+			  { true,false,true,true,true,false,true},};
 
 			//스크립터블 오브젝트 경로
 			m_ForderPath = "ad1a/Data/EnemyData";
@@ -161,9 +159,7 @@ namespace AvantGardeMaker.ad1a
 
 			spawnData.Name = "OriginiumSlug";
 			spawnData.TransitPosList.Add(new Vector2(0, 0));
-			spawnData.TransitPosList.Add(new Vector2(6, 6));
-			spawnData.TransitPosList.Add(new Vector2(0, 0));
-			spawnData.TransitPosList.Add(new Vector2(6, 6));
+			spawnData.TransitPosList.Add(new Vector2(3, 2));
 
 			m_EnemySpawnDataList.Add(spawnData);
 			//디버깅용//
