@@ -230,7 +230,7 @@ namespace AvantGardeMaker.MikangMark
 			temp.Sort((a, b) => b.CompareTo(a));
 			for(int i = 0; i < orderOperators.Count; i++)
 			{
-				sortingOperator.Add(orderOperators[temp[i]]);
+				//sortingOperator.Add(orderOperators[temp[i]]);
 			}
 			return sortingOperator;
 		}
