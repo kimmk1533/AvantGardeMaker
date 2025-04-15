@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
 using AvantGardeMaker.MikangMark;
 using UnityEngine;
+using AvantGardeMaker.MikangMark.Enum;
 
 namespace AvantGardeMaker.ad1a
 {
