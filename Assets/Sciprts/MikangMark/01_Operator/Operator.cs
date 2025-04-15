@@ -16,7 +16,6 @@ namespace AvantGardeMaker.MikangMark
 
 		private Sprite m_FrontSprite = null;
 		private Sprite m_BackSprite = null;
-		private bool m_IsFlipSprite = false;
 
 		private E_OperatorDirection m_CurrentDirection = E_OperatorDirection.None;
 		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
@@ -178,6 +177,16 @@ namespace AvantGardeMaker.MikangMark
 		{
 			m_SpriteRenderer.sprite = m_FrontSprite;
 			m_SpriteRenderer.flipX = false;
+		}
+		//작업
+		/*
+		 *	오퍼레이터의 공격범위에있는 타일위에있는 모든 적을 가져와서
+		 *	해당적오브젝트가 가지고있는 
+		 * 
+		 */
+		public void TileOnAttack(Tile inAttackRangeTile)
+		{
+			
 		}
 
 		#region MikangMark

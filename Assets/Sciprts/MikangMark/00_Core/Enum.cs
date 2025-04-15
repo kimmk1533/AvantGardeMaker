@@ -55,4 +55,11 @@ namespace AvantGardeMaker.MikangMark.Enum
 		Left = 180,
 		Up = 270,
 	}
+
+	public enum E_OperatorDmgType
+	{
+		Physics,
+		Magic,
+		True,
+	}
 }

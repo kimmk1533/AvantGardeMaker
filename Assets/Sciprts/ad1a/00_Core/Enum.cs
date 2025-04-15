@@ -287,11 +287,4 @@ namespace AvantGardeMaker.ad1a.Enum
 		}
 	}
 
-	//임시
-	public enum E_OperatorDmgType
-	{
-		Physics,
-		Magic,
-		True,
-	}
 }

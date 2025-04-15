@@ -15,6 +15,8 @@ namespace AvantGardeMaker.Ceeu
 		private Operator m_OperatorOnTile = null;
 
 		private OperatorSquadUI m_OperatorSquadUI = null;
+
+		//private List<Operator> m_OperatorsTargetingThisTile = null;
 		#endregion
 
 		#region 프로퍼티
