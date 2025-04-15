@@ -1109,6 +1109,11 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
     <origin>k__BackingField: {fileID: 8135089505916519293, guid: 8d8af10734821d749b97074076331099, type: 3}
+  - <key>k__BackingField: Plume
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 1
+    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 8d8af10734821d749b97074076331099, type: 3}
 --- !u!1 &141244309
 GameObject:
   m_ObjectHideFlags: 0
@@ -5008,6 +5013,8 @@ MonoBehaviour:
   m_PlayGroundTileParent: {fileID: 656254635}
   m_OperatorSquadKeyList:
   - Fang
+  - Plume
+  testOrder: []
 --- !u!1 &1185770994
 GameObject:
   m_ObjectHideFlags: 0

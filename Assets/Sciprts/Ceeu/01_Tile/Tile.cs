@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.Ceeu.Enum;
@@ -16,7 +17,7 @@ namespace AvantGardeMaker.Ceeu
 
 		private OperatorSquadUI m_OperatorSquadUI = null;
 
-		//private List<Operator> m_OperatorsTargetingThisTile = null;
+		
 		#endregion
 
 		#region 프로퍼티
@@ -33,6 +34,19 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 이벤트
+		public event Action<Collider2D> onColliderDetected;
+		#endregion
+
+		#region 이벤트 함수
+		private void UpdateDetectedEnemyProcess(Collider2D collision)
+		{
+			if (collision.gameObject.CompareTag("Enemy") == false)
+				return;
+			//적이 타일 콜리더와충돌했을때
+
+			onColliderDetected?.Invoke(collision);
+
+		}
 		#endregion
 
 		#region 매니저
@@ -41,6 +55,10 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void OnTriggerEnter2D(Collider2D collision)
+		{
+			UpdateDetectedEnemyProcess(collision);
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -70,5 +88,8 @@ namespace AvantGardeMaker.Ceeu
 			m_OperatorOnTile.currentDirection = E_OperatorDirection.None;
 			M_Operator.Despawn(m_OperatorOnTile);
 		}
+
+		
+		
 	}
 }

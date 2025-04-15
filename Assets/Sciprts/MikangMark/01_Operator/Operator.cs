@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu;
 using AvantGardeMaker.MikangMark.Enum;
 using Sirenix.OdinInspector;
@@ -26,6 +27,8 @@ namespace AvantGardeMaker.MikangMark
 		private float m_DragThreshold = 150f;
 
 		private Tile m_DeploymentTile = null;
+
+		private List<Tile> m_AttackRangeInTileList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -38,6 +41,7 @@ namespace AvantGardeMaker.MikangMark
 		public OperatorData operatorData
 		{
 			get => m_OperatorData;
+			set => m_OperatorData = value;
 		}
 		public Tile deploymentTile
 		{
@@ -47,6 +51,23 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 이벤트
+		#endregion
+
+		#region 이벤트 함수
+		private void OnEnableTileDetectedEnemy()
+		{
+			for (int i = 0; i < m_AttackRangeInTileList.Count; i++)
+			{
+				m_AttackRangeInTileList[i].onColliderDetected += DetectedEnemy;
+			}
+		}
+		private void OnDisableTileDetectedEnemy()
+		{
+			for (int i = 0; i < m_AttackRangeInTileList.Count; i++)
+			{
+				m_AttackRangeInTileList[i].onColliderDetected -= DetectedEnemy;
+			}
+		}
 		#endregion
 
 		#region 매니저
@@ -78,6 +99,11 @@ namespace AvantGardeMaker.MikangMark
 
 			m_FrontSprite = M_Operator.GetOperatorFrontSprite(m_OperatorData.EngName);
 			m_BackSprite = M_Operator.GetOperatorBackSprite(m_OperatorData.EngName);
+			m_AttackRangeInTileList = new List<Tile>();
+			for (int i = 0; i < operatorData.VariableData.AttackPos.Count; i++)
+			{
+				//m_InAttackRangeTileList.Add();
+			}
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -138,6 +164,7 @@ namespace AvantGardeMaker.MikangMark
 
 				m_CurrentDirection = m_SettingDirection;
 				M_GamePlayingUI.OnSettingDirectionEnd();
+				M_GamePlaying.DeployOperator(this);
 				M_GamePlaying.DeploymentOperatorOnTile(this);
 			}
 		}
@@ -184,9 +211,43 @@ namespace AvantGardeMaker.MikangMark
 		 *	해당적오브젝트가 가지고있는 
 		 * 
 		 */
-		public void TileOnAttack(Tile inAttackRangeTile)
+		private void DetectedEnemy(Collider2D target)
 		{
+			Enemy lockOnEnemy = target.GetComponent<Enemy>();
+			Attack(lockOnEnemy);
+		}
+		
+		private void Attack(Enemy target)
+		{
+			target.TakeDamage(operatorData.VariableData.DamageType, operatorData.VariableData.Atk, operatorData.VariableData.Penetration);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		//물리딜: 공격력 - 방어력/방어 관통
+		//마법딜: 공격력 / 마법 저항
+		public void TakeDamage(E_DamageType damageType, float value, float penetration)
+		{
+			switch (damageType)
+			{
+				case E_DamageType.Physics:
+					DecreaseHp(Mathf.Max(0, operatorData.VariableData.Atk - operatorData.VariableData.Def / penetration));
+					break;
+				case E_DamageType.Magic:
+					DecreaseHp(Mathf.Max(0, operatorData.VariableData.Atk / (operatorData.VariableData.Res / penetration)));
+					break;
+				case E_DamageType.True:
+					DecreaseHp(Mathf.Max(0, operatorData.VariableData.Atk));
+					break;
+				default:
+					break;
+			}
 			
+		}
+
+		private void DecreaseHp(float value)
+		{
+			m_OperatorData.VariableData.RealHp -= value;
 		}
 
 		#region MikangMark
@@ -348,10 +409,7 @@ namespace AvantGardeMaker.MikangMark
 		}
 
 		//오퍼가 공격 및 힐을 당했을경우
-		public void ChangeHp(float _Value)
-		{
-			m_OperatorData.RealHp += _Value;
-		}
+		
 		*/
 		#endregion
 	}

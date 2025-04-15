@@ -81,11 +81,14 @@ namespace AvantGardeMaker.MikangMark
 		public int Provocation;
 		//공격범위좌표
 		public List<Vector2> AttackPos;
+		//공격타입
+		public E_DamageType DamageType;
+		//관통력
+		public float Penetration;
 	}
 	[SerializeField]
 	public class OperatorFixedData
 	{
-		
 		//레어도
 		public int Rate;
 		//최대레벨
