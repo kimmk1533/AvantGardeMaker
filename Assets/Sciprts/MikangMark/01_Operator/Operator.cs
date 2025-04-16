@@ -29,6 +29,8 @@ namespace AvantGardeMaker.MikangMark
 		private Tile m_DeploymentTile = null;
 
 		private List<Tile> m_AttackRangeInTileList = null;
+
+		private UtilClass.Timer m_AttackCoolTimer = null;
 		#endregion
 
 		#region 프로퍼티
@@ -99,7 +101,16 @@ namespace AvantGardeMaker.MikangMark
 
 			m_FrontSprite = M_Operator.GetOperatorFrontSprite(m_OperatorData.EngName);
 			m_BackSprite = M_Operator.GetOperatorBackSprite(m_OperatorData.EngName);
+
 			m_AttackRangeInTileList = new List<Tile>();
+
+			OnEnableTileDetectedEnemy();
+
+			if (m_AttackCoolTimer == null)
+			{
+				m_AttackCoolTimer = new UtilClass.Timer();
+			}
+			m_AttackCoolTimer.interval = operatorData.VariableData.InitAttakSpeed;
 			for (int i = 0; i < operatorData.VariableData.AttackPos.Count; i++)
 			{
 				//m_InAttackRangeTileList.Add();
@@ -198,6 +209,7 @@ namespace AvantGardeMaker.MikangMark
 			if (m_DeploymentTile.tileOnOperator == null)
 				return;
 			m_DeploymentTile.RetreatOperatorOnTile();
+			OnDisableTileDetectedEnemy();
 		}
 
 		public void ResetDirection()
@@ -205,27 +217,26 @@ namespace AvantGardeMaker.MikangMark
 			m_SpriteRenderer.sprite = m_FrontSprite;
 			m_SpriteRenderer.flipX = false;
 		}
-		//작업
-		/*
-		 *	오퍼레이터의 공격범위에있는 타일위에있는 모든 적을 가져와서
-		 *	해당적오브젝트가 가지고있는 
-		 * 
-		 */
+		
 		private void DetectedEnemy(Collider2D target)
 		{
 			Enemy lockOnEnemy = target.GetComponent<Enemy>();
-			Attack(lockOnEnemy);
+			m_AttackCoolTimer.Update();
+			if (m_AttackCoolTimer.TimeCheck())
+			{
+				TakeAttack(lockOnEnemy);
+			}
+			
 		}
 		
-		private void Attack(Enemy target)
+		private void TakeAttack(Enemy target)
 		{
 			target.TakeDamage(operatorData.VariableData.DamageType, operatorData.VariableData.Atk, operatorData.VariableData.Penetration);
 		}
 		/// <summary>
-		/// 
+		/// 물리딜: 공격력 - 방어력/방어 관통
+		/// 마법딜: 공격력 / 마법 저항
 		/// </summary>
-		//물리딜: 공격력 - 방어력/방어 관통
-		//마법딜: 공격력 / 마법 저항
 		public void TakeDamage(E_DamageType damageType, float value, float penetration)
 		{
 			switch (damageType)
