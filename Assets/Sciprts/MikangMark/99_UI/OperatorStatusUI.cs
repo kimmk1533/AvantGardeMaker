@@ -39,7 +39,7 @@ namespace AvantGardeMaker.MikangMark
 		private Image m_OperatorPosAttackRangeUI;
 		[SerializeField]
 		private Image m_ATKPos;
-		private List<Image> m_ATKPosList;
+		private List<Image> m_ATKPosList = null;
 		/*
 		[SerializeField]
 		private GameObject m_AttackRangeHighlight;
@@ -120,7 +120,7 @@ namespace AvantGardeMaker.MikangMark
 		}
 		*/
 		//공격범위 UI생성함수
-		public void OperATKRangeCreate(List<Vector2> _ATKRange)
+		private void OperATKRangeCreate(List<Vector2> _ATKRange)
 		{
 			//공격범위 이미지 사이의 간격
 			int intervalOpset = 6;
@@ -136,6 +136,18 @@ namespace AvantGardeMaker.MikangMark
 			}
 			AlignChildren();
 		}
+		private void ResetATKRangeUI()
+		{
+			if (m_ATKPosList == null)
+				return;
+			Debug.Log("Delete");
+			for (int i = 0; i < m_ATKPosList.Count; i++)
+			{
+				
+				Destroy(m_ATKPosList[i]);
+				m_ATKPosList = new List<Image>();
+			}
+		}
 		public void ChangeOperatorStatusUI(OperatorData selectedOperatorData)
 		{
 			m_OperatorKorNameText.text = selectedOperatorData.KorName;
@@ -147,10 +159,11 @@ namespace AvantGardeMaker.MikangMark
 			OperImg.sprite = M_GamePlayingUI.GetOperatorFullshotSprite(selectedOperatorData.EngName);
 			m_OperatorHpText.text = selectedOperatorData.VariableData.RealHp + "/" + selectedOperatorData.VariableData.MaxHp;
 
+			ResetATKRangeUI();
 			OperATKRangeCreate(m_SelectedOperator.VariableData.AttackPos);
 		}
 		//생성된 공격범위 가운데 정렬
-		public void AlignChildren()
+		private void AlignChildren()
 		{
 			int childCount = m_AttackRangeFieldParent.transform.childCount;
 			if (childCount == 0)

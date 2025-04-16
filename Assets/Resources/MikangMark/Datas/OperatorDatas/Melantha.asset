@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5666ee723b1ea3e46a387cfdf7dc8da6, type: 3}
-  m_Name: Plume
+  m_Name: Melantha
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -172,5 +172,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  EngName: Plume
+  EngName: Melantha
   KorName: "\uD50C\uB8F8"

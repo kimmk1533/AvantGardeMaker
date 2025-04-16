@@ -23,7 +23,7 @@ namespace AvantGardeMaker.MikangMark
 		private List<Tile> m_PlayGroundTileList = new List<Tile>();
 		[SerializeField]
 		private Transform m_PlayGroundTileParent;
-
+		[SerializeField,ReadOnly]
 		private List<Operator> m_PlayingOperatorList = null;
 
 		private Tile m_DeployPreviewOperatorOnTile = new Tile();
@@ -35,9 +35,6 @@ namespace AvantGardeMaker.MikangMark
 		//게임들어오기전 편성한 오퍼레이터들의 이름 받기
 		[SerializeField]
 		private List<string> m_OperatorSquadKeyList = new List<string>();
-
-		//임시
-		public List<Operator> testOrder;
 		#endregion
 
 		#region 프로퍼티
@@ -96,16 +93,6 @@ namespace AvantGardeMaker.MikangMark
 			CostIncreaseProcess();
 			ClickTileProcess();
 
-			if (m_PlayingOperatorList.Count > 1)
-			{
-				List<Operator> temp = new List<Operator>();
-				temp = CompareDeployOrder(testOrder);
-				for (int i = 0; i < testOrder.Count; i++)
-				{
-					Debug.Log(temp[i].operatorData.EngName);
-				}
-
-			}
 		}
 		#endregion
 
@@ -124,18 +111,6 @@ namespace AvantGardeMaker.MikangMark
 			{
 				m_PlayGroundTileList.Add(m_PlayGroundTileParent.GetChild(i).GetComponent<Tile>());
 			}
-
-			//임시
-			testOrder = new List<Operator>();
-			Operator temp1 = new Operator();
-			temp1.operatorData = new OperatorData();
-			temp1.operatorData.EngName = "Fang";
-			Operator temp2 = new Operator();
-			temp1.operatorData = new OperatorData();
-			temp1.operatorData.EngName = "Plume";
-			Debug.Log("요청순서 Fang Plume");
-			testOrder.Add(temp1);
-			testOrder.Add(temp2);
 
 		}
 		/// <summary>
@@ -171,7 +146,7 @@ namespace AvantGardeMaker.MikangMark
 			}
 		}
 
-		public void ClickTileProcess()
+		private void ClickTileProcess()
 		{
 			if (Input.GetMouseButtonDown(0)) // 좌클릭
 			{
@@ -196,7 +171,7 @@ namespace AvantGardeMaker.MikangMark
 			operatorPreview.deploymentTile = m_DeployPreviewOperatorOnTile;
 		}
 
-		public Operator CheckTileInOperator()
+		private Operator CheckTileInOperator()
 		{
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
@@ -215,7 +190,10 @@ namespace AvantGardeMaker.MikangMark
 			return null;
 
 		}
-
+		/// <summary>
+		/// 요청한 오퍼레이터리스트를 오퍼레이터 배치순서의 역순으로 리턴
+		/// </summary>
+		/// <returns></returns>
 		public List<Operator> CompareDeployOrder(List<Operator> orderOperators)
 		{
 			List<Operator> sortingOperator = new List<Operator>();
@@ -223,14 +201,15 @@ namespace AvantGardeMaker.MikangMark
 			for(int i=0; i< orderOperators.Count; i++)
 			{
 				int temp2 = m_PlayingOperatorList.FindIndex(n => n.operatorData.EngName == orderOperators[i].operatorData.EngName);
-				temp.Add(temp2);
+				temp.Add(temp2);//231
 			}
+			//temp에는 오더에서준 m_PlayingOperatorList의 인덱스가 무작위순서로 저장되어있다
 			//내림차순정렬
-			Debug.Log("정렬중");
+
 			temp.Sort((a, b) => b.CompareTo(a));
 			for(int i = 0; i < orderOperators.Count; i++)
 			{
-				//sortingOperator.Add(orderOperators[temp[i]]);
+				sortingOperator.Add(m_PlayingOperatorList[temp[i]]);
 			}
 			return sortingOperator;
 		}

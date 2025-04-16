@@ -1113,7 +1113,12 @@ MonoBehaviour:
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 8d8af10734821d749b97074076331099, type: 3}
+    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 0267d81cf39530243a86660e7a5d2552, type: 3}
+  - <key>k__BackingField: Melantha
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 1
+    <origin>k__BackingField: {fileID: 8135089505916519293, guid: e10d46e8cfecca941808ed14af7dfa77, type: 3}
 --- !u!1 &141244309
 GameObject:
   m_ObjectHideFlags: 0
@@ -5011,9 +5016,11 @@ MonoBehaviour:
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
   m_PlayGroundTileParent: {fileID: 656254635}
+  m_PlayingOperatorList: []
   m_OperatorSquadKeyList:
   - Fang
   - Plume
+  - Melantha
   testOrder: []
 --- !u!1 &1185770994
 GameObject:
