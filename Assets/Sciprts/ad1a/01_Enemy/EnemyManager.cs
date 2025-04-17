@@ -126,7 +126,7 @@ namespace AvantGardeMaker.ad1a
 					//list에서 제거했으니 i 감소, cnt 감소
 					m_EnemySpawnDataList.RemoveAt(i--);
 					--spawnDataListCnt;
-					Debug.Log("적 생성");
+					//Debug.Log("적 생성");
 				}
 			}
 		}

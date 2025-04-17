@@ -119,8 +119,6 @@ namespace AvantGardeMaker.ad1a.Enum
 		//멀뚱히 서있음(== move가 아님 && attack이 아님 && 살아있음)
 		Idle,
 		Move,
-		//저지됨
-		Block,
 		Attack,
 	}
 	public class EnumUtil

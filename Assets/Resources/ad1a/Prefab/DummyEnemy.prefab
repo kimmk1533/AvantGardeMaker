@@ -112,7 +112,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_AtkRange: {fileID: 0}
+  m_BodySize: 0
+  m_AtkRange: {fileID: 7013996342805170601}
+  m_RangeSize: 0
   m_TargetOperList: []
   m_TargetOper: {fileID: 0}
 --- !u!58 &-1793374903507223745
@@ -150,7 +152,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.25
+  m_Radius: 0.0001
 --- !u!50 &-8314005692601211280
 Rigidbody2D:
   serializedVersion: 5
@@ -189,6 +191,7 @@ GameObject:
   - component: {fileID: 7849123638795182361}
   - component: {fileID: 8235467540524883123}
   - component: {fileID: 7013996342805170601}
+  - component: {fileID: 6640023230022115491}
   m_Layer: 0
   m_Name: AtkRange
   m_TagString: Untagged
@@ -268,3 +271,30 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+--- !u!50 &6640023230022115491
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905874929412699700}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
