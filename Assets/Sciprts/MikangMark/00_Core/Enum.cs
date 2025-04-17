@@ -55,4 +55,28 @@ namespace AvantGardeMaker.MikangMark.Enum
 		Left = 180,
 		Up = 270,
 	}
+
+	public enum E_OperatorSkillType
+	{
+		Buff,
+		ChargeCost,
+		MultipleShot,
+		StopAttack,
+		ChangeAttackRange,
+	}
+
+	public enum E_SkillCostGainType
+	{
+		Auto,
+		Attack,
+		TakeAttack,
+
+	}
+
+	public enum E_SkillActivationType
+	{
+		AutoActive,
+		MenualActive,
+		PessiveActive,
+	}
 }

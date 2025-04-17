@@ -26,6 +26,8 @@ namespace AvantGardeMaker.MikangMark
 		[SerializeField,ReadOnly]
 		private List<Operator> m_PlayingOperatorList = null;
 
+		private bool m_IsDeploying = false;
+
 		private Tile m_DeployPreviewOperatorOnTile = new Tile();
 		//선택된 오퍼레이터
 		private Operator m_SettedOperatorSelect = null;
@@ -45,6 +47,12 @@ namespace AvantGardeMaker.MikangMark
 		public int currentCost
 		{
 			get => m_CurrentCost;
+		}
+
+		public bool isDeploying
+		{
+			get => m_IsDeploying;
+			set => m_IsDeploying = value;
 		}
 
 		public UtilClass.Timer costTimer => m_CostTimer;

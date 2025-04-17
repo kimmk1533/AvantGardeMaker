@@ -143,7 +143,6 @@ namespace AvantGardeMaker.MikangMark
 			Debug.Log("Delete");
 			for (int i = 0; i < m_ATKPosList.Count; i++)
 			{
-				
 				Destroy(m_ATKPosList[i]);
 				m_ATKPosList = new List<Image>();
 			}
