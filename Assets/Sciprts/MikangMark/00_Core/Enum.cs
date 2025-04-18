@@ -58,7 +58,7 @@ namespace AvantGardeMaker.MikangMark.Enum
 
 	public enum E_OperatorSkillType
 	{
-		Buff,
+		StatusBuff,
 		ChargeCost,
 		MultipleShot,
 		StopAttack,

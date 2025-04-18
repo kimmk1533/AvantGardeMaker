@@ -85,6 +85,8 @@ namespace AvantGardeMaker.MikangMark
 		public E_DamageType DamageType;
 		//관통력
 		public float Penetration;
+		//스킬 종류와 그에대한값의 리스트
+		public List<SkillInfo> SkillInfoList;
 	}
 	[SerializeField]
 	public class OperatorFixedData
@@ -109,11 +111,24 @@ namespace AvantGardeMaker.MikangMark
 		public E_AttackSpeed AtkSpeed;
 		//공격범위
 		public E_AttackRange AtkRange;
+		//스킬 이름
+		public string SkillName;
 		//스킬레벨
 		public int SkillLevel;
 		//초상화 에셋경로
 		public string PortraitPath;
 		//전신 이미지 에셋경로
 		public string FullShotPath;
+	}
+	[SerializeField]
+	public class SkillInfo
+	{
+		public E_OperatorSkillType SkillType;
+		public float SkillValue;
+
+		public float GetSkillTypeValue(E_OperatorSkillType skillType)
+		{
+			return SkillValue;
+		}
 	}
 }
