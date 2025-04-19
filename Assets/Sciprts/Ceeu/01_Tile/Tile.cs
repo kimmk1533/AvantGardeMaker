@@ -17,7 +17,7 @@ namespace AvantGardeMaker.Ceeu
 
 		private OperatorSquadUI m_OperatorSquadUI = null;
 
-		
+
 		#endregion
 
 		#region 프로퍼티
@@ -82,14 +82,12 @@ namespace AvantGardeMaker.Ceeu
 		{
 			if (m_OperatorOnTile == null)
 				return;
-			M_GamePlayingUI.OperatorRetreateButtonActive(false);
+
+			M_GamePlayingUI.activeRetreatButton = false;
 			M_GamePlayingUI.OperatorSquadUIReDeploymentActive(m_OperatorSquadUI);
 			m_OperatorOnTile.ResetDirection();
 			m_OperatorOnTile.currentDirection = E_OperatorDirection.None;
 			M_Operator.Despawn(m_OperatorOnTile);
 		}
-
-		
-		
 	}
 }

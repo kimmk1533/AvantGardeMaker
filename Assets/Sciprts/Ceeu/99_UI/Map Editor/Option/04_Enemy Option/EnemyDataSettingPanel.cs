@@ -47,6 +47,8 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region WayPoint 변수
+		private List<Vector2> m_ClipboardWayPointList = null;
+		private List<float> m_ClipboardWayPointDelayTimeList = null;
 
 		#region WayPoint Buttons 변수
 		private Button m_AddButton = null;
@@ -79,11 +81,28 @@ namespace AvantGardeMaker.Ceeu
 		}
 		private void OnCopyButtonClicked()
 		{
+			m_ClipboardWayPointList = m_CurrentEnemySpawnDataUI.enemyWayPointList;
+			m_ClipboardWayPointDelayTimeList = m_CurrentEnemySpawnDataUI.enemyWayPointDelayTimeList;
 
+			#region 디버깅
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, "복사되었습니다", new UtilClass.WorldTMP_TextOption()
+			{
+				tmpFont = M_MapEditingUI.uiFont,
+				fontSize = 20f,
+				textAlignment = TextAlignmentOptions.Midline,
+				duration = 1f,
+			});
+			textMesh.transform.rotation = M_MapEditing.mapEditorCamera.transform.rotation;
+			#endregion
 		}
 		private void OnPasteButtonClicked()
 		{
+			ClearWayPointUI();
 
+			m_CurrentEnemySpawnDataUI.enemyWayPointList = m_ClipboardWayPointList;
+			m_CurrentEnemySpawnDataUI.enemyWayPointDelayTimeList = m_ClipboardWayPointDelayTimeList;
+
+			UpdateWayPointUI();
 		}
 		#endregion
 
@@ -108,6 +127,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
@@ -206,6 +226,10 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region WayPoint 초기화
+			if (m_ClipboardWayPointList == null)
+				m_ClipboardWayPointList = new List<Vector2>();
+			if (m_ClipboardWayPointDelayTimeList == null)
+				m_ClipboardWayPointDelayTimeList = new List<float>();
 
 			#region WayPoint Buttons 초기화
 			if (m_AddButton == null)
@@ -253,7 +277,8 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Finallize();
 
-
+			m_ClipboardWayPointDelayTimeList.Clear();
+			m_ClipboardWayPointList.Clear();
 		}
 		#endregion
 
@@ -453,7 +478,7 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			#region WayPoints
-			m_CurrentEnemySpawnDataUI.SaveWayPointUI();
+			m_CurrentEnemySpawnDataUI.SaveChildWayPointUI();
 			#endregion
 		}
 

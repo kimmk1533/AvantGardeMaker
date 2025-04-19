@@ -53,7 +53,7 @@ public class ObjectPool<TItem> where TItem : ObjectPoolItemBase
 		m_PoolSize = poolSize;
 		m_PoolItemQueue = new Queue<TItem>(poolSize * 2);
 		m_SpawnedItemList = new List<TItem>(poolSize * 2);
-		m_Parent = null;
+		m_Parent = parent;
 
 		autoExpandPool = true;
 	}

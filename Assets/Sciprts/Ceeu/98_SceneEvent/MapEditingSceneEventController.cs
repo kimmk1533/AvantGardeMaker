@@ -106,10 +106,16 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditingUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
 			#endregion
 
+			// Main Menu Scene 전환 전 이벤트
 			AddBeforeEvent("Main Menu Scene", M_Game.FinallizeMapEditing);
+
+			// Main Menu Scene 전환 후 이벤트
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
+
+			// Game Playing Scene 전환 전 이벤트
 			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMapEditing);
 
-			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
+			// Game Playing Scene 전환 후 이벤트
 			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlaying);
 		}
 		/// <summary>

@@ -70,8 +70,8 @@ namespace AvantGardeMaker.Ceeu
 			get => new List<Vector2>(m_EnemyWayPointList);
 			set
 			{
-				m_EnemyWayPointList?.Clear();
-				m_EnemyWayPointList = value;
+				m_EnemyWayPointList.Clear();
+				m_EnemyWayPointList.AddRange(value);
 			}
 		}
 		public List<float> enemyWayPointDelayTimeList
@@ -79,8 +79,8 @@ namespace AvantGardeMaker.Ceeu
 			get => new List<float>(m_EnemyWayPointDelayTimeList);
 			set
 			{
-				m_EnemyWayPointDelayTimeList?.Clear();
-				m_EnemyWayPointDelayTimeList = value;
+				m_EnemyWayPointDelayTimeList.Clear();
+				m_EnemyWayPointDelayTimeList.AddRange(value);
 			}
 		}
 		#endregion
@@ -238,7 +238,7 @@ namespace AvantGardeMaker.Ceeu
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
 
 			// 스폰시킬 적의 이름
-			enemySpawnData.Name = enemyData.KorName;
+			enemySpawnData.Name = enemyData.EngName;
 
 			// 수량(일괄 스폰 시 사용)
 			enemySpawnData.Amount = count;
@@ -274,7 +274,7 @@ namespace AvantGardeMaker.Ceeu
 			int count = m_EnemyWayPointList.Count;
 
 			if (count != m_EnemyWayPointDelayTimeList.Count)
-				throw new System.Exception("List 갯수 다름");
+				throw new System.Exception("WayPoint List 갯수 다름");
 
 			for (int i = 0; i < count; ++i)
 			{
@@ -292,7 +292,7 @@ namespace AvantGardeMaker.Ceeu
 				wayPointDataUI.delayTime = delayTime;
 			}
 		}
-		public void SaveWayPointUI()
+		public void SaveChildWayPointUI()
 		{
 			m_EnemyWayPointList.Clear();
 			m_EnemyWayPointDelayTimeList.Clear();

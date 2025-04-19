@@ -275,13 +275,6 @@ namespace AvantGardeMaker.MikangMark
 		#endregion
 
 		#region 유니티 콜백 함수
-		protected override void Awake()
-		{
-			base.Awake();
-
-			Initialize();
-			InitializeMain();
-		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -324,14 +317,14 @@ namespace AvantGardeMaker.MikangMark
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
 		public override void InitializeMain()
 		{
 			base.InitializeMain();
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeMain()
 		{

@@ -71,7 +71,9 @@ namespace AvantGardeMaker.Ceeu
 
 		private void OnPlayButtonClicked()
 		{
+			M_Game.SynchronizeStageData(m_CurrentStageData);
 
+			SceneLoader.LoadScene("Game Playing Scene");
 		}
 		private void OnEditButtonClicked()
 		{
@@ -101,6 +103,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 매니저
+		private static GameManager M_Game => GameManager.Instance;
 		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion

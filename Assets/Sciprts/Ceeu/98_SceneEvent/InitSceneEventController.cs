@@ -35,9 +35,10 @@ namespace AvantGardeMaker.Ceeu
 		{
 			base.Initialize();
 
-			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
-
 			M_Game.Initialize();
+
+			// Main Menu Scene 전환 후 이벤트
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
 
 			SceneLoader.LoadScene("Main Menu Scene");
 		}

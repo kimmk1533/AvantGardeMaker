@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using TileValue = System.ValueTuple<AvantGardeMaker.Ceeu.Enum.E_TileType, AvantGardeMaker.Ceeu.Tile>;
 
@@ -18,6 +19,7 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		public Transform tileParent => m_TileParent.transform;
 		#endregion
 
 		#region 이벤트
@@ -25,6 +27,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -39,8 +42,6 @@ namespace AvantGardeMaker.Ceeu
 			base.Initialize();
 
 			m_TileMap = new Dictionary<Vector2Int, TileValue>();
-
-			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -51,7 +52,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
 		public override void InitializeMain()
 		{
@@ -60,10 +61,21 @@ namespace AvantGardeMaker.Ceeu
 			m_TileParent = new GameObject("Tile Parent");
 			m_TileParent.transform.position = Vector3.zero;
 
-			gameObject.SetActive(true);
+			foreach (var item in m_ObjectPoolMap)
+			{
+				item.Value.onItemDespawned += (Tile tile) =>
+				{
+					// 기존 텍스트 제거
+					TextMeshPro[] textMeshs = tile.transform.GetComponentsInChildren<TextMeshPro>();
+					foreach (var item in textMeshs)
+					{
+						GameObject.Destroy(item.gameObject);
+					}
+				};
+			}
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeMain()
 		{
@@ -72,8 +84,6 @@ namespace AvantGardeMaker.Ceeu
 			m_TileMap.Clear();
 
 			m_TileParent = null;
-
-			gameObject.SetActive(false);
 		}
 		#endregion
 
@@ -91,7 +101,25 @@ namespace AvantGardeMaker.Ceeu
 				.SetAutoInit(true)
 				.Spawn();
 
+			newTile.gameObject.layer = LayerMask.NameToLayer("Tile");
+
 			m_TileMap.Add(tilePos, (tileType, newTile));
+
+			#region 디버깅
+			if (M_MapEditing.isEditMode == false)
+				return;
+
+			// 현재 텍스트 생성
+			TextMeshPro textMesh = UtilClass.CreateWorldText(newTile.transform, tilePos.ToString(), new UtilClass.WorldTMP_TextOption()
+			{
+				tmpFont = M_MapEditingUI.uiFont,
+				fontSize = 1.5f,
+				textAlignment = TextAlignmentOptions.Midline,
+				color = Color.black,
+			});
+			textMesh.transform.position = tilePosition;
+			textMesh.transform.rotation = M_MapEditing.mapEditorCamera.transform.rotation;
+			#endregion
 		}
 		public void RemoveTile(Vector2Int tilePos)
 		{
@@ -131,7 +159,7 @@ namespace AvantGardeMaker.Ceeu
 				stageData.AddTile(item.Key, item.Value.Item1);
 			}
 		}
-		public void LoadTileData(ref StageData stageData)
+		public void LoadTileData(StageData stageData)
 		{
 			ClearTile();
 

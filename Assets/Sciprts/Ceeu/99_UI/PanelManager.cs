@@ -34,30 +34,38 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
-		public virtual void Initialize()
+		public override void Initialize()
 		{
+			base.Initialize();
+
 			m_PanelStack = new Stack<Panel>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
-		public virtual void Finallize()
+		public override void Finallize()
 		{
+			base.Finallize();
+
 
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public virtual void InitializeMain()
+		public override void InitializeMain()
 		{
+			base.InitializeMain();
+
 
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public virtual void FinallizeMain()
+		public override void FinallizeMain()
 		{
+			base.FinallizeMain();
+
 			m_PanelStack.Clear();
 		}
 		#endregion

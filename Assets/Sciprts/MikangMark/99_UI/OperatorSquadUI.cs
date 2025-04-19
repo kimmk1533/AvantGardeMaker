@@ -144,7 +144,6 @@ namespace AvantGardeMaker.MikangMark
 			if (tile == null)
 				return;
 			tile.operatorSquadUI = this;
-			M_GamePlaying.isDeploying = true;
 			m_PreviewOperator.transform.position = tile.transform.position;
 			M_GamePlaying.setPreViewOperatorOnTile = tile;
 		}

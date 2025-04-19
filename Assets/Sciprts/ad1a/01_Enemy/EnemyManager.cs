@@ -34,9 +34,6 @@ namespace AvantGardeMaker.ad1a
 	{
 		#region 기본 템플릿
 		#region 변수
-		[SerializeField]
-		private string m_ForderPath;
-
 		private bool[,] m_TestMap;
 		private bool m_IsStageStart;
 
@@ -61,13 +58,6 @@ namespace AvantGardeMaker.ad1a
 		#endregion
 
 		#region 유니티 콜백 함수
-
-		private void Start()
-		{
-			Initialize();
-			InitializeMain();
-		}
-
 		private void Update()
 		{
 			if (!m_IsStageStart)
@@ -86,12 +76,14 @@ namespace AvantGardeMaker.ad1a
 					Enemy enemy = GetBuilder(m_EnemySpawnDataList[i].Name)
 									.SetActive(true)
 									.SetPosition(m_EnemySpawnDataList[i].startPos)
-									.SetAutoInit(true)
+									.SetAutoInit(false)
 									.Spawn();
 					enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == m_EnemySpawnDataList[i].Name));
+					enemy.SetState(E_EnemyState.Move);
+					enemy.InitializePoolItem();
+
 					enemy.SetRange(1.9f);
 					enemy.SetTransitPosList(m_EnemySpawnDataList[i].TransitPosList);
-					enemy.SetState(E_EnemyState.Move);
 
 					//공격 범위 설정
 					if (enemy.GetRange() > 0)
@@ -109,17 +101,17 @@ namespace AvantGardeMaker.ad1a
 						case E_EnemyType.Normal:
 							break;
 						case E_EnemyType.Elite:
-							{
-								CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-								enemyCollider.radius = 0.4f;
-								break;
-							}
+						{
+							CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+							enemyCollider.radius = 0.4f;
+							break;
+						}
 						case E_EnemyType.Leader:
-							{
-								CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-								enemyCollider.radius = 0.5f;
-								break;
-							}
+						{
+							CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+							enemyCollider.radius = 0.5f;
+							break;
+						}
 					}
 
 					m_EnemyList.Add(enemy);
@@ -149,23 +141,20 @@ namespace AvantGardeMaker.ad1a
 			 { true,true,true,true,true,true,true},
 			 { true,true,true,true,true,true,true},};
 
-			//스크립터블 오브젝트 경로
-			m_ForderPath = "ad1a/Data/EnemyData";
-
 			m_EnemyList = new List<Enemy>();
 			m_EnemyDataList = new List<EnemyData>();
 			m_EnemySpawnDataList = new List<EnemySpawnData>();
 
 			//디버깅용//
-			EnemySpawnData spawnData = new EnemySpawnData();
+			//EnemySpawnData spawnData = new EnemySpawnData();
 
-			spawnData.Name = "OriginiumSlug";
-			spawnData.TransitPosList.Add(new Vector2(0, 0));
-			spawnData.TransitPosList.Add(new Vector2(6, 6));
-			spawnData.TransitPosList.Add(new Vector2(0, 0));
-			spawnData.TransitPosList.Add(new Vector2(6, 6));
+			//spawnData.Name = "OriginiumSlug";
+			//spawnData.TransitPosList.Add(new Vector2(0, 0));
+			//spawnData.TransitPosList.Add(new Vector2(6, 6));
+			//spawnData.TransitPosList.Add(new Vector2(0, 0));
+			//spawnData.TransitPosList.Add(new Vector2(6, 6));
 
-			m_EnemySpawnDataList.Add(spawnData);
+			//m_EnemySpawnDataList.Add(spawnData);
 			//디버깅용//
 
 			LoadEnemyData();
@@ -179,7 +168,7 @@ namespace AvantGardeMaker.ad1a
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
 		public override void InitializeMain()
 		{
@@ -189,16 +178,25 @@ namespace AvantGardeMaker.ad1a
 			m_IsStageStart = true;
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeMain()
 		{
 			base.FinallizeMain();
 			//init에서 만들어둔 복사용 적 삭제
 
+			m_EnemySpawnDataList.Clear();
+
+			int enemyCount = m_EnemyList.Count;
+			for (int i = 0; i < enemyCount; ++i)
+			{
+				Despawn(m_EnemyList[i]);
+			}
+			m_EnemyList.Clear();
 		}
 		#endregion
 		#endregion
+
 		#region Save & Load
 		[Button("Load EnemyData")]
 		///<summary>
@@ -207,12 +205,12 @@ namespace AvantGardeMaker.ad1a
 		public void LoadEnemyData()
 		{
 			m_EnemyDataList.Clear();
-			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>(m_ForderPath));
+			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>("ad1a/Data/EnemyData"));
 		}
 		/// <summary>
 		/// 스크립터블 데이터를 들고 있는 m_EnemyDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
 		/// </summary>
-		public void LoadEnemyData(ref StageData stageData)
+		public void LoadEnemyData(StageData stageData)
 		{
 			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
 			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
@@ -230,15 +228,8 @@ namespace AvantGardeMaker.ad1a
 				enemyData.FixedData = fixedDataList[i];
 				enemyData.VariableData = variableDataList[i];
 			}
-		}
-		public EnemyData GetEnemyData(string krName)
-		{
-			return m_EnemyDataList.Find(n => n.KorName == krName);
-		}
 
-		public List<EnemyData> GetAllEnemyData()
-		{
-			return m_EnemyDataList;
+			m_EnemySpawnDataList.AddRange(stageData.enemySpawnDataList);
 		}
 
 		[Button]
@@ -248,79 +239,13 @@ namespace AvantGardeMaker.ad1a
 		}
 		#endregion
 
-		/*///// <summary>
-		///// 스테이지가 시작하면 Enemy에 관련된 코루틴을 실행시킴
-		///// </summary>
-		//public IEnumerator StartEnemyCoroutine()
-		//{
-		//	for (int i = 0; i < m_CurStageData.m_EnemySpawnDataList.Count; i++)//이번 스테이지에서 스폰할 적의 '무리' 수만큼 반복
-		//	{
-		//		StartCoroutine(GenerateEnemyGroup(m_CurStageData.m_EnemyDataList, m_CurStageData.m_EnemySpawnDataList));
-		//	}
-		//	yield return null;
-		//}
-
-		///// <summary>
-		///// 적을 무리 단위로 스폰하는 코루틴을 실행시킴
-		///// </summary>
-		//public IEnumerator GenerateEnemyGroup(List<EnemyData> enemyData, List<EnemySpawnData> enemySpawnData)
-		//{
-		//	Debug.Log("GenerateEnemyGroup");
-		//	EnemyData curEnemy;
-		//	for (int i = 0; i < enemySpawnData.Count; i++)
-		//	{
-		//		yield return new WaitForSeconds(enemySpawnData[i].Time);
-		//		curEnemy = enemyData.Find(n => n.EngName.Equals(enemySpawnData[i].Name));
-		//		StartCoroutine(GenerateEnemy(curEnemy, enemySpawnData[i]));
-		//	}
-		//}
-
-		///// <summary>
-		///// 적을 오브젝트 풀에서 get해와 enemyData를 넣고 움직이는 코루틴을 실행시킴
-		///// </summary>
-		//public IEnumerator GenerateEnemy(EnemyData enemyData, EnemySpawnData enemySpawnData)
-		//{
-		//	Debug.Log("GenerateEnemy");
-		//	enemySpawnData.StartPos = new Vector3(6, 0, 6);
-		//	enemySpawnData.EndPos = new Vector3(0, 0, 6);
-		//	for (int i = 0; i < enemySpawnData.Amount; i++)
-		//	{
-		//		if (i != 0)
-		//			yield return new WaitForSeconds(enemySpawnData.Interval);
-
-		//		Enemy newEnemy = GetBuilder(enemySpawnData.Name)  //이때 실제 적 오브젝트가 생성됨
-		//			.SetActive(true)
-		//			.SetPosition(enemySpawnData.StartPos)
-		//			.SetAutoInit(true)
-		//			.Spawn();
-
-		//		newEnemy.m_EnemyData = enemyData;
-		//		newEnemy.m_CurPos = enemySpawnData.StartPos;
-
-		//		m_EnemyList.Add(newEnemy);
-
-		//		StartCoroutine(EnemyMove(newEnemy, enemySpawnData));
-		//	}
-		//}
-
-		///// <summary>
-		///// 시작 지점에 나타나 목표 지점 List가 빌 때까지 이동과 대기(0초 가능) 반복
-		///// </summary>
-		//public IEnumerator EnemyMove(Enemy enemy, EnemySpawnData enemySpawnData)
-		//{
-		//	//경유 지점 추가
-		//	List<Vector3> path = PathFinder.FindPath(enemySpawnData.StartPos, enemySpawnData.EndPos, m_TestMap);
-		//	//path[0]은 시작지점임
-		//	for (int i = 1; i < path.Count; i++)
-		//		enemySpawnData.TransitPos.Add(path[i]);
-
-		//	for (int i = 0; i < enemySpawnData.TransitPos.Count; i++)
-		//	{
-		//		enemy.m_TargetPos = enemySpawnData.TransitPos[i];
-		//		enemy.m_CurEnemyState = E_EnemyState.Move;
-		//		yield return new WaitUntil(() => enemy.m_CurEnemyState != E_EnemyState.Move);
-		//	}
-		//	yield break;
-		//}*/
+		public EnemyData GetEnemyData(string enName)
+		{
+			return m_EnemyDataList.Find(n => n.EngName == enName);
+		}
+		public List<EnemyData> GetAllEnemyData()
+		{
+			return m_EnemyDataList;
+		}
 	}
 }

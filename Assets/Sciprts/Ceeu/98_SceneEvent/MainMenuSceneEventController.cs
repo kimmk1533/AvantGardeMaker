@@ -33,6 +33,7 @@ namespace AvantGardeMaker.Ceeu
 		#region 이벤트
 
 		#region 이벤트 함수
+		// 씬 전환하기 전에 메인 메뉴 카메라 끄기
 		private void TurnOffMainMenuCamera()
 		{
 			m_MainMenuCamera.gameObject.SetActive(false);
@@ -42,6 +43,7 @@ namespace AvantGardeMaker.Ceeu
 
 		#region 매니저
 		private static GameManager M_Game => GameManager.Instance;
+
 		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
 		#endregion
 
@@ -72,14 +74,18 @@ namespace AvantGardeMaker.Ceeu
 			M_MainMenuUI.mapListItemParent = m_MapListItemParent;
 			#endregion
 
-			// 씬 전환하기 전에 메인 메뉴 카메라 끄기
+			// Map Editing Scene 전환 전 이벤트
 			AddBeforeEvent("Map Editing Scene", TurnOffMainMenuCamera);
 			AddBeforeEvent("Map Editing Scene", M_Game.FinallizeMainMenu);
 
+			// Map Editing Scene 전환 후 이벤트
+			AddAfterEvent("Map Editing Scene", M_Game.InitializeMapEditing);
+
+			// Game Playing Scene 전환 전 이벤트
 			AddBeforeEvent("Game Playing Scene", TurnOffMainMenuCamera);
 			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMainMenu);
 
-			AddAfterEvent("Map Editing Scene", M_Game.InitializeMapEditing);
+			// Game Playing Scene 전환 후 이벤트
 			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlaying);
 		}
 		/// <summary>

@@ -7,9 +7,9 @@ public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where
 {
 	#region 변수
 	[SerializeField]
-	protected bool m_IsInitScene = false;
+	private bool m_IsInitScene = false;
 	[SerializeField]
-	protected bool m_DontDestroyOnLoad = false;
+	private bool m_DontDestroyOnLoad = false;
 
 	private static TSelf m_Instance = null;
 	#endregion
@@ -65,10 +65,43 @@ public abstract class SerializedSingleton<TSelf> : SerializedMonoBehaviour where
 	}
 	#endregion
 
+	#region 유니티 콜백 함수
 	protected virtual void Awake()
 	{
 		if (Application.isPlaying == true &&
 			m_DontDestroyOnLoad)
 			DontDestroyOnLoad(gameObject);
 	}
+	#endregion
+
+	#region 초기화 & 마무리화 함수
+	/// <summary>
+	/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
+	/// </summary>
+	public virtual void Initialize()
+	{
+		gameObject.SetActive(false);
+	}
+	/// <summary>
+	/// 마무리화 함수 (게임 종료 시 호출)
+	/// </summary>
+	public virtual void Finallize()
+	{
+	}
+
+	/// <summary>
+	/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
+	/// </summary>
+	public virtual void InitializeMain()
+	{
+		gameObject.SetActive(true);
+	}
+	/// <summary>
+	/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+	/// </summary>
+	public virtual void FinallizeMain()
+	{
+		gameObject.SetActive(false);
+	}
+	#endregion
 }

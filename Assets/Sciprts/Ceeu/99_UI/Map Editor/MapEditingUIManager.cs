@@ -4,6 +4,7 @@ using System.Linq;
 using AvantGardeMaker.ad1a;
 using AvantGardeMaker.Ceeu.Enum;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,9 @@ namespace AvantGardeMaker.Ceeu
 		#endregion
 
 		#region 프로퍼티
+		[field: SerializeField]
+		public TMP_FontAsset uiFont { get; }
+
 		public List<string> keyList => m_KeyList;
 
 		public Button mainMenuButton { get; set; }
@@ -62,11 +66,16 @@ namespace AvantGardeMaker.Ceeu
 		private void OnSaveButtonClicked()
 		{
 			M_MapEditing.SaveData();
+
+			M_MapEditing.SaveDataToCloud();
 		}
 		private void OnPlayButtonClicked()
 		{
-			M_Game.SynchronizeStageData();
-			Debug.Log("Play");
+			M_MapEditing.SaveData();
+
+			M_Game.SynchronizeStageData(M_MapEditing.currentStageData);
+
+			SceneLoader.LoadScene("Game Playing Scene");
 		}
 
 		private void OnEnemySpawnDataUISpawned(MapEditingUI mapEditingUI)
@@ -114,11 +123,6 @@ namespace AvantGardeMaker.Ceeu
 
 			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
 			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
-
-			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
-			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
-
-			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -129,7 +133,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
 		public override void InitializeMain()
 		{
@@ -147,6 +151,9 @@ namespace AvantGardeMaker.Ceeu
 			m_MaxWave = 0;
 
 			#region Spawn Enemy Data UI
+			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
+			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
+
 			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
 			for (int i = 0; i < enemyDataList.Count; ++i)
 			{
@@ -163,11 +170,9 @@ namespace AvantGardeMaker.Ceeu
 				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
 			}
 			#endregion
-
-			gameObject.SetActive(true);
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
 		public override void FinallizeMain()
 		{
@@ -188,8 +193,6 @@ namespace AvantGardeMaker.Ceeu
 
 			optionPanel.Finallize();
 			enemyDataSettingPanel.Finallize();
-
-			gameObject.SetActive(false);
 		}
 		#endregion
 
@@ -207,6 +210,7 @@ namespace AvantGardeMaker.Ceeu
 			}
 		}
 
+		#region Save
 		public void SaveEnemyDataUI(ref StageData stageData)
 		{
 			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
@@ -225,8 +229,10 @@ namespace AvantGardeMaker.Ceeu
 				stageData.AddEnemySpawnData(enemySpawnDataUI.MakeSpawnData());
 			}
 		}
+		#endregion
 
-		public void LoadEnemySpawnDataUI(ref StageData stageData)
+		#region Load
+		public void LoadEnemySpawnDataUI(StageData stageData)
 		{
 			ClearEnemySpawnDataUI();
 
@@ -244,7 +250,7 @@ namespace AvantGardeMaker.Ceeu
 
 				enemySpawnDataUI.enemyData = M_Enemy.GetEnemyData(enemySpawnData.Name);
 
-				enemySpawnDataUI.debugText = enemySpawnData.Name;
+				enemySpawnDataUI.debugText = enemySpawnDataUI.enemyData.KorName;
 				enemySpawnDataUI.count = enemySpawnData.Amount;
 				enemySpawnDataUI.interval = enemySpawnData.Interval;
 				enemySpawnDataUI.time = enemySpawnData.Time;
@@ -255,8 +261,10 @@ namespace AvantGardeMaker.Ceeu
 				enemySpawnDataUI.enemyWayPointDelayTimeList = enemySpawnData.DelayTimeList;
 				enemySpawnDataUI.LoadWayPointUI();
 			}
+
 			ReorderEnemySpawnDataUI();
 		}
+		#endregion
 
 		public void ClearEnemyDataUI()
 		{

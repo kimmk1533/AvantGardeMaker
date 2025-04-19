@@ -177,7 +177,7 @@ public static class UtilClass
 	{
 		public Vector3 localPosition = default;
 		public TMP_FontAsset tmpFont = null;
-		public int fontSize = 40;
+		public float fontSize = 10f;
 		public Color color = Color.white;
 		public TextAlignmentOptions textAlignment = TextAlignmentOptions.Left;
 		public int sortingOrder = 5000;

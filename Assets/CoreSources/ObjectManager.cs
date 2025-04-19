@@ -10,7 +10,7 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	// 공통 경로
 	[SerializeField]
 	protected string m_CommonPath = null;
-	[SerializeField]
+	[SerializeField, PropertySpace(SpaceAfter = 10)]
 	protected List<OriginInfo> m_Origins = null;
 	protected Dictionary<string, ObjectPool<TItem>> m_ObjectPoolMap = null;
 	#endregion
@@ -19,8 +19,10 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	/// <summary>
 	/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 	/// </summary>
-	public virtual void Initialize()
+	public override void Initialize()
 	{
+		base.Initialize();
+
 		if (m_Origins == null)
 			m_Origins = new List<OriginInfo>();
 		if (m_ObjectPoolMap == null)
@@ -39,8 +41,10 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	/// <summary>
 	/// 마무리화 함수 (게임 종료 시 호출)
 	/// </summary>
-	public virtual void Finallize()
+	public override void Finallize()
 	{
+		base.Finallize();
+
 		foreach (var item in m_ObjectPoolMap)
 		{
 			item.Value.Dispose();
@@ -48,27 +52,31 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	}
 
 	/// <summary>
-	/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+	/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 	/// </summary>
-	public virtual void InitializeMain()
+	public override void InitializeMain()
 	{
-		for (int i = 0; i < m_Origins.Count; ++i)
-		{
-			OriginInfo originInfo = m_Origins[i];
+		base.InitializeMain();
 
-			if (originInfo.useFlag == false)
-				continue;
+		//for (int i = 0; i < m_Origins.Count; ++i)
+		//{
+		//	OriginInfo originInfo = m_Origins[i];
 
-			ObjectPool<TItem> itemPool = GetPool(originInfo.key);
-			ObjectPool<TItem>.ItemBuilder itemBuilder = new ObjectPool<TItem>.ItemBuilder(itemPool);
-			itemPool.Initialize(itemBuilder);
-		}
+		//	if (originInfo.useFlag == false)
+		//		continue;
+
+		//	ObjectPool<TItem> itemPool = GetPool(originInfo.key);
+		//	ObjectPool<TItem>.ItemBuilder itemBuilder = new ObjectPool<TItem>.ItemBuilder(itemPool);
+		//	itemPool.Initialize(itemBuilder);
+		//}
 	}
 	/// <summary>
-	/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+	/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 	/// </summary>
-	public virtual void FinallizeMain()
+	public override void FinallizeMain()
 	{
+		base.FinallizeMain();
+
 		for (int i = 0; i < m_Origins.Count; ++i)
 		{
 			OriginInfo originInfo = m_Origins[i];
@@ -115,6 +123,9 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 
 		// Pool 생성 (오브젝트 생성 X)
 		ObjectPool<TItem> pool = new ObjectPool<TItem>(key, origin, poolSize, poolParent.transform);
+
+		ObjectPool<TItem>.ItemBuilder itemBuilder = new ObjectPool<TItem>.ItemBuilder(pool);
+		pool.Initialize(itemBuilder);
 
 		// Pool 추가
 		m_ObjectPoolMap.Add(key, pool);

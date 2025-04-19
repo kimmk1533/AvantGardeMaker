@@ -54,9 +54,6 @@ namespace AvantGardeMaker.Ceeu
 		#region 저장 & 불러오기 관련 변수
 		[SerializeField, Sirenix.OdinInspector.ReadOnly]
 		private StageData m_EditingStageData = default;
-
-		[SerializeField]
-		private TMP_FontAsset m_UIFont = null;
 		#endregion
 		#endregion
 
@@ -138,8 +135,10 @@ namespace AvantGardeMaker.Ceeu
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
-		public void Initialize()
+		public override void Initialize()
 		{
+			base.Initialize();
+
 			#region 프리뷰 타일 머터리얼 생성
 			List<KeyValuePair<string, Material>> previewMaterialList = new List<KeyValuePair<string, Material>>();
 			foreach (var item in m_MaterialMap)
@@ -163,22 +162,26 @@ namespace AvantGardeMaker.Ceeu
 			#endregion
 
 			onCameraSwitcingFinished += OnCameraSwitchingFinished;
-
-			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
-		public void Finallize()
+		public override void Finallize()
 		{
+			base.Finallize();
+
 			onCameraSwitcingFinished -= OnCameraSwitchingFinished;
 		}
 
 		/// <summary>
-		/// 게임 초기화 함수 (본인 Main Scene 진입 시 호출)
+		/// 메인 초기화 함수 (본인 Main Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeMain()
+		public override void InitializeMain()
 		{
+			base.InitializeMain();
+
+			m_IsEditMode = true;
+
 			m_TilePlacementFlag = true;
 
 			if (m_TilePreviewMap == null)
@@ -208,14 +211,14 @@ namespace AvantGardeMaker.Ceeu
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
 
 			LoadData();
-
-			gameObject.SetActive(true);
 		}
 		/// <summary>
-		/// 게임 마무리화 함수 (본인 Main Scene 나갈 시 호출)
+		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeMain()
+		public override void FinallizeMain()
 		{
+			base.FinallizeMain();
+
 			foreach (var item in m_TilePreviewMap)
 			{
 				string key = item.Key.ToString().Replace('_', ' ');
@@ -230,7 +233,7 @@ namespace AvantGardeMaker.Ceeu
 			m_EditingStageData = default;
 			stageName = string.Empty;
 
-			gameObject.SetActive(false);
+			m_IsEditMode = false;
 		}
 		#endregion
 
@@ -386,7 +389,7 @@ namespace AvantGardeMaker.Ceeu
 		}
 
 		[Button]
-		public async void SaveData()
+		public void SaveData()
 		{
 			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
@@ -408,13 +411,15 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
 			#endregion
 			#endregion
-
+		}
+		public async void SaveDataToCloud()
+		{
 			await SaveLoadUtility.SaveStageData(stageName, m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
 			{
-				tmpFont = m_UIFont,
+				tmpFont = M_MapEditingUI.uiFont,
 				fontSize = 20,
 				textAlignment = TextAlignmentOptions.Midline,
 				duration = 1f,
@@ -429,15 +434,15 @@ namespace AvantGardeMaker.Ceeu
 				m_EditingStageData.title.Equals(string.Empty) == true)
 				return;
 
-			M_Tile.LoadTileData(ref m_EditingStageData);
-			//M_Enemy.LoadEnemyData(ref m_EditingStageData);
+			M_Tile.LoadTileData(m_EditingStageData);
+			M_Enemy.LoadEnemyData(m_EditingStageData);
 
-			M_MapEditingUI.LoadEnemySpawnDataUI(ref m_EditingStageData);
+			M_MapEditingUI.LoadEnemySpawnDataUI(m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
 			{
-				tmpFont = m_UIFont,
+				tmpFont = M_MapEditingUI.uiFont,
 				fontSize = 20,
 				textAlignment = TextAlignmentOptions.Midline,
 				duration = 1f,
