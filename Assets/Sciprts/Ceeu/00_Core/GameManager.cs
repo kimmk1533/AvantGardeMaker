@@ -167,6 +167,8 @@ namespace AvantGardeMaker.Ceeu
 			M_MapEditing.InitializeMain();
 			M_MapEditingUI.InitializeMain();
 
+			M_MapEditing.LoadData();
+
 			Debug.Log("Initialize Map Editing");
 		}
 		/// <summary>

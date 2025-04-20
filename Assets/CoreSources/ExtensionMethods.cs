@@ -20,6 +20,13 @@ public static class Methods
 		list[index1] = list[index2];
 		list[index2] = temp;
 	}
+	public static void EnqueueRange<T>(this Queue<T> queue, IEnumerable<T> collection)
+	{
+		foreach (var item in collection)
+		{
+			queue.Enqueue(item);
+		}
+	}
 
 	public static T GetChild<T>(this Transform transform, int index) where T : Component
 	{
@@ -30,7 +37,7 @@ public static class Methods
 
 		return child.GetComponent<T>();
 	}
-	public static Transform[] GetChilderen(this Transform transform, string name)
+	public static Transform[] GetChildren(this Transform transform, string name)
 	{
 		int count = transform.childCount;
 
@@ -44,7 +51,7 @@ public static class Methods
 
 		for (int i = 0; i < count; i++)
 		{
-			Transform[] arr = transform.GetChild(i).GetChilderen(name);
+			Transform[] arr = transform.GetChild(i).GetChildren(name);
 			if (arr != null)
 				ret_list.AddRange(arr);
 		}
@@ -88,20 +95,6 @@ public static class Methods
 	public static T FindInChildren<T>(this Transform transform, string name) where T : Component
 	{
 		return transform.FindInChildren(name)?.GetComponent<T>();
-	}
-
-	public static string CombinePath(char split_word = '/', params string[] path)
-	{
-		StringBuilder sb = new StringBuilder();
-		int Length = path.Length;
-
-		for (int i = 0; i < Length - 1; i++)
-		{
-			sb.Append(path[i] + split_word);
-		}
-		sb.Append(path[Length - 1]);
-
-		return sb.ToString();
 	}
 
 	// 좌표 평면 기준 -180 ~ 180 도 리턴

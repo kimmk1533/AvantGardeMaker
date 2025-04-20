@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using AvantGardeMaker.ad1a.Enum;
 using AvantGardeMaker.Ceeu;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -45,7 +44,10 @@ namespace AvantGardeMaker.ad1a
 		[SerializeField]
 		private List<EnemyData> m_EnemyDataList = null;
 		[SerializeField]
-		private List<EnemySpawnData> m_EnemySpawnDataList = null;
+		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
+
+		[SerializeField, ReadOnly]
+		private UtilClass.Timer m_EnemySpawnTimer = null;
 		#endregion
 
 		#region 프로퍼티
@@ -60,67 +62,7 @@ namespace AvantGardeMaker.ad1a
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if (!m_IsStageStart)
-				return;
-
-			if (m_EnemyList == null || m_EnemyDataList == null || m_EnemySpawnDataList == null)
-				return;
-
-			int spawnDataListCnt = m_EnemySpawnDataList.Count;
-
-			//생성
-			for (int i = 0; i < spawnDataListCnt; ++i)
-			{
-				if (true)//스테이지 시작 시 n초가 경과했다면
-				{
-					Enemy enemy = GetBuilder(m_EnemySpawnDataList[i].Name)
-									.SetActive(true)
-									.SetPosition(m_EnemySpawnDataList[i].startPos)
-									.SetAutoInit(false)
-									.Spawn();
-					enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == m_EnemySpawnDataList[i].Name));
-					enemy.SetState(E_EnemyState.Move);
-					enemy.InitializePoolItem();
-
-					enemy.SetRange(1.9f);
-					enemy.SetTransitPosList(m_EnemySpawnDataList[i].TransitPosList);
-
-					//공격 범위 설정
-					if (enemy.GetRange() > 0)
-					{
-						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-						enemyCollider.enabled = true;
-						enemyCollider.radius = enemy.GetRange();
-					}
-
-					//히트박스 크기 설정
-					switch (enemy.GetRank())
-					{
-						//기본 0.25
-						default:
-						case E_EnemyType.Normal:
-							break;
-						case E_EnemyType.Elite:
-						{
-							CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-							enemyCollider.radius = 0.4f;
-							break;
-						}
-						case E_EnemyType.Leader:
-						{
-							CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-							enemyCollider.radius = 0.5f;
-							break;
-						}
-					}
-
-					m_EnemyList.Add(enemy);
-					//list에서 제거했으니 i 감소, cnt 감소
-					m_EnemySpawnDataList.RemoveAt(i--);
-					--spawnDataListCnt;
-					//Debug.Log("적 생성");
-				}
-			}
+			SpawnEnemy();
 		}
 		#endregion
 
@@ -143,7 +85,9 @@ namespace AvantGardeMaker.ad1a
 
 			m_EnemyList = new List<Enemy>();
 			m_EnemyDataList = new List<EnemyData>();
-			m_EnemySpawnDataList = new List<EnemySpawnData>();
+			m_EnemySpawnDataQueue = new Queue<EnemySpawnData>();
+
+			m_EnemySpawnTimer = new UtilClass.Timer();
 
 			//디버깅용//
 			//EnemySpawnData spawnData = new EnemySpawnData();
@@ -154,7 +98,7 @@ namespace AvantGardeMaker.ad1a
 			//spawnData.TransitPosList.Add(new Vector2(0, 0));
 			//spawnData.TransitPosList.Add(new Vector2(6, 6));
 
-			//m_EnemySpawnDataList.Add(spawnData);
+			//m_EnemySpawnDataQueue.Add(spawnData);
 			//디버깅용//
 
 			LoadEnemyData();
@@ -185,7 +129,7 @@ namespace AvantGardeMaker.ad1a
 			base.FinallizeMain();
 			//init에서 만들어둔 복사용 적 삭제
 
-			m_EnemySpawnDataList.Clear();
+			m_EnemySpawnDataQueue.Clear();
 
 			int enemyCount = m_EnemyList.Count;
 			for (int i = 0; i < enemyCount; ++i)
@@ -193,6 +137,9 @@ namespace AvantGardeMaker.ad1a
 				Despawn(m_EnemyList[i]);
 			}
 			m_EnemyList.Clear();
+
+			m_EnemySpawnTimer.Clear();
+			m_EnemySpawnTimer.interval = 0f;
 		}
 		#endregion
 		#endregion
@@ -229,7 +176,10 @@ namespace AvantGardeMaker.ad1a
 				enemyData.VariableData = variableDataList[i];
 			}
 
-			m_EnemySpawnDataList.AddRange(stageData.enemySpawnDataList);
+			m_EnemySpawnDataQueue.Clear();
+			m_EnemySpawnDataQueue.EnqueueRange(stageData.enemySpawnDataList);
+
+			m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;
 		}
 
 		[Button]
@@ -238,6 +188,79 @@ namespace AvantGardeMaker.ad1a
 			m_EnemyDataList.Clear();
 		}
 		#endregion
+
+		private void SpawnEnemy()
+		{
+			if (!m_IsStageStart)
+				return;
+
+			if (m_EnemyList == null || m_EnemyDataList == null || m_EnemySpawnDataQueue == null)
+				return;
+
+			if (m_EnemySpawnDataQueue.Count == 0)
+				return;
+
+			m_EnemySpawnTimer.Update();
+
+			if (m_EnemySpawnTimer.TimeCheck() == false)
+				return;
+
+			EnemySpawnData enemySpawnData = m_EnemySpawnDataQueue.Peek();
+
+			m_EnemySpawnTimer.interval = enemySpawnData.Time;
+
+			if (m_EnemySpawnTimer.TimeCheck() == false)
+				return;
+
+			//스테이지 시작 시 n초가 경과했다면
+			Enemy enemy = GetBuilder(enemySpawnData.Name)
+							.SetPosition(enemySpawnData.startPos)
+							.SetAutoInit(false)
+							.SetActive(false)
+							.Spawn();
+
+			enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == enemySpawnData.Name));
+			enemy.SetState(E_EnemyState.Move);
+			enemy.InitializePoolItem();
+
+			enemy.SetRange(1.9f);
+			enemy.SetTransitPosList(enemySpawnData.TransitPosList);
+
+			//공격 범위 설정
+			if (enemy.GetRange() > 0)
+			{
+				CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+				enemyCollider.enabled = true;
+				enemyCollider.radius = enemy.GetRange();
+			}
+
+			//히트박스 크기 설정
+			switch (enemy.GetRank())
+			{
+				//기본 0.25
+				default:
+				case E_EnemyType.Normal:
+					break;
+				case E_EnemyType.Elite:
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.4f;
+					break;
+				}
+				case E_EnemyType.Leader:
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.5f;
+					break;
+				}
+			}
+
+			m_EnemyList.Add(enemy);
+			m_EnemySpawnDataQueue.Dequeue();
+			//Debug.Log("적 생성");
+
+			enemy.gameObject.SetActive(true);
+		}
 
 		public EnemyData GetEnemyData(string enName)
 		{

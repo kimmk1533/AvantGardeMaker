@@ -85,6 +85,8 @@ namespace AvantGardeMaker.Ceeu
 			m_TitleText.text = "";
 			m_CreatorText.text = "";
 			//m_Rating.Finallize();
+
+			onClick = null;
 		}
 		#endregion
 

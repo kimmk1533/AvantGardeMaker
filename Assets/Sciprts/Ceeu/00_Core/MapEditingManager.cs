@@ -209,8 +209,6 @@ namespace AvantGardeMaker.Ceeu
 			m_CurrentTileType = E_TileType.LowGroundTile;
 
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
-
-			LoadData();
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)

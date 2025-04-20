@@ -151,9 +151,6 @@ namespace AvantGardeMaker.Ceeu
 			m_MaxWave = 0;
 
 			#region Spawn Enemy Data UI
-			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
-			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
-
 			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
 			for (int i = 0; i < enemyDataList.Count; ++i)
 			{
@@ -170,6 +167,9 @@ namespace AvantGardeMaker.Ceeu
 				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
 			}
 			#endregion
+
+			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
+			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -183,6 +183,7 @@ namespace AvantGardeMaker.Ceeu
 				Despawn(m_SpawnedEnemyDataUIList[i]);
 			}
 			m_SpawnedEnemyDataUIList.Clear();
+
 			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
 			{
 				Despawn(m_SpawnedEnemySpawnDataUIList[i]);

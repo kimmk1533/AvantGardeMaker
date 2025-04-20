@@ -94,11 +94,6 @@ namespace AvantGardeMaker.ad1a
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if (m_AtkIntervalTimer.isPaused)
-			{
-				m_AtkIntervalTimer.Resume();
-			}
-
 			m_AtkIntervalTimer.Update();
 
 			if (!IsAlive)
@@ -144,7 +139,7 @@ namespace AvantGardeMaker.ad1a
 				m_VariableData = new EnemyVariableData();
 
 			if (m_BodyCollider == null)
-				m_BodyCollider = gameObject.GetComponent<CircleCollider2D>();
+				m_BodyCollider = GetComponent<CircleCollider2D>();
 			if (m_AtkRange == null)
 				m_AtkRange = GetComponentInChildren<EnemyAtkRange>();
 
@@ -180,9 +175,9 @@ namespace AvantGardeMaker.ad1a
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
 
-			SetRange(m_FixedData.Range.CurStat);
+			//SetRange(m_FixedData.Range.CurStat);
 
-			m_AtkIntervalTimer.interval = m_VariableData.Aspd.CurStat;
+			//m_AtkIntervalTimer.interval = m_VariableData.Aspd.CurStat;
 		}
 		public void SetTransitPosList(List<Vector2> transitPosList)
 		{

@@ -206,8 +206,6 @@ namespace AvantGardeMaker.Ceeu
 			{
 				MapListItem mapListItem = itemParent.GetChild<MapListItem>(0);
 
-				mapListItem.onClick -= OnMapListItemClicked;
-
 				M_MainMenuUI.Despawn(mapListItem);
 			}
 
