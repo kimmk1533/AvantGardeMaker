@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.CoreSpace;
 using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.OperatorSpace.Enum;
 using AvantGardeMaker.UI;
@@ -51,6 +52,7 @@ namespace AvantGardeMaker.TileSpace
 		#region 매니저
 		private OperatorManager M_Operator => OperatorManager.Instance;
 		private GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -86,6 +88,18 @@ namespace AvantGardeMaker.TileSpace
 			M_GamePlayingUI.OperatorSquadUIReDeploymentActive(m_OperatorSquadUI);
 			m_OperatorOnTile.ResetDirection();
 			m_OperatorOnTile.currentDirection = E_OperatorDirection.None;
+			if (m_OperatorOnTile.redeployCount < 2)
+			{
+				++m_OperatorOnTile.redeployCount;
+			}
+			if (m_OperatorOnTile.operatorData.VariableData.RealHp <= 0)
+				M_GamePlaying.GaintCost(m_OperatorOnTile.operatorData.VariableData.InitDeploymentCost / 2);
+			if (m_OperatorOnTile.redeployCount < 2)
+			{
+				m_OperatorOnTile.operatorData.VariableData.InitDeploymentCost += m_OperatorOnTile.operatorData.VariableData.StartDeploymentCost / 2;
+			}
+			
+
 			M_Operator.Despawn(m_OperatorOnTile);
 		}
 	}

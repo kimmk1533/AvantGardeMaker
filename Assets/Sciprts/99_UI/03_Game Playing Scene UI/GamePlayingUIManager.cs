@@ -21,6 +21,8 @@ namespace AvantGardeMaker.UI
 
 		private Dictionary<string, Sprite> m_OperatorFullshotSpriteMap = null;
 
+		[SerializeField]
+		private Button m_OperatorSkillButton = null;
 		#endregion
 
 		#region 프로퍼티

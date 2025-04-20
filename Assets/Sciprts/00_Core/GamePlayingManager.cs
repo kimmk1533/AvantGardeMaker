@@ -214,5 +214,10 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			m_PlayingOperatorList.Add(deployOperator);
 		}
+
+		public void GaintCost(int gainCost)
+		{
+			m_CurrentCost += gainCost;
+		}
 	}
 }

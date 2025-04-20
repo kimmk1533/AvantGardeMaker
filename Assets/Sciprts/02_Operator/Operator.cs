@@ -11,99 +11,12 @@ using AvantGardeMaker.CoreSpace.Enum;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class Vangard : Operator
-	{
-		public void SkillSetting()
-		{
-			operatorPositionSkill = new List<OperatorSkill>();
-			OperatorSkill temp = new OperatorSkill();
-			temp.skillName = operatorData.FixedData.SkillName;
-			temp.skillText = "";
-			for (int i = 0; i < operatorData.VariableData.SkillInfoList.Count; i++)
-			{
-				switch (operatorData.VariableData.SkillInfoList[i].SkillType)
-				{
-					case E_OperatorSkillType.StatusBuff:
-						break;
-					case E_OperatorSkillType.ChargeCost:
-						CostCargeSkillSetting(temp);
-						break;
-					case E_OperatorSkillType.MultipleShot:
-						break;
-					case E_OperatorSkillType.StopAttack:
-						break;
-					case E_OperatorSkillType.ChangeAttackRange:
-						break;
-					default:
-						break;
-				}
-				if (i != operatorData.VariableData.SkillInfoList.Count - 1)
-				{
-					temp.skillText += ",";
-				}
-				operatorPositionSkill.Add(temp);
-			}
-		}
-		public void CostCargeSkillSetting(OperatorSkill tempSkill)
-		{
-			tempSkill.skillText += "배치 코스트 " + operatorData.VariableData.SkillInfoList + " 즉시 획득";
-		}
-
-		public void ActiveSkill()
-		{
-			for (int i = 0; i < operatorData.VariableData.SkillInfoList.Count; i++)
-			{
-				switch (operatorData.VariableData.SkillInfoList[i].SkillType)
-				{
-					case E_OperatorSkillType.StatusBuff:
-						break;
-					case E_OperatorSkillType.ChargeCost:
-						break;
-					case E_OperatorSkillType.MultipleShot:
-						break;
-					case E_OperatorSkillType.StopAttack:
-						break;
-					case E_OperatorSkillType.ChangeAttackRange:
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-	}
-	public class Gard : Operator
-	{
-
-	}
-	public class Defender : Operator
-	{
-
-	}
-	public class Sniper : Operator
-	{
-
-	}
-
-	public class Caster : Operator
-	{
-
-	}
-	public class Surpoter : Operator
-	{
-
-	}
-	public class Specialist : Operator
-	{
-
-	}
-
 	public class Operator : ObjectPoolItemBase
 	{
 		#region 변수
 		private SpriteRenderer m_SpriteRenderer = null;
 
-		private OperatorData m_OperatorData = null;
+		protected OperatorData m_OperatorData = null;
 
 		private Sprite m_FrontSprite = null;
 		private Sprite m_BackSprite = null;
@@ -123,6 +36,8 @@ namespace AvantGardeMaker.OperatorSpace
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
 		private List<OperatorSkill> m_OperatorPositionSkill = null;
+
+		private int m_ReDeployCount = 0;
 		#endregion
 
 		#region 프로퍼티
@@ -146,6 +61,11 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			get => m_OperatorPositionSkill;
 			set => m_OperatorPositionSkill = value;
+		}
+		public int redeployCount
+		{
+			get => m_ReDeployCount;
+			set => m_ReDeployCount = value;
 		}
 		#endregion
 

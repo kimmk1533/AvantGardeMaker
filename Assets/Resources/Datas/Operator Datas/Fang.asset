@@ -20,161 +20,42 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FixedData
-      Entry: 7
-      Data: 0|AvantGardeMaker.MikangMark.OperatorFixedData, Assembly-CSharp
-    - Name: Rate
-      Entry: 3
-      Data: 3
-    - Name: MaxLevel
-      Entry: 3
-      Data: 40
-    - Name: Level
-      Entry: 3
-      Data: 1
-    - Name: MaxExp
-      Entry: 4
-      Data: 40
-    - Name: Exp
-      Entry: 4
-      Data: 0
-    - Name: Elite
-      Entry: 3
-      Data: 3
-    - Name: Potential
-      Entry: 3
-      Data: 0
-    - Name: Job
-      Entry: 3
-      Data: 0
-    - Name: AtkSpeed
-      Entry: 3
-      Data: 1
-    - Name: AtkRange
-      Entry: 3
-      Data: 0
-    - Name: SkillName
-      Entry: 1
-      Data: "\uB3CC\uACA9 \uC9C0\uB839 \u03B1"
-    - Name: SkillLevel
-      Entry: 3
-      Data: 1
-    - Name: PortraitPath
-      Entry: 1
-      Data: MikangMark\Test Images\OperatorFaceImg\Fang
-    - Name: FullShotPath
-      Entry: 1
-      Data: MikangMark\Test Images\OperatorFullImg\Fang
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VariableData
-      Entry: 7
-      Data: 1|AvantGardeMaker.MikangMark.OperatorVariableData, Assembly-CSharp
-    - Name: MaxHp
-      Entry: 4
-      Data: 742
-    - Name: RealHp
-      Entry: 4
-      Data: 742
-    - Name: Atk
-      Entry: 4
-      Data: 157
-    - Name: Def
-      Entry: 4
-      Data: 132
-    - Name: Res
-      Entry: 4
-      Data: 0
-    - Name: RedeploySpeed
-      Entry: 3
-      Data: 0
-    - Name: RedeploymentInterval
-      Entry: 4
-      Data: 5
-    - Name: DeploymentCost
-      Entry: 3
-      Data: 9
-    - Name: BlockCount
-      Entry: 3
-      Data: 2
-    - Name: InitAttakSpeed
-      Entry: 4
-      Data: 106
-    - Name: Provocation
-      Entry: 3
-      Data: 0
-    - Name: AttackPos
-      Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[UnityEngine.Vector2, UnityEngine.CoreModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: DamageType
-      Entry: 3
-      Data: 0
-    - Name: Penetration
-      Entry: 4
-      Data: 0
-    - Name: SkillInfoList
-      Entry: 7
-      Data: 3|System.Collections.Generic.List`1[[AvantGardeMaker.MikangMark.SkillInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 4|AvantGardeMaker.MikangMark.SkillInfo, Assembly-CSharp
-    - Name: SkillType
-      Entry: 3
-      Data: 1
-    - Name: SkillValue
-      Entry: 4
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   EngName: Fang
   KorName: "\uD33D"
+  FixedData:
+    Rate: 3
+    MaxLevel: 40
+    Level: 1
+    MaxExp: 40
+    Exp: 0
+    Elite: 3
+    Potential: 0
+    Job: 0
+    AtkSpeed: 1
+    AtkRange: 0
+    SkillName: "\uB3CC\uACA9 \uC9C0\uB839 \u03B1"
+    SkillLevel: 1
+    PortraitPath: MikangMark\Test Images\OperatorFaceImg\Fang
+    FullShotPath: MikangMark\Test Images\OperatorFullImg\Fang
+  VariableData:
+    MaxHp: 742
+    RealHp: 742
+    Atk: 157
+    Def: 132
+    Res: 0
+    RedeploySpeed: 0
+    RedeploymentInterval: 5
+    StartDeploymentCost: 7
+    InitDeploymentCost: 7
+    BlockCount: 2
+    InitAttakSpeed: 106
+    Provocation: 0
+    AttackPos:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    DamageType: 0
+    Penetration: 0
+    SkillInfoList:
+    - SkillType: 1
+      SkillValue: 6

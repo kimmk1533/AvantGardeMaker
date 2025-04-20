@@ -1106,7 +1106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -649, y: 425}
+  m_AnchoredPosition: {x: -296, y: 375}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &138419951
@@ -5100,7 +5100,6 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
-  m_PlayGroundTileParent: {fileID: 656254635}
   m_PlayingOperatorList: []
   m_OperatorSquadKeyList:
   - Fang
@@ -5757,16 +5756,9 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 718791901072946301, guid: 700f1915b4874db409719323188ccca1, type: 3}
-  m_CostText: {fileID: 142723040}
-  m_CostImage: {fileID: 504509807}
-  m_OperatorSquadUIParent: {fileID: 0}
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
-  m_OperatorStatusUI: {fileID: 1626726308}
-  m_DeploymentCancelButton: {fileID: 141244310}
-  OperatorRetreateButton: {fileID: 55487446}
-  mainCamera: {fileID: 1368605186}
-  isActiveRetreateButton: 0
+  m_OperatorSkillButton: {fileID: 138419951}
 --- !u!4 &1324118280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6699090971738483618, guid: fa02f73474d208049828fa8bc455b775, type: 3}
