@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using AvantGardeMaker.CoreSpace.SaveLoad;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -255,8 +256,8 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#endregion
 		*/
-		private static readonly string s_DataPath = "Datas\\Operator Datas";
-		private static readonly string s_SpritePath = "Textures\\Test Images";
+		private const string c_OperatorDataPath = "Datas\\Operator Datas";
+		private const string c_OperatorSpritePath = "Textures";
 
 		#region 변수
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
@@ -290,17 +291,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_OperatorBackSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorPortraitMap = new Dictionary<string, Sprite>();
 
-			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(s_DataPath);
-
-			for (int i = 0; i < operatorDatas.Length; ++i)
-			{
-				string key = operatorDatas[i].EngName;
-
-				m_OperatorDataMap.Add(key, operatorDatas[i]);
-				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Front")));
-				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(s_SpritePath, key, key + "_Back")));
-				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].FixedData.PortraitPath));
-			}
+			LoadOperatorData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -359,6 +350,50 @@ namespace AvantGardeMaker.OperatorSpace
 				return null;
 
 			return portrait;
+		}
+		///<summary>
+		/// Resources 폴더에 있는 OperatorData 스크립터블 오브젝트를 List에 저장
+		/// </summary>
+		[Button("Load OperatorData")]
+		public void LoadOperatorData()
+		{
+			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(c_OperatorDataPath);
+
+			for (int i = 0; i < operatorDatas.Length; ++i)
+			{
+				string key = operatorDatas[i].EngName;
+
+				m_OperatorDataMap.Add(key, operatorDatas[i]);
+				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));
+				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Back")));
+				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].FixedData.PortraitPath));
+			}
+		}
+		/// <summary>
+		/// 스크립터블 데이터를 들고 있는 m_OperatorDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
+		/// </summary>
+		public void LoadOperatorData(StageData stageData)
+		{
+			List<OperatorFixedData> fixedDataList = stageData.operatorFixedDataList;
+			List<OperatorVariableData> variableDataList = stageData.operatorVariableDataList;
+
+			int count = m_OperatorDataMap.Count;
+
+			if (count != fixedDataList.Count ||
+				count != variableDataList.Count)
+				throw new System.Exception("오퍼레이터 데이터 갯수 다름");
+
+			int index = 0;
+
+			foreach (var item in m_OperatorDataMap)
+			{
+				OperatorData operatorData = item.Value;
+
+				operatorData.FixedData = fixedDataList[index];
+				operatorData.VariableData = variableDataList[index];
+
+				++index;
+			}
 		}
 	}
 }

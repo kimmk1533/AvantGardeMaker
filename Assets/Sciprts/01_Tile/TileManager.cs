@@ -160,7 +160,7 @@ namespace AvantGardeMaker.TileSpace
 		{
 			foreach (var item in m_TileMap)
 			{
-				stageData.AddTile(item.Key, item.Value.Item1);
+				stageData.SaveTileData(item.Key, item.Value.Item1);
 			}
 		}
 		public void LoadTileData(StageData stageData)

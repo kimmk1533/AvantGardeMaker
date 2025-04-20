@@ -25,8 +25,14 @@ namespace AvantGardeMaker.UI
 		private int m_MaxWave;
 		#endregion
 
+		#region 오퍼레이터 저장 관련 변수
+
+		#endregion
+
+		#region 적 저장 관련 변수
 		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -219,7 +225,7 @@ namespace AvantGardeMaker.UI
 			{
 				EnemyDataUI enemyDataUI = m_SpawnedEnemyDataUIList[i];
 
-				stageData.AddEnemyData(enemyDataUI.enemyData);
+				stageData.SaveEnemyData(enemyDataUI.enemyData);
 			}
 		}
 		public void SaveEnemySpawnDataUI(ref StageData stageData)
@@ -228,7 +234,7 @@ namespace AvantGardeMaker.UI
 			{
 				EnemySpawnDataUI enemySpawnDataUI = m_SpawnedEnemySpawnDataUIList[i];
 
-				stageData.AddEnemySpawnData(enemySpawnDataUI.MakeSpawnData());
+				stageData.SaveEnemySpawnData(enemySpawnDataUI.MakeSpawnData());
 			}
 		}
 		#endregion

@@ -146,10 +146,10 @@ namespace AvantGardeMaker.EnemySpace
 		#endregion
 
 		#region Save & Load
-		[Button("Load EnemyData")]
 		///<summary>
 		/// Resources 폴더에 있는 EnemyData 스크립터블 오브젝트를 List에 저장
 		/// </summary>
+		[Button("Load EnemyData")]
 		public void LoadEnemyData()
 		{
 			m_EnemyDataList.Clear();

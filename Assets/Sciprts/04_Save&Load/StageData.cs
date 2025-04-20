@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.EnemySpace;
+using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.TileSpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -51,6 +52,17 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#endregion
 
 		#region 3. 오퍼레이터 관련 변수
+		#region 저장&불러오기
+		[SerializeField]
+		[FoldoutGroup("Operator")]
+		private List<string> m_OperatorKeyList;
+		[SerializeField]
+		[FoldoutGroup("Operator")]
+		private List<OperatorFixedData> m_OperatorFixedDataList;
+		[SerializeField]
+		[FoldoutGroup("Operator")]
+		private List<OperatorVariableData> m_OperatorVariableDataList;
+		#endregion
 
 		#endregion
 
@@ -110,6 +122,11 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 		#endregion
 
+		#region 3. 오퍼레이터 관련 프로퍼티
+		public List<OperatorFixedData> operatorFixedDataList => new List<OperatorFixedData>(m_OperatorFixedDataList);
+		public List<OperatorVariableData> operatorVariableDataList => new List<OperatorVariableData>(m_OperatorVariableDataList);
+		#endregion
+
 		#region 4. 적 관련 프로퍼티
 		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		public List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
@@ -156,7 +173,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		}
 		#endregion
 
-		public void AddTile(Vector2Int pos, E_TileType tileType)
+		public void SaveTileData(Vector2Int pos, E_TileType tileType)
 		{
 			m_TilePointList.Add(pos);
 			m_TileTypeList.Add(tileType);
@@ -167,13 +184,19 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			m_MaxTile.x = Mathf.Max(m_MaxTile.x, pos.x);
 			m_MaxTile.y = Mathf.Max(m_MaxTile.y, pos.y);
 		}
-		public void AddEnemyData(EnemyData enemyData)
+		public void SaveOperatorData(OperatorData operatorData)
 		{
-			m_EnemyKeyList.Add(enemyData.KorName);
+			m_OperatorKeyList.Add(operatorData.EngName);
+			m_OperatorFixedDataList.Add(operatorData.FixedData);
+			m_OperatorVariableDataList.Add(operatorData.VariableData);
+		}
+		public void SaveEnemyData(EnemyData enemyData)
+		{
+			m_EnemyKeyList.Add(enemyData.EngName);
 			m_EnemyFixedDataList.Add(enemyData.FixedData);
 			m_EnemyVariableDataList.Add(enemyData.VariableData);
 		}
-		public void AddEnemySpawnData(EnemySpawnData enemySpawnData)
+		public void SaveEnemySpawnData(EnemySpawnData enemySpawnData)
 		{
 			m_EnemySpawnDataList.Add(enemySpawnData);
 		}
