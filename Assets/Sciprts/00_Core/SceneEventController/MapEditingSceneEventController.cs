@@ -10,44 +10,69 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 	public class MapEditingSceneEventController : SceneEventController
 	{
 		#region 변수
-		#region UI Button 관련 변수
+		#region 버튼 관련 변수
 		[SerializeField]
+		[FoldoutGroup("버튼 관련")]
 		private Button m_MainMenuButton = null;
 		[SerializeField]
+		[FoldoutGroup("버튼 관련")]
 		private Button m_SaveButton = null;
 		[SerializeField]
+		[FoldoutGroup("버튼 관련")]
 		private Button m_PlayButton = null;
 		#endregion
 
-		#region Map Editor Manager 관련 변수
+		#region 카메라 관련 변수
 		[SerializeField]
+		[FoldoutGroup("카메라 관련")]
 		private Camera m_MapEditorCamera = null;
 		[SerializeField]
+		[FoldoutGroup("카메라 관련")]
 		private Camera m_ThumnailCamera = null;
 
 		[SerializeField]
+		[FoldoutGroup("카메라 관련")]
 		private Transform m_EditModeCameraTransform = null;
 		[SerializeField]
+		[FoldoutGroup("카메라 관련")]
 		private Transform m_GameModeCameraTransform = null;
 		#endregion
 
-		#region Map Editor UI Manager 관련 변수
+		#region 컨트롤러 관련 변수
 		[SerializeField]
-		private MenuPanel m_MenuPanel = null;
+		[FoldoutGroup("컨트롤러")]
+		private SettingPanelController m_SettingPanelController = null;
 		[SerializeField]
-		private OptionPanel m_OptionPanel = null;
+		[FoldoutGroup("컨트롤러")]
+		private MenuPanelController m_MenuPanelController = null;
+		#endregion
+
+		#region 세부 설정 관련 변수
+		#region 오퍼레이터 세부 설정 관련 변수
+		[SerializeField]
+		[FoldoutGroup("세부 설정 관련")]
+		[FoldoutGroup("세부 설정 관련/오퍼레이터")]
+		private OperatorDetailedSettingPanel m_OperatorDetailedSettingPanel = null;
+		#endregion
+
+		#region 적 세부 설정 관련 변수
+		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/적")]
+		private EnemyDetailedSettingPanel m_EnemyDetailedSettingPanel = null;
 
 		[SerializeField]
-		private EnemyDataSettingPanel m_EnemyDataSettingPanel = null;
-
-		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/적")]
 		private RectTransform m_EnemySpawnDataUIParent = null;
 		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/적")]
 		private RectTransform m_EnemyDataUIParent = null;
 		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/적")]
 		private RectTransform m_EnemyWayPointDataUIParent = null;
 		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/적")]
 		private RectTransform m_EnemyImmuneDescriptionParent = null;
+		#endregion
 		#endregion
 		#endregion
 
@@ -85,25 +110,39 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			base.Initialize();
 
 			#region 멤버 변수 링킹
+			#region 버튼 관련 변수 링킹
+			M_MapEditingUI.mainMenuButton = m_MainMenuButton;
+			M_MapEditingUI.saveButton = m_SaveButton;
+			M_MapEditingUI.playButton = m_PlayButton;
+			#endregion
+
+			#region 카메라 관련 변수 링킹
 			M_MapEditing.mapEditorCamera = m_MapEditorCamera;
 			M_MapEditing.thumnailCamera = m_ThumnailCamera;
 
 			M_MapEditing.editModeCameraTransform = m_EditModeCameraTransform;
 			M_MapEditing.gameModeCameraTransform = m_GameModeCameraTransform;
+			#endregion
 
-			M_MapEditingUI.mainMenuButton = m_MainMenuButton;
-			M_MapEditingUI.saveButton = m_SaveButton;
-			M_MapEditingUI.playButton = m_PlayButton;
+			#region 컨트롤러 관련 변수 링킹
+			M_MapEditingUI.settingPanelController = m_SettingPanelController;
+			M_MapEditingUI.menuPanelController = m_MenuPanelController;
+			#endregion
 
-			M_MapEditingUI.menuPanel = m_MenuPanel;
-			M_MapEditingUI.optionPanel = m_OptionPanel;
+			#region 세부 설정 관련 변수 링킹
+			#region 오퍼레이터
+			M_MapEditingUI.operatorDetailedSettingPanel = m_OperatorDetailedSettingPanel;
+			#endregion
 
-			M_MapEditingUI.enemyDataSettingPanel = m_EnemyDataSettingPanel;
+			#region 적
+			M_MapEditingUI.enemyDetailedSettingPanel = m_EnemyDetailedSettingPanel;
 
 			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditingUI.enemyDataUIParent = m_EnemyDataUIParent;
 			M_MapEditingUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
 			M_MapEditingUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
+			#endregion
+			#endregion
 			#endregion
 
 			// Main Menu Scene 전환 전 이벤트

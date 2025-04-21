@@ -11,18 +11,14 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class MapEditingUIManager : ObjectManager<MapEditingUIManager, MapEditingUI>
+	public class MapEditingUIManager : ObjectManager<MapEditingUIManager, MapEditingUIPoolItem>
 	{
 		#region 변수
-		[PropertySpace]
-		[SerializeField]
-		private List<string> m_KeyList = new List<string>();
-
 		#region 메뉴 패널 관련 변수
 		#endregion
 
 		#region 옵션 패널 관련 변수
-		private int m_MaxWave;
+		private int m_MaxWave = -1;
 		#endregion
 
 		#region 오퍼레이터 저장 관련 변수
@@ -36,23 +32,29 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 프로퍼티
+		#region 폰트 관련 프로퍼티
 		[field: SerializeField]
 		public TMP_FontAsset uiFont { get; }
+		#endregion
 
-		public List<string> keyList => m_KeyList;
-
+		#region 버튼 관련 프로퍼티
 		public Button mainMenuButton { get; set; }
 		public Button saveButton { get; set; }
 		public Button playButton { get; set; }
-
-		#region 메뉴 패널 관련 프로퍼티
-		public MenuPanel menuPanel { get; set; }
 		#endregion
 
-		#region 옵션 패널 관련 프로퍼티
-		public OptionPanel optionPanel { get; set; }
+		#region 컨트롤러 관련 프로퍼티
+		public SettingPanelController settingPanelController { get; set; }
+		public MenuPanelController menuPanelController { get; set; }
+		#endregion
 
-		public EnemyDataSettingPanel enemyDataSettingPanel { get; set; }
+		#region 세부 설정 관련 프로퍼티
+		#region 오퍼레이터
+		public OperatorDetailedSettingPanel operatorDetailedSettingPanel { get; set; }
+		#endregion
+
+		#region 적
+		public EnemyDetailedSettingPanel enemyDetailedSettingPanel { get; set; }
 
 		public RectTransform enemySpawnDataUIParent { get; set; }
 		public RectTransform enemyDataUIParent { get; set; }
@@ -60,6 +62,7 @@ namespace AvantGardeMaker.UI
 		public RectTransform enemyImmuneDescriptionParent { get; set; }
 
 		public int maxWave { get => m_MaxWave; }
+		#endregion
 		#endregion
 		#endregion
 
@@ -85,7 +88,7 @@ namespace AvantGardeMaker.UI
 			SceneLoader.LoadScene("Game Playing Scene");
 		}
 
-		private void OnEnemySpawnDataUISpawned(MapEditingUI mapEditingUI)
+		private void OnEnemySpawnDataUISpawned(MapEditingUIPoolItem mapEditingUI)
 		{
 			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 
@@ -96,7 +99,7 @@ namespace AvantGardeMaker.UI
 
 			ReorderEnemySpawnDataUI();
 		}
-		private void OnEnemySpawnDataUIDespawned(MapEditingUI mapEditingUI)
+		private void OnEnemySpawnDataUIDespawned(MapEditingUIPoolItem mapEditingUI)
 		{
 			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 
@@ -150,10 +153,10 @@ namespace AvantGardeMaker.UI
 			saveButton.onClick.AddListener(OnSaveButtonClicked);
 			playButton.onClick.AddListener(OnPlayButtonClicked);
 
-			menuPanel.Initialize();
+			settingPanelController.Initialize();
+			menuPanelController.Initialize();
 
-			optionPanel.Initialize();
-			enemyDataSettingPanel.Initialize();
+			enemyDetailedSettingPanel.Initialize();
 
 			m_MaxWave = 0;
 
@@ -197,26 +200,26 @@ namespace AvantGardeMaker.UI
 			}
 			m_SpawnedEnemySpawnDataUIList.Clear();
 
-			menuPanel.Finallize();
+			menuPanelController.Finallize();
+			settingPanelController.Finallize();
 
-			optionPanel.Finallize();
-			enemyDataSettingPanel.Finallize();
+			enemyDetailedSettingPanel.Finallize();
 		}
 		#endregion
 
-		private void MenuShortcut()
-		{
-			foreach (string key in m_KeyList)
-			{
-				OptionViewport optionViewport = optionPanel.optionViewportController[key];
-				KeyCode keyCode = optionViewport.shortcut;
-				if (Input.GetKeyDown(keyCode) == true)
-				{
-					optionViewport.OnMenuButtonClicked();
-					M_MapEditing.SetEditModeType(optionViewport.editModeType);
-				}
-			}
-		}
+		//private void MenuShortcut()
+		//{
+		//	foreach (string key in m_KeyList)
+		//	{
+		//		OptionViewport optionViewport = settingPanelController.optionViewportController[key];
+		//		KeyCode keyCode = optionViewport.shortcut;
+		//		if (Input.GetKeyDown(keyCode) == true)
+		//		{
+		//			optionViewport.OnMenuButtonClicked();
+		//			M_MapEditing.SetEditModeType(optionViewport.editModeType);
+		//		}
+		//	}
+		//}
 
 		#region Save
 		public void SaveEnemyDataUI(ref StageData stageData)

@@ -159,7 +159,7 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefabs\Operator Prefabs
+  m_CommonPath: Prefabs\02_Operator Prefabs
   m_Origins:
   - <key>k__BackingField: Fang
     <additionalPath>k__BackingField: 
@@ -262,7 +262,7 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefabs\UI Prefabs\Game Playing UI
+  m_CommonPath: Prefabs\99_UI Prefabs\Game Playing UI
   m_Origins:
   - <key>k__BackingField: Operator Squad UI
     <additionalPath>k__BackingField: 
@@ -271,6 +271,7 @@ MonoBehaviour:
     <origin>k__BackingField: {fileID: 718791901072946301, guid: 700f1915b4874db409719323188ccca1, type: 3}
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
+  m_OperatorSkillButton: {fileID: 0}
 --- !u!4 &621073717
 Transform:
   m_ObjectHideFlags: 0
@@ -360,7 +361,7 @@ MonoBehaviour:
       Data: 
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefab\Enemy Prefabs
+  m_CommonPath: Prefab\03_Enemy Prefabs
   m_Origins:
   - <key>k__BackingField: OriginiumSlug
     <additionalPath>k__BackingField: 
@@ -489,7 +490,7 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefabs\UI Prefabs\Main Menu UI
+  m_CommonPath: Prefabs\99_UI Prefabs\Main Menu UI
   m_Origins:
   - <key>k__BackingField: Map List Item
     <additionalPath>k__BackingField: 
@@ -656,7 +657,7 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefabs\Tile Prefabs
+  m_CommonPath: Prefabs\01_Tile Prefabs
   m_Origins:
   - <key>k__BackingField: LowGroundTile
     <additionalPath>k__BackingField: 
@@ -737,7 +738,7 @@ MonoBehaviour:
       Data: 0
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CommonPath: Prefabs\UI Prefabs\Map Editor UI
+  m_CommonPath: Prefabs\99_UI Prefabs\Map Editor UI
   m_Origins:
   - <key>k__BackingField: Enemy Data UI
     <additionalPath>k__BackingField: 
@@ -754,16 +755,11 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 6102094215302992146, guid: 959d8b1ca6acaa0458091a89703ba599, type: 3}
-  - <key>k__BackingField: Enemy Immune Option UI
+  - <key>k__BackingField: Enemy Immune Setting UI
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 8470797493107848387, guid: 3e7c092d873f555478d0529053a79f57, type: 3}
-  m_KeyList:
-  - System
-  - Tile
-  - Operator
-  - Enemy
 --- !u!1 &1665881066
 GameObject:
   m_ObjectHideFlags: 8
@@ -953,6 +949,9 @@ MonoBehaviour:
     m_TileTypeList: 
     m_MinTile: {x: 0, y: 0}
     m_MaxTile: {x: 0, y: 0}
+    m_OperatorKeyList: []
+    m_OperatorFixedDataList: []
+    m_OperatorVariableDataList: []
     m_EnemyKeyList: []
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []

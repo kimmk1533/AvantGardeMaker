@@ -33,7 +33,7 @@ namespace AvantGardeMaker.EnemySpace
 	{
 		#region 기본 템플릿
 		#region 변수
-		private const string c_EnemyDataPath = "Datas\\Enemy Datas";
+		private const string c_EnemyDataPath = "Datas\\03_Enemy Datas";
 		private bool[,] m_TestMap;
 		private bool m_IsStageStart;
 

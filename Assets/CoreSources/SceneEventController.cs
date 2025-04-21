@@ -8,10 +8,10 @@ using UnityEngine.Events;
 public abstract class SceneEventController : SerializedMonoBehaviour
 {
 	#region 변수
-	[SerializeField]
+	[SerializeField, PropertySpace(10, 0)]
 	[DictionaryDrawerSettings(KeyLabel = "전환될 씬 이름", ValueLabel = "씬 로딩 전 호출할 이벤트")]
 	protected Dictionary<string, UnityEvent> m_OnSceneSwitchingBeforeEventMap = new Dictionary<string, UnityEvent>();
-	[SerializeField]
+	[SerializeField, PropertySpace(0, 10)]
 	[DictionaryDrawerSettings(KeyLabel = "전환된 씬 이름", ValueLabel = "씬 로딩 후 호출할 이벤트")]
 	protected Dictionary<string, UnityEvent> m_OnSceneSwitchingAfterEventMap = new Dictionary<string, UnityEvent>();
 	#endregion
