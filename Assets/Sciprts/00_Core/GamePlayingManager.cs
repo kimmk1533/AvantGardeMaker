@@ -5,6 +5,7 @@ using AvantGardeMaker.OperatorSpace;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.UI;
+using AvantGardeMaker.TileSpace.Enum;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -71,6 +72,12 @@ namespace AvantGardeMaker.CoreSpace
 			set => m_SettedOperatorSelect = value;
 		}
 
+		public E_TileType[,] currentMap
+		{
+			get;
+			private set;
+		}
+
 		#endregion
 
 		#region 이벤트
@@ -79,6 +86,7 @@ namespace AvantGardeMaker.CoreSpace
 		#region 매니저
 		private static TileManager M_Tile => TileManager.Instance;
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static GameManager M_Game => GameManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -120,7 +128,7 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.InitializeMain();
 
-
+			currentMap = M_Game.currentStageData.map;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)

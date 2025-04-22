@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.TileSpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -77,6 +78,33 @@ namespace AvantGardeMaker.EnemySpace
 				m_G = g;
 				m_H = h;
 			}
+		}
+
+		public static bool[,] TileToGrid(E_TileType[,] map, bool isFlyable = false)
+		{
+			bool[,] returnMap = new bool[map.GetLength(1), map.GetLength(0)];
+
+			for (int y = 0; y < map.GetLength(1); ++y)
+			{
+				for (int x = 0; x < map.GetLength(0); ++x)
+				{
+					switch (map[y, x])
+					{
+						default:
+							returnMap[y, x] = true;
+							break;
+						case E_TileType.HighGroundTile:
+						case E_TileType.None:
+							if (isFlyable)
+								returnMap[y, x] = true;
+							else
+								returnMap[y, x] = false;
+							break;
+					}
+				}
+			}
+
+			return returnMap;
 		}
 
 		public static List<Vector2> FindPath(Vector2 start, Vector2 goal, bool[,] grid)

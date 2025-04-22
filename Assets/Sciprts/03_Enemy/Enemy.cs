@@ -28,12 +28,19 @@ namespace AvantGardeMaker.EnemySpace
 		private EnemyVariableData m_VariableData = null;
 		#endregion
 		//경유지(wayPoint) 인덱스
-		private int m_TransitPosIndex = 0;
+		private int m_WayPointIndex = 0;
 		//경유지 목록(인덱스가 list.count와 같으면 도착)
-		private List<Vector2> m_TransitPosList = null;
+		private List<Vector2> m_WayPointList = null;
 
 		//공격 딜레이
 		private UtilClass.Timer m_AtkIntervalTimer;
+
+		//경유지 대기시간 리스트(경유지 목록과 크기가 같음)
+		//interval[n]은 waypoint[n]에서 waypoint[n+1]로 가기 전 대기시간을 의미함
+		private List<float> m_WayPointIntervalList;
+
+		//현재 출발 전 대기시간
+		private UtilClass.Timer m_CurrentWayPointIntervalTimer;
 
 		//현재 상태
 		[SerializeField]
@@ -54,10 +61,16 @@ namespace AvantGardeMaker.EnemySpace
 		#endregion
 
 		#region 프로퍼티
-		private Vector2 CurPos => new Vector2(transform.position.x, transform.position.y);
-		private Vector2 TargetPos => m_TransitPosList[Mathf.Min(m_TransitPosIndex, m_TransitPosList.Count)];
-		public bool IsAlive => m_VariableData.Hp.CurStat > 0f;
-		public bool IsBlocked => m_IsBlocked == true;
+		public E_EnemyState state { get { return m_CurEnemyState; } set { m_CurEnemyState = value; } }
+		public E_EnemyGradeType grade { get { return m_FixedData.EnemyType; } }
+		public bool isAlive => m_VariableData.Hp.CurStat > 0f;
+		public bool isBlocked => m_IsBlocked == true;
+		private Vector2 curPos => new Vector2(transform.position.x, transform.position.y);
+		private Vector2 targetPos => m_WayPointList[Mathf.Min(m_WayPointIndex, m_WayPointList.Count - 1)];
+		private Vector2 startPos => m_WayPointList[0];
+		private Vector2 endPos => m_WayPointList[m_WayPointList.Count - 1];
+
+
 		#endregion
 
 		#region 이벤트
@@ -70,7 +83,7 @@ namespace AvantGardeMaker.EnemySpace
 			if (oper == null)
 				return;
 
-			SetState(E_EnemyState.Attack);
+			state = E_EnemyState.Attack;
 			m_TargetOperList.Add(oper);
 			Debug.Log("오퍼가 사정거리 내에 들어옴");
 		}
@@ -82,7 +95,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			m_TargetOperList.Remove(oper);
 			if (m_TargetOperList.Count == 0)
-				SetState(E_EnemyState.Move);
+				state = E_EnemyState.Move;
 			Debug.Log("오퍼가 사정거리에서 나감");
 		}
 		#endregion
@@ -97,9 +110,7 @@ namespace AvantGardeMaker.EnemySpace
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			m_AtkIntervalTimer.Update();
-
-			if (!IsAlive)
+			if (!isAlive)
 				Dead();
 
 			Attack();
@@ -149,14 +160,17 @@ namespace AvantGardeMaker.EnemySpace
 			m_AtkRange.onOperatorEnterRange += OnOperatorEnterRange;
 			m_AtkRange.onOperatorExitRange += OnOperatorExitRange;
 
-			if (m_TransitPosList == null)
+			if (m_WayPointList == null)
 			{
-				m_TransitPosList = new List<Vector2>();
+				m_WayPointList = new List<Vector2>();
 				//list 0이라 터지는것 방지
-				m_TransitPosList.Add(CurPos);
+				m_WayPointList.Add(curPos);
 			}
 
+			m_WayPointIntervalList = new List<float>();
+
 			m_AtkIntervalTimer = new UtilClass.Timer(1.0f);
+			m_CurrentWayPointIntervalTimer = new UtilClass.Timer(0f);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -164,6 +178,9 @@ namespace AvantGardeMaker.EnemySpace
 		public override void FinallizePoolItem()
 		{
 			base.FinallizePoolItem();
+
+			m_WayPointList.Clear();
+			m_WayPointIndex = 0;
 		}
 		#endregion
 
@@ -177,14 +194,20 @@ namespace AvantGardeMaker.EnemySpace
 
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
-
-			//SetRange(m_FixedData.Range.CurStat);
-
-			//m_AtkIntervalTimer.interval = m_VariableData.Aspd.CurStat;
 		}
-		public void SetTransitPosList(List<Vector2> transitPosList)
+		public void SetWayPointList(List<Vector2> wayPointList)
 		{
-			m_TransitPosList = transitPosList;
+			m_WayPointList.Clear();
+			m_WayPointList = wayPointList;
+		}
+		public void SetWayPointIntervalList(List<float> wayPointIntervalList)
+		{
+			m_WayPointIntervalList.Clear();
+			m_WayPointIntervalList = wayPointIntervalList;
+		}
+		public float GetRange()
+		{
+			return m_FixedData.Range.CurStat;
 		}
 		public void SetRange(float range)
 		{
@@ -197,54 +220,53 @@ namespace AvantGardeMaker.EnemySpace
 			m_BodySize = m_BodyCollider.radius;
 			m_RangeSize = m_AtkRange.GetComponent<CircleCollider2D>().radius;
 		}
-		public E_EnemyState GetState()
-		{
-			return m_CurEnemyState;
-		}
-
-		public void SetState(E_EnemyState state)
-		{
-			m_CurEnemyState = state;
-		}
-
-		public float GetRange()
-		{
-			return m_FixedData.Range.CurStat;
-		}
-
-		public E_EnemyType GetRank()
-		{
-			return m_FixedData.EnemyType;
-		}
 		#endregion
 
 		#region 기본 행동
 		public void Move()
 		{
 			//공격중 or 저지중이면 움직일 수 없음
-			if (m_CurEnemyState == E_EnemyState.Attack || IsBlocked)
+			if (m_CurEnemyState == E_EnemyState.Attack || isBlocked)
 				return;
 
-			Vector2 direction = TargetPos - CurPos;
+			m_CurrentWayPointIntervalTimer.Update();
+
+			//경유지에서 대기중이면 움직이지 않음
+			if (m_CurrentWayPointIntervalTimer.TimeCheck() == false)
+				return;
+
+			if (m_WayPointIntervalList.Count != m_WayPointList.Count)
+				throw new System.Exception("경유지 목록과 경유지 대기시간의 크기가 다름!");
+
+			Vector2 direction = targetPos - curPos;
 			float moveAmount = m_VariableData.MovementSpeed.CurStat * Time.deltaTime;
 
 			if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
 			{
-				SetState(E_EnemyState.Move);
+				state = E_EnemyState.Move;
 				direction.Normalize();
 				Vector2 moveVector = direction * moveAmount;
 				//direction 방향으로 moveAmount만큼 이동
-				transform.position = CurPos + moveVector;
+				transform.position = curPos + moveVector;
 				Debug.Log("이동");
 			}
 			else
 			{
-				transform.position = TargetPos;
-				SetState(E_EnemyState.Idle);
+				//도착 위치로 순간이동
+				transform.position = targetPos;
+				state = E_EnemyState.Idle;
 				Debug.Log("경유지까지 이동 완료");
 
-				++m_TransitPosIndex;
-				if (m_TransitPosIndex >= m_TransitPosList.Count)
+				//다음 경유지로 출발하기 전 대기시간
+				if (m_WayPointIntervalList[m_WayPointIndex] > 0)
+				{
+					m_CurrentWayPointIntervalTimer.Clear();
+					m_CurrentWayPointIntervalTimer.interval = m_WayPointIntervalList[m_WayPointIndex];
+				}
+
+				//경유지의 끝에 다다르면 소멸 처리
+				++m_WayPointIndex;
+				if (m_WayPointIndex >= m_WayPointList.Count)
 				{
 					Debug.Log("이동 완료");
 					Dead();
@@ -257,8 +279,10 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			//어떤 경우에도 공격 상태로는 전환 가능
 
+			m_AtkIntervalTimer.Update();
+
 			//저지당한 경우
-			if (IsBlocked)
+			if (isBlocked)
 			{
 				//공격 간격이 다 지나지 않았을 경우 attack하지 않음
 				if (m_AtkIntervalTimer.TimeCheck(true) == false)
@@ -278,13 +302,13 @@ namespace AvantGardeMaker.EnemySpace
 				if (m_AtkIntervalTimer.TimeCheck(true) == false)
 				{
 					//공격 범위내 적이 들어올 때 attack상태가 되어서 move로 되돌려주기
-					SetState(E_EnemyState.Move);
+					state = E_EnemyState.Move;
 					return;
 				}
 
 				//공격 범위 내 적이 있었는데 쿨타임이라 안때렸을 경우 move상태므로 attack로 변경
-				if (GetState() != E_EnemyState.Attack)
-					SetState(E_EnemyState.Attack);
+				if (state != E_EnemyState.Attack)
+					state = E_EnemyState.Attack;
 
 				//ad1a 씬에 오퍼 매니저가 없어서 터짐. 임시 봉인
 				//m_TargetOper = M_GamePlaying.CompareDeployOrder(m_TargetOperList)[0];
@@ -294,7 +318,7 @@ namespace AvantGardeMaker.EnemySpace
 			}
 			else
 			{
-				SetState(E_EnemyState.Move);
+				state = E_EnemyState.Move;
 				Debug.Log("공격 중지");
 			}
 		}
@@ -326,10 +350,20 @@ namespace AvantGardeMaker.EnemySpace
 					break;
 			}
 		}
-
 		private void SubHp(float val)
 		{
 			m_VariableData.Hp.CurStat -= val;
+		}
+		public void UpdateWayPointIndex(int index)
+		{
+			if (m_WayPointList == null ||
+				m_WayPointList.Count < 2)
+				return;
+
+			m_WayPointIndex = Mathf.Min(index, m_WayPointList.Count - 2);
+
+			bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
+			m_WayPointList = PathFinder.FindPath(m_WayPointList[m_WayPointIndex], m_WayPointList[m_WayPointIndex + 1], map);
 		}
 	}
 }

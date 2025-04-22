@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.EnemySpace.Enum
 {
-	public enum E_EnemyType
+	public enum E_EnemyGradeType
 	{
 		//일반
 		Normal,

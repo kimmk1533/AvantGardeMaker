@@ -221,11 +221,11 @@ namespace AvantGardeMaker.EnemySpace
 							.Spawn();
 
 			enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == enemySpawnData.Name));
-			enemy.SetState(E_EnemyState.Move);
+			enemy.state = E_EnemyState.Move;
 			enemy.InitializePoolItem();
-
 			enemy.SetRange(1.9f);
-			enemy.SetTransitPosList(enemySpawnData.TransitPosList);
+			enemy.SetWayPointList(enemySpawnData.TransitPosList);
+			enemy.SetWayPointIntervalList(enemySpawnData.DelayTimeList);
 
 			//공격 범위 설정
 			if (enemy.GetRange() > 0)
@@ -236,24 +236,24 @@ namespace AvantGardeMaker.EnemySpace
 			}
 
 			//히트박스 크기 설정
-			switch (enemy.GetRank())
+			switch (enemy.grade)
 			{
 				//기본 0.25
 				default:
-				case E_EnemyType.Normal:
+				case E_EnemyGradeType.Normal:
 					break;
-				case E_EnemyType.Elite:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.4f;
-					break;
-				}
-				case E_EnemyType.Leader:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.5f;
-					break;
-				}
+				case E_EnemyGradeType.Elite:
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.4f;
+						break;
+					}
+				case E_EnemyGradeType.Leader:
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.5f;
+						break;
+					}
 			}
 
 			m_EnemyList.Add(enemy);

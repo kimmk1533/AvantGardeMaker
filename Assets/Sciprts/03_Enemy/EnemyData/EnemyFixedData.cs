@@ -20,7 +20,7 @@ namespace AvantGardeMaker.EnemySpace
 		public E_EnemyDmgType DmgType = E_EnemyDmgType.Physic;
 
 		//등급
-		public E_EnemyType EnemyType = E_EnemyType.Normal;
+		public E_EnemyGradeType EnemyType = E_EnemyGradeType.Normal;
 		//보호 지점에 들어가면 깎이는 목표 HP
 		public int LossHp = 1;
 
