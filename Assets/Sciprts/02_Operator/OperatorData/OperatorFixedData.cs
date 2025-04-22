@@ -9,16 +9,25 @@ namespace AvantGardeMaker.OperatorSpace
 	[System.Serializable]
 	public class OperatorFixedData
 	{
+		// 최대체력
+		public OperatorLevelData<float> MaxHp;
+		// 공격력
+		public OperatorLevelData<float> Atk;
+		// 방어력
+		public OperatorLevelData<float> Def;
+		// 마항
+		public OperatorLevelData<float> Res;
+		// 배치코스트
+		public OperatorLevelData<int> DeploymentCost;
+		// 저지
+		public OperatorLevelData<int> BlockCount;
+		//최대레벨
+		public OperatorLevelData<int> MaxLevel;
+
 		//레어도
 		public int Rate;
-		//최대레벨
-		public int MaxLevel;
 		//현재레벨
 		public int Level;
-		//현재레벨 최대경험치
-		public float MaxExp;
-		//현재경험치
-		public float Exp;
 		//특성
 		public int Elite;
 		//재능

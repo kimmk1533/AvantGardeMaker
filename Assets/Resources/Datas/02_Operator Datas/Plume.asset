@@ -24,12 +24,44 @@ MonoBehaviour:
   EngName: Plume
   KorName: "\uD50C\uB8F8"
   FixedData:
+    MaxHp:
+      Elite0Level1: 688
+      Elite1Level1: 956
+      Elite2Level1: 1226
+      Elite2LevelFull: 1226
+    Atk:
+      Elite0Level1: 229
+      Elite1Level1: 333
+      Elite2Level1: 445
+      Elite2LevelFull: 445
+    Def:
+      Elite0Level1: 148
+      Elite1Level1: 212
+      Elite2Level1: 279
+      Elite2LevelFull: 279
+    Res:
+      Elite0Level1: 0
+      Elite1Level1: 0
+      Elite2Level1: 0
+      Elite2LevelFull: 0
+    DeploymentCost:
+      Elite0Level1: 8
+      Elite1Level1: 10
+      Elite2Level1: 10
+      Elite2LevelFull: 10
+    BlockCount:
+      Elite0Level1: 1
+      Elite1Level1: 1
+      Elite2Level1: 1
+      Elite2LevelFull: 1
+    MaxLevel:
+      Elite0Level1: 40
+      Elite1Level1: 55
+      Elite2Level1: 55
+      Elite2LevelFull: 55
     Rate: 3
-    MaxLevel: 40
     Level: 1
-    MaxExp: 40
-    Exp: 0
-    Elite: 3
+    Elite: 0
     Potential: 0
     Job: 0
     AtkSpeed: 1
@@ -44,10 +76,10 @@ MonoBehaviour:
     Atk: 230
     Def: 148
     Res: 0
-    RedeploySpeed: 0
+    RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    StartDeploymentCost: 10
     InitDeploymentCost: 10
+    CurrentDeploymentCost: 0
     BlockCount: 1
     InitAttakSpeed: 106
     Provocation: 0

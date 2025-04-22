@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class SettingPanelController : Panel
+	public class SettingPanelController : SerializedMonoBehaviour
 	{
 		#region 기본 템플릿
 		#region 변수
@@ -57,10 +57,8 @@ namespace AvantGardeMaker.UI
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public override void Initialize()
+		public void Initialize()
 		{
-			base.Initialize();
-
 			m_SettingPanelMap = new Dictionary<string, SettingPanel>();
 			Transform settingPanelParent = transform.Find("Setting Panels");
 			int childCount = settingPanelParent.childCount;
@@ -81,10 +79,8 @@ namespace AvantGardeMaker.UI
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public override void Finallize()
+		public void Finallize()
 		{
-			base.Finallize();
-
 			foreach (var item in m_SettingPanelMap)
 			{
 				item.Value.Finallize();

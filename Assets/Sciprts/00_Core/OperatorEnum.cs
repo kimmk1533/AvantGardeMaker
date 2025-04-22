@@ -32,7 +32,7 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 		VeryFast,
 	}
 
-	public enum E_RedeploySpeed
+	public enum E_RedeploymentSpeed
 	{
 		Slow,
 		Nomal,

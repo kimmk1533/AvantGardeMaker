@@ -4,6 +4,7 @@ using System.Linq;
 using AvantGardeMaker.CoreSpace;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace;
+using AvantGardeMaker.OperatorSpace;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -21,12 +22,13 @@ namespace AvantGardeMaker.UI
 		private int m_MaxWave = -1;
 		#endregion
 
-		#region 오퍼레이터 저장 관련 변수
+		private List<OperatorDataUI> m_SpawnedOperatorDataUIList = null;
+		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 
+		#region 오퍼레이터 저장 관련 변수
 		#endregion
 
 		#region 적 저장 관련 변수
-		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
 		#endregion
 		#endregion
@@ -51,13 +53,15 @@ namespace AvantGardeMaker.UI
 		#region 세부 설정 관련 프로퍼티
 		#region 오퍼레이터
 		public OperatorDetailedSettingPanel operatorDetailedSettingPanel { get; set; }
+
+		public RectTransform operatorDataUIParent { get; set; }
 		#endregion
 
 		#region 적
 		public EnemyDetailedSettingPanel enemyDetailedSettingPanel { get; set; }
 
-		public RectTransform enemySpawnDataUIParent { get; set; }
 		public RectTransform enemyDataUIParent { get; set; }
+		public RectTransform enemySpawnDataUIParent { get; set; }
 		public RectTransform enemyWayPointDataUIParent { get; set; }
 		public RectTransform enemyImmuneDescriptionParent { get; set; }
 
@@ -113,6 +117,7 @@ namespace AvantGardeMaker.UI
 		#region 매니저
 		private static GameManager M_Game => GameManager.Instance;
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static OperatorManager M_Operator => OperatorManager.Instance;
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
@@ -130,6 +135,8 @@ namespace AvantGardeMaker.UI
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_SpawnedOperatorDataUIList = new List<OperatorDataUI>();
 
 			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
 			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
@@ -156,9 +163,27 @@ namespace AvantGardeMaker.UI
 			settingPanelController.Initialize();
 			menuPanelController.Initialize();
 
+			operatorDetailedSettingPanel.Initialize();
 			enemyDetailedSettingPanel.Initialize();
 
 			m_MaxWave = 0;
+
+			#region Operator Data UI 생성
+			List<OperatorData> operatorDataList = M_Operator.GetAllOperatorDatas();
+			for (int i = 0; i < operatorDataList.Count; ++i)
+			{
+				OperatorDataUI operatorDataUI = GetBuilder("Operator Data UI")
+					.SetParent(operatorDataUIParent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn<OperatorDataUI>();
+
+				operatorDataUI.operatorData = operatorDataList[i];
+
+				m_SpawnedOperatorDataUIList.Add(operatorDataUI);
+			}
+			#endregion
 
 			#region Spawn Enemy Data UI
 			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
@@ -188,6 +213,12 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
+			for (int i = 0; i < m_SpawnedOperatorDataUIList.Count; ++i)
+			{
+				Despawn(m_SpawnedOperatorDataUIList[i]);
+			}
+			m_SpawnedOperatorDataUIList.Clear();
+
 			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
 			{
 				Despawn(m_SpawnedEnemyDataUIList[i]);
@@ -203,6 +234,7 @@ namespace AvantGardeMaker.UI
 			menuPanelController.Finallize();
 			settingPanelController.Finallize();
 
+			operatorDetailedSettingPanel.Finallize();
 			enemyDetailedSettingPanel.Finallize();
 		}
 		#endregion

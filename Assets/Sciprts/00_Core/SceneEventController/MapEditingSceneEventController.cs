@@ -53,6 +53,10 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		[FoldoutGroup("세부 설정 관련")]
 		[FoldoutGroup("세부 설정 관련/오퍼레이터")]
 		private OperatorDetailedSettingPanel m_OperatorDetailedSettingPanel = null;
+
+		[SerializeField]
+		[FoldoutGroup("세부 설정 관련/오퍼레이터")]
+		private RectTransform m_OperatorDataUIParent = null;
 		#endregion
 
 		#region 적 세부 설정 관련 변수
@@ -62,10 +66,10 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 
 		[SerializeField]
 		[FoldoutGroup("세부 설정 관련/적")]
-		private RectTransform m_EnemySpawnDataUIParent = null;
+		private RectTransform m_EnemyDataUIParent = null;
 		[SerializeField]
 		[FoldoutGroup("세부 설정 관련/적")]
-		private RectTransform m_EnemyDataUIParent = null;
+		private RectTransform m_EnemySpawnDataUIParent = null;
 		[SerializeField]
 		[FoldoutGroup("세부 설정 관련/적")]
 		private RectTransform m_EnemyWayPointDataUIParent = null;
@@ -132,13 +136,15 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			#region 세부 설정 관련 변수 링킹
 			#region 오퍼레이터
 			M_MapEditingUI.operatorDetailedSettingPanel = m_OperatorDetailedSettingPanel;
+
+			M_MapEditingUI.operatorDataUIParent = m_OperatorDataUIParent;
 			#endregion
 
 			#region 적
 			M_MapEditingUI.enemyDetailedSettingPanel = m_EnemyDetailedSettingPanel;
 
-			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditingUI.enemyDataUIParent = m_EnemyDataUIParent;
+			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditingUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
 			M_MapEditingUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;
 			#endregion

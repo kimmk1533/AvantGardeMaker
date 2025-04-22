@@ -740,23 +740,28 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\99_UI Prefabs\Map Editor UI
   m_Origins:
+  - <key>k__BackingField: Operator Data UI
+    <additionalPath>k__BackingField: 02_Operator Setting
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 10
+    <origin>k__BackingField: {fileID: 1903526213115943607, guid: 2aacd36bbcde8924691a59b75badab79, type: 3}
   - <key>k__BackingField: Enemy Data UI
-    <additionalPath>k__BackingField: 
+    <additionalPath>k__BackingField: 03_Enemy Setting
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 743649475707460741, guid: d0d356fef47f5c444be266128bb5f1e3, type: 3}
   - <key>k__BackingField: Enemy Spawn Data UI
-    <additionalPath>k__BackingField: 
+    <additionalPath>k__BackingField: 03_Enemy Setting
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 3373354572747204386, guid: 88aaa9d338fe97642be08a36e9d6e522, type: 3}
   - <key>k__BackingField: Enemy WayPoint Data UI
-    <additionalPath>k__BackingField: 
+    <additionalPath>k__BackingField: 03_Enemy Setting
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 6102094215302992146, guid: 959d8b1ca6acaa0458091a89703ba599, type: 3}
   - <key>k__BackingField: Enemy Immune Setting UI
-    <additionalPath>k__BackingField: 
+    <additionalPath>k__BackingField: 03_Enemy Setting
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 8470797493107848387, guid: 3e7c092d873f555478d0529053a79f57, type: 3}

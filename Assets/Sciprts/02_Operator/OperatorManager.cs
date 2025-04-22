@@ -256,10 +256,11 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#endregion
 		*/
-		private const string c_OperatorDataPath = "Datas\\Operator Datas";
+		private const string c_OperatorDataPath = "Datas\\02_Operator Datas";
 		private const string c_OperatorSpritePath = "Textures";
 
 		#region 변수
+		[SerializeField, ReadOnly]
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
 		private Dictionary<string, Sprite> m_OperatorFrontSpriteMap = null;
 		private Dictionary<string, Sprite> m_OperatorBackSpriteMap = null;
@@ -394,6 +395,11 @@ namespace AvantGardeMaker.OperatorSpace
 
 				++index;
 			}
+		}
+
+		public List<OperatorData> GetAllOperatorDatas()
+		{
+			return new List<OperatorData>(m_OperatorDataMap.Values);
 		}
 	}
 }

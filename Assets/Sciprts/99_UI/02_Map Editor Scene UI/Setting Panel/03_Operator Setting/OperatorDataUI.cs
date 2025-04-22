@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using AvantGardeMaker.EnemySpace;
+using AvantGardeMaker.OperatorSpace;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -8,50 +8,32 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class EnemyDataUI : MapEditingUIPoolItem
+	public class OperatorDataUI : MapEditingUIPoolItem
 	{
+		#region 기본 템플릿
 		#region 변수
-		private EnemyData m_EnemyData = null;
+		private OperatorData m_OperatorData = null;
 
 		private Button m_Button = null;
-
-		private TMP_Text m_DebugText = null;
+		private TextMeshProUGUI m_OperatorKorNameText = null;
 		#endregion
 
 		#region 프로퍼티
-		public EnemyData enemyData
+		public OperatorData operatorData
 		{
-			get => m_EnemyData;
+			get => m_OperatorData;
 			set
 			{
-				m_EnemyData = value;
+				m_OperatorData = value;
 
-				m_DebugText.text = value.KorName;
+				m_OperatorKorNameText.text = value.KorName;
 			}
-		}
-
-		public string debugText
-		{
-			get => m_DebugText.text;
-			set => m_DebugText.text = value;
 		}
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
-		private void OnAddButtonClicked()
-		{
-			EnemySpawnDataUI enemySpawnDataUI = M_MapEditingUI.GetBuilder("Enemy Spawn Data UI")
-				.SetParent(M_MapEditingUI.enemySpawnDataUIParent.transform)
-				.SetScale(Vector3.one)
-				.SetActive(true)
-				.SetAutoInit(true)
-				.Spawn<EnemySpawnDataUI>();
-
-			enemySpawnDataUI.enemyData = enemyData;
-			enemySpawnDataUI.debugText = enemyData.KorName;
-		}
 		#endregion
 		#endregion
 
@@ -71,16 +53,11 @@ namespace AvantGardeMaker.UI
 			base.InitializePoolItem();
 
 			if (m_Button == null)
-			{
 				m_Button = GetComponent<Button>();
+			if (m_OperatorKorNameText == null)
+				m_OperatorKorNameText = transform.Find<TextMeshProUGUI>("Name Text");
 
-				m_Button.onClick.AddListener(OnAddButtonClicked);
-			}
-
-			if (m_DebugText == null)
-			{
-				m_DebugText = transform.GetComponentInChildren<TMP_Text>();
-			}
+			m_Button.onClick.AddListener(() => M_MapEditingUI.operatorDetailedSettingPanel.OnOperatorDataUIClicked(this));
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -89,8 +66,9 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizePoolItem();
 
-
+			m_Button.onClick.RemoveAllListeners();
 		}
+		#endregion
 		#endregion
 	}
 }

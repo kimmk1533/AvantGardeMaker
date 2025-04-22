@@ -10,7 +10,7 @@ namespace AvantGardeMaker.UI
 	{
 		#region 기본 템플릿
 		#region 변수
-		private Button m_Button = null;
+		private Button m_SlotButton = null;
 
 		private Image m_PlusImage = null;
 		#endregion
@@ -21,10 +21,15 @@ namespace AvantGardeMaker.UI
 		#region 이벤트
 
 		#region 이벤트 함수
+		private void OnSlotButtonClicked()
+		{
+			M_MapEditingUI.operatorDetailedSettingPanel.StartSetting(this);
+		}
 		#endregion
 		#endregion
 
 		#region 매니저
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -36,7 +41,10 @@ namespace AvantGardeMaker.UI
 		/// </summary>
 		public void Initialize()
 		{
-			m_Button = GetComponent<Button>();
+			m_SlotButton = GetComponent<Button>();
+			m_SlotButton.onClick.AddListener(OnSlotButtonClicked);
+
+			m_PlusImage = transform.Find<Image>("Plus Image");
 		}
 		/// <summary>
 		/// 마무리화 함수

@@ -165,6 +165,8 @@ namespace AvantGardeMaker.CoreSpace
 		/// </summary>
 		public void InitializeMapEditing()
 		{
+			M_Panel.InitializeMain();
+
 			M_Tile.InitializeMain();
 
 			M_MapEditing.InitializeMain();
@@ -183,6 +185,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditing.FinallizeMain();
 
 			M_Tile.FinallizeMain();
+
+			M_Panel.InitializeMain();
 
 			Debug.Log("Finallize Map Editing");
 		}

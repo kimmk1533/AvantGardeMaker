@@ -21,13 +21,13 @@ namespace AvantGardeMaker.OperatorSpace
 		//마항
 		public float Res;
 		//재배치속도
-		public E_RedeploySpeed RedeploySpeed;
+		public E_RedeploymentSpeed RedeploymentSpeed;
 		//재배치 실제 속도
 		public float RedeploymentInterval;
-		//시작 배치코스트
-		public int StartDeploymentCost;
-		//현재 배치코스트
+		//초기 배치코스트
 		public int InitDeploymentCost;
+		//현재 배치코스트
+		public int CurrentDeploymentCost;
 		//저지
 		public int BlockCount;
 		//공격속도 실제값

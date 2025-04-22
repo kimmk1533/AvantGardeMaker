@@ -24,12 +24,44 @@ MonoBehaviour:
   EngName: Melantha
   KorName: "\uD50C\uB8F8"
   FixedData:
+    MaxHp:
+      Elite0Level1: 1395
+      Elite1Level1: 1993
+      Elite2Level1: 2745
+      Elite2LevelFull: 2745
+    Atk:
+      Elite0Level1: 396
+      Elite1Level1: 583
+      Elite2Level1: 738
+      Elite2LevelFull: 738
+    Def:
+      Elite0Level1: 83
+      Elite1Level1: 119
+      Elite2Level1: 155
+      Elite2LevelFull: 155
+    Res:
+      Elite0Level1: 0
+      Elite1Level1: 0
+      Elite2Level1: 0
+      Elite2LevelFull: 0
+    DeploymentCost:
+      Elite0Level1: 13
+      Elite1Level1: 15
+      Elite2Level1: 15
+      Elite2LevelFull: 15
+    BlockCount:
+      Elite0Level1: 1
+      Elite1Level1: 1
+      Elite2Level1: 1
+      Elite2LevelFull: 1
+    MaxLevel:
+      Elite0Level1: 40
+      Elite1Level1: 55
+      Elite2Level1: 55
+      Elite2LevelFull: 55
     Rate: 3
-    MaxLevel: 40
     Level: 1
-    MaxExp: 40
-    Exp: 0
-    Elite: 3
+    Elite: 0
     Potential: 0
     Job: 0
     AtkSpeed: 1
@@ -44,10 +76,10 @@ MonoBehaviour:
     Atk: 230
     Def: 148
     Res: 0
-    RedeploySpeed: 0
+    RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    StartDeploymentCost: 9
     InitDeploymentCost: 9
+    CurrentDeploymentCost: 0
     BlockCount: 1
     InitAttakSpeed: 106
     Provocation: 0

@@ -24,12 +24,44 @@ MonoBehaviour:
   EngName: Fang
   KorName: "\uD33D"
   FixedData:
+    MaxHp:
+      Elite0Level1: 742
+      Elite1Level1: 1060
+      Elite2Level1: 1325
+      Elite2LevelFull: 1325
+    Atk:
+      Elite0Level1: 157
+      Elite1Level1: 235
+      Elite2Level1: 325
+      Elite2LevelFull: 325
+    Def:
+      Elite0Level1: 130
+      Elite1Level1: 187
+      Elite2Level1: 260
+      Elite2LevelFull: 260
+    Res:
+      Elite0Level1: 0
+      Elite1Level1: 0
+      Elite2Level1: 0
+      Elite2LevelFull: 0
+    DeploymentCost:
+      Elite0Level1: 9
+      Elite1Level1: 11
+      Elite2Level1: 11
+      Elite2LevelFull: 11
+    BlockCount:
+      Elite0Level1: 2
+      Elite1Level1: 2
+      Elite2Level1: 2
+      Elite2LevelFull: 2
+    MaxLevel:
+      Elite0Level1: 40
+      Elite1Level1: 55
+      Elite2Level1: 55
+      Elite2LevelFull: 55
     Rate: 3
-    MaxLevel: 40
-    Level: 1
-    MaxExp: 40
-    Exp: 0
-    Elite: 3
+    Level: 40
+    Elite: 0
     Potential: 0
     Job: 0
     AtkSpeed: 1
@@ -44,10 +76,10 @@ MonoBehaviour:
     Atk: 157
     Def: 132
     Res: 0
-    RedeploySpeed: 0
+    RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    StartDeploymentCost: 7
     InitDeploymentCost: 7
+    CurrentDeploymentCost: 0
     BlockCount: 2
     InitAttakSpeed: 106
     Provocation: 0
