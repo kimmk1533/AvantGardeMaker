@@ -23,6 +23,8 @@ namespace AvantGardeMaker.TileSpace.Enum
 	}
 	public enum E_TileType
 	{
+		None,
+
 		// 저지대 타일
 		LowGroundTile,
 		// 고지대 타일

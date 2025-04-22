@@ -120,6 +120,35 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 
 		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
 		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
+
+		public E_TileType[,] map
+		{
+			get
+			{
+				int mapWidth = this.mapWidth;
+				int mapHeight = this.mapHeight;
+
+				E_TileType[,] mapArray = new E_TileType[mapHeight, mapWidth];
+				for (int y = 0; y < mapHeight; ++y)
+				{
+					for (int x = 0; x < mapWidth; ++x)
+					{
+						mapArray[y, x] = E_TileType.None;
+					}
+				}
+
+				Vector2Int offset = -m_MinTile;
+
+				for (int i = 0; i < m_TilePointList.Count; ++i)
+				{
+					Vector2Int tilePoint = m_TilePointList[i] + offset;
+
+					mapArray[tilePoint.y, tilePoint.x] = m_TileTypeList[i];
+				}
+
+				return mapArray;
+			}
+		}
 		#endregion
 
 		#region 3. 오퍼레이터 관련 프로퍼티
