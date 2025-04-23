@@ -135,7 +135,7 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.InitializeMain();
 
-			//currentMap = M_Game.currentStageData.map;
+			currentMap = M_Game.currentStageData.map;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
