@@ -29,8 +29,10 @@ namespace AvantGardeMaker.EnemySpace
 		#endregion
 		//경유지(wayPoint) 인덱스
 		private int m_WayPointIndex = 0;
-		//경유지 목록(인덱스가 list.count와 같으면 도착)
+		//경유지 리스트(인덱스가 list.count와 같으면 도착)
 		private List<Vector2> m_WayPointList = null;
+		//경유지로 가기 위한 경로 리스트
+		private Stack<Vector2> m_PathPointStack = null;
 
 		//공격 딜레이
 		private UtilClass.Timer m_AtkIntervalTimer;
@@ -58,19 +60,20 @@ namespace AvantGardeMaker.EnemySpace
 		public List<Operator> m_TargetOperList = null;
 		//공격할 오퍼
 		public Operator m_TargetOper;
+
+		private bool[,] m_testMap = null;
 		#endregion
 
 		#region 프로퍼티
 		public E_EnemyState state { get { return m_CurEnemyState; } set { m_CurEnemyState = value; } }
 		public E_EnemyGradeType grade { get { return m_FixedData.EnemyType; } }
 		public bool isAlive => m_VariableData.Hp.CurStat > 0f;
-		public bool isBlocked => m_IsBlocked == true;
+		private bool isBlocked => m_IsBlocked == true;
+		private float moveSpeed => m_VariableData.MovementSpeed.CurStat;
 		private Vector2 curPos => new Vector2(transform.position.x, transform.position.y);
 		private Vector2 targetPos => m_WayPointList[Mathf.Min(m_WayPointIndex, m_WayPointList.Count - 1)];
 		private Vector2 startPos => m_WayPointList[0];
 		private Vector2 endPos => m_WayPointList[m_WayPointList.Count - 1];
-
-
 		#endregion
 
 		#region 이벤트
@@ -105,6 +108,7 @@ namespace AvantGardeMaker.EnemySpace
 		#region 매니저
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+		private static GameManager M_Game => GameManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -167,10 +171,20 @@ namespace AvantGardeMaker.EnemySpace
 				m_WayPointList.Add(curPos);
 			}
 
+			if (m_PathPointStack == null)
+				m_PathPointStack = new Stack<Vector2>();
+
 			m_WayPointIntervalList = new List<float>();
 
 			m_AtkIntervalTimer = new UtilClass.Timer(1.0f);
 			m_CurrentWayPointIntervalTimer = new UtilClass.Timer(0f);
+
+			m_testMap = new bool[5, 9]
+				{{true,true,true,true,true,true,true,true,true},
+				{true,false,false,false,false,false,false,false,false},
+				{true,true,true,true,true,true,true,true,true},
+				{false,false,false,false,false,false,false,false,true},
+				{true,true,true,true,true,true,true,true,true},             };
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -180,6 +194,7 @@ namespace AvantGardeMaker.EnemySpace
 			base.FinallizePoolItem();
 
 			m_WayPointList.Clear();
+			m_PathPointStack.Clear();
 			m_WayPointIndex = 0;
 		}
 		#endregion
@@ -199,6 +214,11 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			m_WayPointList.Clear();
 			m_WayPointList = wayPointList;
+
+			m_WayPointIndex = 0;
+
+			//경로 최신화
+			UpdatePathPointList();
 		}
 		public void SetWayPointIntervalList(List<float> wayPointIntervalList)
 		{
@@ -230,7 +250,6 @@ namespace AvantGardeMaker.EnemySpace
 				return;
 
 			m_CurrentWayPointIntervalTimer.Update();
-
 			//경유지에서 대기중이면 움직이지 않음
 			if (m_CurrentWayPointIntervalTimer.TimeCheck() == false)
 				return;
@@ -238,10 +257,11 @@ namespace AvantGardeMaker.EnemySpace
 			if (m_WayPointIntervalList.Count != m_WayPointList.Count)
 				throw new System.Exception("경유지 목록과 경유지 대기시간의 크기가 다름!");
 
-			Vector2 direction = targetPos - curPos;
-			float moveAmount = m_VariableData.MovementSpeed.CurStat * Time.deltaTime;
+			Vector2 direction = m_PathPointStack.Peek() - curPos;
+			float moveAmount = moveSpeed * Time.deltaTime;
 
-			if (direction.sqrMagnitude > moveAmount)//목표 지점에서 일정 거리 이상 떨어져있다면
+			//목표 지점에서 일정 거리 이상 떨어져있다면
+			if (direction.sqrMagnitude > moveAmount * moveAmount)
 			{
 				state = E_EnemyState.Move;
 				direction.Normalize();
@@ -252,26 +272,38 @@ namespace AvantGardeMaker.EnemySpace
 			}
 			else
 			{
+				//////경로 타일 도착 처리//////
+
 				//도착 위치로 순간이동
-				transform.position = targetPos;
-				state = E_EnemyState.Idle;
-				Debug.Log("경유지까지 이동 완료");
+				transform.position = m_PathPointStack.Pop();
+
+				//아직 경로가 남은 것이므로 return
+				if (m_PathPointStack.Count != 0)
+					return;
+
+				//////경유지 도착 처리//////
 
 				//다음 경유지로 출발하기 전 대기시간
 				if (m_WayPointIntervalList[m_WayPointIndex] > 0)
 				{
 					m_CurrentWayPointIntervalTimer.Clear();
 					m_CurrentWayPointIntervalTimer.interval = m_WayPointIntervalList[m_WayPointIndex];
+					//대기시간이 존재한다면 move가 아닌 idle상태
+					state = E_EnemyState.Idle;
 				}
 
-				//경유지의 끝에 다다르면 소멸 처리
+				//경유지 인덱스 +1
 				++m_WayPointIndex;
+
+				//경유지의 끝에 다다르면 소멸 처리
 				if (m_WayPointIndex >= m_WayPointList.Count)
 				{
 					Debug.Log("이동 완료");
 					Dead();
 					return;
 				}
+				//경로 최신화
+				UpdatePathPointList();
 			}
 		}
 
@@ -354,16 +386,26 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			m_VariableData.Hp.CurStat -= val;
 		}
-		public void UpdateWayPointIndex(int index)
+		/// <summary>
+		/// 현재 위치에서 경유지[m_WayPointIndex]로 가기 위한 경로인 m_PathPointStack 최신화
+		/// <br></br>
+		/// 현재 위치가 경유지라면 curPos만 stack에 담고 return
+		/// </summary>
+		private void UpdatePathPointList()
 		{
-			if (m_WayPointList == null ||
-				m_WayPointList.Count < 2)
+			//bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
+			//List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, map);
+			List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, m_testMap);
+			m_PathPointStack.Clear();
+			if (pathList == null)
+			{
+				m_PathPointStack.Push(curPos);
 				return;
-
-			m_WayPointIndex = Mathf.Min(index, m_WayPointList.Count - 2);
-
-			bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
-			m_WayPointList = PathFinder.FindPath(m_WayPointList[m_WayPointIndex], m_WayPointList[m_WayPointIndex + 1], map);
+			}
+			for (int i = 0; i < pathList.Count; i++)
+			{
+				m_PathPointStack.Push(pathList[i]);
+			}
 		}
 	}
 }

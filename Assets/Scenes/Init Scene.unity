@@ -156,7 +156,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: m_OperatorDataMap
+      Entry: 6
+      Data: 
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\02_Operator Prefabs
@@ -165,17 +168,17 @@ MonoBehaviour:
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 8d8af10734821d749b97074076331099, type: 3}
+    <origin>k__BackingField: {fileID: 7562102809550483579, guid: 8d8af10734821d749b97074076331099, type: 3}
   - <key>k__BackingField: Plume
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 0267d81cf39530243a86660e7a5d2552, type: 3}
+    <origin>k__BackingField: {fileID: 1903103974248304768, guid: 0267d81cf39530243a86660e7a5d2552, type: 3}
   - <key>k__BackingField: Melantha
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: e10d46e8cfecca941808ed14af7dfa77, type: 3}
+    <origin>k__BackingField: {fileID: 7225151085698257855, guid: e10d46e8cfecca941808ed14af7dfa77, type: 3}
 --- !u!4 &207421274
 Transform:
   m_ObjectHideFlags: 0
@@ -238,7 +241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &621073716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +275,13 @@ MonoBehaviour:
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
   m_OperatorSkillButton: {fileID: 0}
+  m_CostValueText: {fileID: 0}
+  m_CostFillImage: {fileID: 0}
+  m_GamePlayingCamera: {fileID: 0}
+  m_OperatorSquadUIParent: {fileID: 0}
+  m_OperatorStatusUI: {fileID: 0}
+  m_DeploymentCancelButton: {fileID: 0}
+  m_OperatorRetreatButton: {fileID: 0}
 --- !u!4 &621073717
 Transform:
   m_ObjectHideFlags: 0
@@ -409,7 +419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1446381272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,6 +669,11 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\01_Tile Prefabs
   m_Origins:
+  - <key>k__BackingField: None
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 0
+    <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
   - <key>k__BackingField: LowGroundTile
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1

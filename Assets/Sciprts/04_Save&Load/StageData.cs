@@ -121,6 +121,8 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
 		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 
+		public Vector2Int minTile => m_MinTile;
+
 		public E_TileType[,] map
 		{
 			get

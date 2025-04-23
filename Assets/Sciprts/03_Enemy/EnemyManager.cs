@@ -34,7 +34,6 @@ namespace AvantGardeMaker.EnemySpace
 		#region 기본 템플릿
 		#region 변수
 		private const string c_EnemyDataPath = "Datas\\03_Enemy Datas";
-		private bool[,] m_TestMap;
 		private bool m_IsStageStart;
 
 		//생성한 enemy 목록
@@ -74,15 +73,6 @@ namespace AvantGardeMaker.EnemySpace
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			m_TestMap = new bool[7, 7]
-			{ { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},
-			 { true,true,true,true,true,true,true},};
 
 			m_EnemyList = new List<Enemy>();
 			m_EnemyDataList = new List<EnemyData>();

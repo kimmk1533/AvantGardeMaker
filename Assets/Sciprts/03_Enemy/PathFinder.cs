@@ -6,13 +6,14 @@ using UnityEngine;
 
 namespace AvantGardeMaker.EnemySpace
 {
-	public class PathFinder : SerializedMonoBehaviour
+	public class PathFinder
 	{
 		#region 변수
 		public bool[,] testMap;
 		#endregion
 
 		#region 프로퍼티
+		public static Vector2Int offset { get; set; }
 		#endregion
 
 		#region 이벤트
@@ -82,11 +83,11 @@ namespace AvantGardeMaker.EnemySpace
 
 		public static bool[,] TileToGrid(E_TileType[,] map, bool isFlyable = false)
 		{
-			bool[,] returnMap = new bool[map.GetLength(1), map.GetLength(0)];
+			bool[,] returnMap = new bool[map.GetLength(0), map.GetLength(1)];
 
-			for (int y = 0; y < map.GetLength(1); ++y)
+			for (int y = 0; y < map.GetLength(0); ++y)
 			{
-				for (int x = 0; x < map.GetLength(0); ++x)
+				for (int x = 0; x < map.GetLength(1); ++x)
 				{
 					switch (map[y, x])
 					{
@@ -128,7 +129,7 @@ namespace AvantGardeMaker.EnemySpace
 				foreach (var direction in m_Directions)         //8방향 탐색
 				{
 					Vector2 neighborPos = currentNode.m_Position + direction;                //이웃 노드 선택
-					if (!IsValidPosition(Mathf.FloorToInt(neighborPos.x), Mathf.FloorToInt(neighborPos.y), grid) || closedSet.Contains(neighborPos)) //이동이 불가하거나 닫힌 노드에 있는 노드면 생략
+					if (!IsValidPosition(Mathf.RoundToInt(neighborPos.x), Mathf.RoundToInt(neighborPos.y), grid) || closedSet.Contains(neighborPos)) //이동이 불가하거나 닫힌 노드에 있는 노드면 생략
 						continue;
 
 					float gCost = currentNode.m_G + Vector3.Distance(currentNode.m_Position, neighborPos);   //G(시작~자신) = 부모(curNode)의 G+부모에서 자신까지의 거리 합산
@@ -140,9 +141,9 @@ namespace AvantGardeMaker.EnemySpace
 
 					if (direction.x * direction.y != 0) //x와 y가 모두 움직이는 경우(=대각선의 경우)
 					{
-						if (!IsValidPosition(Mathf.FloorToInt(currentNode.m_Position.x + direction.x), Mathf.FloorToInt(currentNode.m_Position.y), grid))//이동 방향의 x축이 이동 불가 지형인 경우 생략
+						if (!IsValidPosition(Mathf.RoundToInt(currentNode.m_Position.x + direction.x), Mathf.RoundToInt(currentNode.m_Position.y), grid))//이동 방향의 x축이 이동 불가 지형인 경우 생략
 							continue;
-						if (!IsValidPosition(Mathf.FloorToInt(currentNode.m_Position.x), Mathf.FloorToInt(currentNode.m_Position.y + direction.y), grid))//이동 방향의 y축이 이동 불가 지형인 경우 생략
+						if (!IsValidPosition(Mathf.RoundToInt(currentNode.m_Position.x), Mathf.RoundToInt(currentNode.m_Position.y + direction.y), grid))//이동 방향의 y축이 이동 불가 지형인 경우 생략
 							continue;
 					}
 
@@ -163,7 +164,7 @@ namespace AvantGardeMaker.EnemySpace
 				path.Add(node.m_Position);
 				node = node.m_Parent;
 			}
-			path.Reverse(); //도착점부터 add했기 때문에 전체 순서를 뒤집어야 함
+			//path.Reverse(); //도착점부터 add했기 때문에 전체 순서를 뒤집어야 함
 			return path;
 		}
 		/// <summary>
@@ -171,9 +172,12 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		private static bool IsValidPosition(int posX, int posY, bool[,] grid)
 		{
-			return posX >= 0 && posX < grid.GetLength(1) &&   //x값이 grid 안에 있는지
-				posY >= 0 && posY < grid.GetLength(0) &&      //y값이 grid 안에 있는지
-				grid[posY, posX];                             //현재 좌표가 grid에서 이동 가능한지
+			int x = posX + offset.x;
+			int y = posY + offset.y;
+
+			return x >= 0 && x < grid.GetLength(1) &&   //x값이 grid 안에 있는지
+				y >= 0 && y < grid.GetLength(0) &&      //y값이 grid 안에 있는지
+				grid[y, x];                             //현재 좌표가 grid에서 이동 가능한지
 		}
 	}
 }

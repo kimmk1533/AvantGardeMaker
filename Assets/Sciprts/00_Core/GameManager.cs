@@ -66,8 +66,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.Initialize();
 
 			// Game Playing Scene Manager
-			M_GamePlaying.Initialize();
-			M_GamePlayingUI.Initialize();
+			//M_GamePlaying.Initialize();
+			//M_GamePlayingUI.Initialize();
 
 			// Object Manager
 			M_Tile.Initialize();
@@ -89,8 +89,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_Tile.Finallize();
 
 			// Game Playing Scene Manager
-			M_GamePlayingUI.Finallize();
-			M_GamePlaying.Finallize();
+			//M_GamePlayingUI.Finallize();
+			//M_GamePlaying.Finallize();
 
 			// Map Editing Scene Manager
 			M_MapEditingUI.Finallize();
@@ -195,6 +195,8 @@ namespace AvantGardeMaker.CoreSpace
 		public void SynchronizeStageData(StageData stageData)
 		{
 			m_GameStageData = stageData;
+
+			PathFinder.offset = -stageData.minTile;
 		}
 	}
 }
