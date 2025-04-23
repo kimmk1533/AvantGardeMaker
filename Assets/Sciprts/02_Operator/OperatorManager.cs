@@ -257,7 +257,7 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 		*/
 		private const string c_OperatorDataPath = "Datas\\02_Operator Datas";
-		private const string c_OperatorSpritePath = "Textures";
+		private const string c_OperatorSpritePath = "Textures/02_Operator Textures" + "";
 
 		#region 변수
 		[SerializeField, ReadOnly]
@@ -277,6 +277,12 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		#region 유니티 콜백 함수
+		protected override void Awake()
+		{
+			base.Awake();
+			Initialize();
+			InitializeMain();
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수

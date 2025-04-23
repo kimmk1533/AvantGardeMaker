@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace AvantGardeMaker
+namespace AvantGardeMaker.OperatorSpace
 {
-	public class Gard : SerializedMonoBehaviour
+	public class Gard: Operator
 	{
 		#region 변수
 		#endregion

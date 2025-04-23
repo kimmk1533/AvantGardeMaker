@@ -25,10 +25,19 @@ namespace AvantGardeMaker.UI
 		[SerializeField, ReadOnly]
 		private Image m_ReDeploymentTimerImage = null;
 
+		private OperatorData m_OperatorData = null;
+
 		#endregion
 
 		#region 프로퍼티
-		public OperatorData operatorData { get; set; }
+		public OperatorData operatorData
+		{
+			get => m_OperatorData;
+			set 
+			{ 
+				m_OperatorData = value;
+			}
+		}
 		#endregion
 
 		#region 이벤트
@@ -74,8 +83,6 @@ namespace AvantGardeMaker.UI
 			{
 				m_ReDeploymentTimer = new UtilClass.Timer();
 			}
-			m_ReDeploymentTimer.interval = operatorData.VariableData.RedeploymentInterval;
-
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -146,6 +153,7 @@ namespace AvantGardeMaker.UI
 			tile.operatorSquadUI = this;
 			m_PreviewOperator.transform.position = tile.transform.position;
 			M_GamePlaying.setPreViewOperatorOnTile = tile;
+			M_GamePlayingUI.OnSettingDirectionStart();
 		}
 
 		public void CancelDeployment()

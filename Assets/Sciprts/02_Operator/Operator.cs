@@ -35,9 +35,11 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
-		private List<OperatorSkill> m_OperatorPositionSkill = null;
+		private List<OperatorSkill> m_OperatorSkillList = null;
 
 		private int m_ReDeployCount = 0;
+
+
 		#endregion
 
 		#region 프로퍼티
@@ -59,8 +61,8 @@ namespace AvantGardeMaker.OperatorSpace
 		}
 		public List<OperatorSkill> operatorPositionSkill
 		{
-			get => m_OperatorPositionSkill;
-			set => m_OperatorPositionSkill = value;
+			get => m_OperatorSkillList;
+			set => m_OperatorSkillList = value;
 		}
 		public int redeployCount
 		{
@@ -93,7 +95,7 @@ namespace AvantGardeMaker.OperatorSpace
 		private static OperatorManager M_Operator => OperatorManager.Instance;
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
 
-		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+		protected static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -277,8 +279,14 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			m_OperatorData.VariableData.RealHp -= value;
 		}
+
+
+		public void OnClickSkillButton()
+		{
+			for (int i = 0; i < m_OperatorSkillList.Count; i++)
+			{
+				m_OperatorSkillList[i].UsingThisSkill(operatorData.VariableData.SkillInfoList[i]);
+			}
+		}
 	}
-
-
-
 }

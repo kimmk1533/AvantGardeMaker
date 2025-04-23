@@ -90,6 +90,12 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 유니티 콜백 함수
+		protected override void Awake()
+		{
+			base.Awake();
+			Initialize();
+			InitializeMain();
+		}
 		private void Update()
 		{
 			CostIncreaseProcess();
@@ -160,6 +166,8 @@ namespace AvantGardeMaker.CoreSpace
 					return;
 
 				M_GamePlayingUI.activeRetreatButton = !M_GamePlayingUI.activeRetreatButton;
+				//작업
+				M_GamePlayingUI.activeSkillButton = !M_GamePlayingUI.activeSkillButton;
 
 				//오퍼레이터 스탯창열기
 				//M_GamePlayingUI.m_OperStatUIParent.SetActive(true);

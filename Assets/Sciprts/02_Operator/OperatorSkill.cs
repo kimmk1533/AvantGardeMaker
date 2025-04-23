@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AvantGardeMaker.OperatorSpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using AvantGardeMaker.CoreSpace;
 
 namespace AvantGardeMaker.OperatorSpace
 {
@@ -73,7 +74,35 @@ namespace AvantGardeMaker.OperatorSpace
 			get=> m_SkillText;
 			set => m_SkillText = value;
 		}
-		
+
 		#endregion
+
+		#region 매니져
+		public GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+		#endregion
+		public void UsingThisSkill(SkillInfo thisSkillInfo)
+		{
+			switch (thisSkillInfo.SkillType)
+			{
+				case E_OperatorSkillType.StatusBuff:
+					break;
+				case E_OperatorSkillType.ChargeCost:
+					SkillGainCost((int)thisSkillInfo.SkillValue);
+					break;
+				case E_OperatorSkillType.MultipleShot:
+					break;
+				case E_OperatorSkillType.StopAttack:
+					break;
+				case E_OperatorSkillType.ChangeAttackRange:
+					break;
+				default:
+					break;
+			}
+		}
+
+		public void SkillGainCost(int gainCostValue)
+		{
+			M_GamePlaying.GaintCost(gainCostValue);
+		}
 	}
 }

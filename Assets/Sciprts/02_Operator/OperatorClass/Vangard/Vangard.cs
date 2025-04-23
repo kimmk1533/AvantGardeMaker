@@ -29,7 +29,7 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void Initialize()
 		{
-
+			SkillSetting();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -42,9 +42,9 @@ namespace AvantGardeMaker.OperatorSpace
 		public void SkillSetting()
 		{
 			operatorPositionSkill = new List<OperatorSkill>();
-			OperatorSkill temp = new OperatorSkill();
-			temp.skillName = m_OperatorData.FixedData.SkillName;
-			temp.skillText = "";
+			OperatorSkill newSkill = new OperatorSkill();
+			newSkill.skillName = m_OperatorData.FixedData.SkillName;
+			newSkill.skillText = "";
 			for (int i = 0; i < m_OperatorData.VariableData.SkillInfoList.Count; i++)
 			{
 				switch (m_OperatorData.VariableData.SkillInfoList[i].SkillType)
@@ -52,7 +52,7 @@ namespace AvantGardeMaker.OperatorSpace
 					case E_OperatorSkillType.StatusBuff:
 						break;
 					case E_OperatorSkillType.ChargeCost:
-						CostCargeSkillSetting(temp);
+						CostCargeSkillSetting(newSkill);
 						break;
 					case E_OperatorSkillType.MultipleShot:
 						break;
@@ -65,9 +65,9 @@ namespace AvantGardeMaker.OperatorSpace
 				}
 				if (i != m_OperatorData.VariableData.SkillInfoList.Count - 1)
 				{
-					temp.skillText += ",";
+					newSkill.skillText += ",";
 				}
-				operatorPositionSkill.Add(temp);
+				operatorPositionSkill.Add(newSkill);
 			}
 		}
 		public void CostCargeSkillSetting(OperatorSkill tempSkill)
@@ -84,6 +84,7 @@ namespace AvantGardeMaker.OperatorSpace
 					case E_OperatorSkillType.StatusBuff:
 						break;
 					case E_OperatorSkillType.ChargeCost:
+						SkillGainCost((int)m_OperatorData.VariableData.SkillInfoList[i].SkillValue);
 						break;
 					case E_OperatorSkillType.MultipleShot:
 						break;
@@ -97,5 +98,10 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 		}
 
+
+		public void SkillGainCost(int gainCostValue)
+		{
+			M_GamePlaying.GaintCost(gainCostValue);
+		}
 	}
 }

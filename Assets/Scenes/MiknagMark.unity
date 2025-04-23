@@ -1050,26 +1050,46 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: m_OperatorDataMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[AvantGardeMaker.OperatorSpace.OperatorData,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
-  m_CommonPath: MikangMark/Prefabs
+  m_CommonPath: Prefabs\02_Operator Prefabs
   m_Origins:
   - <key>k__BackingField: Fang
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 8d8af10734821d749b97074076331099, type: 3}
+    <origin>k__BackingField: {fileID: 7562102809550483579, guid: 8d8af10734821d749b97074076331099, type: 3}
   - <key>k__BackingField: Plume
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: 0267d81cf39530243a86660e7a5d2552, type: 3}
+    <origin>k__BackingField: {fileID: 1903103974248304768, guid: 0267d81cf39530243a86660e7a5d2552, type: 3}
   - <key>k__BackingField: Melantha
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 1
-    <origin>k__BackingField: {fileID: 8135089505916519293, guid: e10d46e8cfecca941808ed14af7dfa77, type: 3}
+    <origin>k__BackingField: {fileID: 7225151085698257855, guid: e10d46e8cfecca941808ed14af7dfa77, type: 3}
 --- !u!1 &138419949
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,7 +1108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &138419950
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5749,7 +5769,7 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 0
   m_DontDestroyOnLoad: 0
-  m_CommonPath: MikangMark/Prefabs
+  m_CommonPath: Prefabs\99_UI Prefabs\Game Playing UI
   m_Origins:
   - <key>k__BackingField: Operator Squad UI
     <additionalPath>k__BackingField: 
@@ -5759,6 +5779,13 @@ MonoBehaviour:
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
   m_OperatorSkillButton: {fileID: 138419951}
+  m_CostValueText: {fileID: 142723040}
+  m_CostFillImage: {fileID: 1234035068}
+  m_GamePlayingCamera: {fileID: 1368605186}
+  m_OperatorSquadUIParent: {fileID: 1920200658}
+  m_OperatorStatusUI: {fileID: 1626726308}
+  m_DeploymentCancelButton: {fileID: 141244310}
+  m_OperatorRetreatButton: {fileID: 55487446}
 --- !u!4 &1324118280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6699090971738483618, guid: fa02f73474d208049828fa8bc455b775, type: 3}
