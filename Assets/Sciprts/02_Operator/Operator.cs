@@ -15,7 +15,6 @@ namespace AvantGardeMaker.OperatorSpace
 	{
 		#region 변수
 		private SpriteRenderer m_SpriteRenderer = null;
-
 		protected OperatorData m_OperatorData = null;
 
 		private Sprite m_FrontSprite = null;
@@ -35,7 +34,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
-		private List<OperatorSkill> m_OperatorSkillList = null;
+		protected List<OperatorSkill> m_OperatorSkillList = null;
 
 		private int m_ReDeployCount = 0;
 
@@ -59,7 +58,7 @@ namespace AvantGardeMaker.OperatorSpace
 			get => m_DeploymentTile;
 			set => m_DeploymentTile = value;
 		}
-		public List<OperatorSkill> operatorPositionSkill
+		public List<OperatorSkill> operatorSkillList
 		{
 			get => m_OperatorSkillList;
 			set => m_OperatorSkillList = value;
@@ -130,6 +129,8 @@ namespace AvantGardeMaker.OperatorSpace
 				m_AttackCoolTimer = new UtilClass.Timer();
 			}
 			m_AttackCoolTimer.interval = operatorData.VariableData.InitAttakSpeed;
+
+			SkillSetting();
 			for (int i = 0; i < operatorData.VariableData.AttackPos.Count; i++)
 			{
 				//m_InAttackRangeTileList.Add();
@@ -196,6 +197,15 @@ namespace AvantGardeMaker.OperatorSpace
 				M_GamePlayingUI.OnSettingDirectionEnd();
 				M_GamePlaying.DeployOperator(this);
 				M_GamePlaying.DeploymentOperatorOnTile(this);
+				M_GamePlaying.currentCost -= operatorData.VariableData.CurrentDeploymentCost;
+
+				for (int i = 0; i < operatorData.VariableData.SkillInfoList.Count; i++)
+				{
+					if (operatorData.VariableData.SkillInfoList[i].SkillType == E_OperatorSkillType.DeployGainCost)
+					{
+						M_GamePlaying.GainCost((int)operatorData.VariableData.SkillInfoList[i].SkillValue);
+					}
+				}
 			}
 		}
 		private void UpdateDraggingDirection(Vector2 diff)
@@ -287,6 +297,42 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				m_OperatorSkillList[i].UsingThisSkill(operatorData.VariableData.SkillInfoList[i]);
 			}
+		}
+
+		public void SkillSetting()
+		{
+			m_OperatorSkillList = new List<OperatorSkill>();
+			OperatorSkill newSkill = new OperatorSkill();
+			newSkill.skillName = m_OperatorData.FixedData.SkillName;
+			newSkill.skillText = "";
+			for (int i = 0; i < m_OperatorData.VariableData.SkillInfoList.Count; i++)
+			{
+				switch (m_OperatorData.VariableData.SkillInfoList[i].SkillType)
+				{
+					case E_OperatorSkillType.StatusBuff:
+						break;
+					case E_OperatorSkillType.DeployGainCost:
+						CostCargeSkillSetting(newSkill);
+						break;
+					case E_OperatorSkillType.MultipleShot:
+						break;
+					case E_OperatorSkillType.StopAttack:
+						break;
+					case E_OperatorSkillType.ChangeAttackRange:
+						break;
+					default:
+						break;
+				}
+				if (i != m_OperatorData.VariableData.SkillInfoList.Count - 1)
+				{
+					newSkill.skillText += ",";
+				}
+			}
+		}
+		public void CostCargeSkillSetting(OperatorSkill takeSkill)
+		{
+			takeSkill.skillText += "배치 코스트 " + m_OperatorData.VariableData.SkillInfoList + " 즉시 획득";
+			m_OperatorSkillList.Add(takeSkill);
 		}
 	}
 }

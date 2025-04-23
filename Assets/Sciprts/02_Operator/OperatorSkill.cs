@@ -80,14 +80,17 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 매니져
 		public GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
+
+
+
 		public void UsingThisSkill(SkillInfo thisSkillInfo)
 		{
 			switch (thisSkillInfo.SkillType)
 			{
 				case E_OperatorSkillType.StatusBuff:
 					break;
-				case E_OperatorSkillType.ChargeCost:
-					SkillGainCost((int)thisSkillInfo.SkillValue);
+				case E_OperatorSkillType.DeployGainCost:
+					DeployGainCoust((int)thisSkillInfo.SkillValue);
 					break;
 				case E_OperatorSkillType.MultipleShot:
 					break;
@@ -100,7 +103,7 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 		}
 
-		public void SkillGainCost(int gainCostValue)
+		public void DeployGainCoust(int gainCostValue)
 		{
 			M_GamePlaying.GainCost(gainCostValue);
 		}

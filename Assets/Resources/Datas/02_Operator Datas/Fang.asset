@@ -78,8 +78,8 @@ MonoBehaviour:
     Res: 0
     RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    InitDeploymentCost: 7
-    CurrentDeploymentCost: 0
+    InitDeploymentCost: 15
+    CurrentDeploymentCost: 15
     BlockCount: 2
     InitAttakSpeed: 106
     Provocation: 0

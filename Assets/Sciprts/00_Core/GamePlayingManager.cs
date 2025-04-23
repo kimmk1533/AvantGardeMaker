@@ -45,6 +45,7 @@ namespace AvantGardeMaker.CoreSpace
 		public int currentCost
 		{
 			get => m_CurrentCost;
+			set => m_CurrentCost = value;
 		}
 
 		public UtilClass.Timer costTimer => m_CostTimer;

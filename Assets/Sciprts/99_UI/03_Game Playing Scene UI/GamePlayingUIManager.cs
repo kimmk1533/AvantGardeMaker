@@ -186,6 +186,8 @@ namespace AvantGardeMaker.UI
 			{
 				m_OperatorFullshotSpriteMap.Add(operatorFullshotSprites[i].name, operatorFullshotSprites[i]);
 			}
+
+			m_OperatorSkillButton.gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -305,7 +307,8 @@ namespace AvantGardeMaker.UI
 
 		public void ActiveSkillButton()
 		{
-			m_OperatorSkillButton.transform.position = new Vector3(M_GamePlaying.settedOperatorSelect.transform.position.x + 200, M_GamePlaying.settedOperatorSelect.transform.position.y - 200);
+			Vector3 screenPos = gamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			m_OperatorSkillButton.transform.position = new Vector3(screenPos.x + 200, screenPos.y - 200);
 			m_OperatorSkillButton.gameObject.SetActive(true);
 			m_OperatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnClickSkillButton);
 		}
