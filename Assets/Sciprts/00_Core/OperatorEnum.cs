@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace.Enum
 {
-	public enum E_JopType
+	public enum E_ClassType
 	{
 		VanGuard,
 		Guard,

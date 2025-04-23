@@ -22,7 +22,7 @@ namespace AvantGardeMaker.UI
 		private int m_MaxWave = -1;
 		#endregion
 
-		private List<OperatorDataUI> m_SpawnedOperatorDataUIList = null;
+		private Dictionary<string, OperatorDataUI> m_SpawnedOperatorDataUIMap = null;
 		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 
 		#region 오퍼레이터 저장 관련 변수
@@ -136,7 +136,7 @@ namespace AvantGardeMaker.UI
 		{
 			base.Initialize();
 
-			m_SpawnedOperatorDataUIList = new List<OperatorDataUI>();
+			m_SpawnedOperatorDataUIMap = new Dictionary<string, OperatorDataUI>();
 
 			m_SpawnedEnemyDataUIList = new List<EnemyDataUI>();
 			m_SpawnedEnemySpawnDataUIList = new List<EnemySpawnDataUI>();
@@ -181,7 +181,7 @@ namespace AvantGardeMaker.UI
 
 				operatorDataUI.operatorData = operatorDataList[i];
 
-				m_SpawnedOperatorDataUIList.Add(operatorDataUI);
+				m_SpawnedOperatorDataUIMap.Add(operatorDataList[i].EngName, operatorDataUI);
 			}
 			#endregion
 
@@ -213,22 +213,8 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
-			for (int i = 0; i < m_SpawnedOperatorDataUIList.Count; ++i)
-			{
-				Despawn(m_SpawnedOperatorDataUIList[i]);
-			}
-			m_SpawnedOperatorDataUIList.Clear();
-
-			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
-			{
-				Despawn(m_SpawnedEnemyDataUIList[i]);
-			}
+			m_SpawnedOperatorDataUIMap.Clear();
 			m_SpawnedEnemyDataUIList.Clear();
-
-			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
-			{
-				Despawn(m_SpawnedEnemySpawnDataUIList[i]);
-			}
 			m_SpawnedEnemySpawnDataUIList.Clear();
 
 			menuPanelController.Finallize();
@@ -254,6 +240,12 @@ namespace AvantGardeMaker.UI
 		//}
 
 		#region Save
+		public void SaveOperatorDataUI(ref StageData stageData)
+		{
+			OperatorSettingPanel operatorSettingPanel = settingPanelController["Operator"] as OperatorSettingPanel;
+
+			operatorSettingPanel.SaveOperatorDataUI(ref stageData);
+		}
 		public void SaveEnemyDataUI(ref StageData stageData)
 		{
 			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
@@ -275,6 +267,12 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region Load
+		public void LoadOperatorDataUI(StageData stageData)
+		{
+			OperatorSettingPanel operatorSettingPanel = settingPanelController["Operator"] as OperatorSettingPanel;
+
+			operatorSettingPanel.LoadOperatorDataUI(stageData);
+		}
 		public void LoadEnemySpawnDataUI(StageData stageData)
 		{
 			ClearEnemySpawnDataUI();
@@ -309,6 +307,29 @@ namespace AvantGardeMaker.UI
 		}
 		#endregion
 
+		public void RemoveOperatorDataUI(string key)
+		{
+			if (m_SpawnedOperatorDataUIMap.TryGetValue(key, out OperatorDataUI operatorDataUI) == false)
+				return;
+
+			operatorDataUI.gameObject.SetActive(false);
+		}
+		public void RespawnOperatorDataUI(string key)
+		{
+			if (m_SpawnedOperatorDataUIMap.TryGetValue(key, out OperatorDataUI operatorDataUI) == false)
+				return;
+
+			operatorDataUI.gameObject.SetActive(true);
+		}
+
+		public void ClearOperatorDataUI()
+		{
+			foreach (KeyValuePair<string, OperatorDataUI> item in m_SpawnedOperatorDataUIMap)
+			{
+				Despawn(item.Value);
+			}
+			m_SpawnedOperatorDataUIMap.Clear();
+		}
 		public void ClearEnemyDataUI()
 		{
 			int count = m_SpawnedEnemyDataUIList.Count;

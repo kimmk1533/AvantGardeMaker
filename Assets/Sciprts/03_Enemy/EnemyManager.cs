@@ -42,7 +42,7 @@ namespace AvantGardeMaker.EnemySpace
 
 		//스크립터블 오브젝트 추가용
 		[SerializeField]
-		private List<EnemyData> m_EnemyDataList = null;
+		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
 		[SerializeField]
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
 
@@ -75,7 +75,7 @@ namespace AvantGardeMaker.EnemySpace
 			base.Initialize();
 
 			m_EnemyList = new List<Enemy>();
-			m_EnemyDataList = new List<EnemyData>();
+			m_EnemyDataMap = new Dictionary<string, EnemyData>();
 			m_EnemySpawnDataQueue = new Queue<EnemySpawnData>();
 
 			m_EnemySpawnTimer = new UtilClass.Timer();
@@ -142,18 +142,27 @@ namespace AvantGardeMaker.EnemySpace
 		[Button("Load EnemyData")]
 		public void LoadEnemyData()
 		{
-			m_EnemyDataList.Clear();
-			m_EnemyDataList.AddRange(Resources.LoadAll<EnemyData>(c_EnemyDataPath));
+			m_EnemyDataMap.Clear();
+
+			EnemyData[] enemyDatas = Resources.LoadAll<EnemyData>(c_EnemyDataPath);
+
+			for (int i = 0; i < enemyDatas.Length; ++i)
+			{
+				string key = enemyDatas[i].EngName;
+
+				m_EnemyDataMap.Add(key, enemyDatas[i]);
+			}
 		}
 		/// <summary>
 		/// 스크립터블 데이터를 들고 있는 m_EnemyDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
 		/// </summary>
 		public void LoadEnemyData(StageData stageData)
 		{
+			List<string> enemyKeyList = stageData.enemyKeyList;
 			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
 			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
 
-			int count = m_EnemyDataList.Count;
+			int count = enemyKeyList.Count;
 
 			if (count != fixedDataList.Count ||
 				count != variableDataList.Count)
@@ -161,7 +170,9 @@ namespace AvantGardeMaker.EnemySpace
 
 			for (int i = 0; i < count; ++i)
 			{
-				EnemyData enemyData = m_EnemyDataList[i];
+				string key = enemyKeyList[i];
+
+				EnemyData enemyData = m_EnemyDataMap[key];
 
 				enemyData.FixedData = fixedDataList[i];
 				enemyData.VariableData = variableDataList[i];
@@ -170,13 +181,14 @@ namespace AvantGardeMaker.EnemySpace
 			m_EnemySpawnDataQueue.Clear();
 			m_EnemySpawnDataQueue.EnqueueRange(stageData.enemySpawnDataList);
 
-			m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;
+			if (m_EnemySpawnDataQueue.Count != 0)
+				m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;
 		}
 
 		[Button]
 		public void ClearEnemyDataList()
 		{
-			m_EnemyDataList.Clear();
+			m_EnemyDataMap.Clear();
 		}
 		#endregion
 
@@ -185,7 +197,7 @@ namespace AvantGardeMaker.EnemySpace
 			if (!m_IsStageStart)
 				return;
 
-			if (m_EnemyList == null || m_EnemyDataList == null || m_EnemySpawnDataQueue == null)
+			if (m_EnemyList == null || m_EnemyDataMap == null || m_EnemySpawnDataQueue == null)
 				return;
 
 			if (m_EnemySpawnDataQueue.Count == 0)
@@ -210,7 +222,7 @@ namespace AvantGardeMaker.EnemySpace
 							.SetActive(false)
 							.Spawn();
 
-			enemy.SetEnemyData(m_EnemyDataList.Find(n => n.EngName == enemySpawnData.Name));
+			enemy.SetEnemyData(m_EnemyDataMap[enemySpawnData.Name]);
 			enemy.state = E_EnemyState.Move;
 			enemy.InitializePoolItem();
 			enemy.SetRange(1.9f);
@@ -233,17 +245,17 @@ namespace AvantGardeMaker.EnemySpace
 				case E_EnemyGradeType.Normal:
 					break;
 				case E_EnemyGradeType.Elite:
-					{
-						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-						enemyCollider.radius = 0.4f;
-						break;
-					}
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.4f;
+					break;
+				}
 				case E_EnemyGradeType.Leader:
-					{
-						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-						enemyCollider.radius = 0.5f;
-						break;
-					}
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.5f;
+					break;
+				}
 			}
 
 			m_EnemyList.Add(enemy);
@@ -255,11 +267,14 @@ namespace AvantGardeMaker.EnemySpace
 
 		public EnemyData GetEnemyData(string enName)
 		{
-			return m_EnemyDataList.Find(n => n.EngName == enName);
+			if (m_EnemyDataMap.TryGetValue(enName, out EnemyData enemyData) == false)
+				return null;
+
+			return enemyData;
 		}
 		public List<EnemyData> GetAllEnemyData()
 		{
-			return m_EnemyDataList;
+			return new List<EnemyData>(m_EnemyDataMap.Values);
 		}
 	}
 }

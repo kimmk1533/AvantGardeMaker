@@ -33,7 +33,7 @@ namespace AvantGardeMaker.OperatorSpace
 		//재능
 		public int Potential;
 		//직군
-		public E_JopType Job;
+		public E_ClassType Class;
 		//공격속도(ex)느림 빠름)
 		public E_AttackSpeed AtkSpeed;
 		//공격범위

@@ -154,14 +154,16 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#endregion
 
 		#region 3. 오퍼레이터 관련 프로퍼티
+		public List<string> operatorKeyList => new List<string>(m_OperatorKeyList);
 		public List<OperatorFixedData> operatorFixedDataList => new List<OperatorFixedData>(m_OperatorFixedDataList);
 		public List<OperatorVariableData> operatorVariableDataList => new List<OperatorVariableData>(m_OperatorVariableDataList);
 		#endregion
 
 		#region 4. 적 관련 프로퍼티
-		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
+		public List<string> enemyKeyList => new List<string>(m_EnemyKeyList);
 		public List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
 		public List<EnemyVariableData> enemyVariableDataList => new List<EnemyVariableData>(m_EnemyVariableDataList);
+		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		#endregion
 		#endregion
 
@@ -232,30 +234,6 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			m_EnemySpawnDataList.Add(enemySpawnData);
 		}
 
-		public List<EnemyData> GetEnemyDataList()
-		{
-			List<EnemyData> enemyDataList = new List<EnemyData>();
-
-			int count = m_EnemyKeyList.Count;
-
-			if (count != m_EnemyFixedDataList.Count ||
-				count != m_EnemyVariableDataList.Count)
-				throw new System.Exception("EnemyData 갯수 다름");
-
-			for (int i = 0; i < count; ++i)
-			{
-				EnemyData enemyData = ScriptableObject.CreateInstance<EnemyData>();
-
-				//enemyData.EngName = m_EnemyKeyList[i];
-				enemyData.KorName = m_EnemyKeyList[i];
-				enemyData.FixedData = m_EnemyFixedDataList[i];
-				enemyData.VariableData = m_EnemyVariableDataList[i];
-
-				enemyDataList.Add(enemyData);
-			}
-
-			return enemyDataList;
-		}
 		public Texture2D GetThumnailTexture()
 		{
 			Texture2D thumnail = new Texture2D(256, 256);

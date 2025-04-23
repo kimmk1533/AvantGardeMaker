@@ -12,10 +12,12 @@ namespace AvantGardeMaker.UI
 	{
 		#region 기본 템플릿
 		#region 변수
-		private OperatorSettingSlotButton m_CurrentSettingSlotButton = null;
+		private OperatorSettingSlot m_CurrentSettingSlot = null;
 		private OperatorData m_CurrentOperatorData = null;
 
 		#region Info Panel
+		private RectTransform m_InfoPanel = null;
+
 		private RectTransform m_NameParent = null;
 		private TextMeshProUGUI m_EngNameText = null;
 		private TextMeshProUGUI m_KorNameText = null;
@@ -41,9 +43,52 @@ namespace AvantGardeMaker.UI
 		private Button m_LevelPlus5Button = null;
 		private Button m_LevelPlus1Button = null;
 		#endregion
+
+		private Button m_ConfirmButton = null;
 		#endregion
 
 		#region 프로퍼티
+		private float maxHp
+		{
+			get => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			set
+			{
+				m_CurrentOperatorData.VariableData.MaxHp = Mathf.Clamp(value, maxHp, nextMaxHp);
+				m_CurrentOperatorData.VariableData.RealHp = m_CurrentOperatorData.VariableData.MaxHp;
+
+				m_MaxHpText.text = value.ToString();
+			}
+		}
+		private float atk
+		{
+			get => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			set
+			{
+				m_CurrentOperatorData.VariableData.Atk = Mathf.Clamp(value, atk, nextAtk);
+
+				m_AtkText.text = value.ToString();
+			}
+		}
+		private float def
+		{
+			get => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			set
+			{
+				m_CurrentOperatorData.VariableData.Def = Mathf.Clamp(value, def, nextDef);
+
+				m_DefText.text = value.ToString();
+			}
+		}
+		private float res
+		{
+			get => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			set
+			{
+				m_CurrentOperatorData.VariableData.Res = Mathf.Clamp(value, res, nextRes);
+
+				m_ResText.text = value.ToString();
+			}
+		}
 		private int level
 		{
 			get => m_CurrentOperatorData.FixedData.Level;
@@ -54,17 +99,18 @@ namespace AvantGardeMaker.UI
 				m_LevelText.text = "<size=45><color=#00AFFF>" + level + "</color></size>/" + maxLevel;
 			}
 		}
-		private int maxLevel => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+		private int maxLevel
+		{
+			get => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+		}
+
+		private float nextMaxHp => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
+		private float nextAtk => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
+		private float nextDef => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
+		private float nextRes => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
 		private int nextMaxLevel => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
 
-		private float maxHp => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
-		private float nextMaxHp => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float atk => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
-		private float nextAtk => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float def => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
-		private float nextDef => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float res => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
-		private float nextRes => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
+		private bool isSlotHasOperatorData => m_CurrentSettingSlot != null && m_CurrentSettingSlot.operatorData != null;
 		#endregion
 
 		#region 이벤트
@@ -72,28 +118,20 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		public void OnOperatorDataUIClicked(OperatorDataUI operatorDataUI)
 		{
+			if (m_CurrentOperatorData == operatorDataUI.operatorData)
+			{
+				ChangeParentsActive(false);
+				m_CurrentOperatorData = null;
+
+				return;
+			}
+
 			m_CurrentOperatorData = operatorDataUI.operatorData;
 
-			m_EngNameText.text = m_CurrentOperatorData.EngName;
-			m_KorNameText.text = m_CurrentOperatorData.KorName;
+			UpdateUI(m_CurrentOperatorData);
 
-			m_MaxHpText.text = m_CurrentOperatorData.VariableData.MaxHp.ToString();
-			m_AtkText.text = m_CurrentOperatorData.VariableData.Atk.ToString();
-			m_DefText.text = m_CurrentOperatorData.VariableData.Def.ToString();
-			m_ResText.text = m_CurrentOperatorData.VariableData.Res.ToString();
-			m_RedeploymentText.text = m_CurrentOperatorData.VariableData.RedeploymentSpeed.ToString();
-			m_DeploymentCostText.text = m_CurrentOperatorData.VariableData.InitDeploymentCost.ToString();
-			m_BlockCountText.text = m_CurrentOperatorData.VariableData.BlockCount.ToString();
-			m_AspdText.text = m_CurrentOperatorData.FixedData.AtkSpeed.ToString();
-
-			level = m_CurrentOperatorData.FixedData.Level;
-
-			m_NameParent.gameObject.SetActive(true);
-			m_AttackRangeParent.gameObject.SetActive(true);
-			m_StatParent.gameObject.SetActive(true);
-			m_LevelParent.gameObject.SetActive(true);
+			ChangeParentsActive(true);
 		}
-
 		private void OnLevelModifyButtonClicked(int value)
 		{
 			level += value;
@@ -103,18 +141,47 @@ namespace AvantGardeMaker.UI
 			float defDiff = (nextDef - def) / (maxLevel - 1);
 			float resDiff = (nextRes - res) / (maxLevel - 1);
 
-			m_MaxHpText.text = Mathf.RoundToInt(maxHp + (maxHpDiff * (level - 1))).ToString();
-			m_AtkText.text = Mathf.RoundToInt(atk + (atkDiff * (level - 1))).ToString();
-			m_DefText.text = Mathf.RoundToInt(def + (defDiff * (level - 1))).ToString();
-			m_ResText.text = Mathf.RoundToInt(res + (resDiff * (level - 1))).ToString();
+			maxHp = Mathf.RoundToInt(maxHp + (maxHpDiff * (level - 1)));
+			atk = Mathf.RoundToInt(atk + (atkDiff * (level - 1)));
+			def = Mathf.RoundToInt(def + (defDiff * (level - 1)));
+			res = Mathf.RoundToInt(res + (resDiff * (level - 1)));
+		}
+
+		private void OnConfirmButtonClicked()
+		{
+			OperatorSettingSlot settingSlot = m_CurrentSettingSlot;
+			OperatorData slotOperatorData = settingSlot.operatorData;
+			OperatorData seletedOperatorData = m_CurrentOperatorData;
+
+			m_CurrentSettingSlot = null;
+			m_CurrentOperatorData = null;
+
+			gameObject.SetActive(false);
+
+			settingSlot.operatorData = seletedOperatorData;
+
+			if (slotOperatorData != null)
+				M_MapEditingUI.RespawnOperatorDataUI(slotOperatorData.EngName);
+			if (seletedOperatorData != null)
+				M_MapEditingUI.RemoveOperatorDataUI(seletedOperatorData.EngName);
 		}
 		#endregion
 		#endregion
 
 		#region 매니저
+		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
+		private void OnDisable()
+		{
+			if (m_CurrentSettingSlot != null &&
+				m_CurrentSettingSlot.operatorData != null)
+				M_MapEditingUI.RemoveOperatorDataUI(m_CurrentSettingSlot.operatorData.EngName);
+
+			m_CurrentSettingSlot = null;
+			m_CurrentOperatorData = null;
+		}
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -124,6 +191,8 @@ namespace AvantGardeMaker.UI
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_InfoPanel = transform.Find("Operator Info Panel").Find("Info Panel") as RectTransform;
 
 			m_NameParent = transform.Find("Operator Info Panel").Find("Name") as RectTransform;
 			m_EngNameText = m_NameParent.Find<TextMeshProUGUI>("Eng Name Text");
@@ -150,12 +219,18 @@ namespace AvantGardeMaker.UI
 			m_LevelPlus5Button = m_LevelParent.Find<Button>("Plus 5 Button");
 			m_LevelPlus1Button = m_LevelParent.Find<Button>("Plus 1 Button");
 
+			m_ConfirmButton = transform.Find<Button>("Confirm Button");
+
 			m_LevelMinus10Button.onClick.AddListener(() => OnLevelModifyButtonClicked(-10));
 			m_LevelMinus5Button.onClick.AddListener(() => OnLevelModifyButtonClicked(-5));
 			m_LevelMinus1Button.onClick.AddListener(() => OnLevelModifyButtonClicked(-1));
 			m_LevelPlus10Button.onClick.AddListener(() => OnLevelModifyButtonClicked(10));
 			m_LevelPlus5Button.onClick.AddListener(() => OnLevelModifyButtonClicked(5));
 			m_LevelPlus1Button.onClick.AddListener(() => OnLevelModifyButtonClicked(1));
+
+			m_ConfirmButton.onClick.AddListener(OnConfirmButtonClicked);
+
+			ChangeParentsActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -164,21 +239,62 @@ namespace AvantGardeMaker.UI
 		{
 			base.Finallize();
 
+			m_CurrentSettingSlot = null;
+			m_CurrentOperatorData = null;
+
 			m_LevelMinus10Button.onClick.RemoveAllListeners();
 			m_LevelMinus5Button.onClick.RemoveAllListeners();
 			m_LevelMinus1Button.onClick.RemoveAllListeners();
 			m_LevelPlus10Button.onClick.RemoveAllListeners();
 			m_LevelPlus5Button.onClick.RemoveAllListeners();
 			m_LevelPlus1Button.onClick.RemoveAllListeners();
+
+			m_ConfirmButton.onClick.RemoveAllListeners();
 		}
 		#endregion
 		#endregion
 
-		public void StartSetting(OperatorSettingSlotButton slotButton)
+		public void StartSetting(OperatorSettingSlot settingSlot)
 		{
-			m_CurrentSettingSlotButton = slotButton;
+			m_CurrentSettingSlot = settingSlot;
+
+			if (isSlotHasOperatorData == true)
+			{
+				m_CurrentOperatorData = settingSlot.operatorData;
+
+				UpdateUI(m_CurrentOperatorData);
+
+				M_MapEditingUI.RespawnOperatorDataUI(m_CurrentOperatorData.EngName);
+			}
+
+			ChangeParentsActive(isSlotHasOperatorData);
 
 			gameObject.SetActive(true);
+		}
+		private void UpdateUI(OperatorData operatorData)
+		{
+			m_EngNameText.text = operatorData.EngName;
+			m_KorNameText.text = operatorData.KorName;
+
+			m_MaxHpText.text = operatorData.VariableData.MaxHp.ToString();
+			m_AtkText.text = operatorData.VariableData.Atk.ToString();
+			m_DefText.text = operatorData.VariableData.Def.ToString();
+			m_ResText.text = operatorData.VariableData.Res.ToString();
+			m_RedeploymentText.text = operatorData.VariableData.RedeploymentSpeed.ToString();
+			m_DeploymentCostText.text = operatorData.VariableData.InitDeploymentCost.ToString();
+			m_BlockCountText.text = operatorData.VariableData.BlockCount.ToString();
+			m_AspdText.text = operatorData.FixedData.AtkSpeed.ToString();
+
+			m_LevelText.text = "<size=45><color=#00AFFF>" + operatorData.FixedData.Level + "</color></size>/" + operatorData.FixedData.MaxLevel.GetLevelData(operatorData.FixedData.Elite);
+		}
+		private void ChangeParentsActive(bool showParents)
+		{
+			m_InfoPanel.gameObject.SetActive(!showParents);
+
+			m_NameParent.gameObject.SetActive(showParents);
+			m_AttackRangeParent.gameObject.SetActive(showParents);
+			m_StatParent.gameObject.SetActive(showParents);
+			m_LevelParent.gameObject.SetActive(showParents);
 		}
 	}
 }

@@ -9,6 +9,7 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using AvantGardeMaker.OperatorSpace;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -109,9 +110,11 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 매니저
-		private static TileManager M_Tile => TileManager.Instance;
-		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+
+		private static TileManager M_Tile => TileManager.Instance;
+		private static OperatorManager M_Operator => OperatorManager.Instance;
+		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -406,6 +409,10 @@ namespace AvantGardeMaker.CoreSpace
 			M_Tile.SaveTileData(ref m_EditingStageData);
 			#endregion
 
+			#region 오퍼레이터 저장
+			M_MapEditingUI.SaveOperatorDataUI(ref m_EditingStageData);
+			#endregion
+
 			#region 적 저장
 			M_MapEditingUI.SaveEnemyDataUI(ref m_EditingStageData);
 			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
@@ -435,8 +442,10 @@ namespace AvantGardeMaker.CoreSpace
 				return;
 
 			M_Tile.LoadTileData(m_EditingStageData);
+			M_Operator.LoadOperatorData(m_EditingStageData);
 			M_Enemy.LoadEnemyData(m_EditingStageData);
 
+			M_MapEditingUI.LoadOperatorDataUI(m_EditingStageData);
 			M_MapEditingUI.LoadEnemySpawnDataUI(m_EditingStageData);
 
 			#region Debug

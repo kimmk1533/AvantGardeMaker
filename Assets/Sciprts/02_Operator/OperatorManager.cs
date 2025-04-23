@@ -332,10 +332,10 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public OperatorData GetOperatorData(string key)
 		{
-			if (m_OperatorDataMap.TryGetValue(key, out OperatorData info) == false)
+			if (m_OperatorDataMap.TryGetValue(key, out OperatorData operatorData) == false)
 				return null;
 
-			return info;
+			return operatorData;
 		}
 		public Sprite GetOperatorFrontSprite(string key)
 		{
@@ -364,6 +364,11 @@ namespace AvantGardeMaker.OperatorSpace
 		[Button("Load OperatorData")]
 		public void LoadOperatorData()
 		{
+			m_OperatorDataMap.Clear();
+			m_OperatorFrontSpriteMap.Clear();
+			m_OperatorBackSpriteMap.Clear();
+			m_OperatorPortraitMap.Clear();
+
 			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(c_OperatorDataPath);
 
 			for (int i = 0; i < operatorDatas.Length; ++i)
@@ -377,29 +382,28 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 		}
 		/// <summary>
-		/// 스크립터블 데이터를 들고 있는 m_OperatorDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
+		/// 스크립터블 데이터를 들고 있는 m_OperatorDataMap에 stageData의 데이터를 덮어써 operatorData를 만듦
 		/// </summary>
 		public void LoadOperatorData(StageData stageData)
 		{
+			List<string> operatorKeyList = stageData.operatorKeyList;
 			List<OperatorFixedData> fixedDataList = stageData.operatorFixedDataList;
 			List<OperatorVariableData> variableDataList = stageData.operatorVariableDataList;
 
-			int count = m_OperatorDataMap.Count;
+			int count = operatorKeyList.Count;
 
 			if (count != fixedDataList.Count ||
 				count != variableDataList.Count)
 				throw new System.Exception("오퍼레이터 데이터 갯수 다름");
 
-			int index = 0;
-
-			foreach (var item in m_OperatorDataMap)
+			for (int i = 0; i < count; ++i)
 			{
-				OperatorData operatorData = item.Value;
+				string key = operatorKeyList[i];
 
-				operatorData.FixedData = fixedDataList[index];
-				operatorData.VariableData = variableDataList[index];
+				OperatorData operatorData = m_OperatorDataMap[key];
 
-				++index;
+				operatorData.FixedData = fixedDataList[i];
+				operatorData.VariableData = variableDataList[i];
 			}
 		}
 
