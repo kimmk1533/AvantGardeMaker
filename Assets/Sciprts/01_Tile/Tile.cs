@@ -93,7 +93,7 @@ namespace AvantGardeMaker.TileSpace
 				++m_OperatorOnTile.redeployCount;
 			}
 			if (m_OperatorOnTile.operatorData.VariableData.RealHp <= 0)
-				M_GamePlaying.GaintCost(m_OperatorOnTile.operatorData.VariableData.CurrentDeploymentCost / 2);
+				M_GamePlaying.GainCost(m_OperatorOnTile.operatorData.VariableData.CurrentDeploymentCost / 2);
 			if (m_OperatorOnTile.redeployCount < 2)
 			{
 				m_OperatorOnTile.operatorData.VariableData.CurrentDeploymentCost += m_OperatorOnTile.operatorData.VariableData.InitDeploymentCost / 2;

@@ -102,7 +102,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void SkillGainCost(int gainCostValue)
 		{
-			M_GamePlaying.GaintCost(gainCostValue);
+			M_GamePlaying.GainCost(gainCostValue);
 		}
 	}
 }

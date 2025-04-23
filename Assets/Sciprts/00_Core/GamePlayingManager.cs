@@ -134,7 +134,7 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.InitializeMain();
 
-			currentMap = M_Game.currentStageData.map;
+			//currentMap = M_Game.currentStageData.map;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -174,6 +174,9 @@ namespace AvantGardeMaker.CoreSpace
 				//퇴각버튼 활성화하기
 				M_GamePlayingUI.OperatorRetreateButtonSetPosition();
 				M_GamePlayingUI.SettingOperatorRetreateButton(m_SelectedTile);
+
+				//스킬 버튼 활성화
+				M_GamePlayingUI.ActiveSkillButton();
 			}
 		}
 		public void DeploymentOperatorOnTile(Operator operatorPreview)
@@ -231,7 +234,7 @@ namespace AvantGardeMaker.CoreSpace
 			m_PlayingOperatorList.Add(deployOperator);
 		}
 
-		public void GaintCost(int gainCost)
+		public void GainCost(int gainCost)
 		{
 			m_CurrentCost += gainCost;
 		}
