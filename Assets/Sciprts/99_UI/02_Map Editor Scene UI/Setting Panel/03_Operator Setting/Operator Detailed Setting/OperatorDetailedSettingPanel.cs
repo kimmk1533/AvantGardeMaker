@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class OperatorDetailedSettingPanel : Panel
+	public class OperatorDetailedSettingPanel : SettingPanel
 	{
 		#region 기본 템플릿
 		#region 변수

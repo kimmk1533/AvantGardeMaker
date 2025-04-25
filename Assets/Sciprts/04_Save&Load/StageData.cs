@@ -14,53 +14,58 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 변수
 		#region 1. 시스템 관련 변수
 		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private string m_Title;
 		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private string m_CreatorNickName;
 		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private string m_CreatedPlayerId;
 		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private byte[] m_ThumnailTexture;
 		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private string m_Description;
 
+		[PropertySpace(10)]
 		[SerializeField]
-		[FoldoutGroup("System")]
+		[FoldoutGroup("시스템")]
 		private int m_InitCost;
 		[SerializeField]
-		[FoldoutGroup("System")]
+		[FoldoutGroup("시스템")]
 		private float m_IncreaseCostTime;
-
 		#endregion
 
 		#region 2. 타일 관련 변수
 		#region 저장&불러오기
 		[SerializeField]
-		[FoldoutGroup("Tile")]
+		[FoldoutGroup("타일")]
 		private List<Vector2Int> m_TilePointList;
 		[SerializeField]
-		[FoldoutGroup("Tile")]
+		[FoldoutGroup("타일")]
 		private List<E_TileType> m_TileTypeList;
 		#endregion
 
-		[SerializeField, ReadOnly]
-		[FoldoutGroup("Tile/Info")]
+		[SerializeField, RuntimeReadOnly]
+		[FoldoutGroup("타일")]
 		private Vector2Int m_MinTile;
-		[SerializeField, ReadOnly]
-		[FoldoutGroup("Tile/Info")]
+		[SerializeField, RuntimeReadOnly]
+		[FoldoutGroup("타일")]
 		private Vector2Int m_MaxTile;
 		#endregion
 
 		#region 3. 오퍼레이터 관련 변수
 		#region 저장&불러오기
 		[SerializeField]
-		[FoldoutGroup("Operator")]
+		[FoldoutGroup("오퍼레이터")]
 		private List<string> m_OperatorKeyList;
 		[SerializeField]
-		[FoldoutGroup("Operator")]
+		[FoldoutGroup("오퍼레이터")]
 		private List<OperatorFixedData> m_OperatorFixedDataList;
 		[SerializeField]
-		[FoldoutGroup("Operator")]
+		[FoldoutGroup("오퍼레이터")]
 		private List<OperatorVariableData> m_OperatorVariableDataList;
 		#endregion
 
@@ -69,16 +74,16 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 4. 적 관련 변수
 		#region 저장&불러오기
 		[SerializeField]
-		[FoldoutGroup("Enemy")]
+		[FoldoutGroup("적")]
 		private List<string> m_EnemyKeyList;
 		[SerializeField]
-		[FoldoutGroup("Enemy")]
+		[FoldoutGroup("적")]
 		private List<EnemyFixedData> m_EnemyFixedDataList;
 		[SerializeField]
-		[FoldoutGroup("Enemy")]
+		[FoldoutGroup("적")]
 		private List<EnemyVariableData> m_EnemyVariableDataList;
 		[SerializeField]
-		[FoldoutGroup("Enemy")]
+		[FoldoutGroup("적")]
 		private List<EnemySpawnData> m_EnemySpawnDataList;
 		#endregion
 
@@ -174,11 +179,6 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		public void Initialize()
 		{
 			#region 타일 관련 초기화
-			if (m_TilePointList == null)
-				m_TilePointList = new List<Vector2Int>();
-			if (m_TileTypeList == null)
-				m_TileTypeList = new List<E_TileType>();
-
 			m_TilePointList.Clear();
 			m_TileTypeList.Clear();
 
@@ -186,17 +186,13 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			m_MaxTile = Vector2Int.one * int.MinValue;
 			#endregion
 
+			#region 오퍼레이터 관련 초기화
+			m_OperatorKeyList.Clear();
+			m_OperatorFixedDataList.Clear();
+			m_OperatorVariableDataList.Clear();
+			#endregion
+
 			#region 적 관련 초기화
-			if (m_EnemyKeyList == null)
-				m_EnemyKeyList = new List<string>();
-			if (m_EnemyFixedDataList == null)
-				m_EnemyFixedDataList = new List<EnemyFixedData>();
-			if (m_EnemyVariableDataList == null)
-				m_EnemyVariableDataList = new List<EnemyVariableData>();
-
-			if (m_EnemySpawnDataList == null)
-				m_EnemySpawnDataList = new List<EnemySpawnData>();
-
 			m_EnemyKeyList.Clear();
 			m_EnemyFixedDataList.Clear();
 			m_EnemyVariableDataList.Clear();

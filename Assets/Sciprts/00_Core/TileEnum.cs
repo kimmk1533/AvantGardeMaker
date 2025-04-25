@@ -25,14 +25,39 @@ namespace AvantGardeMaker.TileSpace.Enum
 	{
 		None,
 
+		// y offset 0
 		// 저지대 타일
-		LowGroundTile,
+		LowGround,
 		// 고지대 타일
-		HighGroundTile,
+		HighGround,
+		//// 구덩이
+		//Hole,
+
+		// y offset 1
 		// 보호 목표
-		Protection_Objective,
+		ProtectionObjective,
 		// 침입 포인트
-		Incursion_Point,
+		IncursionPoint,
+		//// 울타리
+		//Fence,
+		//// 수풀
+		//Bush,
+		//// 치료 룬
+		//MedicalRune,
+		//// 방어 룬
+		//DefenseRune,
+		//// 방공 룬
+		//AntiAirRune,
+		//// 스페셜리스트 작전 포인트
+		//SpecialistTacticalPoint,
+		//// 활성 오리지늄
+		//ActiveOriginium,
+		//// 열펌프 통로
+		//HeatPumpPassage,
+		//// 배치 불가 타일
+		//
+		//// 장식
+		//Decoration,
 
 		Max
 	}

@@ -10,9 +10,6 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 	{
 		#region 변수
 		[SerializeField]
-		private Camera m_MainMenuCamera = null;
-
-		[SerializeField]
 		private RectTransform m_MainMenuInitPanel = null;
 		[SerializeField]
 		private RectTransform m_MainMenuButtonsPanel = null;
@@ -32,11 +29,6 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		#region 이벤트
 
 		#region 이벤트 함수
-		// 씬 전환하기 전에 메인 메뉴 카메라 끄기
-		private void TurnOffMainMenuCamera()
-		{
-			m_MainMenuCamera.gameObject.SetActive(false);
-		}
 		#endregion
 		#endregion
 
@@ -74,14 +66,12 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			#endregion
 
 			// Map Editing Scene 전환 전 이벤트
-			AddBeforeEvent("Map Editing Scene", TurnOffMainMenuCamera);
 			AddBeforeEvent("Map Editing Scene", M_Game.FinallizeMainMenu);
 
 			// Map Editing Scene 전환 후 이벤트
 			AddAfterEvent("Map Editing Scene", M_Game.InitializeMapEditing);
 
 			// Game Playing Scene 전환 전 이벤트
-			AddBeforeEvent("Game Playing Scene", TurnOffMainMenuCamera);
 			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMainMenu);
 
 			// Game Playing Scene 전환 후 이벤트

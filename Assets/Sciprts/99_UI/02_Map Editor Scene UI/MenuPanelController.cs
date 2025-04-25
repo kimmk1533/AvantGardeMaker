@@ -40,6 +40,18 @@ namespace AvantGardeMaker.UI
 
 		#region 이벤트 함수
 		#region 메뉴 버튼 관련 이벤트 함수
+		private void OnMenuButtonClicked(string key)
+		{
+			SettingPanelController settingPanelController = M_MapEditingUI.settingPanelController;
+			SettingPanel prevSettingPanel = settingPanelController.currentSettingPanel;
+
+			if (prevSettingPanel != null)
+				prevSettingPanel.gameObject.SetActive(false);
+
+			SettingPanel currSettingPanel = settingPanelController.GetSettingPanel<SettingPanel>(key);
+
+			currSettingPanel.OnMenuButtonClicked();
+		}
 		#endregion
 
 		#region 잠금 설정 관련 이벤트 함수
@@ -90,17 +102,16 @@ namespace AvantGardeMaker.UI
 			int childCount = buttonParent.childCount;
 			for (int i = 0; i < childCount; ++i)
 			{
-				Button button = buttonParent.GetChild<Button>(i);
+				Button menuButton = buttonParent.GetChild<Button>(i);
 
-				if (button == null)
+				if (menuButton == null)
 					continue;
 
-				string key = button.name.Split(' ')[0];
+				string key = menuButton.name.Split(' ')[0];
 
-				m_MenuButtonMap.Add(key, button);
+				m_MenuButtonMap.Add(key, menuButton);
 
-				button.onClick.AddListener(M_MapEditingUI.settingPanelController.OnMenuButtonClicked);
-				button.onClick.AddListener(M_MapEditingUI.settingPanelController[key].OnMenuButtonClicked);
+				menuButton.onClick.AddListener(() => OnMenuButtonClicked(key));
 			}
 			#endregion
 

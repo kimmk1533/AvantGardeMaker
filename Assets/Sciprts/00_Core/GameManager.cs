@@ -14,13 +14,11 @@ namespace AvantGardeMaker.CoreSpace
 	{
 		#region 변수
 		#region 게임 관련 변수
-		private StageData m_GameStageData = default;
 		private bool m_IsGameMode = false;
 		#endregion
 		#endregion
 
 		#region 프로퍼티
-		public StageData currentStageData => m_GameStageData;
 		public bool isGameMode => m_IsGameMode;
 		#endregion
 
@@ -66,8 +64,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.Initialize();
 
 			// Game Playing Scene Manager
-			//M_GamePlaying.Initialize();
-			//M_GamePlayingUI.Initialize();
+			M_GamePlaying.Initialize();
+			M_GamePlayingUI.Initialize();
 
 			// Object Manager
 			M_Tile.Initialize();
@@ -89,8 +87,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_Tile.Finallize();
 
 			// Game Playing Scene Manager
-			//M_GamePlayingUI.Finallize();
-			//M_GamePlaying.Finallize();
+			M_GamePlayingUI.Finallize();
+			M_GamePlaying.Finallize();
 
 			// Map Editing Scene Manager
 			M_MapEditingUI.Finallize();
@@ -138,8 +136,9 @@ namespace AvantGardeMaker.CoreSpace
 			M_GamePlaying.InitializeMain();
 			M_GamePlayingUI.InitializeMain();
 
-			M_Tile.LoadTileData(m_GameStageData);
-			M_Enemy.LoadEnemyData(m_GameStageData);
+			M_Tile.LoadTileData(M_GamePlaying.currentStageData);
+			M_Operator.LoadOperatorData(M_GamePlaying.currentStageData);
+			M_Enemy.LoadEnemyData(M_GamePlaying.currentStageData);
 
 			Debug.Log("Initialize Game Playing");
 		}
@@ -156,6 +155,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_Enemy.FinallizeMain();
 			M_Operator.FinallizeMain();
 			M_Tile.FinallizeMain();
+
+			M_GamePlaying.SynchronizeStageData(default);
 
 			Debug.Log("Finallize Game Playing");
 		}
@@ -188,15 +189,10 @@ namespace AvantGardeMaker.CoreSpace
 
 			M_Panel.InitializeMain();
 
+			M_MapEditing.SynchronizeStageData(default);
+
 			Debug.Log("Finallize Map Editing");
 		}
 		#endregion
-
-		public void SynchronizeStageData(StageData stageData)
-		{
-			m_GameStageData = stageData;
-
-			PathFinder.offset = -stageData.minTile;
-		}
 	}
 }

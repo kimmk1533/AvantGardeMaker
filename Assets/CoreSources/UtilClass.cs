@@ -190,7 +190,7 @@ public static class UtilClass
 		#region 변수
 		[SerializeField]
 		private float m_Interval = 0f;
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private float m_Time = 0f;
 
 		private bool m_IsSimulating = true;

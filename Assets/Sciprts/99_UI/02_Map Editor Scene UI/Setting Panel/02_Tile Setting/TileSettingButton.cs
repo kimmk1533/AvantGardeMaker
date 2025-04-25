@@ -8,13 +8,13 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class TileOptionButton : SerializedMonoBehaviour
+	public class TileSettingButton : SerializedMonoBehaviour
 	{
 		#region 변수
 		private Button m_Button = null;
 
 		[SerializeField]
-		private E_TileType m_TileType = E_TileType.LowGroundTile;
+		private E_TileType m_TileType = E_TileType.LowGround;
 		#endregion
 
 		#region 프로퍼티
@@ -23,7 +23,7 @@ namespace AvantGardeMaker.UI
 		#region 이벤트
 
 		#region 이벤트 함수
-		public void OnButtonClicked()
+		private void OnButtonClicked()
 		{
 			M_MapEditing.SetTileType(m_TileType);
 		}

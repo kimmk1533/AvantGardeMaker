@@ -21,14 +21,14 @@ namespace AvantGardeMaker.EnemySpace
 		//작전 시작 후 n초에 스폰(최초 스폰까지 걸리는 시간)
 		public float Time = 0f;
 		//경유 지점
-		public List<Vector2> TransitPosList = null;
+		public List<Vector2> WayPointList = null;
 		//경유 지점에서 n초 대기(0초면 딜레이 x)
 		public List<float> DelayTimeList = null;
 
 		//최초 스폰 지점
-		public Vector2 startPos => TransitPosList[0];
+		public Vector2 startPos => WayPointList[0];
 		//최종 도착 지점
-		public Vector2 endPos => TransitPosList[TransitPosList.Count - 1];
+		public Vector2 endPos => WayPointList[WayPointList.Count - 1];
 
 		public EnemySpawnData()
 		{
@@ -40,7 +40,7 @@ namespace AvantGardeMaker.EnemySpace
 			WaveTime = 0f;
 			Time = 0f;
 
-			TransitPosList = new List<Vector2>();
+			WayPointList = new List<Vector2>();
 			DelayTimeList = new List<float>();
 		}
 	}

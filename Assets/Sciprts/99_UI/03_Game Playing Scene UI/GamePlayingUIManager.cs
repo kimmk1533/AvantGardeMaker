@@ -13,87 +13,45 @@ namespace AvantGardeMaker.UI
 	public class GamePlayingUIManager : ObjectManager<GamePlayingUIManager, GamePlayingUI>
 	{
 		#region 변수
+		[SerializeField]
+		private Camera m_GamePlayingCamera = null;
 
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private OperatorSquadUI m_SelectedOperatorSquadUI = null;
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
 
 		private Dictionary<string, Sprite> m_OperatorFullshotSpriteMap = null;
-
-		[SerializeField]
-		private Button m_OperatorSkillButton = null;
-
-		[SerializeField]
-		private TextMeshProUGUI m_CostValueText = null;
-		[SerializeField]
-		private Image m_CostFillImage = null;
-
-		[SerializeField]
-		private Camera m_GamePlayingCamera = null;
-		[SerializeField]
-		private RectTransform m_OperatorSquadUIParent = null;
-		[SerializeField]
-		private OperatorStatusUI m_OperatorStatusUI = null;
-		[SerializeField]
-		private Button m_DeploymentCancelButton = null;
-		[SerializeField]
-		private Button m_OperatorRetreatButton = null;
 		#endregion
 
 		#region 프로퍼티
+		public Button optionButton { get; set; }
+
 		// 현재 코스트 텍스트
-		public TextMeshProUGUI costValueText 
-		{
-			get => m_CostValueText;
-			set => m_CostValueText = value;
-		}
+		public TextMeshProUGUI costValueText { get; set; }
 		// 코스트 게이지 이미지
-		public Image costFillImage
-		{
-			get => m_CostFillImage;
-			set => m_CostFillImage = value;
-		}
-		// 게임 플레잉 카메라
-		public Camera gamePlayingCamera
-		{
-			get => m_GamePlayingCamera;
-			set => m_GamePlayingCamera = value;
-		}
+		public Image costFillImage { get; set; }
+
 		// 오퍼레이터 배치 UI 부모
-		public RectTransform operatorSquadUIParent
-		{
-			get => m_OperatorSquadUIParent;
-			set => m_OperatorSquadUIParent = value;
-		}
+		public RectTransform operatorSquadUIParent { get; set; }
 		// 오퍼레이터 상태 UI
-		public OperatorStatusUI operatorStatusUI
-		{
-			get => m_OperatorStatusUI;
-			set => m_OperatorStatusUI = value;
-		}
-		// 배치 취소 버튼
-		public Button deploymentCancelButton
-		{
-			get => m_DeploymentCancelButton;
-			set => m_DeploymentCancelButton = value;
-		}
+		public OperatorStatusUI operatorStatusUI { get; set; }
+		// 오퍼레이터 배치 취소 버튼
+		public Button deploymentCancelButton { get; set; }
 		// 오퍼레이터 퇴각 버튼
-		public Button operatorRetreatButton
-		{
-			get => m_OperatorRetreatButton;
-			set => m_OperatorRetreatButton = value;
-		}
+		public Button operatorRetreatButton { get; set; }
+		// 오퍼레이터 스킬 버튼
+		public Button operatorSkillButton { get; set; }
 
 		public bool activeRetreatButton
 		{
-			get => m_OperatorRetreatButton.gameObject.activeSelf;
-			set => m_OperatorRetreatButton.gameObject.SetActive(value);
+			get => operatorRetreatButton.gameObject.activeSelf;
+			set => operatorRetreatButton.gameObject.SetActive(value);
 		}
 		public bool activeSkillButton
 		{
-			get => m_OperatorSkillButton.gameObject.activeSelf;
-			set => m_OperatorSkillButton.gameObject.SetActive(value);
+			get => operatorSkillButton.gameObject.activeSelf;
+			set => operatorSkillButton.gameObject.SetActive(value);
 		}
 		public OperatorSquadUI selectedOperatorSquadUI
 		{
@@ -136,17 +94,12 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 매니저
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		private static OperatorManager M_Operator => OperatorManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		protected override void Awake()
-		{
-			base.Awake();
-			Initialize();
-			InitializeMain();
-		}
 		private void Update()
 		{
 			UpdateUI();
@@ -186,8 +139,6 @@ namespace AvantGardeMaker.UI
 			{
 				m_OperatorFullshotSpriteMap.Add(operatorFullshotSprites[i].name, operatorFullshotSprites[i]);
 			}
-
-			m_OperatorSkillButton.gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -206,8 +157,11 @@ namespace AvantGardeMaker.UI
 		{
 			base.InitializeMain();
 
+			m_GamePlayingCamera = Camera.main;
+
 			CreateOperatorSquadUI();
 
+			optionButton.onClick.AddListener(LoadPrevScene);
 			deploymentCancelButton.onClick.AddListener(OnDeploymentCancelButtonClicked);
 		}
 		/// <summary>
@@ -217,11 +171,24 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
+			m_GamePlayingCamera = null;
+
 			DestroyOperatorSquadUI();
 
 			deploymentCancelButton.onClick.RemoveListener(OnDeploymentCancelButtonClicked);
+			optionButton.onClick.RemoveAllListeners();
 		}
 		#endregion
+
+		public void LoadPrevScene()
+		{
+			if (SceneLoader.prevSceneName.Equals("Map Editing Scene") == true)
+				M_MapEditing.SynchronizeStageData(M_GamePlaying.currentStageData);
+
+			Debug.Log("이전 씬: " + SceneLoader.prevSceneName);
+
+			SceneLoader.LoadScene(SceneLoader.prevSceneName);
+		}
 
 		private void CreateOperatorSquadUI()
 		{
@@ -285,7 +252,7 @@ namespace AvantGardeMaker.UI
 		#region MikangMark
 		public void OperatorRetreateButtonSetPosition()
 		{
-			Vector3 screenPos = gamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
 			operatorRetreatButton.transform.position = new Vector3(screenPos.x - 200, screenPos.y + 200);
 		}
 
@@ -307,10 +274,10 @@ namespace AvantGardeMaker.UI
 
 		public void ActiveSkillButton()
 		{
-			Vector3 screenPos = gamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
-			m_OperatorSkillButton.transform.position = new Vector3(screenPos.x + 200, screenPos.y - 200);
-			m_OperatorSkillButton.gameObject.SetActive(true);
-			m_OperatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnClickSkillButton);
+			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			operatorSkillButton.transform.position = new Vector3(screenPos.x + 200, screenPos.y - 200);
+			operatorSkillButton.gameObject.SetActive(true);
+			operatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnClickSkillButton);
 		}
 		#endregion
 	}

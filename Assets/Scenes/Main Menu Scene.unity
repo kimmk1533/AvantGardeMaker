@@ -480,7 +480,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  m_MainMenuCamera: {fileID: 1637053954}
   m_MainMenuInitPanel: {fileID: 1706965753}
   m_MainMenuButtonsPanel: {fileID: 1496967087}
   m_MapListPanel: {fileID: 605662694}
@@ -2979,7 +2978,7 @@ GameObject:
   - component: {fileID: 1032360830}
   - component: {fileID: 1032360829}
   m_Layer: 5
-  m_Name: Viewport
+  m_Name: Description Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3171,7 +3170,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1064410525}
   m_OnClick:
     m_PersistentCalls:
@@ -4987,7 +4986,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1660007807}
   m_OnClick:
     m_PersistentCalls:
@@ -5474,7 +5473,7 @@ GameObject:
   - component: {fileID: 1746725419}
   - component: {fileID: 1746725417}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Description Scroll Rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5979,8 +5978,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 170, y: -28.965}
-  m_SizeDelta: {x: 340, y: 57.93}
+  m_AnchoredPosition: {x: 170, y: 0}
+  m_SizeDelta: {x: 340, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1994590960
 MonoBehaviour:
@@ -6002,8 +6001,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=white><\uAD70\uC218\uACF5\uC7A5 \uC9C0\uB839 \uD50C\uB7AB\uD3FC></color>
-    \uC774\uAC74 \uC5B4\uCA4C\uACE0 \uC800\uCA4C\uACE0 \uBB50\uB77C\uBB50\uB77C \uC124\uBA85"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
   m_sharedMaterial: {fileID: 1963738424256772380, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
@@ -6160,7 +6158,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2007194092}
   m_OnClick:
     m_PersistentCalls:
@@ -6215,7 +6213,7 @@ GameObject:
   - component: {fileID: 2022912831}
   - component: {fileID: 2022912830}
   m_Layer: 5
-  m_Name: Content
+  m_Name: Description Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6239,7 +6237,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 57.93}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2022912830
 MonoBehaviour:
@@ -6430,7 +6428,7 @@ GameObject:
   - component: {fileID: 2059748320}
   - component: {fileID: 2059748319}
   m_Layer: 5
-  m_Name: Map Scroll View
+  m_Name: Map Scroll Rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

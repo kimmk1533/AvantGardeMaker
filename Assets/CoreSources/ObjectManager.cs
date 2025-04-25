@@ -189,17 +189,17 @@ public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> w
 	[System.Serializable]
 	public struct OriginInfo : IEqualityComparer<OriginInfo>
 	{
-		[field: SerializeField, ReadOnly(true)]
+		[field: SerializeField, RuntimeReadOnly(true)]
 		public string key { get; set; }
-		[field: SerializeField, ReadOnly(true)]
+		[field: SerializeField, RuntimeReadOnly(true)]
 		public string additionalPath { get; set; }
 
 		[field: Space]
-		[field: SerializeField, ReadOnly(true)]
+		[field: SerializeField, RuntimeReadOnly(true)]
 		public bool useFlag { get; set; }
-		[field: SerializeField, ReadOnly(true), Min(1)]
+		[field: SerializeField, RuntimeReadOnly(true), Min(1)]
 		public int poolSize { get; set; }
-		[field: SerializeField, ReadOnly(true)]
+		[field: SerializeField, RuntimeReadOnly(true)]
 		public TItem origin { get; set; }
 
 		public static bool operator ==(OriginInfo x, OriginInfo y)

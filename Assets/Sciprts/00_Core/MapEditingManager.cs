@@ -20,10 +20,10 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, Min(0f)]
 		private float m_CameraSwitchDuration = 1f;
 
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private E_CameraMode m_CameraMode = E_CameraMode.EditMode;
 
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private bool m_IsCameraSwitching = false;
 		#endregion
 
@@ -40,7 +40,7 @@ namespace AvantGardeMaker.CoreSpace
 		private Vector3 m_HighGroundTileOffset = Vector3.back * 0.2f;
 
 		// 현재 타일 타입
-		private E_TileType m_CurrentTileType = E_TileType.LowGroundTile;
+		private E_TileType m_CurrentTileType = E_TileType.LowGround;
 		// 타일 프리뷰 오브젝트
 		private Tile m_TilePreview = null;
 		// 타일 프리뷰 오브젝트 맵
@@ -48,14 +48,14 @@ namespace AvantGardeMaker.CoreSpace
 
 		// 머터리얼 정보 맵
 		[SerializeField]
-		private Dictionary<string, Material> m_MaterialMap = new Dictionary<string, Material>();
+		private Dictionary<string, Material> m_MaterialMap = null;
 		#endregion
 
 		#region 적 관련 변수
 		#endregion
 
 		#region 저장 & 불러오기 관련 변수
-		[SerializeField, Sirenix.OdinInspector.ReadOnly]
+		[SerializeField, ReadOnly]
 		private StageData m_EditingStageData = default;
 		#endregion
 		#endregion
@@ -193,7 +193,7 @@ namespace AvantGardeMaker.CoreSpace
 			{
 				m_TilePreviewMap = new Dictionary<E_TileType, Tile>();
 
-				for (E_TileType tileType = E_TileType.LowGroundTile; tileType < E_TileType.Max; ++tileType)
+				for (E_TileType tileType = E_TileType.LowGround; tileType < E_TileType.Max; ++tileType)
 				{
 					string key = tileType.ToString().Replace('_', ' ');
 					string previewKey = key + " Preview";
@@ -211,7 +211,7 @@ namespace AvantGardeMaker.CoreSpace
 			}
 
 			m_EditModeType = E_EditModeType.Tile;
-			m_CurrentTileType = E_TileType.LowGroundTile;
+			m_CurrentTileType = E_TileType.LowGround;
 
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
 		}
@@ -365,7 +365,7 @@ namespace AvantGardeMaker.CoreSpace
 
 		public Vector3 GetTileOffset(E_TileType tileType)
 		{
-			if (tileType == E_TileType.HighGroundTile)
+			if (tileType == E_TileType.HighGround)
 				return m_HighGroundTileOffset;
 
 			return Vector3.zero;
@@ -391,10 +391,8 @@ namespace AvantGardeMaker.CoreSpace
 			return tex;
 		}
 
-		[Button]
 		public void SaveData()
 		{
-			#region 저장할 데이터 초기화
 			m_EditingStageData.Initialize();
 
 			m_EditingStageData.title = stageName;
@@ -417,7 +415,6 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.SaveEnemyDataUI(ref m_EditingStageData);
 			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
 			#endregion
-			#endregion
 		}
 		public async void SaveDataToCloud()
 		{
@@ -434,7 +431,6 @@ namespace AvantGardeMaker.CoreSpace
 			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
 			#endregion
 		}
-		[Button]
 		public void LoadData()
 		{
 			if (m_EditingStageData.title == null ||

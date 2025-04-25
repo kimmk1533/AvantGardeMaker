@@ -90,7 +90,7 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		private void OnOptionButtonClicked()
 		{
-			EnemyDetailedSettingPanel settingPanel = M_MapEditingUI.enemyDetailedSettingPanel;
+			EnemyDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<EnemyDetailedSettingPanel>("Enemy");
 
 			settingPanel.SetEnemySpawnDataUI(this);
 
@@ -258,7 +258,7 @@ namespace AvantGardeMaker.UI
 			// 경유 지점
 			for (int i = 0; i < m_EnemyWayPointList.Count; ++i)
 			{
-				enemySpawnData.TransitPosList.Add(m_EnemyWayPointList[i]);
+				enemySpawnData.WayPointList.Add(m_EnemyWayPointList[i]);
 			}
 
 			// 경유 지점에서 n초 대기(0초면 딜레이 x)

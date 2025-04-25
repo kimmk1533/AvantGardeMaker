@@ -11,39 +11,16 @@ namespace AvantGardeMaker.UI
 		#region 기본 템플릿
 		#region 변수
 		private Dictionary<string, SettingPanel> m_SettingPanelMap = null;
+		private Dictionary<string, SettingPanel> m_DetailedSettingPanelMap = null;
 		#endregion
 
 		#region 프로퍼티
-		public SettingPanel this[string key] => m_SettingPanelMap[key];
 		public SettingPanel currentSettingPanel { get; set; }
 		#endregion
 
 		#region 이벤트
 
 		#region 이벤트 함수
-		//public void OnMenuButtonClicked()
-		//{
-		//	if (currentViewport != null)
-		//		currentViewport.gameObject.SetActive(false);
-
-		//	if (m_SettingPanelController.gameObject.activeSelf == false)
-		//		ToggleOptionPanelActive();
-		//	else if (currentViewport == this)
-		//	{
-		//		m_SettingPanelController.ChangeCurrentViewport(null);
-		//		ToggleOptionPanelActive();
-		//		return;
-		//	}
-
-		//	m_SettingPanelController.ChangeCurrentViewport(this);
-		//	currentViewport.gameObject.SetActive(true);
-
-		//	onViewportTurnOn?.Invoke(this);
-		//}
-		public void OnMenuButtonClicked()
-		{
-			currentSettingPanel?.gameObject.SetActive(false);
-		}
 		#endregion
 		#endregion
 
@@ -66,14 +43,25 @@ namespace AvantGardeMaker.UI
 			{
 				SettingPanel settingPanel = settingPanelParent.GetChild<SettingPanel>(i);
 
-				if (settingPanel == null)
-					continue;
-
 				string key = settingPanel.name.Split(' ')[0];
 
 				m_SettingPanelMap.Add(key, settingPanel);
 
 				settingPanel.Initialize();
+			}
+
+			m_DetailedSettingPanelMap = new Dictionary<string, SettingPanel>();
+			settingPanelParent = transform.Find("Detailed Setting Panels");
+			childCount = settingPanelParent.childCount;
+			for (int i = 0; i < childCount; ++i)
+			{
+				SettingPanel detailedSettingPanel = settingPanelParent.GetChild<SettingPanel>(i);
+
+				string key = detailedSettingPanel.name.Split(' ')[0];
+
+				m_DetailedSettingPanelMap.Add(key, detailedSettingPanel);
+
+				detailedSettingPanel.Initialize();
 			}
 		}
 		/// <summary>
@@ -87,8 +75,30 @@ namespace AvantGardeMaker.UI
 			}
 			m_SettingPanelMap.Clear();
 			m_SettingPanelMap = null;
+
+			foreach (var item in m_DetailedSettingPanelMap)
+			{
+				item.Value.Finallize();
+			}
+			m_DetailedSettingPanelMap.Clear();
+			m_DetailedSettingPanelMap = null;
 		}
 		#endregion
 		#endregion
+
+		public T GetSettingPanel<T>(string key) where T : SettingPanel
+		{
+			if (m_SettingPanelMap.TryGetValue(key, out SettingPanel settingPanel) == false)
+				return null;
+
+			return settingPanel as T;
+		}
+		public T GetDetailedSettingPanel<T>(string key) where T : SettingPanel
+		{
+			if (m_DetailedSettingPanelMap.TryGetValue(key, out SettingPanel settingPanel) == false)
+				return null;
+
+			return settingPanel as T;
+		}
 	}
 }

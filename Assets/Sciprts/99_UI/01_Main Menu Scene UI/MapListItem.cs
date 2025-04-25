@@ -11,13 +11,14 @@ namespace AvantGardeMaker.UI
 	public class MapListItem : MainMenuUI
 	{
 		#region 변수
+		[SerializeField]
+		private StageData m_StageData = default;
+
 		private Button m_SelfButton = null;
 		private RawImage m_ThumnailImage = null;
 		private TMP_Text m_TitleText = null;
 		private TMP_Text m_CreatorText = null;
 		//private Rating m_Rating = null;
-
-		private StageData m_StageData = default;
 		#endregion
 
 		#region 프로퍼티

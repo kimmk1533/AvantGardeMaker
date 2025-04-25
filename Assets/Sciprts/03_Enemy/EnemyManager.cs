@@ -46,7 +46,7 @@ namespace AvantGardeMaker.EnemySpace
 		[SerializeField]
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
 
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private UtilClass.Timer m_EnemySpawnTimer = null;
 		#endregion
 
@@ -226,7 +226,7 @@ namespace AvantGardeMaker.EnemySpace
 			enemy.state = E_EnemyState.Move;
 			enemy.InitializePoolItem();
 			enemy.SetRange(1.9f);
-			enemy.SetWayPointList(enemySpawnData.TransitPosList);
+			enemy.SetWayPointList(enemySpawnData.WayPointList);
 			enemy.SetWayPointIntervalList(enemySpawnData.DelayTimeList);
 
 			//공격 범위 설정

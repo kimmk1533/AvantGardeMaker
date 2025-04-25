@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class EnemyDetailedSettingPanel : Panel
+	public class EnemyDetailedSettingPanel : SettingPanel
 	{
 		#region 변수
 		private EnemySpawnDataUI m_CurrentEnemySpawnDataUI = null;
@@ -268,8 +268,6 @@ namespace AvantGardeMaker.UI
 				m_CancleButton.onClick.AddListener(OnCancleButtonClicked);
 			}
 			#endregion
-
-			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수

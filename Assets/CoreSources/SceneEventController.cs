@@ -103,6 +103,7 @@ public abstract class SceneEventController : SerializedMonoBehaviour
 		if (m_OnSceneSwitchingBeforeEventMap.TryGetValue(sceneName, out UnityEvent unityEvent) == false)
 		{
 			unityEvent = new UnityEvent();
+
 			m_OnSceneSwitchingBeforeEventMap.Add(sceneName, unityEvent);
 		}
 
@@ -113,6 +114,7 @@ public abstract class SceneEventController : SerializedMonoBehaviour
 		if (m_OnSceneSwitchingAfterEventMap.TryGetValue(sceneName, out UnityEvent unityEvent) == false)
 		{
 			unityEvent = new UnityEvent();
+
 			m_OnSceneSwitchingAfterEventMap.Add(sceneName, unityEvent);
 		}
 

@@ -15,7 +15,7 @@ namespace AvantGardeMaker.UI
 		#region Map Item List 관련 변수
 		private TMP_Text m_LoadingText = null;
 
-		private StageData m_CurrentStageData = default;
+		private MapListItem m_SelectedMapListItem = null;
 		#endregion
 
 		#region Map Info 관련 변수
@@ -34,11 +34,6 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 프로퍼티
-		public StageData currentStageData
-		{
-			get => m_CurrentStageData;
-			set => m_CurrentStageData = value;
-		}
 		#endregion
 
 		#region 이벤트
@@ -46,19 +41,20 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		private void OnMapListItemClicked(MapListItem mapListItem)
 		{
-			m_CurrentStageData = mapListItem.stageData;
+			m_SelectedMapListItem = mapListItem;
+			StageData stageData = mapListItem.stageData;
 
 			m_ThumnailImage.texture = mapListItem.thumnailImage;
 			m_TitleText.text = mapListItem.titleText;
 			m_CreatorText.text = mapListItem.creatorText;
 			//m_Rating.value = mapListItem.rating.value;
-			m_DescriptionText.text = mapListItem.stageData.description;
+			m_DescriptionText.text = stageData.description;
 
 			string playerId = SaveLoadUtility.GetPlayerId();
 
 			m_PlayButton.interactable = true;
-			m_EditButton.interactable = playerId.Equals(m_CurrentStageData.createdPlayerId);
-			m_DeleteButton.interactable = playerId.Equals(m_CurrentStageData.createdPlayerId);
+			m_EditButton.interactable = playerId.Equals(stageData.createdPlayerId);
+			m_DeleteButton.interactable = playerId.Equals(stageData.createdPlayerId);
 		}
 
 		private void OnOperatorInfoButtonClicked()
@@ -72,23 +68,23 @@ namespace AvantGardeMaker.UI
 
 		private void OnPlayButtonClicked()
 		{
-			M_Game.SynchronizeStageData(m_CurrentStageData);
+			M_GamePlaying.SynchronizeStageData(m_SelectedMapListItem.stageData);
 
 			SceneLoader.LoadScene("Game Playing Scene");
 		}
 		private void OnEditButtonClicked()
 		{
-			M_MapEditing.SynchronizeStageData(m_CurrentStageData);
+			M_MapEditing.SynchronizeStageData(m_SelectedMapListItem.stageData);
 
 			SceneLoader.LoadScene("Map Editing Scene");
 		}
 		private async void OnDeleteButtonClicked()
 		{
-			await SaveLoadUtility.DeleteStageData(m_CurrentStageData.title);
+			await SaveLoadUtility.DeleteStageData(m_SelectedMapListItem.stageData.title);
 
 			UpdateMapListItem();
 
-			m_CurrentStageData = default;
+			m_SelectedMapListItem = null;
 
 			m_ThumnailImage.texture = null;
 			m_TitleText.text = string.Empty;
@@ -104,9 +100,9 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 매니저
-		private static GameManager M_Game => GameManager.Instance;
 		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
+		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -126,62 +122,37 @@ namespace AvantGardeMaker.UI
 		{
 			base.Initialize();
 
-			if (m_LoadingText == null)
-				m_LoadingText = transform.FindInChildren<TMP_Text>("Loading Text");
+			m_LoadingText = transform.Find("Map Scroll Rect").Find<TMP_Text>("Loading Text");
 
-			if (m_ThumnailImage == null)
-				m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
-			if (m_TitleText == null)
-			{
-				m_TitleText = transform.Find("Map Info Panel").Find<TMP_Text>("Title Text");
-			}
-			if (m_CreatorText == null)
-			{
-				m_CreatorText = transform.Find("Map Info Panel").Find<TMP_Text>("Creator Text");
-			}
-			//if (m_Rating == null)
-			//{
-			//	m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
-			//}
+			m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
+			m_TitleText = transform.Find("Map Info Panel").Find<TMP_Text>("Title Text");
+			m_CreatorText = transform.Find("Map Info Panel").Find<TMP_Text>("Creator Text");
+			//m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
+			m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
+
+			m_EnemyInfoButton = transform.Find("Map Info Panel").Find<Button>("Enemy Info Button");
+			m_DescriptionText = transform
+				.Find("Map Info Panel")
+				.Find("Description Scroll Rect")
+				.Find("Description Viewport")
+				.Find("Description Content")
+				.Find<TMP_Text>("Description Text");
+
+			m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
+			m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");
+			m_DeleteButton = transform.Find("Buttons").Find<Button>("Delete Button");
+
+			m_OperatorInfoButton.onClick.AddListener(OnOperatorInfoButtonClicked);
+			m_EnemyInfoButton.onClick.AddListener(OnEnemyInfoButtonClicked);
+
+			m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
+			m_PlayButton.interactable = false;
+			m_EditButton.onClick.AddListener(OnEditButtonClicked);
+			m_EditButton.interactable = false;
+			m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
+			m_DeleteButton.interactable = false;
+
 			//m_Rating.Initialize();
-			if (m_OperatorInfoButton == null)
-			{
-				m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
-
-				m_OperatorInfoButton.onClick.AddListener(OnOperatorInfoButtonClicked);
-			}
-			if (m_EnemyInfoButton == null)
-			{
-				m_EnemyInfoButton = transform.Find("Map Info Panel").Find<Button>("Enemy Info Button");
-
-				m_EnemyInfoButton.onClick.AddListener(OnEnemyInfoButtonClicked);
-			}
-			if (m_DescriptionText == null)
-			{
-				m_DescriptionText = transform.Find("Map Info Panel").FindInChildren<TMP_Text>("Description Text");
-			}
-
-			if (m_PlayButton == null)
-			{
-				m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
-
-				m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
-				m_PlayButton.interactable = false;
-			}
-			if (m_EditButton == null)
-			{
-				m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");
-
-				m_EditButton.onClick.AddListener(OnEditButtonClicked);
-				m_EditButton.interactable = false;
-			}
-			if (m_DeleteButton == null)
-			{
-				m_DeleteButton = transform.Find("Buttons").Find<Button>("Delete Button");
-
-				m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
-				m_DeleteButton.interactable = false;
-			}
 		}
 		/// <summary>
 		/// 마무리화 함수

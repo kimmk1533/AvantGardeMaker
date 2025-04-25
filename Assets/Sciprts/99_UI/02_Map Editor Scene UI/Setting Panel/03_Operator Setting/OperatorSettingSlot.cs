@@ -96,7 +96,9 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		private void OnSlotButtonClicked()
 		{
-			M_MapEditingUI.operatorDetailedSettingPanel.StartSetting(this);
+			OperatorDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<OperatorDetailedSettingPanel>("Operator");
+
+			settingPanel.StartSetting(this);
 		}
 		private void OnMinusButtonClicked(int currentLevel, TextMeshProUGUI text)
 		{

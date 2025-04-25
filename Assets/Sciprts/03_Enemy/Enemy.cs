@@ -213,7 +213,7 @@ namespace AvantGardeMaker.EnemySpace
 		public void SetWayPointList(List<Vector2> wayPointList)
 		{
 			m_WayPointList.Clear();
-			m_WayPointList = wayPointList;
+			m_WayPointList.AddRange(wayPointList);
 
 			m_WayPointIndex = 0;
 
@@ -223,7 +223,7 @@ namespace AvantGardeMaker.EnemySpace
 		public void SetWayPointIntervalList(List<float> wayPointIntervalList)
 		{
 			m_WayPointIntervalList.Clear();
-			m_WayPointIntervalList = wayPointIntervalList;
+			m_WayPointIntervalList.AddRange(wayPointIntervalList);
 		}
 		public float GetRange()
 		{

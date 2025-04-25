@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &207421273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &621073716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,16 +272,9 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 718791901072946301, guid: 700f1915b4874db409719323188ccca1, type: 3}
+  m_GamePlayingCamera: {fileID: 0}
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
-  m_OperatorSkillButton: {fileID: 0}
-  m_CostValueText: {fileID: 0}
-  m_CostFillImage: {fileID: 0}
-  m_GamePlayingCamera: {fileID: 0}
-  m_OperatorSquadUIParent: {fileID: 0}
-  m_OperatorStatusUI: {fileID: 0}
-  m_DeploymentCancelButton: {fileID: 0}
-  m_OperatorRetreatButton: {fileID: 0}
 --- !u!4 &621073717
 Transform:
   m_ObjectHideFlags: 0
@@ -366,6 +359,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
+    - Name: m_EnemyDataMap
+      Entry: 6
+      Data: 
     - Name: m_EnemySpawnDataQueue
       Entry: 6
       Data: 
@@ -384,7 +380,6 @@ MonoBehaviour:
     <poolSize>k__BackingField: 2
     <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
   m_EnemyList: []
-  m_EnemyDataList: []
   m_EnemySpawnTimer:
     m_Interval: 0
     m_Time: 0
@@ -419,7 +414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1446381272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,8 +438,26 @@ MonoBehaviour:
     SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
+  m_GameStageData:
+    m_Title: 
+    m_CreatorNickName: 
+    m_CreatedPlayerId: 
+    m_ThumnailTexture: 
+    m_Description: 
+    m_InitCost: 0
+    m_IncreaseCostTime: 0
+    m_TilePointList: []
+    m_TileTypeList: 
+    m_MinTile: {x: 0, y: 0}
+    m_MaxTile: {x: 0, y: 0}
+    m_OperatorKeyList: []
+    m_OperatorFixedDataList: []
+    m_OperatorVariableDataList: []
+    m_EnemyKeyList: []
+    m_EnemyFixedDataList: []
+    m_EnemyVariableDataList: []
+    m_EnemySpawnDataList: []
   m_PlayingOperatorList: []
-  m_OperatorSquadKeyList: []
 --- !u!4 &1446381273
 Transform:
   m_ObjectHideFlags: 0
@@ -674,22 +687,22 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 0
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
-  - <key>k__BackingField: LowGroundTile
+  - <key>k__BackingField: LowGround
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
-  - <key>k__BackingField: HighGroundTile
+  - <key>k__BackingField: HighGround
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: 1bca4103252419f48b44396adf68a65f, type: 3}
-  - <key>k__BackingField: Protection Objective
+  - <key>k__BackingField: ProtectionObjective
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 5
     <origin>k__BackingField: {fileID: -2000793769421993583, guid: ae049637790ef4e46933620dfdefcb96, type: 3}
-  - <key>k__BackingField: Incursion Point
+  - <key>k__BackingField: IncursionPoint
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 5
@@ -755,6 +768,11 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\99_UI Prefabs\Map Editor UI
   m_Origins:
+  - <key>k__BackingField: Tile Data UI
+    <additionalPath>k__BackingField: 01_Tile Setting
+    <useFlag>k__BackingField: 0
+    <poolSize>k__BackingField: 10
+    <origin>k__BackingField: {fileID: 0}
   - <key>k__BackingField: Operator Data UI
     <additionalPath>k__BackingField: 02_Operator Setting
     <useFlag>k__BackingField: 1
@@ -875,9 +893,10 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 2100000, guid: 41ac777673c50ea4888d695d901452ea, type: 2}
     - {fileID: 2100000, guid: f06c4402bfb0ce346b00ae5a6c7b4c52, type: 2}
-    - {fileID: 2100000, guid: 3206e53488f9fd040adca06dff110473, type: 2}
     - {fileID: 2100000, guid: ee0d865896881d7428df553ff1ed9eda, type: 2}
+    - {fileID: 2100000, guid: 3206e53488f9fd040adca06dff110473, type: 2}
     - {fileID: 2100000, guid: 631649d35a613d445bf1c3c1e89742cb, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -897,13 +916,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: LowGroundTile
+      Data: None
     - Name: $v
       Entry: 10
       Data: 0
@@ -915,7 +934,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Protection Objective
+      Data: LowGround
     - Name: $v
       Entry: 10
       Data: 1
@@ -927,7 +946,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Incursion Point
+      Data: IncursionPoint
     - Name: $v
       Entry: 10
       Data: 2
@@ -939,10 +958,22 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: HighGroundTile
+      Data: ProtectionObjective
     - Name: $v
       Entry: 10
       Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: HighGround
+    - Name: $v
+      Entry: 10
+      Data: 4
     - Name: 
       Entry: 8
       Data: 

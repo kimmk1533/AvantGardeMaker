@@ -13,7 +13,7 @@ namespace AvantGardeMaker.TileSpace
 	public class Tile : ObjectPoolItemBase
 	{
 		#region 변수
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private Operator m_OperatorOnTile = null;
 
 		private OperatorSquadUI m_OperatorSquadUI = null;

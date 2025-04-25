@@ -94,7 +94,7 @@ namespace AvantGardeMaker.EnemySpace
 						default:
 							returnMap[y, x] = true;
 							break;
-						case E_TileType.HighGroundTile:
+						case E_TileType.HighGround:
 						case E_TileType.None:
 							if (isFlyable)
 								returnMap[y, x] = true;

@@ -11,7 +11,7 @@ namespace AvantGardeMaker.UI
 	public class OperatorStatusUI : GamePlayingUI
 	{
 		#region 변수
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private OperatorData m_SelectedOperator = null;
 
 		[SerializeField]

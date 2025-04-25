@@ -22,7 +22,7 @@ namespace AvantGardeMaker.UI
 
 		private UtilClass.Timer m_ReDeploymentTimer = null;
 		private TextMeshProUGUI m_ReDeploymentTimerText = null;
-		[SerializeField, ReadOnly]
+		[SerializeField, RuntimeReadOnly]
 		private Image m_ReDeploymentTimerImage = null;
 
 		private OperatorData m_OperatorData = null;

@@ -47,7 +47,8 @@ namespace AvantGardeMaker.UI
 		{
 			base.Finallize();
 
-
+			m_PanelStack.Clear();
+			m_PanelStack = null;
 		}
 
 		/// <summary>
@@ -81,7 +82,9 @@ namespace AvantGardeMaker.UI
 			while (m_PanelStack.Count > 0 &&
 				panel != null &&
 				panel.gameObject.activeSelf == false)
+			{
 				panel = m_PanelStack.Pop();
+			}
 
 			panel.gameObject.SetActive(false);
 		}

@@ -6,23 +6,28 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.UI;
 using AvantGardeMaker.TileSpace.Enum;
+using AvantGardeMaker.CoreSpace.SaveLoad;
+using AvantGardeMaker.EnemySpace;
 
 namespace AvantGardeMaker.CoreSpace
 {
 	public class GamePlayingManager : SerializedSingleton<GamePlayingManager>
 	{
 		#region 변수
+		[SerializeField, ReadOnly]
+		private StageData m_GameStageData = default;
+
 		private int m_GameHp;
 		private int m_GameSpeed;
 
+		#region 코스트 관련 변수
 		private int m_MaxCost = 99;
 		private int m_CurrentCost = 0;
 
 		private UtilClass.Timer m_CostTimer = null;
+		#endregion
 
-		private int m_MaxLocationCount;
-		private int m_LocationCount;
-
+		#region 오퍼레이터 관련 변수
 		[SerializeField, ReadOnly]
 		private List<Operator> m_PlayingOperatorList = null;
 
@@ -31,17 +36,17 @@ namespace AvantGardeMaker.CoreSpace
 		private Operator m_SettedOperatorSelect = null;
 		//선택된 오퍼레이터가있는 타일
 		private Tile m_SelectedTile = null;
+		#endregion
 
-		//게임들어오기전 편성한 오퍼레이터들의 이름 받기
-		[SerializeField]
-		private List<string> m_OperatorSquadKeyList = new List<string>();
+		#region 적 관련 변수
+
+		#endregion
 		#endregion
 
 		#region 프로퍼티
-		public int maxCost
-		{
-			get => m_MaxCost;
-		}
+		public StageData currentStageData => m_GameStageData;
+
+		public int maxCost => m_MaxCost;
 		public int currentCost
 		{
 			get => m_CurrentCost;
@@ -49,17 +54,6 @@ namespace AvantGardeMaker.CoreSpace
 		}
 
 		public UtilClass.Timer costTimer => m_CostTimer;
-
-		public int maxLocationCount
-		{
-			get => m_MaxLocationCount;
-		}
-		public int locationCount
-		{
-			get => m_LocationCount;
-		}
-
-		public List<string> operatorSquadKeyList => new List<string>(m_OperatorSquadKeyList);
 
 		public Tile setPreViewOperatorOnTile
 		{
@@ -73,30 +67,18 @@ namespace AvantGardeMaker.CoreSpace
 			set => m_SettedOperatorSelect = value;
 		}
 
-		public E_TileType[,] currentMap
-		{
-			get;
-			private set;
-		}
-
+		public E_TileType[,] currentMap { get; private set; }
+		public List<string> operatorSquadKeyList { get; private set; }
 		#endregion
 
 		#region 이벤트
 		#endregion
 
 		#region 매니저
-		private static TileManager M_Tile => TileManager.Instance;
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
-		private static GameManager M_Game => GameManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		protected override void Awake()
-		{
-			base.Awake();
-			Initialize();
-			InitializeMain();
-		}
 		private void Update()
 		{
 			CostIncreaseProcess();
@@ -117,6 +99,8 @@ namespace AvantGardeMaker.CoreSpace
 
 			m_CostTimer = new UtilClass.Timer(1f);
 			m_PlayingOperatorList = new List<Operator>();
+
+			operatorSquadKeyList = new List<string>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -135,7 +119,8 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.InitializeMain();
 
-			currentMap = M_Game.currentStageData.map;
+			currentMap = m_GameStageData.map;
+			operatorSquadKeyList = m_GameStageData.operatorKeyList;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -144,7 +129,9 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.FinallizeMain();
 
-
+			currentMap = default;
+			operatorSquadKeyList.Clear();
+			operatorSquadKeyList = null;
 		}
 		#endregion
 
@@ -238,6 +225,13 @@ namespace AvantGardeMaker.CoreSpace
 		public void GainCost(int gainCost)
 		{
 			m_CurrentCost += gainCost;
+		}
+
+		public void SynchronizeStageData(StageData stageData)
+		{
+			m_GameStageData = stageData;
+
+			PathFinder.offset = -stageData.minTile;
 		}
 	}
 }

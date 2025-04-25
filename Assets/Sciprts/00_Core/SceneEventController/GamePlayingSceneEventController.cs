@@ -12,20 +12,23 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 	{
 		#region 변수
 		[SerializeField]
+		private Button m_OptionButton = null;
+
+		[SerializeField]
 		private TextMeshProUGUI m_CostValueText = null;
 		[SerializeField]
 		private Image m_CostFillImage = null;
 
 		[SerializeField]
-		private Camera m_GamePlayingCamera = null;
-		[SerializeField]
 		private RectTransform m_OperatorSquadUIParent = null;
 		[SerializeField]
 		private OperatorStatusUI m_OperatorStatusUI = null;
 		[SerializeField]
-		private Button m_DeploymentCancelButton = null;
+		private Button m_OperatorDeploymentCancelButton = null;
 		[SerializeField]
 		private Button m_OperatorRetreatButton = null;
+		[SerializeField]
+		private Button m_OperatorSkillButton = null;
 		#endregion
 
 		#region 프로퍼티
@@ -61,14 +64,16 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			base.Initialize();
 
 			#region 멤버 변수 링킹
+			M_GamePlayingUI.optionButton = m_OptionButton;
+
 			M_GamePlayingUI.costValueText = m_CostValueText;
 			M_GamePlayingUI.costFillImage = m_CostFillImage;
 
-			M_GamePlayingUI.gamePlayingCamera = m_GamePlayingCamera;
 			M_GamePlayingUI.operatorSquadUIParent = m_OperatorSquadUIParent;
 			M_GamePlayingUI.operatorStatusUI = m_OperatorStatusUI;
-			M_GamePlayingUI.deploymentCancelButton = m_DeploymentCancelButton;
+			M_GamePlayingUI.deploymentCancelButton = m_OperatorDeploymentCancelButton;
 			M_GamePlayingUI.operatorRetreatButton = m_OperatorRetreatButton;
+			M_GamePlayingUI.operatorSkillButton = m_OperatorSkillButton;
 			#endregion
 
 			// Main Menu Scene 전환 전 이벤트
@@ -93,10 +98,5 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 
 		}
 		#endregion
-
-		public void Debug_LoadMainMenuScene()
-		{
-			SceneLoader.LoadScene("Main Menu Scene");
-		}
 	}
 }

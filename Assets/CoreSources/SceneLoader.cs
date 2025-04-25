@@ -10,7 +10,7 @@ public class SceneLoader : SerializedMonoBehaviour
 {
 	#region 변수
 	protected static string m_PrevScene = null;
-	protected static string m_NextScene = null;
+	protected static string m_CurrScene = "Init Scene";
 
 	[SerializeField, FoldoutGroup("Use Flags")]
 	private bool m_UseFadeBG = true;
@@ -27,6 +27,10 @@ public class SceneLoader : SerializedMonoBehaviour
 	private TextMeshProUGUI m_Percent = null;
 	[SerializeField, ShowIf("@m_UseProgressBar")]
 	private Image m_ProgressBar = null;
+	#endregion
+
+	#region 프로퍼티
+	public static string prevSceneName => m_PrevScene;
 	#endregion
 
 	#region 유니티 콜백 함수
@@ -59,8 +63,8 @@ public class SceneLoader : SerializedMonoBehaviour
 
 	public static void LoadScene(string sceneName)
 	{
-		m_PrevScene = SceneManager.GetActiveScene().name;
-		m_NextScene = sceneName;
+		m_PrevScene = m_CurrScene;
+		m_CurrScene = sceneName;
 
 		LoadSceneParameters sceneParameters = new LoadSceneParameters(LoadSceneMode.Additive, LocalPhysicsMode.None);
 		SceneManager.LoadScene("Loading Scene", sceneParameters);
@@ -74,14 +78,21 @@ public class SceneLoader : SerializedMonoBehaviour
 
 		yield return null;
 
-		SceneEventController[] eventControllers = FindObjectsByType<SceneEventController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-		for (int i = 0; i < eventControllers.Length; ++i)
+		List<GameObject> rootGameObjectList = new List<GameObject>();
+		SceneManager.GetSceneByName(m_PrevScene).GetRootGameObjects(rootGameObjectList);
+
+		for (int i = 0; i < rootGameObjectList.Count; ++i)
 		{
-			eventControllers[i].OnBeforeSceneSwitching(m_NextScene);
+			SceneEventController eventController = rootGameObjectList[i].GetComponent<SceneEventController>();
+
+			if (eventController == null)
+				continue;
+
+			eventController.OnBeforeSceneSwitching(m_CurrScene);
 		}
 
 		LoadSceneParameters sceneParameters = new LoadSceneParameters(LoadSceneMode.Additive, LocalPhysicsMode.None);
-		AsyncOperation op = SceneManager.LoadSceneAsync(m_NextScene, sceneParameters);
+		AsyncOperation op = SceneManager.LoadSceneAsync(m_CurrScene, sceneParameters);
 		op.allowSceneActivation = false;
 		op.completed += OnSceneLoadCompleted;
 
@@ -152,18 +163,48 @@ public class SceneLoader : SerializedMonoBehaviour
 
 	private void OnSceneLoadCompleted(AsyncOperation op)
 	{
-		SceneManager.SetActiveScene(SceneManager.GetSceneByName(m_NextScene));
+		SceneManager.SetActiveScene(SceneManager.GetSceneByName(m_CurrScene));
 
-		SceneEventController[] eventControllers = FindObjectsByType<SceneEventController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-		for (int i = 0; i < eventControllers.Length; ++i)
+		List<GameObject> rootGameObjectList = new List<GameObject>();
+		SceneManager.GetSceneByName(m_PrevScene).GetRootGameObjects(rootGameObjectList);
+
+		for (int i = 0; i < rootGameObjectList.Count; ++i)
 		{
-			eventControllers[i].OnAfterSceneSwitching(m_NextScene);
+			SceneEventController eventController = rootGameObjectList[i].GetComponent<SceneEventController>();
+
+			if (eventController == null)
+				continue;
+
+			eventController.OnAfterSceneSwitching(m_CurrScene);
 		}
+
+		TurnOffCamera();
 
 		AsyncOperation opLoading = SceneManager.UnloadSceneAsync("Loading Scene");
 		AsyncOperation opPrev = SceneManager.UnloadSceneAsync(m_PrevScene);
+	}
+	private void TurnOffCamera()
+	{
+		List<GameObject> rootGameObjectList = new List<GameObject>();
 
-		m_PrevScene = m_NextScene;
-		m_NextScene = "";
+		for (int i = 0; i < SceneManager.sceneCount; ++i)
+		{
+			Scene scene = SceneManager.GetSceneAt(i);
+
+			if (scene.isLoaded == false ||
+				scene == SceneManager.GetActiveScene())
+				continue;
+
+			SceneManager.GetSceneByName(scene.name).GetRootGameObjects(rootGameObjectList);
+			for (int j = 0; j < rootGameObjectList.Count; ++j)
+			{
+				Camera camera = rootGameObjectList[j].GetComponent<Camera>();
+
+				if (camera == null)
+					continue;
+
+				camera.gameObject.SetActive(false);
+			}
+		}
 	}
 }

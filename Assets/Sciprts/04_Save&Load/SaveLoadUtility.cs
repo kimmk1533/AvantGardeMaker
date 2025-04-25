@@ -116,6 +116,11 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			// Json 변환
 			string json = JsonUtility.ToJson(stageData);
 
+			// 디버깅용 파일 저장
+			string debugJson = JsonUtility.ToJson(stageData, true);
+			string debugPath = Path.Combine(Application.dataPath, "..", "Data", mapTitle + ".json");
+			File.WriteAllText(debugPath, debugJson);
+
 			// 압축
 			byte[] compressedJson = await Compression.Compress(json);
 

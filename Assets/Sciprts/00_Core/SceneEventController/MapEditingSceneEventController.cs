@@ -47,36 +47,36 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		private MenuPanelController m_MenuPanelController = null;
 		#endregion
 
-		#region 세부 설정 관련 변수
-		#region 오퍼레이터 세부 설정 관련 변수
+		#region 타일 설정 관련 변수
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련")]
-		[FoldoutGroup("세부 설정 관련/오퍼레이터")]
-		private OperatorDetailedSettingPanel m_OperatorDetailedSettingPanel = null;
+		[FoldoutGroup("설정 관련")]
+		[FoldoutGroup("설정 관련/타일")]
+		private RectTransform m_TileDataUIParent = null;
 
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/오퍼레이터")]
+		[FoldoutGroup("설정 관련/타일")]
+		private RectTransform m_TileSettingButtonParent = null;
+		#endregion
+
+		#region 오퍼레이터 설정 관련 변수
+		[SerializeField]
+		[FoldoutGroup("설정 관련/오퍼레이터")]
 		private RectTransform m_OperatorDataUIParent = null;
 		#endregion
 
-		#region 적 세부 설정 관련 변수
+		#region 적 설정 관련 변수
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/적")]
-		private EnemyDetailedSettingPanel m_EnemyDetailedSettingPanel = null;
-
-		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/적")]
+		[FoldoutGroup("설정 관련/적")]
 		private RectTransform m_EnemyDataUIParent = null;
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/적")]
+		[FoldoutGroup("설정 관련/적")]
 		private RectTransform m_EnemySpawnDataUIParent = null;
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/적")]
+		[FoldoutGroup("설정 관련/적")]
 		private RectTransform m_EnemyWayPointDataUIParent = null;
 		[SerializeField]
-		[FoldoutGroup("세부 설정 관련/적")]
+		[FoldoutGroup("설정 관련/적")]
 		private RectTransform m_EnemyImmuneDescriptionParent = null;
-		#endregion
 		#endregion
 		#endregion
 
@@ -133,16 +133,18 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			M_MapEditingUI.menuPanelController = m_MenuPanelController;
 			#endregion
 
-			#region 세부 설정 관련 변수 링킹
-			#region 오퍼레이터
-			M_MapEditingUI.operatorDetailedSettingPanel = m_OperatorDetailedSettingPanel;
+			#region 설정 관련 변수 링킹
+			#region 타일
+			M_MapEditingUI.tileDataUIParent = m_TileDataUIParent;
 
+			M_MapEditingUI.tileSettingButtonParent = m_TileSettingButtonParent;
+			#endregion
+
+			#region 오퍼레이터
 			M_MapEditingUI.operatorDataUIParent = m_OperatorDataUIParent;
 			#endregion
 
 			#region 적
-			M_MapEditingUI.enemyDetailedSettingPanel = m_EnemyDetailedSettingPanel;
-
 			M_MapEditingUI.enemyDataUIParent = m_EnemyDataUIParent;
 			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditingUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
