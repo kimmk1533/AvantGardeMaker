@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using TileValue = System.ValueTuple<AvantGardeMaker.TileSpace.Enum.E_TileType, AvantGardeMaker.TileSpace.Tile>;
+using System.Linq;
 
 namespace AvantGardeMaker.UI
 {
@@ -195,12 +196,12 @@ namespace AvantGardeMaker.UI
 		{
 			List<string> operatorSquadKeyList = M_GamePlaying.operatorSquadKeyList;
 
+			// 생성
 			for (int i = 0; i < operatorSquadKeyList.Count; ++i)
 			{
 				string operatorKey = operatorSquadKeyList[i];
 
 				OperatorSquadUI operatorSquadUI = GetBuilder("Operator Squad UI")
-					.SetParent(operatorSquadUIParent)
 					.SetAutoInit(false)
 					.SetActive(true)
 					.SetName(operatorKey)
@@ -211,6 +212,17 @@ namespace AvantGardeMaker.UI
 				operatorSquadUI.onOperatorSquadUIClicked += OnOperatorSquadUIClicked;
 
 				m_OperatorSquadUIList.Add(operatorSquadUI);
+			}
+
+			// 정렬
+			m_OperatorSquadUIList = m_OperatorSquadUIList
+				.OrderBy(squadUI => squadUI.operatorData.VariableData.DeploymentCost)
+				.ToList();
+
+			// 정렬 적용
+			for (int i = 0; i < m_OperatorSquadUIList.Count; ++i)
+			{
+				m_OperatorSquadUIList[i].transform.SetParent(operatorSquadUIParent);
 			}
 		}
 		private void DestroyOperatorSquadUI()
@@ -278,7 +290,7 @@ namespace AvantGardeMaker.UI
 			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
 			operatorSkillButton.transform.position = new Vector3(screenPos.x + 200, screenPos.y - 200);
 			operatorSkillButton.gameObject.SetActive(true);
-			operatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnClickSkillButton);
+			operatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnSkillButtonClicked);
 		}
 		#endregion
 	}

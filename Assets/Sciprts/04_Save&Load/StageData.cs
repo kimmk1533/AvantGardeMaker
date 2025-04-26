@@ -35,7 +35,10 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		private int m_InitCost;
 		[SerializeField]
 		[FoldoutGroup("시스템")]
-		private float m_IncreaseCostTime;
+		private int m_MaxCost;
+		[SerializeField]
+		[FoldoutGroup("시스템")]
+		private float m_CostIncreaseTime;
 		#endregion
 
 		#region 2. 타일 관련 변수
@@ -117,6 +120,10 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			get => m_Description;
 			set => m_Description = value;
 		}
+
+		public int initCost => m_InitCost;
+		public int maxCost => m_MaxCost;
+		public float costIncreaseTime => m_CostIncreaseTime;
 		#endregion
 
 		#region 2. 타일 관련 프로퍼티
@@ -176,28 +183,50 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public static void Initialize(ref StageData stageData)
 		{
 			#region 타일 관련 초기화
-			m_TilePointList.Clear();
-			m_TileTypeList.Clear();
+			if (stageData.m_TilePointList == null)
+				stageData.m_TilePointList = new List<Vector2Int>();
+			if (stageData.m_TileTypeList == null)
+				stageData.m_TileTypeList = new List<E_TileType>();
 
-			m_MinTile = Vector2Int.one * int.MaxValue;
-			m_MaxTile = Vector2Int.one * int.MinValue;
+			stageData.m_TilePointList.Clear();
+			stageData.m_TileTypeList.Clear();
+
+			stageData.m_MinTile = Vector2Int.one * int.MaxValue;
+			stageData.m_MaxTile = Vector2Int.one * int.MinValue;
 			#endregion
 
 			#region 오퍼레이터 관련 초기화
-			m_OperatorKeyList.Clear();
-			m_OperatorFixedDataList.Clear();
-			m_OperatorVariableDataList.Clear();
+			if (stageData.m_OperatorKeyList == null)
+				stageData.m_OperatorKeyList = new List<string>();
+			if (stageData.m_OperatorFixedDataList == null)
+				stageData.m_OperatorFixedDataList = new List<OperatorFixedData>();
+			if (stageData.m_OperatorVariableDataList == null)
+				stageData.m_OperatorVariableDataList = new List<OperatorVariableData>();
+
+			stageData.m_OperatorKeyList.Clear();
+			stageData.m_OperatorFixedDataList.Clear();
+			stageData.m_OperatorVariableDataList.Clear();
 			#endregion
 
 			#region 적 관련 초기화
-			m_EnemyKeyList.Clear();
-			m_EnemyFixedDataList.Clear();
-			m_EnemyVariableDataList.Clear();
+			if (stageData.m_EnemyKeyList == null)
+				stageData.m_EnemyKeyList = new List<string>();
+			if (stageData.m_EnemyFixedDataList == null)
+				stageData.m_EnemyFixedDataList = new List<EnemyFixedData>();
+			if (stageData.m_EnemyVariableDataList == null)
+				stageData.m_EnemyVariableDataList = new List<EnemyVariableData>();
 
-			m_EnemySpawnDataList.Clear();
+			if (stageData.m_EnemySpawnDataList == null)
+				stageData.m_EnemySpawnDataList = new List<EnemySpawnData>();
+
+			stageData.m_EnemyKeyList.Clear();
+			stageData.m_EnemyFixedDataList.Clear();
+			stageData.m_EnemyVariableDataList.Clear();
+
+			stageData.m_EnemySpawnDataList.Clear();
 			#endregion
 		}
 		#endregion
@@ -215,7 +244,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		}
 		public void SaveOperatorData(OperatorData operatorData)
 		{
-			m_OperatorKeyList.Add(operatorData.EngName);
+			m_OperatorKeyList.Add(operatorData.key);
 			m_OperatorFixedDataList.Add(operatorData.FixedData);
 			m_OperatorVariableDataList.Add(operatorData.VariableData);
 		}

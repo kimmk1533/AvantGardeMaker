@@ -393,7 +393,7 @@ namespace AvantGardeMaker.CoreSpace
 
 		public void SaveData()
 		{
-			m_EditingStageData.Initialize();
+			StageData.Initialize(ref m_EditingStageData);
 
 			m_EditingStageData.title = stageName;
 			m_EditingStageData.creatorNickName = creatorNickName;

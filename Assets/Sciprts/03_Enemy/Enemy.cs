@@ -299,7 +299,7 @@ namespace AvantGardeMaker.EnemySpace
 				if (m_WayPointIndex >= m_WayPointList.Count)
 				{
 					Debug.Log("이동 완료");
-					Dead();
+					//Dead();
 					return;
 				}
 				//경로 최신화
@@ -371,18 +371,18 @@ namespace AvantGardeMaker.EnemySpace
 			{
 				case E_DamageType.Physics:
 					//물리딜: 공격력 - 방어력/방어 관통 vs 공격력의 5%
-					SubHp(Mathf.Max(val - m_VariableData.Def.CurStat * (piercePercentage / 100), val * 0.05f));
+					DecreaseHp(Mathf.Max(val - m_VariableData.Def.CurStat * (piercePercentage / 100), val * 0.05f));
 					break;
 				case E_DamageType.Magic:
 					//마법딜: 공격력 / 마법 저항 vs 공격력의 5%
-					SubHp(Mathf.Max(val / m_VariableData.Res.CurStat * (piercePercentage / 100), val * 0.05f));
+					DecreaseHp(Mathf.Max(val / m_VariableData.Res.CurStat * (piercePercentage / 100), val * 0.05f));
 					break;
 				case E_DamageType.True:
-					SubHp(val);
+					DecreaseHp(val);
 					break;
 			}
 		}
-		private void SubHp(float val)
+		private void DecreaseHp(float val)
 		{
 			m_VariableData.Hp.CurStat -= val;
 		}

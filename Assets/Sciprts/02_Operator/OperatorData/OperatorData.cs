@@ -8,6 +8,7 @@ namespace AvantGardeMaker.OperatorSpace
 	[CreateAssetMenu(fileName = "OperatorInfo", menuName = "Scriptable Object/OperatorInfo", order = int.MinValue)]
 	public class OperatorData : SerializedScriptableObject
 	{
+		#region 변수
 		//영어이름
 		public string EngName;
 		//한글이름
@@ -15,6 +16,10 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public OperatorFixedData FixedData = new OperatorFixedData();
 		public OperatorVariableData VariableData = new OperatorVariableData();
+		#endregion
 
+		#region 프로퍼티
+		public string key => EngName;
+		#endregion
 	}
 }

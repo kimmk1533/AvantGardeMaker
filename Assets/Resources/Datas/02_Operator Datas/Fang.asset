@@ -60,7 +60,7 @@ MonoBehaviour:
       Elite2Level1: 55
       Elite2LevelFull: 55
     Rate: 3
-    Level: 1
+    Level: 40
     Elite: 0
     Potential: 0
     Class: 0
@@ -71,15 +71,14 @@ MonoBehaviour:
     PortraitPath: MikangMark\Test Images\OperatorFaceImg\Fang
     FullShotPath: MikangMark\Test Images\OperatorFullImg\Fang
   VariableData:
-    MaxHp: 742
-    RealHp: 742
-    Atk: 157
-    Def: 132
+    MaxHp: 1060
+    CurrentHp: 1060
+    Atk: 235
+    Def: 187
     Res: 0
     RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    InitDeploymentCost: 11
-    CurrentDeploymentCost: 11
+    DeploymentCost: 9
     BlockCount: 2
     InitAttakSpeed: 106
     Provocation: 0

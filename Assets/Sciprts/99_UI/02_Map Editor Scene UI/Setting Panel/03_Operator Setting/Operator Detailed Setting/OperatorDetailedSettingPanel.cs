@@ -54,7 +54,7 @@ namespace AvantGardeMaker.UI
 			set
 			{
 				m_CurrentOperatorData.VariableData.MaxHp = Mathf.Clamp(value, maxHp, nextMaxHp);
-				m_CurrentOperatorData.VariableData.RealHp = m_CurrentOperatorData.VariableData.MaxHp;
+				m_CurrentOperatorData.VariableData.CurrentHp = m_CurrentOperatorData.VariableData.MaxHp;
 
 				m_MaxHpText.text = value.ToString();
 			}
@@ -161,9 +161,9 @@ namespace AvantGardeMaker.UI
 			settingSlot.operatorData = seletedOperatorData;
 
 			if (slotOperatorData != null)
-				M_MapEditingUI.RespawnOperatorDataUI(slotOperatorData.EngName);
+				M_MapEditingUI.RespawnOperatorDataUI(slotOperatorData.key);
 			if (seletedOperatorData != null)
-				M_MapEditingUI.RemoveOperatorDataUI(seletedOperatorData.EngName);
+				M_MapEditingUI.RemoveOperatorDataUI(seletedOperatorData.key);
 		}
 		#endregion
 		#endregion
@@ -177,7 +177,7 @@ namespace AvantGardeMaker.UI
 		{
 			if (m_CurrentSettingSlot != null &&
 				m_CurrentSettingSlot.operatorData != null)
-				M_MapEditingUI.RemoveOperatorDataUI(m_CurrentSettingSlot.operatorData.EngName);
+				M_MapEditingUI.RemoveOperatorDataUI(m_CurrentSettingSlot.operatorData.key);
 
 			m_CurrentSettingSlot = null;
 			m_CurrentOperatorData = null;
@@ -264,7 +264,7 @@ namespace AvantGardeMaker.UI
 
 				UpdateUI(m_CurrentOperatorData);
 
-				M_MapEditingUI.RespawnOperatorDataUI(m_CurrentOperatorData.EngName);
+				M_MapEditingUI.RespawnOperatorDataUI(m_CurrentOperatorData.key);
 			}
 
 			ChangeParentsActive(isSlotHasOperatorData);

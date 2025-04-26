@@ -24,7 +24,7 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 프로퍼티
-		public Operator tileOnOperator
+		public Operator operatorOnTile
 		{
 			get => m_OperatorOnTile;
 			set => m_OperatorOnTile = value;
@@ -107,19 +107,8 @@ namespace AvantGardeMaker.TileSpace
 
 			M_GamePlayingUI.activeRetreatButton = false;
 			M_GamePlayingUI.OperatorSquadUIReDeploymentActive(m_OperatorSquadUI);
-			m_OperatorOnTile.ResetDirection();
-			m_OperatorOnTile.currentDirection = E_OperatorDirection.None;
-			if (m_OperatorOnTile.redeployCount < 2)
-			{
-				++m_OperatorOnTile.redeployCount;
-			}
-			if (m_OperatorOnTile.operatorData.VariableData.RealHp <= 0)
-				M_GamePlaying.GainCost(m_OperatorOnTile.currentDeploymentCost / 2);
-			if (m_OperatorOnTile.redeployCount < 2)
-			{
-				m_OperatorOnTile.currentDeploymentCost += m_OperatorOnTile.currentDeploymentCost / 2;
-			}
-			
+
+			m_OperatorOnTile.Retreat();
 
 			M_Operator.Despawn(m_OperatorOnTile);
 		}

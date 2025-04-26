@@ -155,8 +155,8 @@ namespace AvantGardeMaker.UI
 			m_DefText.text = selectedOperatorData.VariableData.Def.ToString();
 			m_ResText.text = selectedOperatorData.VariableData.Res.ToString();
 			m_BlockText.text = selectedOperatorData.VariableData.BlockCount.ToString();
-			OperImg.sprite = M_GamePlayingUI.GetOperatorFullshotSprite(selectedOperatorData.EngName);
-			m_OperatorHpText.text = selectedOperatorData.VariableData.RealHp + "/" + selectedOperatorData.VariableData.MaxHp;
+			OperImg.sprite = M_GamePlayingUI.GetOperatorFullshotSprite(selectedOperatorData.key);
+			m_OperatorHpText.text = selectedOperatorData.VariableData.CurrentHp + "/" + selectedOperatorData.VariableData.MaxHp;
 
 			ResetATKRangeUI();
 			OperATKRangeCreate(m_SelectedOperator.VariableData.AttackPos);

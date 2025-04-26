@@ -13,7 +13,7 @@ namespace AvantGardeMaker.OperatorSpace
 		//최대체력
 		public float MaxHp;
 		//현재체력
-		public float RealHp;
+		public float CurrentHp;
 		//공격력
 		public float Atk;
 		//방어력

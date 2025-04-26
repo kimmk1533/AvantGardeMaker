@@ -68,10 +68,10 @@ namespace AvantGardeMaker.OperatorSpace
 			get => m_SkillActiveTime;
 			set => m_SkillActiveTime = value;
 		}
-		
+
 		public string skillText
 		{
-			get=> m_SkillText;
+			get => m_SkillText;
 			set => m_SkillText = value;
 		}
 
@@ -85,11 +85,11 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void UsingThisSkill(SkillInfo thisSkillInfo, Operator useOperator)
 		{
-			Debug.Log("ATK" + useOperator.operatorData.VariableData.Atk);
+			Debug.Log("ATK" + useOperator.variableData.Atk);
 			switch (thisSkillInfo.SkillType)
 			{
 				case E_OperatorSkillType.AttackBuff:
-					
+
 					AttackBuff(useOperator, thisSkillInfo.SkillValue);
 					break;
 				case E_OperatorSkillType.AttackSpeedBuff:
@@ -111,30 +111,30 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void DeployGainCost(int gainCostValue)
 		{
-			M_GamePlaying.GainCost(gainCostValue);
+			M_GamePlaying.currentCost += gainCostValue;
 		}
 
 		private void AttackBuff(Operator targetOperator, float buffSkillValue)
 		{
 			if (buffSkillValue < 1)
 			{
-				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
-				targetOperator.operatorData.VariableData.Atk = targetOperator.operatorData.VariableData.Atk * (1 + buffSkillValue);
-				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+				Debug.Log("ATK" + targetOperator.variableData.Atk);
+				targetOperator.variableData.Atk = targetOperator.variableData.Atk * (1 + buffSkillValue);
+				Debug.Log("ATK" + targetOperator.variableData.Atk);
 			}
 			else
 			{
-				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
-				targetOperator.operatorData.VariableData.Atk += buffSkillValue;
-				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+				Debug.Log("ATK" + targetOperator.variableData.Atk);
+				targetOperator.variableData.Atk += buffSkillValue;
+				Debug.Log("ATK" + targetOperator.variableData.Atk);
 			}
 		}
 
 		private void AttackSpeedBuff(Operator targetOperator, float buffSkillValue)
 		{
-			Debug.Log("AttackSpeed" + targetOperator.operatorData.VariableData.InitAttakSpeed);
-			targetOperator.operatorData.VariableData.InitAttakSpeed += buffSkillValue;
-			Debug.Log("AttackSpeed" + targetOperator.operatorData.VariableData.InitAttakSpeed);
+			Debug.Log("AttackSpeed" + targetOperator.variableData.InitAttakSpeed);
+			targetOperator.variableData.InitAttakSpeed += buffSkillValue;
+			Debug.Log("AttackSpeed" + targetOperator.variableData.InitAttakSpeed);
 		}
 	}
 }

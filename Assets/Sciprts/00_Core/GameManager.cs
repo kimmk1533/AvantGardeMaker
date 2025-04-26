@@ -12,8 +12,15 @@ namespace AvantGardeMaker.CoreSpace
 {
 	public sealed class GameManager : SerializedSingleton<GameManager>
 	{
+		static GameManager()
+		{
+			StageData.Initialize(ref defaultStageData);
+		}
+
 		#region 변수
 		#region 게임 관련 변수
+		private static readonly StageData defaultStageData = new StageData();
+
 		private bool m_IsGameMode = false;
 		#endregion
 		#endregion
@@ -156,7 +163,7 @@ namespace AvantGardeMaker.CoreSpace
 			M_Operator.FinallizeMain();
 			M_Tile.FinallizeMain();
 
-			M_GamePlaying.SynchronizeStageData(default);
+			M_GamePlaying.SynchronizeStageData(defaultStageData);
 
 			Debug.Log("Finallize Game Playing");
 		}
@@ -189,7 +196,7 @@ namespace AvantGardeMaker.CoreSpace
 
 			M_Panel.InitializeMain();
 
-			M_MapEditing.SynchronizeStageData(default);
+			M_MapEditing.SynchronizeStageData(defaultStageData);
 
 			Debug.Log("Finallize Map Editing");
 		}

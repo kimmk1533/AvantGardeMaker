@@ -367,7 +367,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 			for (int i = 0; i < operatorDatas.Length; ++i)
 			{
-				string key = operatorDatas[i].EngName;
+				string key = operatorDatas[i].key;
 
 				m_OperatorDataMap.Add(key, operatorDatas[i]);
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));

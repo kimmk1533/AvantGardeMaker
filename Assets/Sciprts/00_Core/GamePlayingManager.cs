@@ -8,6 +8,7 @@ using AvantGardeMaker.UI;
 using AvantGardeMaker.TileSpace.Enum;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace;
+using System.Linq;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -21,15 +22,12 @@ namespace AvantGardeMaker.CoreSpace
 		private int m_GameSpeed;
 
 		#region 코스트 관련 변수
-		private int m_MaxCost = 99;
-		private int m_CurrentCost = 0;
-
 		private UtilClass.Timer m_CostTimer = null;
 		#endregion
 
 		#region 오퍼레이터 관련 변수
 		[SerializeField, ReadOnly]
-		private List<Operator> m_PlayingOperatorList = null;
+		private List<Operator> m_DeployingOperatorList = null;
 
 		private Tile m_DeployPreviewOperatorOnTile = null;
 		//선택된 오퍼레이터
@@ -46,12 +44,8 @@ namespace AvantGardeMaker.CoreSpace
 		#region 프로퍼티
 		public StageData currentStageData => m_GameStageData;
 
-		public int maxCost => m_MaxCost;
-		public int currentCost
-		{
-			get => m_CurrentCost;
-			set => m_CurrentCost = value;
-		}
+		public int currentCost { get; set; }
+		public int maxCost { get; private set; }
 
 		public UtilClass.Timer costTimer => m_CostTimer;
 
@@ -72,6 +66,7 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 이벤트
+		public event System.Action onCostIncreased = null;
 		#endregion
 
 		#region 매니저
@@ -94,12 +89,10 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.Initialize();
 
-			//임시 초기 코스트
-			m_CurrentCost = 10;
-
 			m_CostTimer = new UtilClass.Timer(1f);
-			m_PlayingOperatorList = new List<Operator>();
+			m_DeployingOperatorList = new List<Operator>();
 
+			currentMap = null;
 			operatorSquadKeyList = new List<string>();
 		}
 		/// <summary>
@@ -119,8 +112,8 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.InitializeMain();
 
-			currentMap = m_GameStageData.map;
-			operatorSquadKeyList = m_GameStageData.operatorKeyList;
+			m_CostTimer.Clear();
+			m_CostTimer.Resume();
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -137,20 +130,35 @@ namespace AvantGardeMaker.CoreSpace
 
 		private void CostIncreaseProcess()
 		{
+			if (currentCost >= maxCost)
+				return;
+
 			m_CostTimer.Update();
+
 			if (m_CostTimer.TimeCheck(true) == true)
 			{
-				++m_CurrentCost;
+				++currentCost;
+
+				onCostIncreased?.Invoke();
 			}
 		}
 
-		
+		public void DeployOperator(Operator deployingOperator)
+		{
+			m_DeployingOperatorList.Add(deployingOperator);
+		}
+		public void DeploymentOperatorOnTile(Operator operatorPreview)
+		{
+			m_DeployPreviewOperatorOnTile.operatorOnTile = operatorPreview;
+
+			operatorPreview.deploymentTile = m_DeployPreviewOperatorOnTile;
+		}
 
 		private void ClickTileProcess()
 		{
 			if (Input.GetMouseButtonDown(0)) // 좌클릭
 			{
-				m_SettedOperatorSelect = CheckTileInOperator();
+				m_SettedOperatorSelect = GetOperatorOnTile();
 
 				if (m_SettedOperatorSelect == null)
 					return;
@@ -169,14 +177,7 @@ namespace AvantGardeMaker.CoreSpace
 				M_GamePlayingUI.ActiveSkillButton();
 			}
 		}
-		public void DeploymentOperatorOnTile(Operator operatorPreview)
-		{
-			m_DeployPreviewOperatorOnTile.tileOnOperator = operatorPreview;
-			//임시
-			operatorPreview.deploymentTile = (E_TileType.LowGround, m_DeployPreviewOperatorOnTile);
-		}
-
-		private Operator CheckTileInOperator()
+		private Operator GetOperatorOnTile()
 		{
 			Vector2 origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero);
@@ -184,54 +185,48 @@ namespace AvantGardeMaker.CoreSpace
 			{
 				GameObject target = hit.collider.gameObject;
 				Tile tile = target.GetComponent<Tile>();
+
 				if (tile == null)
 					return null;
-				if (tile.tileOnOperator == null)
+
+				if (tile.operatorOnTile == null)
 					return null;
+
 				m_SelectedTile = tile;
-				return tile.tileOnOperator;
+
+				return tile.operatorOnTile;
 			}
+
 			return null;
-
 		}
-		/// <summary>
-		/// 요청한 오퍼레이터리스트를 오퍼레이터 배치순서의 역순으로 리턴
-		/// </summary>
-		/// <returns></returns>
-		public List<Operator> CompareDeployOrder(List<Operator> orderOperatorList)
-		{
-			List<Operator> sortingOperatorList = new List<Operator>();
-			List<int> temp = new List<int>();
-			for (int i = 0; i < orderOperatorList.Count; i++)
-			{
-				int temp2 = m_PlayingOperatorList.FindIndex(n => n.operatorData.EngName == orderOperatorList[i].operatorData.EngName);
-				temp.Add(temp2);//231
-			}
-			//temp에는 오더에서준 m_PlayingOperatorList의 인덱스가 무작위순서로 저장되어있다
-			//내림차순정렬
 
-			temp.Sort((a, b) => b.CompareTo(a));
-			for (int i = 0; i < orderOperatorList.Count; i++)
-			{
-				sortingOperatorList.Add(m_PlayingOperatorList[temp[i]]);
-			}
+		/// <summary>
+		/// 도발, 배치 순서를 이용하여 오퍼레이터 리스트(보통 적의 공격 범위에 들어온)를 내림차순으로 정렬해주는 함수
+		/// </summary>
+		/// <returns>정렬된 오퍼레이터 리스트</returns>
+		public List<Operator> SortOperatorListByAttackIndex(List<Operator> operatorList)
+		{
+			List<Operator> sortingOperatorList = new List<Operator>(operatorList);
+
+			sortingOperatorList = sortingOperatorList
+				.OrderByDescending(oper => oper.variableData.Provocation)
+				.ThenByDescending(oper => oper.deploymentIndex)
+				.ToList();
 
 			return sortingOperatorList;
-		}
-
-		public void DeployOperator(Operator deployOperator)
-		{
-			m_PlayingOperatorList.Add(deployOperator);
-		}
-
-		public void GainCost(int gainCost)
-		{
-			m_CurrentCost += gainCost;
 		}
 
 		public void SynchronizeStageData(StageData stageData)
 		{
 			m_GameStageData = stageData;
+
+			currentMap = stageData.map;
+			operatorSquadKeyList = stageData.operatorKeyList;
+
+			currentCost = stageData.initCost;
+			maxCost = 99;//stageData.maxCost;
+			m_CostTimer.interval = 1f;//stageData.costIncreaseTime;
+			m_CostTimer.Pause();
 
 			PathFinder.offset = -stageData.minTile;
 		}

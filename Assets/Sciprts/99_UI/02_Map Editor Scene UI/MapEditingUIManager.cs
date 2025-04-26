@@ -178,7 +178,7 @@ namespace AvantGardeMaker.UI
 
 				operatorDataUI.operatorData = operatorDataList[i];
 
-				m_SpawnedOperatorDataUIMap.Add(operatorDataList[i].EngName, operatorDataUI);
+				m_SpawnedOperatorDataUIMap.Add(operatorDataList[i].key, operatorDataUI);
 			}
 			#endregion
 

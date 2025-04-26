@@ -63,7 +63,7 @@ MonoBehaviour:
     Level: 1
     Elite: 0
     Potential: 0
-    Job: 0
+    Class: 0
     AtkSpeed: 1
     AtkRange: 0
     SkillName: "\uC2E0\uC18D \uACF5\uACA9 \u03B1"
@@ -72,14 +72,13 @@ MonoBehaviour:
     FullShotPath: MikangMark\Test Images\OperatorFullImg\Fang
   VariableData:
     MaxHp: 688
-    RealHp: 688
+    CurrentHp: 0
     Atk: 230
     Def: 148
     Res: 0
     RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    InitDeploymentCost: 10
-    CurrentDeploymentCost: 0
+    DeploymentCost: 8
     BlockCount: 1
     InitAttakSpeed: 106
     Provocation: 0

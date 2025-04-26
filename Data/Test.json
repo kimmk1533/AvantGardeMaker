@@ -40253,7 +40253,7 @@
         255,
         213,
         195,
-        152,
+        153,
         255,
         213,
         195,
@@ -73767,7 +73767,7 @@
         195,
         153,
         255,
-        212,
+        213,
         195,
         153,
         255,
@@ -160348,7 +160348,7 @@
         172,
         255,
         239,
-        219,
+        220,
         171,
         255,
         239,
@@ -192800,7 +192800,7 @@
         172,
         255,
         241,
-        221,
+        222,
         173,
         255,
         242,
@@ -251653,7 +251653,7 @@
         255,
         249,
         229,
-        178,
+        179,
         255,
         249,
         229,
@@ -349530,7 +349530,8 @@
     ],
     "m_Description": "",
     "m_InitCost": 0,
-    "m_IncreaseCostTime": 0.0,
+    "m_MaxCost": 0,
+    "m_CostIncreaseTime": 0.0,
     "m_TilePointList": [
         {
             "x": -2,
@@ -350219,7 +350220,9 @@
         "y": 4
     },
     "m_OperatorKeyList": [
-        "Fang"
+        "Fang",
+        "Melantha",
+        "Plume"
     ],
     "m_OperatorFixedDataList": [
         {
@@ -350266,7 +350269,7 @@
                 "Elite2LevelFull": 55
             },
             "Rate": 3,
-            "Level": 1,
+            "Level": 40,
             "Elite": 0,
             "Potential": 0,
             "Class": 0,
@@ -350276,30 +350279,139 @@
             "SkillLevel": 1,
             "PortraitPath": "MikangMark\\Test Images\\OperatorFaceImg\\Fang",
             "FullShotPath": "MikangMark\\Test Images\\OperatorFullImg\\Fang"
+        },
+        {
+            "MaxHp": {
+                "Elite0Level1": 1395.0,
+                "Elite1Level1": 1993.0,
+                "Elite2Level1": 2745.0,
+                "Elite2LevelFull": 2745.0
+            },
+            "Atk": {
+                "Elite0Level1": 396.0,
+                "Elite1Level1": 583.0,
+                "Elite2Level1": 738.0,
+                "Elite2LevelFull": 738.0
+            },
+            "Def": {
+                "Elite0Level1": 83.0,
+                "Elite1Level1": 119.0,
+                "Elite2Level1": 155.0,
+                "Elite2LevelFull": 155.0
+            },
+            "Res": {
+                "Elite0Level1": 0.0,
+                "Elite1Level1": 0.0,
+                "Elite2Level1": 0.0,
+                "Elite2LevelFull": 0.0
+            },
+            "DeploymentCost": {
+                "Elite0Level1": 13,
+                "Elite1Level1": 15,
+                "Elite2Level1": 15,
+                "Elite2LevelFull": 15
+            },
+            "BlockCount": {
+                "Elite0Level1": 1,
+                "Elite1Level1": 1,
+                "Elite2Level1": 1,
+                "Elite2LevelFull": 1
+            },
+            "MaxLevel": {
+                "Elite0Level1": 40,
+                "Elite1Level1": 55,
+                "Elite2Level1": 55,
+                "Elite2LevelFull": 55
+            },
+            "Rate": 3,
+            "Level": 20,
+            "Elite": 0,
+            "Potential": 0,
+            "Class": 0,
+            "AtkSpeed": 1,
+            "AtkRange": 0,
+            "SkillName": "공격 강화 α",
+            "SkillLevel": 1,
+            "PortraitPath": "MikangMark\\Test Images\\OperatorFaceImg\\Fang",
+            "FullShotPath": "MikangMark\\Test Images\\OperatorFullImg\\Fang"
+        },
+        {
+            "MaxHp": {
+                "Elite0Level1": 688.0,
+                "Elite1Level1": 956.0,
+                "Elite2Level1": 1226.0,
+                "Elite2LevelFull": 1226.0
+            },
+            "Atk": {
+                "Elite0Level1": 229.0,
+                "Elite1Level1": 333.0,
+                "Elite2Level1": 445.0,
+                "Elite2LevelFull": 445.0
+            },
+            "Def": {
+                "Elite0Level1": 148.0,
+                "Elite1Level1": 212.0,
+                "Elite2Level1": 279.0,
+                "Elite2LevelFull": 279.0
+            },
+            "Res": {
+                "Elite0Level1": 0.0,
+                "Elite1Level1": 0.0,
+                "Elite2Level1": 0.0,
+                "Elite2LevelFull": 0.0
+            },
+            "DeploymentCost": {
+                "Elite0Level1": 8,
+                "Elite1Level1": 10,
+                "Elite2Level1": 10,
+                "Elite2LevelFull": 10
+            },
+            "BlockCount": {
+                "Elite0Level1": 1,
+                "Elite1Level1": 1,
+                "Elite2Level1": 1,
+                "Elite2LevelFull": 1
+            },
+            "MaxLevel": {
+                "Elite0Level1": 40,
+                "Elite1Level1": 55,
+                "Elite2Level1": 55,
+                "Elite2LevelFull": 55
+            },
+            "Rate": 3,
+            "Level": 1,
+            "Elite": 0,
+            "Potential": 0,
+            "Class": 0,
+            "AtkSpeed": 1,
+            "AtkRange": 0,
+            "SkillName": "신속 공격 α",
+            "SkillLevel": 1,
+            "PortraitPath": "MikangMark\\Test Images\\OperatorFaceImg\\Fang",
+            "FullShotPath": "MikangMark\\Test Images\\OperatorFullImg\\Fang"
         }
     ],
     "m_OperatorVariableDataList": [
         {
-            "MaxHp": 742.0,
-            "RealHp": 742.0,
-            "Atk": 157.0,
-            "Def": 132.0,
+            "MaxHp": 1060.0,
+            "CurrentHp": 1060.0,
+            "Atk": 235.0,
+            "Def": 187.0,
             "Res": 0.0,
             "RedeploymentSpeed": 0,
             "RedeploymentInterval": 5.0,
-            "InitDeploymentCost": 15,
-            "CurrentDeploymentCost": 15,
+            "DeploymentCost": 0,
             "BlockCount": 2,
             "InitAttakSpeed": 106.0,
             "Provocation": 0,
             "AttackPos": [
                 {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": 0,
+                    "y": 0
                 },
                 {
-                    "x": 1.0,
-                    "y": 0.0
+                    "x": 1,
+                    "y": 0
                 }
             ],
             "DamageType": 0,
@@ -350308,6 +350420,88 @@
                 {
                     "SkillType": 1,
                     "SkillValue": 6.0
+                }
+            ]
+        },
+        {
+            "MaxHp": 1686.0,
+            "CurrentHp": 1686.0,
+            "Atk": 487.0,
+            "Def": 101.0,
+            "Res": 0.0,
+            "RedeploymentSpeed": 0,
+            "RedeploymentInterval": 5.0,
+            "DeploymentCost": 15,
+            "BlockCount": 1,
+            "InitAttakSpeed": 106.0,
+            "Provocation": 0,
+            "AttackPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                }
+            ],
+            "DamageType": 0,
+            "Penetration": 0.0,
+            "SkillInfoList": [
+                {
+                    "SkillType": 0,
+                    "SkillValue": 0.10000000149011612
+                }
+            ]
+        },
+        {
+            "MaxHp": 688.0,
+            "CurrentHp": 0.0,
+            "Atk": 230.0,
+            "Def": 148.0,
+            "Res": 0.0,
+            "RedeploymentSpeed": 0,
+            "RedeploymentInterval": 5.0,
+            "DeploymentCost": 10,
+            "BlockCount": 1,
+            "InitAttakSpeed": 106.0,
+            "Provocation": 0,
+            "AttackPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                }
+            ],
+            "DamageType": 0,
+            "Penetration": 0.0,
+            "SkillInfoList": [
+                {
+                    "SkillType": 0,
+                    "SkillValue": 0.05999999865889549
+                },
+                {
+                    "SkillType": 1,
+                    "SkillValue": 10.0
                 }
             ]
         }
