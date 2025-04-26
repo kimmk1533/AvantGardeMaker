@@ -39,11 +39,15 @@ public static class UtilClass
 
 	public static Vector2 GetMouseWorldPosition2D()
 	{
-		return GetMouseWorldPosition2D(Input.mousePosition, Camera.main);
+		Camera worldCamera = Camera.main;
+
+		return GetMouseWorldPosition2D(worldCamera);
 	}
 	public static Vector2 GetMouseWorldPosition2D(Camera worldCamera)
 	{
-		return GetMouseWorldPosition2D(Input.mousePosition, worldCamera);
+		Vector2 mousePosition = Input.mousePosition;
+
+		return GetMouseWorldPosition2D(mousePosition, worldCamera);
 	}
 	public static Vector2 GetMouseWorldPosition2D(Vector3 screenPosition, Camera worldCamera)
 	{
@@ -53,11 +57,16 @@ public static class UtilClass
 	}
 	public static Vector3 GetMouseWorldPosition3D()
 	{
-		return GetMouseWorldPosition3D(Input.mousePosition, Camera.main);
+		Camera worldCamera = Camera.main;
+
+		return GetMouseWorldPosition3D(worldCamera);
 	}
 	public static Vector3 GetMouseWorldPosition3D(Camera worldCamera)
 	{
-		return GetMouseWorldPosition3D(Input.mousePosition, worldCamera);
+		Vector3 mousePosition = Input.mousePosition;
+		mousePosition.z = -worldCamera.transform.position.z;
+
+		return GetMouseWorldPosition3D(mousePosition, worldCamera);
 	}
 	public static Vector3 GetMouseWorldPosition3D(Vector3 screenPosition, Camera worldCamera)
 	{

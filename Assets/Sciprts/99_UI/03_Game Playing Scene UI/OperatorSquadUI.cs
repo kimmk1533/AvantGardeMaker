@@ -33,8 +33,8 @@ namespace AvantGardeMaker.UI
 		public OperatorData operatorData
 		{
 			get => m_OperatorData;
-			set 
-			{ 
+			set
+			{
 				m_OperatorData = value;
 			}
 		}
@@ -104,7 +104,7 @@ namespace AvantGardeMaker.UI
 			if (operatorData.VariableData.CurrentDeploymentCost > M_GamePlaying.currentCost)
 				return;
 
-			Vector3 mousePos = UtilClass.GetMouseWorldPosition2D();
+			Vector3 mousePos = UtilClass.GetMouseWorldPosition3D();
 
 			m_PreviewOperator = M_Operator.GetBuilder(operatorData.EngName)
 				.SetPosition(mousePos)
@@ -124,13 +124,16 @@ namespace AvantGardeMaker.UI
 
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
 			{
-				Vector3 mousePos = UtilClass.GetMouseWorldPosition2D();
+				Vector3 mousePos = UtilClass.GetMouseWorldPosition3D();
 
 				m_PreviewOperator.transform.position = mousePos;
 			}
 			else
 			{
-				m_PreviewOperator.transform.position = hit.transform.position;
+				Vector3 tilePos = hit.transform.position;
+				tilePos.z = -0.49f;
+
+				m_PreviewOperator.transform.position = tilePos;
 			}
 		}
 		public void OnEndDrag(PointerEventData eventData)
