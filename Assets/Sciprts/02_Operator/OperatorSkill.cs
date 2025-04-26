@@ -83,14 +83,20 @@ namespace AvantGardeMaker.OperatorSpace
 
 
 
-		public void UsingThisSkill(SkillInfo thisSkillInfo)
+		public void UsingThisSkill(SkillInfo thisSkillInfo, Operator useOperator)
 		{
+			Debug.Log("ATK" + useOperator.operatorData.VariableData.Atk);
 			switch (thisSkillInfo.SkillType)
 			{
-				case E_OperatorSkillType.StatusBuff:
+				case E_OperatorSkillType.AttackBuff:
+					
+					AttackBuff(useOperator, thisSkillInfo.SkillValue);
+					break;
+				case E_OperatorSkillType.AttackSpeedBuff:
+					AttackSpeedBuff(useOperator, thisSkillInfo.SkillValue);
 					break;
 				case E_OperatorSkillType.DeployGainCost:
-					DeployGainCoust((int)thisSkillInfo.SkillValue);
+
 					break;
 				case E_OperatorSkillType.MultipleShot:
 					break;
@@ -103,9 +109,32 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 		}
 
-		public void DeployGainCoust(int gainCostValue)
+		public void DeployGainCost(int gainCostValue)
 		{
 			M_GamePlaying.GainCost(gainCostValue);
+		}
+
+		private void AttackBuff(Operator targetOperator, float buffSkillValue)
+		{
+			if (buffSkillValue < 1)
+			{
+				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+				targetOperator.operatorData.VariableData.Atk = targetOperator.operatorData.VariableData.Atk * (1 + buffSkillValue);
+				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+			}
+			else
+			{
+				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+				targetOperator.operatorData.VariableData.Atk += buffSkillValue;
+				Debug.Log("ATK" + targetOperator.operatorData.VariableData.Atk);
+			}
+		}
+
+		private void AttackSpeedBuff(Operator targetOperator, float buffSkillValue)
+		{
+			Debug.Log("AttackSpeed" + targetOperator.operatorData.VariableData.InitAttakSpeed);
+			targetOperator.operatorData.VariableData.InitAttakSpeed += buffSkillValue;
+			Debug.Log("AttackSpeed" + targetOperator.operatorData.VariableData.InitAttakSpeed);
 		}
 	}
 }

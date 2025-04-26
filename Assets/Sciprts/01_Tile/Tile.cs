@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace;
 using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.OperatorSpace.Enum;
+using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,7 +18,9 @@ namespace AvantGardeMaker.TileSpace
 		private Operator m_OperatorOnTile = null;
 
 		private OperatorSquadUI m_OperatorSquadUI = null;
-
+		//현제 타일의 위에 있는 에너미 리스트 먼저들어온 Enemy가 앞순서의 인덱스를 가짐
+		[SerializeField, ReadOnly]
+		private List<Enemy> m_EnemyOnTileList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -31,6 +34,12 @@ namespace AvantGardeMaker.TileSpace
 			get => m_OperatorSquadUI;
 			set => m_OperatorSquadUI = value;
 		}
+		public List<Enemy> enemyOnTileList
+		{
+			get => m_EnemyOnTileList;
+			set => m_EnemyOnTileList = value;
+		}
+
 		#endregion
 
 		#region 이벤트
@@ -38,14 +47,14 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 이벤트 함수
-		private void UpdateDetectedEnemyProcess(Collider2D collision)
+		private void UpdateDetectedEnemyProcess(Collider2D collider)
 		{
-			if (collision.gameObject.CompareTag("Enemy") == false)
+			if (collider.gameObject.CompareTag("Enemy") == false)
 				return;
 			//적이 타일 콜리더와충돌했을때
-
-			onColliderDetected?.Invoke(collision);
-
+			Debug.Log("UpdateDetectedEnemyProcess");
+			onColliderDetected?.Invoke(collider);
+			m_EnemyOnTileList.Add(collider.GetComponent<Enemy>());
 		}
 		#endregion
 
@@ -56,9 +65,21 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void OnTriggerEnter2D(Collider2D collision)
+		private void Awake()
 		{
-			UpdateDetectedEnemyProcess(collision);
+			Initialize();
+		}
+		private void OnTriggerEnter2D(Collider2D collider)
+		{
+			UpdateDetectedEnemyProcess(collider);
+		}
+		private void OnTriggerExit2D(Collider2D collision)
+		{
+			if (collision.gameObject.CompareTag("Enemy") == false)
+				return;
+			//적이 충돌한 타일을 벗어났을때
+			onColliderDetected = null;
+			m_EnemyOnTileList.Remove(collision.GetComponent<Enemy>());
 		}
 		#endregion
 
@@ -68,7 +89,7 @@ namespace AvantGardeMaker.TileSpace
 		/// </summary>
 		public void Initialize()
 		{
-
+			m_EnemyOnTileList = new List<Enemy>();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -93,10 +114,10 @@ namespace AvantGardeMaker.TileSpace
 				++m_OperatorOnTile.redeployCount;
 			}
 			if (m_OperatorOnTile.operatorData.VariableData.RealHp <= 0)
-				M_GamePlaying.GainCost(m_OperatorOnTile.operatorData.VariableData.CurrentDeploymentCost / 2);
+				M_GamePlaying.GainCost(m_OperatorOnTile.currentDeploymentCost / 2);
 			if (m_OperatorOnTile.redeployCount < 2)
 			{
-				m_OperatorOnTile.operatorData.VariableData.CurrentDeploymentCost += m_OperatorOnTile.operatorData.VariableData.InitDeploymentCost / 2;
+				m_OperatorOnTile.currentDeploymentCost += m_OperatorOnTile.currentDeploymentCost / 2;
 			}
 			
 

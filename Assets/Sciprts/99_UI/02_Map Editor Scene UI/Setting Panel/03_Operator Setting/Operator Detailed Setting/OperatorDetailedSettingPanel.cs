@@ -281,7 +281,7 @@ namespace AvantGardeMaker.UI
 			m_DefText.text = operatorData.VariableData.Def.ToString();
 			m_ResText.text = operatorData.VariableData.Res.ToString();
 			m_RedeploymentText.text = operatorData.VariableData.RedeploymentSpeed.ToString();
-			m_DeploymentCostText.text = operatorData.VariableData.InitDeploymentCost.ToString();
+			//_DeploymentCostText.text = operatorData.VariableData.InitDeploymentCost.ToString();
 			m_BlockCountText.text = operatorData.VariableData.BlockCount.ToString();
 			m_AspdText.text = operatorData.FixedData.AtkSpeed.ToString();
 

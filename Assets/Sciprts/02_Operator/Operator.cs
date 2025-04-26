@@ -8,6 +8,7 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.CoreSpace.Enum;
+using TileValue = System.ValueTuple<AvantGardeMaker.TileSpace.Enum.E_TileType, AvantGardeMaker.TileSpace.Tile>;
 
 namespace AvantGardeMaker.OperatorSpace
 {
@@ -23,20 +24,24 @@ namespace AvantGardeMaker.OperatorSpace
 		private E_OperatorDirection m_CurrentDirection = E_OperatorDirection.None;
 		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
 
+		private List<Vector2Int> m_currentAttackRangePosList = null;
+
 		private bool m_IsDragging = false;
 		private Vector2 m_DragStartPos;
 		// 드래그로 인정할 최소 거리 (픽셀)
 		private float m_DragThreshold = 150f;
 
-		private Tile m_DeploymentTile = null;
-
-		private List<Tile> m_AttackRangeInTileList = null;
+		private TileValue m_DeploymentTile;
+		[SerializeField, ReadOnly]
+		private Dictionary<Vector2Int, Tile> m_AttackRangeInTileMap = null;
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
 		protected List<OperatorSkill> m_OperatorSkillList = null;
 
 		private int m_ReDeployCount = 0;
+
+		private int m_CurrentDeploymentCost = 0;
 
 
 		#endregion
@@ -53,7 +58,12 @@ namespace AvantGardeMaker.OperatorSpace
 			get => m_OperatorData;
 			set => m_OperatorData = value;
 		}
-		public Tile deploymentTile
+		public int currentDeploymentCost
+		{
+			get => m_CurrentDeploymentCost;
+			set => m_CurrentDeploymentCost = value;
+		}
+		public TileValue deploymentTile
 		{
 			get => m_DeploymentTile;
 			set => m_DeploymentTile = value;
@@ -76,16 +86,16 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 이벤트 함수
 		private void OnEnableTileDetectedEnemy()
 		{
-			for (int i = 0; i < m_AttackRangeInTileList.Count; i++)
+			foreach(var map in m_AttackRangeInTileMap)
 			{
-				m_AttackRangeInTileList[i].onColliderDetected += DetectedEnemy;
+				map.Value.onColliderDetected += DetectedEnemy;
 			}
 		}
 		private void OnDisableTileDetectedEnemy()
 		{
-			for (int i = 0; i < m_AttackRangeInTileList.Count; i++)
+			foreach (var map in m_AttackRangeInTileMap)
 			{
-				m_AttackRangeInTileList[i].onColliderDetected -= DetectedEnemy;
+				map.Value.onColliderDetected -= DetectedEnemy;
 			}
 		}
 		#endregion
@@ -95,6 +105,8 @@ namespace AvantGardeMaker.OperatorSpace
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
 
 		protected static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+
+		private static TileManager M_TileManager => TileManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -120,7 +132,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_FrontSprite = M_Operator.GetOperatorFrontSprite(m_OperatorData.EngName);
 			m_BackSprite = M_Operator.GetOperatorBackSprite(m_OperatorData.EngName);
 
-			m_AttackRangeInTileList = new List<Tile>();
+			m_AttackRangeInTileMap = new Dictionary<Vector2Int, Tile>();
 
 			OnEnableTileDetectedEnemy();
 
@@ -129,11 +141,12 @@ namespace AvantGardeMaker.OperatorSpace
 				m_AttackCoolTimer = new UtilClass.Timer();
 			}
 			m_AttackCoolTimer.interval = operatorData.VariableData.InitAttakSpeed;
-
+			m_CurrentDeploymentCost = operatorData.VariableData.DeploymentCost;
 			SkillSetting();
 			for (int i = 0; i < operatorData.VariableData.AttackPos.Count; i++)
 			{
-				//m_InAttackRangeTileList.Add();
+				//임시
+				m_AttackRangeInTileMap.Add(operatorData.VariableData.AttackPos[i], M_TileManager.GetTileValue(operatorData.VariableData.AttackPos[i]).Item2);
 			}
 		}
 		/// <summary>
@@ -192,21 +205,70 @@ namespace AvantGardeMaker.OperatorSpace
 					M_GamePlayingUI.OnDeploymentCancelButtonClicked();
 					return;
 				}
-
+				//방향지정까지 오퍼레이터 배치가 완료되었을때
 				m_CurrentDirection = m_SettingDirection;
 				M_GamePlayingUI.OnSettingDirectionEnd();
 				M_GamePlaying.DeployOperator(this);
 				M_GamePlaying.DeploymentOperatorOnTile(this);
-				M_GamePlaying.currentCost -= operatorData.VariableData.CurrentDeploymentCost;
 
-				for (int i = 0; i < operatorData.VariableData.SkillInfoList.Count; i++)
+				for (int i = 0; i < m_OperatorSkillList.Count; i++)
 				{
 					if (operatorData.VariableData.SkillInfoList[i].SkillType == E_OperatorSkillType.DeployGainCost)
 					{
 						M_GamePlaying.GainCost((int)operatorData.VariableData.SkillInfoList[i].SkillValue);
 					}
 				}
+				m_AttackRangeInTileMap = new Dictionary<Vector2Int, Tile>();
+				m_currentAttackRangePosList = new List<Vector2Int>();
+				for(int i=0; i < operatorData.VariableData.AttackPos.Count; i++)
+				{
+					Vector2Int copyPos = new Vector2Int (operatorData.VariableData.AttackPos[i].x, operatorData.VariableData.AttackPos[i].y);
+					m_currentAttackRangePosList.Add(copyPos);
+				}
+				for(int i=0;i< m_currentAttackRangePosList.Count; i++)
+				{
+					m_currentAttackRangePosList[i] = new Vector2Int(m_currentAttackRangePosList[i].x + (int)transform.position.x, m_currentAttackRangePosList[i].y + (int)transform.position.y);
+				}
+				m_currentAttackRangePosList = RotatePosList(m_currentAttackRangePosList, m_currentAttackRangePosList[0], m_CurrentDirection);
+				for (int i = 0; i < operatorData.VariableData.AttackPos.Count; i++)
+				{
+					//임시 공격범위 타일회전
+					m_AttackRangeInTileMap.Add(m_currentAttackRangePosList[i], M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2);
+					/*
+					if (M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
+					{
+						M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
+					}
+					M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
+					*/
+				}
 			}
+		}
+		/// <summary>
+		/// 좌표 리스트를 회전하여 리턴해주는 함수
+		/// </summary>
+		/// <returns></returns>
+		public List<Vector2Int> RotatePosList(List<Vector2Int> tiles, Vector2Int pivot, E_OperatorDirection direction)
+		{
+			List<Vector2Int> rotated = new List<Vector2Int>();
+
+			foreach (var tile in tiles)
+			{
+				Vector2Int relative = tile - pivot;
+
+				Vector2Int rotatedRelative = direction switch
+				{
+					E_OperatorDirection.Right => relative,
+					E_OperatorDirection.Left => new Vector2Int(-relative.x, -relative.y),
+					E_OperatorDirection.Down => new Vector2Int(relative.y, -relative.x),
+					E_OperatorDirection.Up => new Vector2Int(-relative.y, relative.x),
+					_ => relative
+				};
+
+				rotated.Add(rotatedRelative + pivot);
+			}
+
+			return rotated;
 		}
 		private void UpdateDraggingDirection(Vector2 diff)
 		{
@@ -235,9 +297,9 @@ namespace AvantGardeMaker.OperatorSpace
 			//체력이 0되었을때
 			if (UpdateIsAlive() == true)
 				return;
-			if (m_DeploymentTile.tileOnOperator == null)
+			if (m_DeploymentTile.Item2.tileOnOperator == null)
 				return;
-			m_DeploymentTile.RetreatOperatorOnTile();
+			m_DeploymentTile.Item2.RetreatOperatorOnTile();
 			OnDisableTileDetectedEnemy();
 		}
 
@@ -246,21 +308,42 @@ namespace AvantGardeMaker.OperatorSpace
 			m_SpriteRenderer.sprite = m_FrontSprite;
 			m_SpriteRenderer.flipX = false;
 		}
-
-		private void DetectedEnemy(Collider2D target)
+		public void FindedEnemyInAttackRangeTile()
 		{
-			Enemy lockOnEnemy = target.GetComponent<Enemy>();
-			m_AttackCoolTimer.Update();
-			if (m_AttackCoolTimer.TimeCheck())
-			{
-				TakeAttack(lockOnEnemy);
-			}
-
+			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(operatorData.VariableData.InitAttakSpeed / 100);
+			operatorAttackTimer.interval = operatorData.VariableData.InitAttakSpeed / 100;
 		}
 
-		private void TakeAttack(Enemy target)
+		/// <summary>
+		/// 공격범위 타일 안에 들어온 Enemy를 공격하는 함수
+		/// </summary>
+		public void AttackEnemy()
 		{
-			target.TakeDamage(operatorData.VariableData.DamageType, operatorData.VariableData.Atk, operatorData.VariableData.Penetration);
+			foreach (var tileMap in m_AttackRangeInTileMap)
+			{
+				if (tileMap.Value.enemyOnTileList == null)
+					continue;
+
+				m_AttackCoolTimer.Update();
+				if (m_AttackCoolTimer.TimeCheck())
+				{
+					tileMap.Value.enemyOnTileList[0].TakeDamage(operatorData.VariableData.DamageType, operatorData.VariableData.Atk, operatorData.VariableData.Penetration);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Enemy와 Operator가 접촉됬을 경우 호출되는 함수
+		/// </summary>
+		private void DetectedEnemy(Collider2D target)
+		{
+			if (!target.gameObject.CompareTag("Enemy"))
+				return;
+			Debug.Log("DetectedEnemy");
+			Enemy lockOnEnemy = target.GetComponent<Enemy>();
+			//에너미의 공격속도를 알수있는정보루트 만들어달라하기
+			//에너미의 데미지타입 공격력 관통력알수있는 정보루트 만들어달라하기
+			//TakeDamage(lockOnEnemy.damageType, lockOnEnemy.atk, lockOnEnemy.penetration);
 		}
 		/// <summary>
 		/// 물리딜: 공격력 - 방어력/방어 관통
@@ -295,7 +378,7 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			for (int i = 0; i < m_OperatorSkillList.Count; i++)
 			{
-				m_OperatorSkillList[i].UsingThisSkill(operatorData.VariableData.SkillInfoList[i]);
+				m_OperatorSkillList[i].UsingThisSkill(operatorData.VariableData.SkillInfoList[i], this);
 			}
 		}
 
@@ -309,7 +392,7 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				switch (m_OperatorData.VariableData.SkillInfoList[i].SkillType)
 				{
-					case E_OperatorSkillType.StatusBuff:
+					case E_OperatorSkillType.AttackBuff:
 						break;
 					case E_OperatorSkillType.DeployGainCost:
 						CostCargeSkillSetting(newSkill);

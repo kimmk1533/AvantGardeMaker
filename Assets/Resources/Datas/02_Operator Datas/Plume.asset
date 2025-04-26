@@ -92,6 +92,6 @@ MonoBehaviour:
     Penetration: 0
     SkillInfoList:
     - SkillType: 0
-      SkillValue: 0.6
-    - SkillType: 0
+      SkillValue: 0.06
+    - SkillType: 1
       SkillValue: 10

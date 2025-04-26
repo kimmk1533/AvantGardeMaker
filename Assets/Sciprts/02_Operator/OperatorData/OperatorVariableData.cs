@@ -25,9 +25,7 @@ namespace AvantGardeMaker.OperatorSpace
 		//재배치 실제 속도
 		public float RedeploymentInterval;
 		//초기 배치코스트
-		public int InitDeploymentCost;
-		//현재 배치코스트
-		public int CurrentDeploymentCost;
+		public int DeploymentCost;
 		//저지
 		public int BlockCount;
 		//공격속도 실제값
@@ -35,7 +33,7 @@ namespace AvantGardeMaker.OperatorSpace
 		//도발
 		public int Provocation;
 		//공격범위좌표
-		public List<Vector2> AttackPos;
+		public List<Vector2Int> AttackPos;
 		//공격타입
 		public E_DamageType DamageType;
 		//관통력

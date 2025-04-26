@@ -31,7 +31,7 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, ReadOnly]
 		private List<Operator> m_PlayingOperatorList = null;
 
-		private Tile m_DeployPreviewOperatorOnTile = new Tile();
+		private Tile m_DeployPreviewOperatorOnTile = null;
 		//선택된 오퍼레이터
 		private Operator m_SettedOperatorSelect = null;
 		//선택된 오퍼레이터가있는 타일
@@ -144,6 +144,8 @@ namespace AvantGardeMaker.CoreSpace
 			}
 		}
 
+		
+
 		private void ClickTileProcess()
 		{
 			if (Input.GetMouseButtonDown(0)) // 좌클릭
@@ -170,15 +172,15 @@ namespace AvantGardeMaker.CoreSpace
 		public void DeploymentOperatorOnTile(Operator operatorPreview)
 		{
 			m_DeployPreviewOperatorOnTile.tileOnOperator = operatorPreview;
-			operatorPreview.deploymentTile = m_DeployPreviewOperatorOnTile;
+			//임시
+			operatorPreview.deploymentTile = (E_TileType.LowGround, m_DeployPreviewOperatorOnTile);
 		}
 
 		private Operator CheckTileInOperator()
 		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-
-			if (Physics.Raycast(ray, out hit))
+			Vector2 origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero);
+			if (hit.collider != null)
 			{
 				GameObject target = hit.collider.gameObject;
 				Tile tile = target.GetComponent<Tile>();

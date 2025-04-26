@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TileValue = System.ValueTuple<AvantGardeMaker.TileSpace.Enum.E_TileType, AvantGardeMaker.TileSpace.Tile>;
 
 namespace AvantGardeMaker.UI
 {
@@ -244,7 +245,7 @@ namespace AvantGardeMaker.UI
 			deploymentCancelButton.gameObject.SetActive(false);
 
 			m_SelectedOperatorSquadUI.gameObject.SetActive(false);
-			m_SelectedOperatorSquadUI = null;
+			//m_SelectedOperatorSquadUI = null;
 
 			operatorStatusUI.gameObject.SetActive(false);
 		}

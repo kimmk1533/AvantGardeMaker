@@ -63,7 +63,7 @@ MonoBehaviour:
     Level: 1
     Elite: 0
     Potential: 0
-    Job: 0
+    Class: 0
     AtkSpeed: 1
     AtkRange: 0
     SkillName: "\uB3CC\uACA9 \uC9C0\uB839 \u03B1"
@@ -78,8 +78,8 @@ MonoBehaviour:
     Res: 0
     RedeploymentSpeed: 0
     RedeploymentInterval: 5
-    InitDeploymentCost: 15
-    CurrentDeploymentCost: 15
+    InitDeploymentCost: 11
+    CurrentDeploymentCost: 11
     BlockCount: 2
     InitAttakSpeed: 106
     Provocation: 0

@@ -59,6 +59,8 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 	public enum E_OperatorSkillType
 	{
 		StatusBuff,
+		AttackBuff,
+		AttackSpeedBuff,
 		DeployGainCost,
 		MultipleShot,
 		StopAttack,

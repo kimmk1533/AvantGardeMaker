@@ -101,8 +101,7 @@ namespace AvantGardeMaker.UI
 
 			if (m_CanDeployment == false)
 				return;
-			if (operatorData.VariableData.CurrentDeploymentCost > M_GamePlaying.currentCost)
-				return;
+			
 
 			Vector3 mousePos = UtilClass.GetMouseWorldPosition3D();
 
