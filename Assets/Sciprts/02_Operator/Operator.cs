@@ -42,6 +42,12 @@ namespace AvantGardeMaker.OperatorSpace
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
 		protected List<OperatorSkill> m_OperatorSkillList = null;
+
+		private int m_CurrentBlock = 0;
+		private int m_MaxBlock = 0;
+
+		private Enemy m_AttackTartgetEnemy = null;
+		private bool isAttack = true;
 		#endregion
 
 		#region 프로퍼티
@@ -59,6 +65,7 @@ namespace AvantGardeMaker.OperatorSpace
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
 
 				m_AttackCoolTimer.interval = value.VariableData.InitAttakSpeed;
+				m_MaxBlock = value.VariableData.BlockCount;
 
 				SkillSetting();
 			}
@@ -126,6 +133,20 @@ namespace AvantGardeMaker.OperatorSpace
 			UpdateDeadOperator();
 
 		}
+
+		//저지시킬때
+		private void OnTriggerEnter2D(Collider2D collider)
+		{
+			if (collider.gameObject.CompareTag("Enemy"))
+			{
+				//현제 최대치로 저지하고있으면 리턴
+				if (m_MaxBlock <= m_CurrentBlock)
+					return;
+				++m_CurrentBlock;
+
+			}
+		}
+
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -334,6 +355,9 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void AttackEnemy()
 		{
+			if (m_AttackRangeInTileList == null || m_AttackRangeInTileList.Count == 0 || !isAttack)
+				return;
+
 			foreach (var tile in m_AttackRangeInTileList)
 			{
 				if (tile.enemyOnTileList == null)
@@ -342,7 +366,8 @@ namespace AvantGardeMaker.OperatorSpace
 				m_AttackCoolTimer.Update();
 				if (m_AttackCoolTimer.TimeCheck())
 				{
-					tile.enemyOnTileList[0].TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
+					m_AttackTartgetEnemy = tile.enemyOnTileList[0];
+					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
 				}
 			}
 		}
