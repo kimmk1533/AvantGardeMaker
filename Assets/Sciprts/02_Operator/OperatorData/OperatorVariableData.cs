@@ -38,7 +38,7 @@ namespace AvantGardeMaker.OperatorSpace
 		public E_DamageType DamageType;
 		//관통력
 		public float Penetration;
-		//스킬 종류와 그에대한값의 리스트
-		public List<SkillInfo> SkillInfoList;
+		//스킬 정보
+		public SkillInfo SkillData;
 	}
 }

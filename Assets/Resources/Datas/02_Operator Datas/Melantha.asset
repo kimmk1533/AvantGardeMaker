@@ -89,6 +89,13 @@ MonoBehaviour:
     - {x: 0, y: -1}
     DamageType: 0
     Penetration: 0
-    SkillInfoList:
-    - SkillType: 0
-      SkillValue: 0.1
+    SkillData:
+      SkillCostMax: 50
+      SkillInitCost: 0
+      StartSkillCost: 0
+      SkillCostGainType: 0
+      SkillActivationType: 1
+      SkillActiveTime:
+        m_Interval: 20
+        m_Time: 0
+      SkillText: 

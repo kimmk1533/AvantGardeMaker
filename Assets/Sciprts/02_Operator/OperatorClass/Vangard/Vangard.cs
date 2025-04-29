@@ -40,6 +40,28 @@ namespace AvantGardeMaker.OperatorSpace
 
 		}
 		#endregion
-		
+
+		#region 직업스킬
+		public OperatorSkill CreateReChargeSkill()
+		{
+			SkillInfo skillData = new SkillInfo(variableData.SkillData);
+
+			return new ReChargeCostSkill(skillData);
+		}
+		#endregion
+	}
+
+	public class ReChargeCostSkill : OperatorSkill
+	{
+		public int reChargeCostValue { get; private set; }
+
+		public ReChargeCostSkill(SkillInfo skillData) : base(skillData)
+		{
+			reChargeCostValue = (int)skillData.SkillAbilityInfoList[0].SkillValue;
+		}
+		public override void Activate()
+		{
+			M_GamePlaying.currentCost += reChargeCostValue;
+		}
 	}
 }

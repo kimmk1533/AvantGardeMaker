@@ -41,7 +41,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
-		protected List<OperatorSkill> m_OperatorSkillList = null;
+		private OperatorSkill m_OperatorSkill = null;
 
 		private int m_CurrentBlock = 0;
 		private int m_MaxBlock = 0;
@@ -66,8 +66,6 @@ namespace AvantGardeMaker.OperatorSpace
 
 				m_AttackCoolTimer.interval = value.VariableData.InitAttakSpeed;
 				m_MaxBlock = value.VariableData.BlockCount;
-
-				SkillSetting();
 			}
 		}
 		public OperatorFixedData fixedData => m_FixedData;
@@ -106,13 +104,12 @@ namespace AvantGardeMaker.OperatorSpace
 			//에너미의 데미지타입 공격력 관통력알수있는 정보루트 만들어달라하기
 			//TakeDamage(lockOnEnemy.damageType, lockOnEnemy.atk, lockOnEnemy.penetration);
 		}
-
+		/// <summary>
+		/// 스킬 버튼을 눌렀을때 실행되는 함수
+		/// </summary>
 		public void OnSkillButtonClicked()
 		{
-			for (int i = 0; i < m_OperatorSkillList.Count; i++)
-			{
-				m_OperatorSkillList[i].UsingThisSkill(m_VariableData.SkillInfoList[i], this);
-			}
+			
 		}
 
 		#endregion
@@ -162,8 +159,6 @@ namespace AvantGardeMaker.OperatorSpace
 				m_AttackRangeInTileList = new List<Tile>();
 			if (m_AttackCoolTimer == null)
 				m_AttackCoolTimer = new UtilClass.Timer();
-			if (m_OperatorSkillList == null)
-				m_OperatorSkillList = new List<OperatorSkill>();
 
 			currentDirection = E_OperatorDirection.Left;
 			m_SettingDirection = E_OperatorDirection.None;
@@ -179,7 +174,6 @@ namespace AvantGardeMaker.OperatorSpace
 
 			m_AttackRangeInTileList.Clear();
 			m_AttackCoolTimer.Clear();
-			m_OperatorSkillList.Clear();
 		}
 		#endregion
 
@@ -445,46 +439,10 @@ namespace AvantGardeMaker.OperatorSpace
 		// Operator: abstract UseSkill 함수 구현
 		// Vanguard: 직군 공용 스킬 구현(코스트 획득 등)
 		// 머틀: 머틀 고유 스킬 구현
-		public void SkillSetting()
+		
+		public virtual void ActivateSkill()
 		{
-			m_OperatorSkillList.Clear();
-
-			OperatorSkill newSkill = new OperatorSkill();
-
-			newSkill.skillName = m_OperatorData.FixedData.SkillName;
-			newSkill.skillText = "";
-
-			for (int i = 0; i < m_OperatorData.VariableData.SkillInfoList.Count; i++)
-			{
-				E_OperatorSkillType skillType = m_OperatorData.VariableData.SkillInfoList[i].SkillType;
-
-				switch (skillType)
-				{
-					case E_OperatorSkillType.AttackBuff:
-						break;
-					case E_OperatorSkillType.DeployGainCost:
-						CostChargeSkillSetting(newSkill);
-						break;
-					case E_OperatorSkillType.MultipleShot:
-						break;
-					case E_OperatorSkillType.StopAttack:
-						break;
-					case E_OperatorSkillType.ChangeAttackRange:
-						break;
-					default:
-						break;
-				}
-
-				if (i != m_OperatorData.VariableData.SkillInfoList.Count - 1)
-				{
-					newSkill.skillText += ",";
-				}
-			}
-		}
-		private void CostChargeSkillSetting(OperatorSkill takeSkill)
-		{
-			takeSkill.skillText += "배치 코스트 " + m_OperatorData.VariableData.SkillInfoList + " 즉시 획득";
-			m_OperatorSkillList.Add(takeSkill);
+			m_OperatorSkill.Activate();
 		}
 	}
 }
