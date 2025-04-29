@@ -51,10 +51,10 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		private List<E_TileType> m_TileTypeList;
 		#endregion
 
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		[FoldoutGroup("타일")]
 		private Vector2Int m_MinTile;
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		[FoldoutGroup("타일")]
 		private Vector2Int m_MaxTile;
 		#endregion

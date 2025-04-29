@@ -20,10 +20,10 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, Min(0f)]
 		private float m_CameraSwitchDuration = 1f;
 
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private E_CameraMode m_CameraMode = E_CameraMode.EditMode;
 
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private bool m_IsCameraSwitching = false;
 		#endregion
 

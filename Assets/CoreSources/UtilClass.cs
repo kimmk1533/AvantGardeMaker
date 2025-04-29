@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -199,7 +200,7 @@ public static class UtilClass
 		#region 변수
 		[SerializeField]
 		private float m_Interval = 0f;
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private float m_Time = 0f;
 
 		private bool m_IsSimulating = true;

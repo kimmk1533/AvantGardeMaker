@@ -29,12 +29,12 @@ namespace AvantGardeMaker.OperatorSpace
 		// 배치중 방향(설정 중일 때 방향)
 		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
 
-		private List<Vector2Int> m_currentAttackRangePosList = null;
-
 		private bool m_IsDragging = false;
 		private Vector2 m_DragStartPos;
 		// 드래그로 인정할 최소 거리 (픽셀)
 		private float m_DragThreshold = 150f;
+
+		private List<Vector2Int> m_currentAttackRangePosList = null;
 
 		[SerializeField, ReadOnly]
 		private List<Tile> m_AttackRangeInTileList = null;
@@ -73,9 +73,10 @@ namespace AvantGardeMaker.OperatorSpace
 		public OperatorFixedData fixedData => m_FixedData;
 		public OperatorVariableData variableData => m_VariableData;
 
-		private bool isSettedDirection => currentDirection != E_OperatorDirection.None;
 		// 현재 방향
 		public E_OperatorDirection currentDirection { get; protected set; }
+		private bool isDirectionSetted => currentDirection != E_OperatorDirection.None;
+		private float sqrDragThreshold => m_DragThreshold * m_DragThreshold;
 
 		public int deploymentCost
 		{
@@ -129,9 +130,7 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			SettingDirectionProcess();
-			UpdateDeadOperator();
-
+			SetDirectionProcess();
 		}
 
 		//저지시킬때
@@ -166,6 +165,9 @@ namespace AvantGardeMaker.OperatorSpace
 			if (m_OperatorSkillList == null)
 				m_OperatorSkillList = new List<OperatorSkill>();
 
+			currentDirection = E_OperatorDirection.Left;
+			m_SettingDirection = E_OperatorDirection.None;
+
 			redeployCount = 0;
 		}
 		/// <summary>
@@ -181,81 +183,130 @@ namespace AvantGardeMaker.OperatorSpace
 		}
 		#endregion
 
-		private void SettingDirectionProcess()
+		// 배치
+		public void Deploy()
 		{
-			if (isSettedDirection == true)
+			currentDirection = E_OperatorDirection.None;
+			m_SettingDirection = E_OperatorDirection.None;
+		}
+
+		// 퇴각
+		public void Retreat()
+		{
+			ResetDirection();
+
+			// 퇴각 코스트(배치 코스트의 절반) 반환
+			M_GamePlaying.currentCost += (deploymentCost >> 1);
+
+			// 배치 코스트 2회에 한해 절반 증가
+			if (redeployCount++ < 2)
+				deploymentCost += deploymentCost >> 1;
+		}
+		private void ResetDirection()
+		{
+			m_SpriteRenderer.sprite = m_FrontSprite;
+			m_SpriteRenderer.flipX = false;
+
+			currentDirection = E_OperatorDirection.None;
+		}
+
+		private void SetDirectionProcess()
+		{
+			if (isDirectionSetted == true)
 				return;
 
-			//클릭했을때
-			if (Input.GetMouseButtonDown(0))
-			{
-				m_DragStartPos = Input.mousePosition;
-				m_IsDragging = true;
-			}
-
-			//드래그중일때
-			if (Input.GetMouseButton(0) && m_IsDragging)
-			{
-				Vector2 currentPos = Input.mousePosition;
-				Vector2 diff = currentPos - m_DragStartPos;
-
-				//일정거리이상 드래그하지못했을때
-				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
-					return;
-
-				UpdateDraggingDirection(diff);
-			}
-
-			if (Input.GetMouseButtonUp(0) && m_IsDragging)
-			{
-				m_IsDragging = false;
-
-				Vector2 currentPos = Input.mousePosition;
-				Vector2 diff = currentPos - m_DragStartPos;
-
-				//드래그가 일정범위를 벗어나지않은상태에서 해제되었을때
-				if (diff.sqrMagnitude < m_DragThreshold * m_DragThreshold)
-				{
-					m_SettingDirection = E_OperatorDirection.None;
-
-					M_GamePlayingUI.OnDeploymentCancelButtonClicked();
-					return;
-				}
-
-				//방향지정까지 오퍼레이터 배치가 완료되었을때
-				currentDirection = m_SettingDirection;
-
-				M_GamePlayingUI.OnSettingDirectionEnd();
-				M_GamePlaying.DeployOperator(this);
-				M_GamePlaying.DeploymentOperatorOnTile(this);
-
-				m_AttackRangeInTileList.Clear();
-				List<Vector2Int> currentAttackRangePosList = new List<Vector2Int>();
-
-				for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
-				{
-					Vector2Int copyPos = new Vector2Int(m_VariableData.AttackPos[i].x, m_VariableData.AttackPos[i].y);
-					currentAttackRangePosList.Add(copyPos);
-				}
-				for (int i = 0; i < currentAttackRangePosList.Count; i++)
-				{
-					currentAttackRangePosList[i] = new Vector2Int(currentAttackRangePosList[i].x + (int)transform.position.x, currentAttackRangePosList[i].y + (int)transform.position.y);
-				}
-				currentAttackRangePosList = RotatePosList(currentAttackRangePosList, currentAttackRangePosList[0], currentDirection);
-				for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
-				{
-					//임시 공격범위 타일회전
-					m_AttackRangeInTileList.Add(M_TileManager.GetTileValue(currentAttackRangePosList[i]).Item2);
-					/*
-					if (M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
-					{
-						M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
-					}
-					M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
-					*/
-				}
-			}
+			SetDirectionStart();
+			SetDirection();
+			SetDirectionEnd();
 		}
+		// 클릭했을 때
+		private bool SetDirectionStart()
+		{
+			if (Input.GetMouseButtonDown(0) == false)
+				return false;
+
+			m_DragStartPos = Input.mousePosition;
+			m_IsDragging = true;
+
+			return true;
+		}
+		// 드래그중일 때
+		private bool SetDirection()
+		{
+			if (Input.GetMouseButton(0) == false)
+				return false;
+			if (m_IsDragging == false)
+				return false;
+
+			Vector2 currentPos = Input.mousePosition;
+			Vector2 diff = currentPos - m_DragStartPos;
+
+			// 일정거리이상 드래그하지못했을 때
+			if (diff.sqrMagnitude < sqrDragThreshold)
+				return false;
+
+			UpdateDraggingDirection(diff);
+
+			return true;
+		}
+		// 드래그를 끝냈을 때
+		private bool SetDirectionEnd()
+		{
+			if (Input.GetMouseButtonUp(0) == false)
+				return false;
+			if (m_IsDragging == false)
+				return false;
+
+			m_IsDragging = false;
+
+			Vector2 currentPos = Input.mousePosition;
+			Vector2 diff = currentPos - m_DragStartPos;
+
+			// 드래그가 일정범위를 벗어나지않은상태에서 해제되었을 때
+			if (diff.sqrMagnitude < sqrDragThreshold)
+			{
+				m_SettingDirection = E_OperatorDirection.None;
+
+				M_GamePlayingUI.OnDeploymentCancelButtonClicked();
+
+				return false;
+			}
+
+			// 방향지정까지 오퍼레이터 배치가 완료되었을 때
+			currentDirection = m_SettingDirection;
+
+			M_GamePlaying.DeployOperator(this);
+			M_GamePlayingUI.OnSettingDirectionEnd();
+
+			return true;
+
+			//m_AttackRangeInTileList.Clear();
+			//List<Vector2Int> currentAttackRangePosList = new List<Vector2Int>();
+
+			//for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
+			//{
+			//	Vector2Int copyPos = new Vector2Int(m_VariableData.AttackPos[i].x, m_VariableData.AttackPos[i].y);
+			//	currentAttackRangePosList.Add(copyPos);
+			//}
+			//for (int i = 0; i < currentAttackRangePosList.Count; i++)
+			//{
+			//	currentAttackRangePosList[i] = new Vector2Int(currentAttackRangePosList[i].x + (int)transform.position.x, currentAttackRangePosList[i].y + (int)transform.position.y);
+			//}
+			//currentAttackRangePosList = RotatePosList(currentAttackRangePosList, currentAttackRangePosList[0], currentDirection);
+			//for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
+			//{
+			//	//임시 공격범위 타일회전
+			//	m_AttackRangeInTileList.Add(M_TileManager.GetTileValue(currentAttackRangePosList[i]).Item2);
+			//	/*
+			//	if (M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
+			//	{
+			//		M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
+			//	}
+			//	M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
+			//	*/
+			//}
+		}
+
 		/// <summary>
 		/// 좌표 리스트를 회전하여 리턴해주는 함수
 		/// </summary>
@@ -270,10 +321,10 @@ namespace AvantGardeMaker.OperatorSpace
 
 				Vector2Int rotatedRelative = direction switch
 				{
-					E_OperatorDirection.Right => relative,
 					E_OperatorDirection.Left => new Vector2Int(-relative.x, -relative.y),
-					E_OperatorDirection.Down => new Vector2Int(relative.y, -relative.x),
 					E_OperatorDirection.Up => new Vector2Int(-relative.y, relative.x),
+					E_OperatorDirection.Right => relative,
+					E_OperatorDirection.Down => new Vector2Int(relative.y, -relative.x),
 					_ => relative
 				};
 
@@ -294,7 +345,7 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 
 			m_SpriteRenderer.sprite = (diff.y > 0) ? m_BackSprite : m_FrontSprite;
-			m_SpriteRenderer.flipX = diff.x > 0;
+			m_SpriteRenderer.flipX = m_SettingDirection == E_OperatorDirection.Right;
 		}
 
 		private void LinkTileDetectedEnemy()
@@ -304,7 +355,7 @@ namespace AvantGardeMaker.OperatorSpace
 				tile.onColliderDetected += OnDetectedEnemy;
 			}
 		}
-		private void UnLinkTileDetectedEnemy()
+		private void UnlinkTileDetectedEnemy()
 		{
 			foreach (var tile in m_AttackRangeInTileList)
 			{
@@ -318,32 +369,14 @@ namespace AvantGardeMaker.OperatorSpace
 				return;
 
 			if (deploymentTile == null ||
-				deploymentTile.operatorOnTile == null)
+				deploymentTile.currentOperator == null)
 				return;
 
-			deploymentTile.RetreatOperatorOnTile();
+			deploymentTile.RetreatOperator();
 
-			UnLinkTileDetectedEnemy();
+			UnlinkTileDetectedEnemy();
 		}
 
-		public void Retreat()
-		{
-			ResetDirection();
-
-			// 퇴각 코스트(배치 코스트의 절반) 반환
-			M_GamePlaying.currentCost += (deploymentCost >> 1);
-
-			// 배치 코스트 2회에 한해 절반 증가
-			if (redeployCount++ < 2)
-				deploymentCost += deploymentCost >> 1;
-		}
-		public void ResetDirection()
-		{
-			m_SpriteRenderer.sprite = m_FrontSprite;
-			m_SpriteRenderer.flipX = false;
-
-			currentDirection = E_OperatorDirection.None;
-		}
 		public void FindedEnemyInAttackRangeTile()
 		{
 			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(m_VariableData.InitAttakSpeed / 100);
@@ -403,6 +436,8 @@ namespace AvantGardeMaker.OperatorSpace
 		private void DecreaseHp(float value)
 		{
 			m_VariableData.CurrentHp -= value;
+
+			UpdateDeadOperator();
 		}
 
 		// enum, switch 이용한 방법 쓰면 안됨

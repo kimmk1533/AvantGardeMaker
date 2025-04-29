@@ -260,7 +260,7 @@ namespace AvantGardeMaker.OperatorSpace
 		private const string c_OperatorSpritePath = "Textures/02_Operator Textures" + "";
 
 		#region 변수
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
 		private Dictionary<string, Sprite> m_OperatorFrontSpriteMap = null;
 		private Dictionary<string, Sprite> m_OperatorBackSpriteMap = null;

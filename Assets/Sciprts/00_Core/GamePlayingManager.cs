@@ -22,6 +22,8 @@ namespace AvantGardeMaker.CoreSpace
 		private int m_GameSpeed;
 
 		#region 코스트 관련 변수
+		private int m_CurrentCost = 10;
+
 		private UtilClass.Timer m_CostTimer = null;
 		#endregion
 
@@ -29,9 +31,8 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, ReadOnly]
 		private List<Operator> m_DeployingOperatorList = null;
 
-		private Tile m_DeployPreviewOperatorOnTile = null;
 		//선택된 오퍼레이터
-		private Operator m_SettedOperatorSelect = null;
+		private Operator m_SelectedOperator = null;
 		//선택된 오퍼레이터가있는 타일
 		private Tile m_SelectedTile = null;
 		#endregion
@@ -44,21 +45,24 @@ namespace AvantGardeMaker.CoreSpace
 		#region 프로퍼티
 		public StageData currentStageData => m_GameStageData;
 
-		public int currentCost { get; set; }
+		public int currentCost
+		{
+			get => m_CurrentCost;
+			set
+			{
+				m_CurrentCost = value;
+
+				onCostChanged?.Invoke(m_CurrentCost);
+			}
+		}
 		public int maxCost { get; private set; }
 
 		public UtilClass.Timer costTimer => m_CostTimer;
 
-		public Tile setPreViewOperatorOnTile
+		public Operator selectedOperator
 		{
-			get => m_DeployPreviewOperatorOnTile;
-			set => m_DeployPreviewOperatorOnTile = value;
-		}
-
-		public Operator settedOperatorSelect
-		{
-			get => m_SettedOperatorSelect;
-			set => m_SettedOperatorSelect = value;
+			get => m_SelectedOperator;
+			set => m_SelectedOperator = value;
 		}
 
 		public E_TileType[,] currentMap { get; private set; }
@@ -66,7 +70,7 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 이벤트
-		public event System.Action onCostIncreased = null;
+		public event System.Action<int> onCostChanged = null;
 		#endregion
 
 		#region 매니저
@@ -138,37 +142,29 @@ namespace AvantGardeMaker.CoreSpace
 			if (m_CostTimer.TimeCheck(true) == true)
 			{
 				++currentCost;
-
-				onCostIncreased?.Invoke();
 			}
 		}
 
 		public void DeployOperator(Operator deployingOperator)
 		{
 			m_DeployingOperatorList.Add(deployingOperator);
-		}
-		public void DeploymentOperatorOnTile(Operator operatorPreview)
-		{
-			m_DeployPreviewOperatorOnTile.operatorOnTile = operatorPreview;
 
-			operatorPreview.deploymentTile = m_DeployPreviewOperatorOnTile;
+			currentCost -= deployingOperator.deploymentCost;
 		}
 
 		private void ClickTileProcess()
 		{
 			if (Input.GetMouseButtonDown(0)) // 좌클릭
 			{
-				m_SettedOperatorSelect = GetOperatorOnTile();
+				m_SelectedOperator = GetOperatorOnTile();
 
-				if (m_SettedOperatorSelect == null)
+				if (m_SelectedOperator == null)
 					return;
 
 				M_GamePlayingUI.activeRetreatButton = !M_GamePlayingUI.activeRetreatButton;
 				//작업
 				M_GamePlayingUI.activeSkillButton = !M_GamePlayingUI.activeSkillButton;
 
-				//오퍼레이터 스탯창열기
-				//M_GamePlayingUI.m_OperStatUIParent.SetActive(true);
 				//퇴각버튼 활성화하기
 				M_GamePlayingUI.OperatorRetreateButtonSetPosition();
 				M_GamePlayingUI.SettingOperatorRetreateButton(m_SelectedTile);
@@ -189,12 +185,12 @@ namespace AvantGardeMaker.CoreSpace
 				if (tile == null)
 					return null;
 
-				if (tile.operatorOnTile == null)
+				if (tile.currentOperator == null)
 					return null;
 
 				m_SelectedTile = tile;
 
-				return tile.operatorOnTile;
+				return tile.currentOperator;
 			}
 
 			return null;
@@ -223,7 +219,7 @@ namespace AvantGardeMaker.CoreSpace
 			currentMap = stageData.map;
 			operatorSquadKeyList = stageData.operatorKeyList;
 
-			currentCost = stageData.initCost;
+			currentCost = 10;//stageData.initCost;
 			maxCost = 99;//stageData.maxCost;
 			m_CostTimer.interval = 1f;//stageData.costIncreaseTime;
 			m_CostTimer.Pause();

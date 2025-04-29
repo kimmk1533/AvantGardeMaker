@@ -18,12 +18,13 @@ namespace AvantGardeMaker.UI
 		[SerializeField]
 		private Camera m_GamePlayingCamera = null;
 
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private OperatorSquadUI m_SelectedOperatorSquadUI = null;
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
 
 		private Dictionary<string, Sprite> m_OperatorFullshotSpriteMap = null;
+		private Dictionary<Tile, OperatorSquadUI> m_TileOperatorSquadUIMap = null;
 		#endregion
 
 		#region 프로퍼티
@@ -248,16 +249,18 @@ namespace AvantGardeMaker.UI
 			#endregion
 		}
 
-		public void OnSettingDirectionStart()
+		public void StartDirectionSetting(Operator previewOperator, Tile tile)
 		{
 			deploymentCancelButton.gameObject.SetActive(true);
+
+			tile.DeployOperator(previewOperator);
 		}
 		public void OnSettingDirectionEnd()
 		{
 			deploymentCancelButton.gameObject.SetActive(false);
 
 			m_SelectedOperatorSquadUI.gameObject.SetActive(false);
-			//m_SelectedOperatorSquadUI = null;
+			m_SelectedOperatorSquadUI = null;
 
 			operatorStatusUI.gameObject.SetActive(false);
 		}
@@ -265,19 +268,23 @@ namespace AvantGardeMaker.UI
 		#region MikangMark
 		public void OperatorRetreateButtonSetPosition()
 		{
-			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
-			operatorRetreatButton.transform.position = new Vector3(screenPos.x - 200, screenPos.y + 200);
 		}
-
 		public void SettingOperatorRetreateButton(Tile selectedTile)
 		{
-			operatorRetreatButton.onClick.AddListener(selectedTile.RetreatOperatorOnTile);
+			Vector3 worldPos = M_GamePlaying.selectedOperator.transform.position;
+			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(worldPos);
+			operatorRetreatButton.transform.position = new Vector3(screenPos.x - 200, screenPos.y + 200);
+
+			operatorRetreatButton.onClick.AddListener(selectedTile.RetreatOperator);
 		}
 
-		public void OperatorSquadUIReDeploymentActive(OperatorSquadUI targetOperatorSquadUI)
+		public void RespawnOperatorSquadUI(Tile tile)
 		{
-			targetOperatorSquadUI.gameObject.SetActive(true);
-			targetOperatorSquadUI.ReDeploymentActiveObject();
+			if (m_TileOperatorSquadUIMap.TryGetValue(tile, out OperatorSquadUI squadUI) == false)
+				return;
+
+			squadUI.gameObject.SetActive(true);
+			squadUI.StartRedeployment();
 		}
 
 		public Sprite GetOperatorFullshotSprite(string key)
@@ -287,10 +294,10 @@ namespace AvantGardeMaker.UI
 
 		public void ActiveSkillButton()
 		{
-			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.settedOperatorSelect.transform.position);
+			Vector3 screenPos = m_GamePlayingCamera.WorldToScreenPoint(M_GamePlaying.selectedOperator.transform.position);
 			operatorSkillButton.transform.position = new Vector3(screenPos.x + 200, screenPos.y - 200);
 			operatorSkillButton.gameObject.SetActive(true);
-			operatorSkillButton.onClick.AddListener(M_GamePlaying.settedOperatorSelect.OnSkillButtonClicked);
+			operatorSkillButton.onClick.AddListener(M_GamePlaying.selectedOperator.OnSkillButtonClicked);
 		}
 		#endregion
 	}

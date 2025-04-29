@@ -11,7 +11,7 @@ using TMPro;
 
 namespace AvantGardeMaker.UI
 {
-	public class OperatorSquadUI : GamePlayingUI, IBeginDragHandler, IDragHandler, IEndDragHandler
+	public class OperatorSquadUI : GamePlayingUI, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
 		#region 변수
 		private Button m_Button = null;
@@ -23,7 +23,6 @@ namespace AvantGardeMaker.UI
 
 		private UtilClass.Timer m_ReDeploymentTimer = null;
 		private TextMeshProUGUI m_ReDeploymentTimerText = null;
-		[SerializeField, RuntimeReadOnly]
 		private Image m_ReDeploymentTimerImage = null;
 
 		private bool m_IsDragging = false;
@@ -49,25 +48,25 @@ namespace AvantGardeMaker.UI
 			}
 		}
 
-		private bool isWaitingRedeploy => m_Button.interactable;
+		private bool isWaitingRedeploy
+		{
+			get => m_RedeploymentParent.gameObject.activeSelf;
+			set => m_RedeploymentParent.gameObject.SetActive(value);
+		}
 		private int deployRequiredCost => m_PreviewOperator.deploymentCost;
-		private bool isDeployable => isWaitingRedeploy && M_GamePlaying.currentCost >= deployRequiredCost;
+		private bool isDeployable => !isWaitingRedeploy && M_GamePlaying.currentCost >= deployRequiredCost;
 		#endregion
 
 		#region 이벤트
 		public event System.Action<OperatorSquadUI> onOperatorSquadUIClicked;
 
 		#region 이벤트 함수
-		private void OnCostIncreased()
+		private void OnCostChanged(int currentCost)
 		{
 			if (operatorData == null)
 				return;
 
-			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
-		}
-		private void OnOperatorSquadUIButtonClicked()
-		{
-			onOperatorSquadUIClicked?.Invoke(this);
+			m_Button.interactable = currentCost >= deployRequiredCost;
 		}
 		#endregion
 		#endregion
@@ -82,7 +81,7 @@ namespace AvantGardeMaker.UI
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			UpdateReDeploymentTimer();
+			UpdateRedeploymentTimer();
 		}
 		#endregion
 
@@ -105,8 +104,9 @@ namespace AvantGardeMaker.UI
 			if (m_ReDeploymentTimer == null)
 				m_ReDeploymentTimer = new UtilClass.Timer();
 
-			m_Button.onClick.AddListener(OnOperatorSquadUIButtonClicked);
-			M_GamePlaying.onCostIncreased += OnCostIncreased;
+			M_GamePlaying.onCostChanged += OnCostChanged;
+
+			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -115,20 +115,24 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizePoolItem();
 
-			m_Button.onClick.RemoveListener(OnOperatorSquadUIButtonClicked);
-			M_GamePlaying.onCostIncreased -= OnCostIncreased;
+			M_GamePlaying.onCostChanged -= OnCostChanged;
 
 			M_Operator.Despawn(m_PreviewOperator);
 		}
 		#endregion
 
+		public void OnPointerClick(PointerEventData eventData)
+		{
+			onOperatorSquadUIClicked?.Invoke(this);
+		}
 		//오퍼레이터 프리뷰 생성
 		public void OnBeginDrag(PointerEventData eventData)
 		{
 			if (isDeployable == false)
 				return;
 
-			M_GamePlayingUI.OnOperatorSquadUIClicked(this);
+			if (M_GamePlayingUI.selectedOperatorSquadUI != this)
+				M_GamePlayingUI.OnOperatorSquadUIClicked(this);
 
 			Vector3 mousePos = UtilClass.GetMouseWorldPosition3D();
 
@@ -171,7 +175,6 @@ namespace AvantGardeMaker.UI
 				return;
 
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
 			{
 				m_PreviewOperator.gameObject.SetActive(false);
@@ -187,14 +190,7 @@ namespace AvantGardeMaker.UI
 			if (tile == null)
 				return;
 
-			Vector3 tilePos = tile.transform.position;
-			tilePos.z = -0.49f;
-			m_PreviewOperator.transform.position = tilePos;
-
-			tile.operatorSquadUI = this;
-			M_GamePlaying.setPreViewOperatorOnTile = tile;
-
-			M_GamePlayingUI.OnSettingDirectionStart();
+			M_GamePlayingUI.StartDirectionSetting(m_PreviewOperator, tile);
 		}
 
 		public void CancelDeployment()
@@ -202,16 +198,18 @@ namespace AvantGardeMaker.UI
 			m_PreviewOperator.gameObject.SetActive(false);
 		}
 
-		public void ReDeploymentActiveObject()
+		public void StartRedeployment()
 		{
 			m_RedeploymentParent.gameObject.SetActive(true);
 
-			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
+			isWaitingRedeploy = true;
+
+			m_ReDeploymentTimer.Resume();
 		}
 
-		private void UpdateReDeploymentTimer()
+		private void UpdateRedeploymentTimer()
 		{
-			if (isWaitingRedeploy == true)
+			if (m_ReDeploymentTimer.isPaused)
 				return;
 
 			float redeploymentInterval = (1f - m_ReDeploymentTimer.progress) * operatorData.VariableData.RedeploymentInterval;
@@ -220,11 +218,14 @@ namespace AvantGardeMaker.UI
 			m_ReDeploymentTimer.Update();
 			m_ReDeploymentTimerImage.fillAmount = m_ReDeploymentTimer.progress;
 			m_ReDeploymentTimerText.text = redeploymentText;
+
 			if (m_ReDeploymentTimer.TimeCheck(true))
 			{
-				Debug.Log("ReadyOperator");
 				m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
-				m_RedeploymentParent.gameObject.SetActive(false);
+
+				isWaitingRedeploy = false;
+
+				m_ReDeploymentTimer.Pause();
 			}
 		}
 	}

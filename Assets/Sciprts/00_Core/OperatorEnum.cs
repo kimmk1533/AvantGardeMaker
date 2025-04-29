@@ -50,10 +50,11 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 	{
 		None = -1,
 
+		Setting,
+		Left,
+		Up,
 		Right,
-		Down = 90,
-		Left = 180,
-		Up = 270,
+		Down,
 	}
 
 	public enum E_OperatorSkillType

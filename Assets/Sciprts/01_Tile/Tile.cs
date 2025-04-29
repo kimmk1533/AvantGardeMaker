@@ -14,72 +14,55 @@ namespace AvantGardeMaker.TileSpace
 	public class Tile : ObjectPoolItemBase
 	{
 		#region 변수
-		[SerializeField, RuntimeReadOnly]
-		private Operator m_OperatorOnTile = null;
-
-		private OperatorSquadUI m_OperatorSquadUI = null;
 		//현제 타일의 위에 있는 에너미 리스트 먼저들어온 Enemy가 앞순서의 인덱스를 가짐
 		[SerializeField, ReadOnly]
 		private List<Enemy> m_EnemyOnTileList = null;
 		#endregion
 
 		#region 프로퍼티
-		public Operator operatorOnTile
-		{
-			get => m_OperatorOnTile;
-			set => m_OperatorOnTile = value;
-		}
-		public OperatorSquadUI operatorSquadUI
-		{
-			get => m_OperatorSquadUI;
-			set => m_OperatorSquadUI = value;
-		}
+		[field: SerializeField, ReadOnly]
+		public Operator currentOperator { get; set; }
 		public List<Enemy> enemyOnTileList
 		{
 			get => m_EnemyOnTileList;
 			set => m_EnemyOnTileList = value;
 		}
-
 		#endregion
 
 		#region 이벤트
-		public event Action<Collider2D> onColliderDetected;
-		#endregion
+		public event Action<Collider2D> onColliderDetected = null;
 
 		#region 이벤트 함수
 		private void UpdateDetectedEnemyProcess(Collider2D collider)
 		{
 			if (collider.gameObject.CompareTag("Enemy") == false)
 				return;
+
 			//적이 타일 콜리더와충돌했을때
 			Debug.Log("UpdateDetectedEnemyProcess");
 			onColliderDetected?.Invoke(collider);
 			m_EnemyOnTileList.Add(collider.GetComponent<Enemy>());
 		}
 		#endregion
+		#endregion
 
 		#region 매니저
-		private OperatorManager M_Operator => OperatorManager.Instance;
 		private GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
-		private GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Awake()
-		{
-			Initialize();
-		}
 		private void OnTriggerEnter2D(Collider2D collider)
 		{
 			UpdateDetectedEnemyProcess(collider);
 		}
-		private void OnTriggerExit2D(Collider2D collision)
+		private void OnTriggerExit2D(Collider2D collider)
 		{
-			if (collision.gameObject.CompareTag("Enemy") == false)
+			if (collider.gameObject.CompareTag("Enemy") == false)
 				return;
+
 			//적이 충돌한 타일을 벗어났을때
 			onColliderDetected = null;
-			m_EnemyOnTileList.Remove(collision.GetComponent<Enemy>());
+			m_EnemyOnTileList.Remove(collider.GetComponent<Enemy>());
 		}
 		#endregion
 
@@ -87,30 +70,41 @@ namespace AvantGardeMaker.TileSpace
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void InitializePoolItem()
 		{
-			m_EnemyOnTileList = new List<Enemy>();
+			base.InitializePoolItem();
+
+			if (m_EnemyOnTileList == null)
+				m_EnemyOnTileList = new List<Enemy>();
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void FinallizePoolItem()
 		{
+			base.FinallizePoolItem();
 
+			m_EnemyOnTileList.Clear();
 		}
 		#endregion
 
-		public void RetreatOperatorOnTile()
+		// 오퍼레이터 배치
+		public void DeployOperator(Operator oper)
 		{
-			if (m_OperatorOnTile == null)
+			currentOperator = oper;
+
+			currentOperator.Deploy();
+		}
+		// 오퍼레이터 퇴각
+		public void RetreatOperator()
+		{
+			if (currentOperator == null)
 				return;
 
 			M_GamePlayingUI.activeRetreatButton = false;
-			M_GamePlayingUI.OperatorSquadUIReDeploymentActive(m_OperatorSquadUI);
+			M_GamePlayingUI.RespawnOperatorSquadUI(this);
 
-			m_OperatorOnTile.Retreat();
-
-			M_Operator.Despawn(m_OperatorOnTile);
+			currentOperator.Retreat();
 		}
 	}
 }

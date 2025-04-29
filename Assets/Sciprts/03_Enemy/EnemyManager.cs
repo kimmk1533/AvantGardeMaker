@@ -46,7 +46,7 @@ namespace AvantGardeMaker.EnemySpace
 		[SerializeField]
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
 
-		[SerializeField, RuntimeReadOnly]
+		[SerializeField, ReadOnly]
 		private UtilClass.Timer m_EnemySpawnTimer = null;
 		#endregion
 
