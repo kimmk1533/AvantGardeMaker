@@ -3,6 +3,7 @@ using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using static AvantGardeMaker.EnemySpace.EnemySkillInterface;
 
 /*
  * 옵젝 매니저(풀링 되어있음)
@@ -245,25 +246,26 @@ namespace AvantGardeMaker.EnemySpace
 				case E_EnemyGradeType.Normal:
 					break;
 				case E_EnemyGradeType.Elite:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.4f;
-					break;
-				}
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.4f;
+						break;
+					}
 				case E_EnemyGradeType.Leader:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.5f;
-					break;
-				}
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.5f;
+						break;
+					}
 			}
 
 			m_EnemyList.Add(enemy);
 			m_EnemySpawnDataQueue.Dequeue();
 			//Debug.Log("적 생성");
 
-			enemy.gameObject.SetActive(true);
+			//enemy.gameObject.SetActive(true);
 		}
+
 
 		public EnemyData GetEnemyData(string enName)
 		{

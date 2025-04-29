@@ -6,13 +6,12 @@ using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.CoreSpace.Enum;
+using static AvantGardeMaker.EnemySpace.EnemySkillInterface;
 
 namespace AvantGardeMaker.EnemySpace
 {
 	/*최상위 개체에 콜라이더
-	 * 아래에 렌더러
-	 * 
-	 */
+	 아래에 렌더러	 */
 
 	public class Enemy : ObjectPoolItemBase
 	{
@@ -27,6 +26,8 @@ namespace AvantGardeMaker.EnemySpace
 		private EnemyFixedData m_FixedData = null;
 		private EnemyVariableData m_VariableData = null;
 		#endregion
+
+		#region 길찾기
 		//경유지(wayPoint) 인덱스
 		private int m_WayPointIndex = 0;
 		//경유지 리스트(인덱스가 list.count와 같으면 도착)
@@ -43,12 +44,19 @@ namespace AvantGardeMaker.EnemySpace
 
 		//현재 출발 전 대기시간
 		private UtilClass.Timer m_CurrentWayPointIntervalTimer;
-
+		#endregion
 		//현재 상태
 		[SerializeField]
 		private E_EnemyState m_CurEnemyState;
 		private bool m_IsBlocked = false;
 
+		#region 스킬
+		private bool m_HasStealth = false;
+		private IOnAttackSkill m_OnAttackSkill = null;
+		private IOnDeadSkill m_OnDeadSkill = null;
+		#endregion
+
+		#region 콜라이더
 		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
 		private CircleCollider2D m_BodyCollider = null;
 		public float m_BodySize;
@@ -60,8 +68,7 @@ namespace AvantGardeMaker.EnemySpace
 		public List<Operator> m_TargetOperList = null;
 		//공격할 오퍼
 		public Operator m_TargetOper;
-
-		private bool[,] m_testMap = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -178,13 +185,6 @@ namespace AvantGardeMaker.EnemySpace
 
 			m_AtkIntervalTimer = new UtilClass.Timer(1.0f);
 			m_CurrentWayPointIntervalTimer = new UtilClass.Timer(0f);
-
-			m_testMap = new bool[5, 9]
-				{{true,true,true,true,true,true,true,true,true},
-				{true,false,false,false,false,false,false,false,false},
-				{true,true,true,true,true,true,true,true,true},
-				{false,false,false,false,false,false,false,false,true},
-				{true,true,true,true,true,true,true,true,true},             };
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -209,6 +209,63 @@ namespace AvantGardeMaker.EnemySpace
 
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
+
+			for (int i = 0; i < m_FixedData.SkillDataList.Count; i++)
+			{
+				SetTag(m_FixedData.Tag[i]);
+			}
+
+			SetSkill(m_FixedData.SkillDataList);
+		}
+		private void SetTag(string tag)
+		{
+			switch (tag)
+			{
+				default:
+					break;
+				case "Stealth":
+					m_HasStealth = true;
+					break;
+			}
+		}
+		public void SetSkill(List<EnemySkillData> skillDataList)
+		{
+			for (int i = 0; i < skillDataList.Count; i++)
+			{
+				switch (skillDataList[i].Type)
+				{
+					default:
+						break;
+					case E_EnemySkillType.OnAttack:
+						m_OnAttackSkill = GetAttackSkill(skillDataList[i]);
+						break;
+					case E_EnemySkillType.OnDead:
+						m_OnDeadSkill = GetDeadSkill(skillDataList[i]);
+						break;
+				}
+			}
+		}
+
+		private IOnAttackSkill GetAttackSkill(EnemySkillData skillData)
+		{
+			switch (skillData.Name)
+			{
+				default:
+					return null;
+				case "Splash":
+					return new SplashSkill();
+			}
+		}
+
+		private IOnDeadSkill GetDeadSkill(EnemySkillData skillData)
+		{
+			switch (skillData.Name)
+			{
+				default:
+					return null;
+				case "SuicideExplode":
+					return new SuicideExplodeSkill();
+			}
 		}
 		public void SetWayPointList(List<Vector2> wayPointList)
 		{
@@ -393,9 +450,9 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		private void UpdatePathPointList()
 		{
-			//bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
-			//List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, map);
-			List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, m_testMap);
+			bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
+			List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, map);
+			//List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, m_testMap);
 			m_PathPointStack.Clear();
 			if (pathList == null)
 			{

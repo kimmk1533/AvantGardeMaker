@@ -37,13 +37,13 @@ namespace AvantGardeMaker.EnemySpace
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲적 정보 중단▲▲▲▲▲▲▲▲▲▲▲▲//
 
-		//적 설명
+		//적 설명 텍스트
 		[TextArea(6, 20)]
 		public string Description = string.Empty;
 
 		//▲▲▲▲▲▲▲▲▲▲▲▲적 정보 하단▲▲▲▲▲▲▲▲▲▲▲▲//
 
-		//적 능력
+		//적 능력 텍스트
 		[TextArea(6, 20)]
 		public string Trait = string.Empty;
 
@@ -56,5 +56,13 @@ namespace AvantGardeMaker.EnemySpace
 
 		//필터에 표시되지 않는 공격 타입
 		public E_DamageType DamageType = E_DamageType.Physics;
+
+		//EnemySkill로 구현하기 애매한 능력
+		public List<string> Tag;
+
+		public List<EnemySkillData> SkillDataList = new List<EnemySkillData>();
+
+		//▲▲▲▲▲▲▲▲▲▲▲▲스킬▲▲▲▲▲▲▲▲▲▲▲▲//
+
 	}
 }

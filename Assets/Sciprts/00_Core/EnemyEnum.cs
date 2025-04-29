@@ -115,6 +115,12 @@ namespace AvantGardeMaker.EnemySpace.Enum
 		Attack,
 	}
 
+	public enum E_EnemySkillType
+	{
+		OnAttack,
+		OnDead,
+	}
+
 	public class EnumUtil
 	{
 		public static string EnumToKorString<TEnum>(TEnum enumValue) where TEnum : System.Enum

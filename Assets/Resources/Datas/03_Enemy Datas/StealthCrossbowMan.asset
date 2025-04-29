@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef381811585a4294cb0a90d73b3a5bf0, type: 3}
   m_Name: StealthCrossbowMan
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   EngName: StealthCrossbowMan
   KorName: "\uC740\uC2E0\uC11D\uAD81\uBCD1"
+  PortraitImagePath: 
   FixedData:
     RaceType: 0
     Code: C1
@@ -22,7 +32,6 @@ MonoBehaviour:
     EnemyType: 0
     LossHp: 1
     Flyable: 0
-    PortraitImagePath: 
     Weight:
       InitStat: 1
       CurStat: 1
@@ -38,6 +47,10 @@ MonoBehaviour:
     Trait: "\u2022<indent=15><line-height=25>[\uC740\uC2E0]: \uC800\uC9C0\uB418\uC9C0
       \uC54A\uC558\uC744 \uB54C \uACF5\uACA9 \uBAA9\uD45C\uAC00 \uB418\uC9C0 \uC54A\uB294\uB2E4.</line-height></indent>"
     ImmuneType: 0
+    DamageType: 0
+    Tag:
+    - Stealth
+    SkillDataList: []
   VariableData:
     Hp:
       InitStat: 0
