@@ -54,10 +54,25 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 프로퍼티
-		public OperatorData selectedOperator
+		public OperatorData selectedOperatorData
 		{
 			get => m_SelectedOperator;
-			set => m_SelectedOperator = value;
+			set
+			{
+				m_SelectedOperator = value;
+
+				m_OperatorKorNameText.text = value.KorName;
+				m_OperatorLevelText.text = value.FixedData.Level.ToString();
+				m_AtkText.text = value.VariableData.Atk.ToString();
+				m_DefText.text = value.VariableData.Def.ToString();
+				m_ResText.text = value.VariableData.Res.ToString();
+				m_BlockText.text = value.VariableData.BlockCount.ToString();
+				OperImg.sprite = M_GamePlayingUI.GetOperatorFullshotSprite(value.key);
+				m_OperatorHpText.text = value.VariableData.CurrentHp + "/" + value.VariableData.MaxHp;
+
+				ResetATKRangeUI();
+				OperATKRangeCreate(value.VariableData.AttackPos);
+			}
 		}
 		#endregion
 
@@ -146,20 +161,6 @@ namespace AvantGardeMaker.UI
 				Destroy(m_ATKPosList[i]);
 				m_ATKPosList = new List<Image>();
 			}
-		}
-		public void ChangeOperatorStatusUI(OperatorData selectedOperatorData)
-		{
-			m_OperatorKorNameText.text = selectedOperatorData.KorName;
-			m_OperatorLevelText.text = selectedOperatorData.FixedData.Level.ToString();
-			m_AtkText.text = selectedOperatorData.VariableData.Atk.ToString();
-			m_DefText.text = selectedOperatorData.VariableData.Def.ToString();
-			m_ResText.text = selectedOperatorData.VariableData.Res.ToString();
-			m_BlockText.text = selectedOperatorData.VariableData.BlockCount.ToString();
-			OperImg.sprite = M_GamePlayingUI.GetOperatorFullshotSprite(selectedOperatorData.key);
-			m_OperatorHpText.text = selectedOperatorData.VariableData.CurrentHp + "/" + selectedOperatorData.VariableData.MaxHp;
-
-			ResetATKRangeUI();
-			OperATKRangeCreate(m_SelectedOperator.VariableData.AttackPos);
 		}
 		//생성된 공격범위 가운데 정렬
 		private void AlignChildren()

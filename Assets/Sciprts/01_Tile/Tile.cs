@@ -8,10 +8,11 @@ using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AvantGardeMaker.TileSpace
 {
-	public class Tile : ObjectPoolItemBase
+	public class Tile : ObjectPoolItemBase, IPointerClickHandler
 	{
 		#region 변수
 		//현제 타일의 위에 있는 에너미 리스트 먼저들어온 Enemy가 앞순서의 인덱스를 가짐
@@ -21,7 +22,7 @@ namespace AvantGardeMaker.TileSpace
 
 		#region 프로퍼티
 		[field: SerializeField, ReadOnly]
-		public Operator currentOperator { get; set; }
+		public Operator currentOperator { get; private set; }
 		public List<Enemy> enemyOnTileList
 		{
 			get => m_EnemyOnTileList;
@@ -31,6 +32,7 @@ namespace AvantGardeMaker.TileSpace
 
 		#region 이벤트
 		public event Action<Collider2D> onColliderDetected = null;
+		public event Action<Tile> onTileClicked = null;
 
 		#region 이벤트 함수
 		private void UpdateDetectedEnemyProcess(Collider2D collider)
@@ -76,6 +78,8 @@ namespace AvantGardeMaker.TileSpace
 
 			if (m_EnemyOnTileList == null)
 				m_EnemyOnTileList = new List<Enemy>();
+
+			onTileClicked += M_GamePlayingUI.OnTileClicked;
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -85,6 +89,8 @@ namespace AvantGardeMaker.TileSpace
 			base.FinallizePoolItem();
 
 			m_EnemyOnTileList.Clear();
+
+			onTileClicked -= M_GamePlayingUI.OnTileClicked;
 		}
 		#endregion
 
@@ -102,9 +108,23 @@ namespace AvantGardeMaker.TileSpace
 				return;
 
 			M_GamePlayingUI.activeRetreatButton = false;
-			M_GamePlayingUI.RespawnOperatorSquadUI(this);
+			M_GamePlayingUI.activeSkillButton = false;
+			M_GamePlayingUI.operatorStatusUI.gameObject.SetActive(false);
 
 			currentOperator.Retreat();
+			currentOperator = null;
+
+			OperatorSquadUI squadUI = M_GamePlayingUI.GetOperatorSquadUI(this);
+			squadUI.gameObject.SetActive(true);
+			squadUI.StartRedeployment();
+		}
+
+		public void OnPointerClick(PointerEventData eventData)
+		{
+			if (currentOperator == null)
+				return;
+
+			onTileClicked?.Invoke(this);
 		}
 	}
 }

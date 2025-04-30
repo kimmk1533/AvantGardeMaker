@@ -4528,8 +4528,9 @@ GameObject:
   - component: {fileID: 1186492089}
   - component: {fileID: 1186492088}
   - component: {fileID: 1186492087}
+  - component: {fileID: 1186492091}
   m_Layer: 0
-  m_Name: PlayingCamera
+  m_Name: Game Playing Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4653,6 +4654,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1186492091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186492086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_MaxRayIntersections: 0
 --- !u!1 &1232903852
 GameObject:
   m_ObjectHideFlags: 0
@@ -6047,6 +6064,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  m_GamePlayingCamera: {fileID: 1186492089}
   m_OptionButton: {fileID: 1715055890}
   m_CostValueText: {fileID: 1631333813}
   m_CostFillImage: {fileID: 1512874261}

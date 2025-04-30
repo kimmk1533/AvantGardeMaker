@@ -19,11 +19,13 @@ namespace AvantGardeMaker.UI
 		private OperatorData m_OperatorData = null;
 
 		private Operator m_PreviewOperator = null;
-		private RectTransform m_RedeploymentParent = null;
 
-		private UtilClass.Timer m_ReDeploymentTimer = null;
-		private TextMeshProUGUI m_ReDeploymentTimerText = null;
-		private Image m_ReDeploymentTimerImage = null;
+		private TextMeshProUGUI m_CostText = null;
+
+		private RectTransform m_RedeploymentParent = null;
+		private UtilClass.Timer m_RedeploymentTimer = null;
+		private TextMeshProUGUI m_RedeploymentTimerText = null;
+		private Image m_RedeploymentTimerImage = null;
 
 		private bool m_IsDragging = false;
 		#endregion
@@ -39,26 +41,27 @@ namespace AvantGardeMaker.UI
 				if (m_PreviewOperator != null)
 					M_Operator.Despawn(m_PreviewOperator);
 
-				m_PreviewOperator = M_Operator.GetBuilder(operatorData.key)
+				m_PreviewOperator = M_Operator.GetBuilder(value.key)
 					.SetAutoInit(true)
 					.SetActive(false)
 					.Spawn();
+				m_PreviewOperator.operatorData = value;
 
-				m_PreviewOperator.operatorData = operatorData;
+				UpdateInfoUI();
 			}
 		}
 
-		private bool isWaitingRedeploy
+		private bool isWaitingRedeployment
 		{
 			get => m_RedeploymentParent.gameObject.activeSelf;
 			set => m_RedeploymentParent.gameObject.SetActive(value);
 		}
-		private int deployRequiredCost => m_PreviewOperator.deploymentCost;
-		private bool isDeployable => !isWaitingRedeploy && M_GamePlaying.currentCost >= deployRequiredCost;
+		private int deployRequiredCost => m_PreviewOperator.variableData.DeploymentCost;
+		private bool isDeployable => !isWaitingRedeployment && M_GamePlaying.currentCost >= deployRequiredCost;
 		#endregion
 
 		#region 이벤트
-		public event System.Action<OperatorSquadUI> onOperatorSquadUIClicked;
+		public event System.Action<OperatorSquadUI> onOperatorSquadUIClicked = null;
 
 		#region 이벤트 함수
 		private void OnCostChanged(int currentCost)
@@ -95,18 +98,20 @@ namespace AvantGardeMaker.UI
 
 			if (m_Button == null)
 				m_Button = GetComponent<Button>();
+
+			if (m_CostText == null)
+				m_CostText = transform.Find<TextMeshProUGUI>("Operator Info/Cost/Text");
+
 			if (m_RedeploymentParent == null)
 				m_RedeploymentParent = transform.Find<RectTransform>("Redeployment Parent");
-			if (m_ReDeploymentTimerImage == null)
-				m_ReDeploymentTimerImage = m_RedeploymentParent.transform.Find<Image>("ResponeTimer Image");
-			if (m_ReDeploymentTimerText == null)
-				m_ReDeploymentTimerText = m_RedeploymentParent.transform.Find<TextMeshProUGUI>("ResponeTimer Text");
-			if (m_ReDeploymentTimer == null)
-				m_ReDeploymentTimer = new UtilClass.Timer();
+			if (m_RedeploymentTimerImage == null)
+				m_RedeploymentTimerImage = m_RedeploymentParent.Find<Image>("RedeploymentTimer Image");
+			if (m_RedeploymentTimerText == null)
+				m_RedeploymentTimerText = m_RedeploymentParent.Find<TextMeshProUGUI>("RedeploymentTimer Text");
+			if (m_RedeploymentTimer == null)
+				m_RedeploymentTimer = new UtilClass.Timer();
 
 			M_GamePlaying.onCostChanged += OnCostChanged;
-
-			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -190,42 +195,51 @@ namespace AvantGardeMaker.UI
 			if (tile == null)
 				return;
 
-			M_GamePlayingUI.StartDirectionSetting(m_PreviewOperator, tile);
-		}
+			tile.DeployOperator(m_PreviewOperator);
 
-		public void CancelDeployment()
-		{
-			m_PreviewOperator.gameObject.SetActive(false);
+			M_GamePlayingUI.OnFindingTile(this, tile);
 		}
 
 		public void StartRedeployment()
 		{
 			m_RedeploymentParent.gameObject.SetActive(true);
 
-			isWaitingRedeploy = true;
+			isWaitingRedeployment = true;
 
-			m_ReDeploymentTimer.Resume();
+			m_RedeploymentTimer.Clear();
+			m_RedeploymentTimer.Resume();
+
+			UpdateInfoUI();
+		}
+		public void CancelDeployment()
+		{
+			m_PreviewOperator.gameObject.SetActive(false);
 		}
 
+		private void UpdateInfoUI()
+		{
+			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
+			m_CostText.text = m_PreviewOperator.variableData.DeploymentCost.ToString();
+		}
 		private void UpdateRedeploymentTimer()
 		{
-			if (m_ReDeploymentTimer.isPaused)
+			if (m_RedeploymentTimer.isPaused)
 				return;
 
-			float redeploymentInterval = (1f - m_ReDeploymentTimer.progress) * operatorData.VariableData.RedeploymentInterval;
+			float redeploymentInterval = (1f - m_RedeploymentTimer.progress) * m_PreviewOperator.variableData.RedeploymentInterval;
 			string redeploymentText = redeploymentInterval.ToString("F1");
 
-			m_ReDeploymentTimer.Update();
-			m_ReDeploymentTimerImage.fillAmount = m_ReDeploymentTimer.progress;
-			m_ReDeploymentTimerText.text = redeploymentText;
+			m_RedeploymentTimer.Update();
+			m_RedeploymentTimerImage.fillAmount = m_RedeploymentTimer.progress;
+			m_RedeploymentTimerText.text = redeploymentText;
 
-			if (m_ReDeploymentTimer.TimeCheck(true))
+			if (m_RedeploymentTimer.TimeCheck(true))
 			{
 				m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
 
-				isWaitingRedeploy = false;
+				isWaitingRedeployment = false;
 
-				m_ReDeploymentTimer.Pause();
+				m_RedeploymentTimer.Pause();
 			}
 		}
 	}

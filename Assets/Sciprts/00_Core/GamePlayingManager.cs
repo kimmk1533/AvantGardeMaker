@@ -81,7 +81,6 @@ namespace AvantGardeMaker.CoreSpace
 		private void Update()
 		{
 			CostIncreaseProcess();
-			ClickTileProcess();
 		}
 		#endregion
 
@@ -149,51 +148,7 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			m_DeployingOperatorList.Add(deployingOperator);
 
-			currentCost -= deployingOperator.deploymentCost;
-		}
-
-		private void ClickTileProcess()
-		{
-			if (Input.GetMouseButtonDown(0)) // 좌클릭
-			{
-				m_SelectedOperator = GetOperatorOnTile();
-
-				if (m_SelectedOperator == null)
-					return;
-
-				M_GamePlayingUI.activeRetreatButton = !M_GamePlayingUI.activeRetreatButton;
-				//작업
-				M_GamePlayingUI.activeSkillButton = !M_GamePlayingUI.activeSkillButton;
-
-				//퇴각버튼 활성화하기
-				M_GamePlayingUI.OperatorRetreateButtonSetPosition();
-				M_GamePlayingUI.SettingOperatorRetreateButton(m_SelectedTile);
-
-				//스킬 버튼 활성화
-				M_GamePlayingUI.ActiveSkillButton();
-			}
-		}
-		private Operator GetOperatorOnTile()
-		{
-			Vector2 origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero);
-			if (hit.collider != null)
-			{
-				GameObject target = hit.collider.gameObject;
-				Tile tile = target.GetComponent<Tile>();
-
-				if (tile == null)
-					return null;
-
-				if (tile.currentOperator == null)
-					return null;
-
-				m_SelectedTile = tile;
-
-				return tile.currentOperator;
-			}
-
-			return null;
+			currentCost -= deployingOperator.variableData.DeploymentCost;
 		}
 
 		/// <summary>

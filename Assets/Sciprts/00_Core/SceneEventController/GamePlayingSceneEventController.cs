@@ -12,6 +12,9 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 	{
 		#region 변수
 		[SerializeField]
+		private Camera m_GamePlayingCamera = null;
+
+		[SerializeField]
 		private Button m_OptionButton = null;
 
 		[SerializeField]
@@ -64,6 +67,8 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			base.Initialize();
 
 			#region 멤버 변수 링킹
+			M_GamePlayingUI.gamePlaingCamera = m_GamePlayingCamera;
+
 			M_GamePlayingUI.optionButton = m_OptionButton;
 
 			M_GamePlayingUI.costValueText = m_CostValueText;

@@ -53,13 +53,12 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 프로퍼티
 		public OperatorData operatorData
 		{
+			get => m_OperatorData;
 			set
 			{
 				m_OperatorData = value;
 				m_FixedData = value.FixedData;
 				m_VariableData = value.VariableData;
-
-				deploymentCost = value.VariableData.DeploymentCost;
 
 				m_FrontSprite = M_Operator.GetOperatorFrontSprite(value.key);
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
@@ -76,11 +75,6 @@ namespace AvantGardeMaker.OperatorSpace
 		private bool isDirectionSetted => currentDirection != E_OperatorDirection.None;
 		private float sqrDragThreshold => m_DragThreshold * m_DragThreshold;
 
-		public int deploymentCost
-		{
-			get => m_VariableData.DeploymentCost;
-			private set => m_VariableData.DeploymentCost = value;
-		}
 		public int deploymentIndex { get; set; }
 		public Tile deploymentTile { get; set; }
 		public int redeployCount { get; set; }
@@ -104,14 +98,14 @@ namespace AvantGardeMaker.OperatorSpace
 			//에너미의 데미지타입 공격력 관통력알수있는 정보루트 만들어달라하기
 			//TakeDamage(lockOnEnemy.damageType, lockOnEnemy.atk, lockOnEnemy.penetration);
 		}
+
 		/// <summary>
 		/// 스킬 버튼을 눌렀을때 실행되는 함수
 		/// </summary>
 		public void OnSkillButtonClicked()
 		{
-			
+			Debug.Log("스킬 발동");
 		}
-
 		#endregion
 		#endregion
 
@@ -190,11 +184,13 @@ namespace AvantGardeMaker.OperatorSpace
 			ResetDirection();
 
 			// 퇴각 코스트(배치 코스트의 절반) 반환
-			M_GamePlaying.currentCost += (deploymentCost >> 1);
+			M_GamePlaying.currentCost += (variableData.DeploymentCost >> 1);
 
 			// 배치 코스트 2회에 한해 절반 증가
 			if (redeployCount++ < 2)
-				deploymentCost += deploymentCost >> 1;
+				variableData.DeploymentCost += variableData.DeploymentCost >> 1;
+
+			gameObject.SetActive(false);
 		}
 		private void ResetDirection()
 		{
@@ -439,7 +435,7 @@ namespace AvantGardeMaker.OperatorSpace
 		// Operator: abstract UseSkill 함수 구현
 		// Vanguard: 직군 공용 스킬 구현(코스트 획득 등)
 		// 머틀: 머틀 고유 스킬 구현
-		
+
 		public virtual void ActivateSkill()
 		{
 			m_OperatorSkill.Activate();
