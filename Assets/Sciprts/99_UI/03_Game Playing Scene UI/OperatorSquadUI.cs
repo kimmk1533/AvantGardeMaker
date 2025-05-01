@@ -69,7 +69,7 @@ namespace AvantGardeMaker.UI
 			if (operatorData == null)
 				return;
 
-			m_Button.interactable = currentCost >= deployRequiredCost;
+			UpdateButtonInteractable();
 		}
 		#endregion
 		#endregion
@@ -219,8 +219,16 @@ namespace AvantGardeMaker.UI
 
 		private void UpdateInfoUI()
 		{
-			m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
-			m_CostText.text = m_PreviewOperator.variableData.DeploymentCost.ToString();
+			UpdateButtonInteractable();
+
+			m_CostText.text = deployRequiredCost.ToString();
+		}
+		private void UpdateButtonInteractable()
+		{
+			if (isWaitingRedeployment == true)
+				m_Button.interactable = false;
+			else
+				m_Button.interactable = M_GamePlaying.currentCost >= deployRequiredCost;
 		}
 		private void UpdateRedeploymentTimer()
 		{
