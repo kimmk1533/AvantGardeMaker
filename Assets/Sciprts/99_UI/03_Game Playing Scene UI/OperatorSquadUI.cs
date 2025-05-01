@@ -206,6 +206,7 @@ namespace AvantGardeMaker.UI
 
 			isWaitingRedeployment = true;
 
+			m_RedeploymentTimer.interval = m_PreviewOperator.variableData.RedeploymentInterval;
 			m_RedeploymentTimer.Clear();
 			m_RedeploymentTimer.Resume();
 
