@@ -41,13 +41,15 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
-		private OperatorSkill m_OperatorSkill = null;
+		
 
 		private int m_CurrentBlock = 0;
 		private int m_MaxBlock = 0;
 
 		private Enemy m_AttackTartgetEnemy = null;
 		private bool isAttack = true;
+
+		private UtilClass.Timer m_AutoSPGainTimer = null;
 		#endregion
 
 		#region 프로퍼티
@@ -80,6 +82,8 @@ namespace AvantGardeMaker.OperatorSpace
 		public int redeployCount { get; set; }
 
 		protected bool isAlive => m_OperatorData.VariableData.CurrentHp > 0;
+
+		public OperatorSkill operatorSkill { get; set; }
 		#endregion
 
 		#region 이벤트
@@ -122,6 +126,9 @@ namespace AvantGardeMaker.OperatorSpace
 		private void Update()
 		{
 			SetDirectionProcess();
+			AutoSPGainProcess();
+			ActivateSkill();
+			AttackEnemyProcess();
 		}
 
 		//저지시킬때
@@ -156,7 +163,6 @@ namespace AvantGardeMaker.OperatorSpace
 
 			currentDirection = E_OperatorDirection.Left;
 			m_SettingDirection = E_OperatorDirection.None;
-
 			redeployCount = 0;
 		}
 		/// <summary>
@@ -376,7 +382,7 @@ namespace AvantGardeMaker.OperatorSpace
 		/// <summary>
 		/// 공격범위 타일 안에 들어온 Enemy를 공격하는 함수
 		/// </summary>
-		public void AttackEnemy()
+		public void AttackEnemyProcess()
 		{
 			if (m_AttackRangeInTileList == null || m_AttackRangeInTileList.Count == 0 || !isAttack)
 				return;
@@ -391,6 +397,11 @@ namespace AvantGardeMaker.OperatorSpace
 				{
 					m_AttackTartgetEnemy = tile.enemyOnTileList[0];
 					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
+					//공격회복 스킬일시 실행
+					if (operatorSkill.gainSPType == E_SPGainType.Attack)
+					{
+						operatorSkill.RecoverSP(1);
+					}
 				}
 			}
 		}
@@ -422,6 +433,11 @@ namespace AvantGardeMaker.OperatorSpace
 			float minDamage = atk * 0.05f;
 
 			DecreaseHp(Mathf.Max(minDamage, damage));
+
+			if (operatorSkill.gainSPType == E_SPGainType.TakeAttack)
+			{
+				operatorSkill.RecoverSP(1);
+			}
 		}
 		private void DecreaseHp(float value)
 		{
@@ -436,9 +452,25 @@ namespace AvantGardeMaker.OperatorSpace
 		// Vanguard: 직군 공용 스킬 구현(코스트 획득 등)
 		// 머틀: 머틀 고유 스킬 구현
 
+		private void AutoSPGainProcess()
+		{
+			if (m_AutoSPGainTimer == null)
+			{
+				m_AutoSPGainTimer = new UtilClass.Timer(1f);
+			}
+			 
+			m_AutoSPGainTimer.Update();
+
+			if (m_AutoSPGainTimer.TimeCheck(true) == true)
+			{
+				operatorSkill.RecoverSP(1);
+			}
+
+		}
+
 		public virtual void ActivateSkill()
 		{
-			m_OperatorSkill.Activate();
+			operatorSkill.Activate();
 		}
 	}
 }

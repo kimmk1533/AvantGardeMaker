@@ -67,7 +67,7 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 		ChangeAttackRange,
 	}
 
-	public enum E_SkillCostGainType
+	public enum E_SPGainType
 	{
 		Auto,
 		Attack,

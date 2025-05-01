@@ -88,12 +88,12 @@ MonoBehaviour:
     DamageType: 0
     Penetration: 0
     SkillData:
-      SkillCostMax: 30
-      SkillInitCost: 0
-      StartSkillCost: 0
-      SkillCostGainType: 0
-      SkillActivationType: 0
-      SkillActiveTime:
+      MaxSP: 30
+      CurrentSP: 0
+      StartSP: 0
+      GainSPType: 0
+      ActivationSkillType: 0
+      ActiveSkillTime:
         m_Interval: 0
         m_Time: 0
       SkillText: 

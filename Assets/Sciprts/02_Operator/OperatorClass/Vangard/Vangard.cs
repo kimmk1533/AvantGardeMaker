@@ -30,7 +30,7 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void Initialize()
 		{
-			
+			operatorSkill = CreateReChargeSkill();
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -46,22 +46,33 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			SkillInfo skillData = new SkillInfo(variableData.SkillData);
 
-			return new ReChargeCostSkill(skillData);
+			return new SkillReChargeCost(skillData);
 		}
 		#endregion
 	}
 
-	public class ReChargeCostSkill : OperatorSkill
+	public class SkillReChargeCost : OperatorSkill
 	{
 		public int reChargeCostValue { get; private set; }
+		private SkillInfo skillInfo;
 
-		public ReChargeCostSkill(SkillInfo skillData) : base(skillData)
+		public SkillReChargeCost(SkillInfo skillData) : base(skillData)
 		{
-			reChargeCostValue = (int)skillData.SkillAbilityInfoList[E_OperatorSkillType.GainCost].SkillValue;
+			skillInfo = skillData;
+			reChargeCostValue = (int)skillInfo.SkillAbilityInfoList[E_OperatorSkillType.GainCost].SkillValue;
 		}
 		public override void Activate()
 		{
-			M_GamePlaying.currentCost += reChargeCostValue;
+			if (skillInfo == null)
+				return;
+			if (currentSP >= maxSP)
+			{
+				M_GamePlaying.currentCost += reChargeCostValue;
+				currentSP = 0;
+			}
+			
 		}
+
+
 	}
 }
