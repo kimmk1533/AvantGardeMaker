@@ -16,12 +16,12 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 프로퍼티
 		public string skillName { get; protected set; }
 		
-		public float skillCostMax { get; protected set; }
-		public float skillInitCost { get; protected set; }
+		public float maxSkillCost { get; protected set; }
+		public float currentSkillCost { get; protected set; }
 		public float startSkillCost { get; protected set; }
-		public E_SkillCostGainType skillCostGainType { get; protected set; }
+		public E_SkillCostGainType gainSkillCostType { get; protected set; }
 		public E_SkillActivationType skillActivationType { get; protected set; }
-		public UtilClass.Timer skillActiveTime { get; protected set; }
+		public UtilClass.Timer activeSkillTime { get; protected set; }
 
 		public string skillText { get; protected set; }
 
@@ -30,12 +30,12 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 생성자
 		protected OperatorSkill(SkillInfo skillData)
 		{
-			skillCostMax = skillData.SkillCostMax;
-			skillInitCost = skillData.SkillInitCost;
+			maxSkillCost = skillData.MaxSkillCost;
+			currentSkillCost = skillData.CurrentSkillCost;
 			startSkillCost = skillData.StartSkillCost;
-			skillCostGainType = skillData.SkillCostGainType;
-			skillActivationType = skillData.SkillActivationType;
-			skillActiveTime = skillData.SkillActiveTime;
+			gainSkillCostType = skillData.GainSkillCostType;
+			skillActivationType = skillData.ActivationSkillType;
+			activeSkillTime = skillData.ActiveSkillTime;
 			skillText = skillData.SkillText;
 		}
 		#endregion

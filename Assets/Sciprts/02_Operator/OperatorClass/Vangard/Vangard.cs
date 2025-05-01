@@ -57,7 +57,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public ReChargeCostSkill(SkillInfo skillData) : base(skillData)
 		{
-			reChargeCostValue = (int)skillData.SkillAbilityInfoList[0].SkillValue;
+			reChargeCostValue = (int)skillData.SkillAbilityInfoList[E_OperatorSkillType.GainCost].SkillValue;
 		}
 		public override void Activate()
 		{

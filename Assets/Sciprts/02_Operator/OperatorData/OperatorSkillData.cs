@@ -10,24 +10,24 @@ namespace AvantGardeMaker.OperatorSpace
 	[System.Serializable]
 	public class SkillInfo
 	{
-		public float SkillCostMax;
-		public float SkillInitCost;
+		public float MaxSkillCost;
+		public float CurrentSkillCost;
 		public float StartSkillCost;
-		public E_SkillCostGainType SkillCostGainType;
-		public E_SkillActivationType SkillActivationType;
-		public UtilClass.Timer SkillActiveTime;
+		public E_SkillCostGainType GainSkillCostType;
+		public E_SkillActivationType ActivationSkillType;
+		public UtilClass.Timer ActiveSkillTime;
 		public string SkillText;
 
 		public Dictionary<E_OperatorSkillType,SkillAbilityInfo> SkillAbilityInfoList;
 
 		public SkillInfo(SkillInfo skillData)
 		{
-			SkillCostMax = skillData.SkillCostMax;
-			SkillInitCost = skillData.SkillInitCost;
+			MaxSkillCost = skillData.MaxSkillCost;
+			CurrentSkillCost = skillData.CurrentSkillCost;
 			StartSkillCost = skillData.StartSkillCost;
-			SkillCostGainType = skillData.SkillCostGainType;
-			SkillActivationType = skillData.SkillActivationType;
-			SkillActiveTime = skillData.SkillActiveTime;
+			GainSkillCostType = skillData.GainSkillCostType;
+			ActivationSkillType = skillData.ActivationSkillType;
+			ActiveSkillTime = skillData.ActiveSkillTime;
 			SkillText = skillData.SkillText;
 			SkillAbilityInfoList = skillData.SkillAbilityInfoList;
 		}

@@ -61,7 +61,7 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 	{
 		AttackBuff,
 		AttackSpeedBuff,
-		DeployGainCost,
+		GainCost,
 		MultipleShot,
 		StopAttack,
 		ChangeAttackRange,
