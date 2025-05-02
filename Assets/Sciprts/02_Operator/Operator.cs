@@ -298,13 +298,13 @@ namespace AvantGardeMaker.OperatorSpace
 			//for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
 			//{
 			//	//임시 공격범위 타일회전
-			//	m_AttackRangeInTileList.Add(M_TileManager.GetTileValue(currentAttackRangePosList[i]).Item2);
+			//	m_AttackRangeInTileList.Add(M_TileManager.GetTile(currentAttackRangePosList[i]).Item2);
 			//	/*
-			//	if (M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
+			//	if (M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
 			//	{
-			//		M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
+			//		M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
 			//	}
-			//	M_TileManager.GetTileValue(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
+			//	M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
 			//	*/
 			//}
 		}

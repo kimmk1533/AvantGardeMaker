@@ -113,6 +113,8 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		{
 			SaveOptions saveOption = new SaveOptions(new PublicWriteAccessClassOptions());
 
+			float t1, t2;
+
 			// Json 변환
 			string json = JsonUtility.ToJson(stageData);
 
@@ -121,8 +123,16 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			string debugPath = Path.Combine(Application.dataPath, "..", "Data", mapTitle + ".json");
 			File.WriteAllText(debugPath, debugJson);
 
+			t1 = Time.realtimeSinceStartup;
+
 			// 압축
 			byte[] compressedJson = await Compression.Compress(json);
+
+			t2 = Time.realtimeSinceStartup;
+
+			Debug.Log("[압축]: " + (t2 - t1));
+
+			t1 = Time.realtimeSinceStartup;
 
 			// 기존 제작한 맵 타이틀 리스트 가져오기
 			List<string> mapTitleList = await GetMakingMapTitleList(AuthenticationService.Instance.PlayerId);
@@ -132,7 +142,11 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 
 			string mapTitlListData = string.Join(", ", mapTitleList);
 
-			// 저장할 데이터 만들기
+			t2 = Time.realtimeSinceStartup;
+
+			Debug.Log("[기존 제작한 맵 타이틀 리스트 가져오기]: " + (t2 - t1));
+
+			// 저장할 데이터 제작
 			Dictionary<string, object> data = new Dictionary<string, object>();
 
 			data.Add("isUse", true);
@@ -317,16 +331,26 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		{
 			public static async Task<byte[]> Compress(string source)
 			{
-				var bytes = Encoding.UTF8.GetBytes(source);
+				byte[] bytes = Encoding.UTF8.GetBytes(source);
 
-				await using var input = new MemoryStream(bytes);
-				await using var output = new MemoryStream();
-				await using var brotliStream = new BrotliStream(output, System.IO.Compression.CompressionLevel.Optimal);
-
-				await input.CopyToAsync(brotliStream);
-				await brotliStream.FlushAsync();
+				await using MemoryStream output = new MemoryStream();
+				await using (BrotliStream brotliStream = new BrotliStream(output, System.IO.Compression.CompressionLevel.Optimal))
+				{
+					await brotliStream.WriteAsync(bytes, 0, bytes.Length);
+				}
 
 				return output.ToArray();
+
+				//var bytes = Encoding.UTF8.GetBytes(source);
+
+				//await using var input = new MemoryStream(bytes);
+				//await using var output = new MemoryStream();
+				//await using var brotliStream = new BrotliStream(output, System.IO.Compression.CompressionLevel.Optimal);
+
+				//await input.CopyToAsync(brotliStream);
+				//await brotliStream.FlushAsync();
+
+				//return output.ToArray();
 			}
 
 			public static async Task<byte[]> Decompress(byte[] compressed)

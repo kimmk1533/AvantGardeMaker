@@ -53,7 +53,7 @@ namespace AvantGardeMaker.UI
 			string playerId = SaveLoadUtility.GetPlayerId();
 
 			m_PlayButton.interactable = true;
-			m_EditButton.interactable = playerId.Equals(stageData.createdPlayerId);
+			m_EditButton.interactable = true;//playerId.Equals(stageData.createdPlayerId);
 			m_DeleteButton.interactable = playerId.Equals(stageData.createdPlayerId);
 		}
 

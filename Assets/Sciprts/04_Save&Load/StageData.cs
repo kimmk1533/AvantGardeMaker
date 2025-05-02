@@ -281,9 +281,9 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			m_EnemySpawnDataList.Add(enemySpawnData);
 		}
 
-		public Texture2D GetThumnailTexture(int width, int height)
+		public Texture2D GetThumnailTexture()
 		{
-			Texture2D thumnail = new Texture2D(width, height);
+			Texture2D thumnail = new Texture2D(580, 326, TextureFormat.RGBA32, false);
 			thumnail.LoadRawTextureData(m_ThumnailTexture);
 			thumnail.Apply();
 

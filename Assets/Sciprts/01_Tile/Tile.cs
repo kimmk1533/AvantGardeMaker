@@ -9,6 +9,7 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using AvantGardeMaker.TileSpace.Enum;
 
 namespace AvantGardeMaker.TileSpace
 {
@@ -28,6 +29,7 @@ namespace AvantGardeMaker.TileSpace
 			get => m_EnemyOnTileList;
 			set => m_EnemyOnTileList = value;
 		}
+		public E_TileType tileType { get; set; }
 		#endregion
 
 		#region 이벤트
@@ -91,6 +93,8 @@ namespace AvantGardeMaker.TileSpace
 			m_EnemyOnTileList.Clear();
 
 			onTileClicked -= M_GamePlayingUI.OnTileClicked;
+
+			tileType = E_TileType.None;
 		}
 		#endregion
 

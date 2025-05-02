@@ -443,6 +443,7 @@ MonoBehaviour:
     m_CreatedPlayerId: 
     m_ThumnailTexture: 
     m_Description: 
+    m_LifePoint: 0
     m_InitCost: 0
     m_MaxCost: 0
     m_CostIncreaseTime: 0
@@ -985,7 +986,7 @@ MonoBehaviour:
       Data: 
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
-  m_CameraSwitchDuration: 1
+  m_CameraSwitchDuration: 0.1
   m_CameraMode: 1
   m_IsCameraSwitching: 0
   m_EditingStageData:
@@ -994,6 +995,7 @@ MonoBehaviour:
     m_CreatedPlayerId: 
     m_ThumnailTexture: 
     m_Description: 
+    m_LifePoint: 0
     m_InitCost: 0
     m_MaxCost: 0
     m_CostIncreaseTime: 0
@@ -1008,7 +1010,13 @@ MonoBehaviour:
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
     m_EnemySpawnDataList: []
-  <stageName>k__BackingField: 
+  <stageTitle>k__BackingField: 
+  <creatorNickName>k__BackingField: 
+  <description>k__BackingField: 
+  <lifePoint>k__BackingField: 0
+  <initCost>k__BackingField: 0
+  <maxCost>k__BackingField: 0
+  <costIncreaseTime>k__BackingField: 0
 --- !u!4 &2021308435
 Transform:
   m_ObjectHideFlags: 0

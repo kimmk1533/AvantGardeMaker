@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1733890309296197143}
   - component: {fileID: 5128230265265866644}
   - component: {fileID: 3517390410534930288}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HighGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,4 +130,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_OperatorOnTile: {fileID: 0}
+  m_EnemyOnTileList: []
+  <currentOperator>k__BackingField: {fileID: 0}

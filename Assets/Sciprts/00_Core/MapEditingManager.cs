@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace.Enum;
 using AvantGardeMaker.CoreSpace.SaveLoad;
+using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.TileSpace;
 using AvantGardeMaker.TileSpace.Enum;
 using AvantGardeMaker.EnemySpace;
@@ -9,8 +10,8 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using AvantGardeMaker.OperatorSpace;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -335,7 +336,8 @@ namespace AvantGardeMaker.CoreSpace
 		#region 타일 편집 모드 관련 함수
 		private void TileEditModeProcess()
 		{
-			if (m_CameraMode == E_CameraMode.GameMode ||
+			if (m_CurrentTileType == E_TileType.None ||
+				m_CameraMode == E_CameraMode.GameMode ||
 				m_IsCameraSwitching == true)
 				return;
 
@@ -359,19 +361,19 @@ namespace AvantGardeMaker.CoreSpace
 				m_TilePreview.transform.position = (Vector3Int)mousePositionInt;
 				m_TilePreview.gameObject.SetActive(true);
 
-				(E_TileType tileType, Tile tile) tileValue = M_Tile.GetTileValue(mousePositionInt);
+				Tile tile = M_Tile.GetTile(mousePositionInt);
 
 				// 타일 배치
 				if (Input.GetMouseButton(0) == true)
 				{
-					if (tileValue.tile == null)
+					if (tile == null)
 						M_Tile.AddTile(mousePositionInt, m_CurrentTileType);
-					else if (tileValue.tileType != m_CurrentTileType)
+					else if (tile.tileType != m_CurrentTileType)
 						M_Tile.ReplaceTile(mousePositionInt, m_CurrentTileType);
 				}
 				// 타일 제거
 				if (Input.GetMouseButton(1) == true &&
-					tileValue.tile != null)
+					tile != null)
 				{
 					M_Tile.RemoveTile(mousePositionInt);
 				}
@@ -398,6 +400,8 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			m_CurrentTileType = tileType;
 			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
+
+			m_TilePreview.gameObject.SetActive(tileType != E_TileType.None);
 		}
 		#endregion
 
@@ -405,16 +409,35 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 저장 & 불러오기 관련 함수
-		private Texture2D ConvertTexture(RenderTexture renderTexture)
+		private async Awaitable<byte[]> CreateThumnailRawTextureData()
 		{
-			Texture2D tex = new Texture2D(renderTexture.width, renderTexture.height);
+			int resWidth = 580;
+			int resHeight = 326;
+
+			RenderTexture renderTexture = RenderTexture.GetTemporary(resWidth, resHeight, 32);
+			thumnailCamera.targetTexture = renderTexture; //Create new renderTexture and assign to camera
 			RenderTexture.active = renderTexture;
-			tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-			tex.Apply();
-			return tex;
+			thumnailCamera.Render();
+
+			AsyncGPUReadbackRequest request = await AsyncGPUReadback.RequestAsync(renderTexture, 0, 0, resWidth, 0, resHeight, 0, 1, TextureFormat.RGBA32);
+
+			while (!request.done)
+			{
+				InfiniteLoopDetector.Run();
+
+				await Awaitable.NextFrameAsync();
+			}
+
+			RenderTexture.active = null; //Clean
+			thumnailCamera.targetTexture = null;
+			RenderTexture.ReleaseTemporary(renderTexture);
+
+			Unity.Collections.NativeArray<byte> data = request.GetData<byte>();
+
+			return data.ToArray();
 		}
 
-		public void SaveData()
+		public async Awaitable SaveData()
 		{
 			StageData.Initialize(ref m_EditingStageData);
 
@@ -428,9 +451,7 @@ namespace AvantGardeMaker.CoreSpace
 			m_EditingStageData.maxCost = maxCost;
 			m_EditingStageData.costIncreaseTime = costIncreaseTime;
 
-			thumnailCamera.Render();
-			Texture2D thumnail = ConvertTexture(thumnailCamera.targetTexture);
-			m_EditingStageData.thumnail = thumnail.GetRawTextureData();
+			m_EditingStageData.thumnail = await CreateThumnailRawTextureData();
 
 			#region 타일 저장
 			M_Tile.SaveTileData(ref m_EditingStageData);
@@ -445,9 +466,14 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
 			#endregion
 		}
-		public async void SaveDataToCloud()
+		public async Awaitable SaveDataToCloud()
 		{
+			float t1, t2;
+
+			t1 = Time.realtimeSinceStartup;
 			await SaveLoadUtility.SaveStageData(stageTitle, m_EditingStageData);
+			t2 = Time.realtimeSinceStartup;
+			Debug.Log("[SaveDataToCloud]: " + (t2 - t1));
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 저장 완료", new UtilClass.WorldTMP_TextOption()

@@ -59,7 +59,7 @@ namespace AvantGardeMaker.UI
 			{
 				Button settingButton = tileSettingButtonParent.GetChild<Button>(i);
 
-				E_TileType tileType = (E_TileType)(i + 1);
+				E_TileType tileType = (E_TileType)i;
 
 				settingButton.onClick.AddListener(() => OnTileSettingButtonClicked(tileType));
 			}

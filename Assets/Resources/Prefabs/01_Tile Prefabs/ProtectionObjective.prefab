@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6506712624106574191}
   - component: {fileID: 2375436865471479812}
   - component: {fileID: -2000793769421993583}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ProtectionObjective
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,3 +130,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  m_EnemyOnTileList: []
+  <currentOperator>k__BackingField: {fileID: 0}

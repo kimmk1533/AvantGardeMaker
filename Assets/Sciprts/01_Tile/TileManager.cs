@@ -7,7 +7,6 @@ using AvantGardeMaker.TileSpace.Enum;
 using AvantGardeMaker.UI;
 using TMPro;
 using UnityEngine;
-using TileValue = System.ValueTuple<AvantGardeMaker.TileSpace.Enum.E_TileType, AvantGardeMaker.TileSpace.Tile>;
 
 namespace AvantGardeMaker.TileSpace
 {
@@ -19,7 +18,7 @@ namespace AvantGardeMaker.TileSpace
 		private GameObject m_TileParent = null;
 
 		// 생성한 타일 맵
-		private Dictionary<Vector2Int, TileValue> m_TileMap = null;
+		private Dictionary<Vector2Int, Tile> m_TileMap = null;
 		#endregion
 
 		#region 프로퍼티
@@ -45,7 +44,7 @@ namespace AvantGardeMaker.TileSpace
 		{
 			base.Initialize();
 
-			m_TileMap = new Dictionary<Vector2Int, TileValue>();
+			m_TileMap = new Dictionary<Vector2Int, Tile>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -105,9 +104,9 @@ namespace AvantGardeMaker.TileSpace
 				.SetAutoInit(true)
 				.Spawn();
 
-			newTile.gameObject.layer = LayerMask.NameToLayer("Tile");
+			newTile.tileType = tileType;
 
-			m_TileMap.Add(tilePos, (tileType, newTile));
+			m_TileMap.Add(tilePos, newTile);
 
 			#region 디버깅
 			if (M_MapEditing.isEditMode == false)
@@ -121,13 +120,13 @@ namespace AvantGardeMaker.TileSpace
 				textAlignment = TextAlignmentOptions.Midline,
 				color = Color.black,
 			});
-			textMesh.transform.position = tilePosition;
+			textMesh.transform.position = tilePosition + (Vector3.back * 0.49f);
 			textMesh.transform.rotation = M_MapEditing.mapEditorCamera.transform.rotation;
 			#endregion
 		}
 		public void RemoveTile(Vector2Int tilePos)
 		{
-			Tile removeTile = m_TileMap[tilePos].Item2;
+			Tile removeTile = m_TileMap[tilePos];
 
 			Despawn(removeTile);
 
@@ -139,12 +138,12 @@ namespace AvantGardeMaker.TileSpace
 
 			AddTile(tilePos, tileType);
 		}
-		public TileValue GetTileValue(Vector2Int tilePos)
+		public Tile GetTile(Vector2Int tilePos)
 		{
-			if (m_TileMap.TryGetValue(tilePos, out TileValue tileValue) == false)
+			if (m_TileMap.TryGetValue(tilePos, out Tile tile) == false)
 				return default;
 
-			return tileValue;
+			return tile;
 		}
 		public void ClearTile()
 		{
@@ -160,7 +159,7 @@ namespace AvantGardeMaker.TileSpace
 		{
 			foreach (var item in m_TileMap)
 			{
-				stageData.SaveTileData(item.Key, item.Value.Item1);
+				stageData.SaveTileData(item.Key, item.Value.tileType);
 			}
 		}
 		public void LoadTileData(in StageData stageData)

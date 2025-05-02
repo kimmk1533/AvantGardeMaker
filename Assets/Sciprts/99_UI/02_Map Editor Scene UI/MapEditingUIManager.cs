@@ -77,15 +77,15 @@ namespace AvantGardeMaker.UI
 		{
 			SceneLoader.LoadScene("Main Menu Scene");
 		}
-		private void OnSaveButtonClicked()
+		private async void OnSaveButtonClicked()
 		{
-			M_MapEditing.SaveData();
+			await M_MapEditing.SaveData();
 
-			M_MapEditing.SaveDataToCloud();
+			await M_MapEditing.SaveDataToCloud();
 		}
-		private void OnPlayButtonClicked()
+		private async void OnPlayButtonClicked()
 		{
-			M_MapEditing.SaveData();
+			await M_MapEditing.SaveData();
 
 			M_GamePlaying.SynchronizeStageData(M_MapEditing.currentStageData);
 
