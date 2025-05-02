@@ -157,7 +157,7 @@ namespace AvantGardeMaker.EnemySpace
 		/// <summary>
 		/// 스크립터블 데이터를 들고 있는 m_EnemyDataList에 stageData의 데이터를 덮어써 enemyData를 만듦
 		/// </summary>
-		public void LoadEnemyData(StageData stageData)
+		public void LoadEnemyData(in StageData stageData)
 		{
 			List<string> enemyKeyList = stageData.enemyKeyList;
 			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;

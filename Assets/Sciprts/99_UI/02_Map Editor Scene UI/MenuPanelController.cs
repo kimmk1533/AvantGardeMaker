@@ -48,7 +48,7 @@ namespace AvantGardeMaker.UI
 			if (prevSettingPanel != null)
 				prevSettingPanel.gameObject.SetActive(false);
 
-			SettingPanel currSettingPanel = settingPanelController.GetSettingPanel<SettingPanel>(key);
+			SettingPanel currSettingPanel = settingPanelController.GetSettingPanel(key);
 
 			currSettingPanel.OnMenuButtonClicked();
 		}

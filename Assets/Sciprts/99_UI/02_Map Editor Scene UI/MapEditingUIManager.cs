@@ -15,20 +15,20 @@ namespace AvantGardeMaker.UI
 	public class MapEditingUIManager : ObjectManager<MapEditingUIManager, MapEditingUIPoolItem>
 	{
 		#region 변수
-		#region 메뉴 패널 관련 변수
+		#region 시스템 설정 관련 변수
+
 		#endregion
 
-		#region 옵션 패널 관련 변수
-		private int m_MaxWave = -1;
+		#region 타일 설정 관련 변수
+
 		#endregion
 
+		#region 오퍼레이터 설정 관련 변수
 		private Dictionary<string, OperatorDataUI> m_SpawnedOperatorDataUIMap = null;
-		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
-
-		#region 오퍼레이터 저장 관련 변수
 		#endregion
 
-		#region 적 저장 관련 변수
+		#region 적 설정 관련 변수
+		private List<EnemyDataUI> m_SpawnedEnemyDataUIList = null;
 		private List<EnemySpawnDataUI> m_SpawnedEnemySpawnDataUIList = null;
 		#endregion
 		#endregion
@@ -46,8 +46,8 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 컨트롤러 관련 프로퍼티
-		public SettingPanelController settingPanelController { get; set; }
 		public MenuPanelController menuPanelController { get; set; }
+		public SettingPanelController settingPanelController { get; set; }
 		#endregion
 
 		#region 타일 설정 관련 프로퍼티
@@ -66,7 +66,7 @@ namespace AvantGardeMaker.UI
 		public RectTransform enemyWayPointDataUIParent { get; set; }
 		public RectTransform enemyImmuneDescriptionParent { get; set; }
 
-		public int maxWave { get => m_MaxWave; }
+		public int maxWave { get; private set; }
 		#endregion
 		#endregion
 
@@ -160,10 +160,10 @@ namespace AvantGardeMaker.UI
 			saveButton.onClick.AddListener(OnSaveButtonClicked);
 			playButton.onClick.AddListener(OnPlayButtonClicked);
 
-			settingPanelController.Initialize();
 			menuPanelController.Initialize();
+			settingPanelController.Initialize();
 
-			m_MaxWave = 0;
+			maxWave = 0;
 
 			#region Operator Data UI 생성
 			List<OperatorData> operatorDataList = M_Operator.GetAllOperatorDatas();
@@ -236,7 +236,7 @@ namespace AvantGardeMaker.UI
 		#region Save
 		public void SaveOperatorDataUI(ref StageData stageData)
 		{
-			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>("Operator");
+			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>();
 
 			operatorSettingPanel.SaveOperatorDataUI(ref stageData);
 		}
@@ -261,13 +261,24 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region Load
-		public void LoadOperatorDataUI(StageData stageData)
+		public void LoadSystemSetting(in StageData stageData)
 		{
-			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>("Operator");
+			SystemSettingPanel systemSettingPanel = settingPanelController.GetSettingPanel<SystemSettingPanel>();
+
+			systemSettingPanel.stageTitle = stageData.title;
+			systemSettingPanel.lifePoint = stageData.lifePoint;
+			systemSettingPanel.initCost = stageData.initCost;
+			systemSettingPanel.maxCost = stageData.maxCost;
+			systemSettingPanel.costIncreaseTime = stageData.costIncreaseTime;
+			systemSettingPanel.description = stageData.description;
+		}
+		public void LoadOperatorDataUI(in StageData stageData)
+		{
+			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>();
 
 			operatorSettingPanel.LoadOperatorDataUI(stageData);
 		}
-		public void LoadEnemySpawnDataUI(StageData stageData)
+		public void LoadEnemySpawnDataUI(in StageData stageData)
 		{
 			ClearEnemySpawnDataUI();
 
@@ -368,7 +379,7 @@ namespace AvantGardeMaker.UI
 						enemySpawnDataUI.wave = wave + 1;
 					wave = enemySpawnDataUI.wave;
 					waveTime += (prevSpawnDataUI == null) ? 0f : prevSpawnDataUI.time;
-					m_MaxWave = wave;
+					maxWave = wave;
 				}
 
 				enemySpawnDataUI.time = waveTime;

@@ -163,7 +163,7 @@ namespace AvantGardeMaker.TileSpace
 				stageData.SaveTileData(item.Key, item.Value.Item1);
 			}
 		}
-		public void LoadTileData(StageData stageData)
+		public void LoadTileData(in StageData stageData)
 		{
 			ClearTile();
 

@@ -41,7 +41,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private UtilClass.Timer m_AttackCoolTimer = null;
 
-		
+
 
 		private int m_CurrentBlock = 0;
 		private int m_MaxBlock = 0;
@@ -74,7 +74,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		// 현재 방향
 		public E_OperatorDirection currentDirection { get; protected set; }
-		private bool isDirectionSetted => currentDirection != E_OperatorDirection.None;
+		private bool isFinishedDirectionSetting => currentDirection != E_OperatorDirection.None;
 		private float sqrDragThreshold => m_DragThreshold * m_DragThreshold;
 
 		public int deploymentIndex { get; set; }
@@ -126,6 +126,10 @@ namespace AvantGardeMaker.OperatorSpace
 		private void Update()
 		{
 			SetDirectionProcess();
+
+			if (isFinishedDirectionSetting == false)
+				return;
+
 			AutoSPGainProcess();
 			ActivateSkill();
 			AttackEnemyProcess();
@@ -161,7 +165,7 @@ namespace AvantGardeMaker.OperatorSpace
 			if (m_AttackCoolTimer == null)
 				m_AttackCoolTimer = new UtilClass.Timer();
 
-			currentDirection = E_OperatorDirection.Left;
+			currentDirection = E_OperatorDirection.None;
 			m_SettingDirection = E_OperatorDirection.None;
 			redeployCount = 0;
 		}
@@ -208,7 +212,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private void SetDirectionProcess()
 		{
-			if (isDirectionSetted == true)
+			if (isFinishedDirectionSetting == true)
 				return;
 
 			SetDirectionStart();
@@ -458,7 +462,7 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				m_AutoSPGainTimer = new UtilClass.Timer(1f);
 			}
-			 
+
 			m_AutoSPGainTimer.Update();
 
 			if (m_AutoSPGainTimer.TimeCheck(true) == true)

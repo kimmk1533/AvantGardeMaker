@@ -272,7 +272,6 @@ MonoBehaviour:
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
     <origin>k__BackingField: {fileID: 718791901072946301, guid: 700f1915b4874db409719323188ccca1, type: 3}
-  m_GamePlayingCamera: {fileID: 0}
   m_SelectedOperatorSquadUI: {fileID: 0}
   m_OperatorSquadUIList: []
 --- !u!4 &621073717
@@ -445,7 +444,8 @@ MonoBehaviour:
     m_ThumnailTexture: 
     m_Description: 
     m_InitCost: 0
-    m_IncreaseCostTime: 0
+    m_MaxCost: 0
+    m_CostIncreaseTime: 0
     m_TilePointList: []
     m_TileTypeList: 
     m_MinTile: {x: 0, y: 0}
@@ -457,7 +457,7 @@ MonoBehaviour:
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
     m_EnemySpawnDataList: []
-  m_PlayingOperatorList: []
+  m_DeployingOperatorList: []
 --- !u!4 &1446381273
 Transform:
   m_ObjectHideFlags: 0
@@ -995,7 +995,8 @@ MonoBehaviour:
     m_ThumnailTexture: 
     m_Description: 
     m_InitCost: 0
-    m_IncreaseCostTime: 0
+    m_MaxCost: 0
+    m_CostIncreaseTime: 0
     m_TilePointList: []
     m_TileTypeList: 
     m_MinTile: {x: 0, y: 0}

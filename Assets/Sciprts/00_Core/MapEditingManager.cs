@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using AvantGardeMaker.OperatorSpace;
+using UnityEngine.EventSystems;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -82,9 +83,29 @@ namespace AvantGardeMaker.CoreSpace
 		#region 저장 & 불러오기 관련 프로퍼티
 		public StageData currentStageData => m_EditingStageData;
 
-		[field: SerializeField]
-		public string stageName { get; set; }
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public string stageTitle { get; set; }
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
 		public string creatorNickName { get; set; }
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public string description { get; set; }
+
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public int lifePoint { get; set; }
+
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public int initCost { get; set; }
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public int maxCost { get; set; }
+		[field: SerializeField, ReadOnly]
+		[field: FoldoutGroup("Info")]
+		public float costIncreaseTime { get; set; }
 		#endregion
 		#endregion
 
@@ -234,7 +255,7 @@ namespace AvantGardeMaker.CoreSpace
 			m_TilePreviewMap = null;
 
 			m_EditingStageData = default;
-			stageName = string.Empty;
+			stageTitle = string.Empty;
 
 			m_IsEditMode = false;
 		}
@@ -251,6 +272,8 @@ namespace AvantGardeMaker.CoreSpace
 		#region 카메라 관련 함수
 		private void SwitchCameraMode()
 		{
+			if (EventSystem.current.currentSelectedGameObject != null)
+				return;
 			if (m_IsCameraSwitching == true)
 				return;
 
@@ -395,9 +418,15 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			StageData.Initialize(ref m_EditingStageData);
 
-			m_EditingStageData.title = stageName;
+			m_EditingStageData.title = stageTitle;
 			m_EditingStageData.creatorNickName = creatorNickName;
 			m_EditingStageData.createdPlayerId = SaveLoadUtility.GetPlayerId();
+			m_EditingStageData.description = description;
+
+			m_EditingStageData.lifePoint = lifePoint;
+			m_EditingStageData.initCost = initCost;
+			m_EditingStageData.maxCost = maxCost;
+			m_EditingStageData.costIncreaseTime = costIncreaseTime;
 
 			thumnailCamera.Render();
 			Texture2D thumnail = ConvertTexture(thumnailCamera.targetTexture);
@@ -418,10 +447,10 @@ namespace AvantGardeMaker.CoreSpace
 		}
 		public async void SaveDataToCloud()
 		{
-			await SaveLoadUtility.SaveStageData(stageName, m_EditingStageData);
+			await SaveLoadUtility.SaveStageData(stageTitle, m_EditingStageData);
 
 			#region Debug
-			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 저장 완료", new UtilClass.WorldTMP_TextOption()
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 저장 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = M_MapEditingUI.uiFont,
 				fontSize = 20,
@@ -437,15 +466,24 @@ namespace AvantGardeMaker.CoreSpace
 				m_EditingStageData.title.Equals(string.Empty) == true)
 				return;
 
+			stageTitle = m_EditingStageData.title;
+			description = m_EditingStageData.description;
+
+			lifePoint = m_EditingStageData.lifePoint;
+			initCost = m_EditingStageData.initCost;
+			maxCost = m_EditingStageData.maxCost;
+			costIncreaseTime = m_EditingStageData.costIncreaseTime;
+
 			M_Tile.LoadTileData(m_EditingStageData);
 			M_Operator.LoadOperatorData(m_EditingStageData);
 			M_Enemy.LoadEnemyData(m_EditingStageData);
 
+			M_MapEditingUI.LoadSystemSetting(m_EditingStageData);
 			M_MapEditingUI.LoadOperatorDataUI(m_EditingStageData);
 			M_MapEditingUI.LoadEnemySpawnDataUI(m_EditingStageData);
 
 			#region Debug
-			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageName + " 로드 완료", new UtilClass.WorldTMP_TextOption()
+			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 로드 완료", new UtilClass.WorldTMP_TextOption()
 			{
 				tmpFont = M_MapEditingUI.uiFont,
 				fontSize = 20,
@@ -456,11 +494,11 @@ namespace AvantGardeMaker.CoreSpace
 			#endregion
 		}
 
-		public void SynchronizeStageData(StageData stageData)
+		public void SynchronizeStageData(in StageData stageData)
 		{
 			m_EditingStageData = stageData;
 
-			stageName = stageData.title;
+			stageTitle = stageData.title;
 		}
 		#endregion
 	}

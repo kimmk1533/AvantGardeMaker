@@ -19,7 +19,14 @@ namespace AvantGardeMaker.CoreSpace
 
 		#region 변수
 		#region 게임 관련 변수
-		private static readonly StageData defaultStageData = new StageData();
+		private static readonly StageData defaultStageData = new StageData()
+		{
+			lifePoint = 3,
+
+			initCost = 10,
+			maxCost = 99,
+			costIncreaseTime = 1,
+		};
 
 		private bool m_IsGameMode = false;
 		#endregion
@@ -143,9 +150,7 @@ namespace AvantGardeMaker.CoreSpace
 			M_GamePlaying.InitializeMain();
 			M_GamePlayingUI.InitializeMain();
 
-			M_Tile.LoadTileData(M_GamePlaying.currentStageData);
-			M_Operator.LoadOperatorData(M_GamePlaying.currentStageData);
-			M_Enemy.LoadEnemyData(M_GamePlaying.currentStageData);
+			M_GamePlaying.LoadData();
 
 			Debug.Log("Initialize Game Playing");
 		}

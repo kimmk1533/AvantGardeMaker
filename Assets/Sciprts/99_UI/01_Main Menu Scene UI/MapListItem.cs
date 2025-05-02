@@ -102,7 +102,7 @@ namespace AvantGardeMaker.UI
 			if (creator.StartsWith("by. ") == false)
 				creator = creator.Insert(0, "by. ");
 
-			m_ThumnailImage.texture = m_StageData.GetThumnailTexture();
+			m_ThumnailImage.texture = m_StageData.GetThumnailTexture(256, 256);
 			m_TitleText.text = m_StageData.title;
 			m_CreatorText.text = creator;
 		}

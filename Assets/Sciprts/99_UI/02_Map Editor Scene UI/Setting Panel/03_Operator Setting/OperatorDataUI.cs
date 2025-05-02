@@ -57,7 +57,7 @@ namespace AvantGardeMaker.UI
 			if (m_OperatorKorNameText == null)
 				m_OperatorKorNameText = transform.Find<TextMeshProUGUI>("Name Text");
 
-			OperatorDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<OperatorDetailedSettingPanel>("Operator");
+			OperatorDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<OperatorDetailedSettingPanel>();
 
 			m_Button.onClick.AddListener(() => settingPanel.OnOperatorDataUIClicked(this));
 		}

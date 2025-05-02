@@ -41,10 +41,10 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		#region 컨트롤러 관련 변수
 		[SerializeField]
 		[FoldoutGroup("컨트롤러")]
-		private SettingPanelController m_SettingPanelController = null;
+		private MenuPanelController m_MenuPanelController = null;
 		[SerializeField]
 		[FoldoutGroup("컨트롤러")]
-		private MenuPanelController m_MenuPanelController = null;
+		private SettingPanelController m_SettingPanelController = null;
 		#endregion
 
 		#region 타일 설정 관련 변수
@@ -129,8 +129,8 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			#endregion
 
 			#region 컨트롤러 관련 변수 링킹
-			M_MapEditingUI.settingPanelController = m_SettingPanelController;
 			M_MapEditingUI.menuPanelController = m_MenuPanelController;
+			M_MapEditingUI.settingPanelController = m_SettingPanelController;
 			#endregion
 
 			#region 설정 관련 변수 링킹

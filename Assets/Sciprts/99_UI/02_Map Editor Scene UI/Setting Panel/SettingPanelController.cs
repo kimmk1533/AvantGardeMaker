@@ -86,17 +86,34 @@ namespace AvantGardeMaker.UI
 		#endregion
 		#endregion
 
-		public T GetSettingPanel<T>(string key) where T : SettingPanel
+		public SettingPanel GetSettingPanel(string key)
 		{
 			if (m_SettingPanelMap.TryGetValue(key, out SettingPanel settingPanel) == false)
 				return null;
 
-			return settingPanel as T;
+			return settingPanel;
 		}
-		public T GetDetailedSettingPanel<T>(string key) where T : SettingPanel
+		public SettingPanel GetDetailedSettingPanel(string key)
 		{
 			if (m_DetailedSettingPanelMap.TryGetValue(key, out SettingPanel settingPanel) == false)
 				return null;
+
+			return settingPanel;
+		}
+
+		public T GetSettingPanel<T>() where T : SettingPanel
+		{
+			string key = typeof(T).Name.Replace("SettingPanel", "");
+
+			SettingPanel settingPanel = GetSettingPanel(key);
+
+			return settingPanel as T;
+		}
+		public T GetDetailedSettingPanel<T>() where T : SettingPanel
+		{
+			string key = typeof(T).Name.Replace("SettingPanel", "");
+
+			SettingPanel settingPanel = GetDetailedSettingPanel(key);
 
 			return settingPanel as T;
 		}

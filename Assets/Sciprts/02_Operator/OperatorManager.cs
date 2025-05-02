@@ -378,7 +378,7 @@ namespace AvantGardeMaker.OperatorSpace
 		/// <summary>
 		/// 스크립터블 데이터를 들고 있는 m_OperatorDataMap에 stageData의 데이터를 덮어써 operatorData를 만듦
 		/// </summary>
-		public void LoadOperatorData(StageData stageData)
+		public void LoadOperatorData(in StageData stageData)
 		{
 			List<string> operatorKeyList = stageData.operatorKeyList;
 			List<OperatorFixedData> fixedDataList = stageData.operatorFixedDataList;

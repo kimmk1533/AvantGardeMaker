@@ -32,6 +32,10 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		[PropertySpace(10)]
 		[SerializeField]
 		[FoldoutGroup("시스템")]
+		private int m_LifePoint;
+
+		[SerializeField]
+		[FoldoutGroup("시스템")]
 		private int m_InitCost;
 		[SerializeField]
 		[FoldoutGroup("시스템")]
@@ -97,45 +101,63 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 1. 시스템 관련 프로퍼티
 		public string title
 		{
-			get => m_Title;
+			readonly get => m_Title;
 			set => m_Title = value;
 		}
 		public string creatorNickName
 		{
-			get => m_CreatorNickName;
+			readonly get => m_CreatorNickName;
 			set => m_CreatorNickName = value;
 		}
 		public string createdPlayerId
 		{
-			get => m_CreatedPlayerId;
+			readonly get => m_CreatedPlayerId;
 			set => m_CreatedPlayerId = value;
 		}
 		public byte[] thumnail
 		{
-			get => m_ThumnailTexture;
+			readonly get => m_ThumnailTexture;
 			set => m_ThumnailTexture = value;
 		}
 		public string description
 		{
-			get => m_Description;
+			readonly get => m_Description;
 			set => m_Description = value;
 		}
 
-		public int initCost => m_InitCost;
-		public int maxCost => m_MaxCost;
-		public float costIncreaseTime => m_CostIncreaseTime;
+		public int lifePoint
+		{
+			readonly get => m_LifePoint;
+			set => m_LifePoint = value;
+		}
+
+		public int initCost
+		{
+			readonly get => m_InitCost;
+			set => m_InitCost = value;
+		}
+		public int maxCost
+		{
+			readonly get => m_MaxCost;
+			set => m_MaxCost = value;
+		}
+		public float costIncreaseTime
+		{
+			readonly get => m_CostIncreaseTime;
+			set => m_CostIncreaseTime = value;
+		}
 		#endregion
 
 		#region 2. 타일 관련 프로퍼티
-		public List<Vector2Int> tilePointList => new List<Vector2Int>(m_TilePointList);
-		public List<E_TileType> tileTypeList => new List<E_TileType>(m_TileTypeList);
+		public readonly List<Vector2Int> tilePointList => new List<Vector2Int>(m_TilePointList);
+		public readonly List<E_TileType> tileTypeList => new List<E_TileType>(m_TileTypeList);
 
-		public int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
-		public int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
+		public readonly int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
+		public readonly int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 
-		public Vector2Int minTile => m_MinTile;
+		public readonly Vector2Int minTile => m_MinTile;
 
-		public E_TileType[,] map
+		public readonly E_TileType[,] map
 		{
 			get
 			{
@@ -166,16 +188,16 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#endregion
 
 		#region 3. 오퍼레이터 관련 프로퍼티
-		public List<string> operatorKeyList => new List<string>(m_OperatorKeyList);
-		public List<OperatorFixedData> operatorFixedDataList => new List<OperatorFixedData>(m_OperatorFixedDataList);
-		public List<OperatorVariableData> operatorVariableDataList => new List<OperatorVariableData>(m_OperatorVariableDataList);
+		public readonly List<string> operatorKeyList => new List<string>(m_OperatorKeyList);
+		public readonly List<OperatorFixedData> operatorFixedDataList => new List<OperatorFixedData>(m_OperatorFixedDataList);
+		public readonly List<OperatorVariableData> operatorVariableDataList => new List<OperatorVariableData>(m_OperatorVariableDataList);
 		#endregion
 
 		#region 4. 적 관련 프로퍼티
-		public List<string> enemyKeyList => new List<string>(m_EnemyKeyList);
-		public List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
-		public List<EnemyVariableData> enemyVariableDataList => new List<EnemyVariableData>(m_EnemyVariableDataList);
-		public List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
+		public readonly List<string> enemyKeyList => new List<string>(m_EnemyKeyList);
+		public readonly List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
+		public readonly List<EnemyVariableData> enemyVariableDataList => new List<EnemyVariableData>(m_EnemyVariableDataList);
+		public readonly List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		#endregion
 		#endregion
 
@@ -259,9 +281,9 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			m_EnemySpawnDataList.Add(enemySpawnData);
 		}
 
-		public Texture2D GetThumnailTexture()
+		public Texture2D GetThumnailTexture(int width, int height)
 		{
-			Texture2D thumnail = new Texture2D(256, 256);
+			Texture2D thumnail = new Texture2D(width, height);
 			thumnail.LoadRawTextureData(m_ThumnailTexture);
 			thumnail.Apply();
 

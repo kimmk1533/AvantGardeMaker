@@ -90,7 +90,7 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		private void OnOptionButtonClicked()
 		{
-			EnemyDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<EnemyDetailedSettingPanel>("Enemy");
+			EnemyDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<EnemyDetailedSettingPanel>();
 
 			settingPanel.SetEnemySpawnDataUI(this);
 

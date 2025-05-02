@@ -18,7 +18,7 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, ReadOnly]
 		private StageData m_GameStageData = default;
 
-		private int m_GameHp;
+		private int m_LifePoint;
 		private int m_GameSpeed;
 
 		#region 코스트 관련 변수
@@ -75,6 +75,10 @@ namespace AvantGardeMaker.CoreSpace
 
 		#region 매니저
 		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+
+		private static TileManager M_Tile => TileManager.Instance;
+		private static OperatorManager M_Operator => OperatorManager.Instance;
+		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -167,16 +171,22 @@ namespace AvantGardeMaker.CoreSpace
 			return sortingOperatorList;
 		}
 
-		public void SynchronizeStageData(StageData stageData)
+		public void LoadData()
+		{
+			M_Tile.LoadTileData(m_GameStageData);
+			M_Operator.LoadOperatorData(m_GameStageData);
+			M_Enemy.LoadEnemyData(m_GameStageData);
+		}
+		public void SynchronizeStageData(in StageData stageData)
 		{
 			m_GameStageData = stageData;
 
 			currentMap = stageData.map;
 			operatorSquadKeyList = stageData.operatorKeyList;
 
-			currentCost = 10;//stageData.initCost;
-			maxCost = 99;//stageData.maxCost;
-			m_CostTimer.interval = 1f;//stageData.costIncreaseTime;
+			currentCost = stageData.initCost;
+			maxCost = stageData.maxCost;
+			m_CostTimer.interval = stageData.costIncreaseTime;
 			m_CostTimer.Pause();
 
 			PathFinder.offset = -stageData.minTile;
