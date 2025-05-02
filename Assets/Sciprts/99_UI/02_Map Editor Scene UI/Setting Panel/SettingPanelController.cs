@@ -111,7 +111,7 @@ namespace AvantGardeMaker.UI
 		}
 		public T GetDetailedSettingPanel<T>() where T : SettingPanel
 		{
-			string key = typeof(T).Name.Replace("SettingPanel", "");
+			string key = typeof(T).Name.Replace("DetailedSettingPanel", "");
 
 			SettingPanel settingPanel = GetDetailedSettingPanel(key);
 
