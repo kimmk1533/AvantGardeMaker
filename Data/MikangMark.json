@@ -73767,7 +73767,7 @@
         195,
         153,
         255,
-        212,
+        213,
         195,
         153,
         255,
@@ -160348,7 +160348,7 @@
         172,
         255,
         239,
-        219,
+        220,
         171,
         255,
         239,
@@ -192800,7 +192800,7 @@
         172,
         255,
         241,
-        221,
+        222,
         173,
         255,
         242,
@@ -349529,8 +349529,10 @@
         255
     ],
     "m_Description": "",
+    "m_LifePoint": 20,
     "m_InitCost": 0,
-    "m_IncreaseCostTime": 0.0,
+    "m_MaxCost": 99,
+    "m_CostIncreaseTime": 1.0,
     "m_TilePointList": [
         {
             "x": -5,
@@ -349958,7 +349960,7 @@
     "m_OperatorVariableDataList": [
         {
             "MaxHp": 742.0,
-            "RealHp": 742.0,
+            "CurrentHp": 0.0,
             "Atk": 157.0,
             "Def": 132.0,
             "Res": 0.0,
@@ -349980,16 +349982,22 @@
             ],
             "DamageType": 0,
             "Penetration": 0.0,
-            "SkillInfoList": [
-                {
-                    "SkillType": 1,
-                    "SkillValue": 6.0
-                }
-            ]
+            "SkillData": {
+                "MaxSP": 0.0,
+                "CurrentSP": 0.0,
+                "StartSP": 0.0,
+                "GainSPType": 0,
+                "ActivationSkillType": 0,
+                "ActiveSkillTime": {
+                    "m_Interval": 0.0,
+                    "m_Time": 0.0
+                },
+                "SkillText": ""
+            }
         },
         {
             "MaxHp": 688.0,
-            "RealHp": 688.0,
+            "CurrentHp": 0.0,
             "Atk": 230.0,
             "Def": 148.0,
             "Res": 0.0,
@@ -350019,20 +350027,22 @@
             ],
             "DamageType": 0,
             "Penetration": 0.0,
-            "SkillInfoList": [
-                {
-                    "SkillType": 0,
-                    "SkillValue": 0.05999999865889549
+            "SkillData": {
+                "MaxSP": 0.0,
+                "CurrentSP": 0.0,
+                "StartSP": 0.0,
+                "GainSPType": 0,
+                "ActivationSkillType": 0,
+                "ActiveSkillTime": {
+                    "m_Interval": 0.0,
+                    "m_Time": 0.0
                 },
-                {
-                    "SkillType": 1,
-                    "SkillValue": 10.0
-                }
-            ]
+                "SkillText": ""
+            }
         },
         {
             "MaxHp": 688.0,
-            "RealHp": 688.0,
+            "CurrentHp": 0.0,
             "Atk": 230.0,
             "Def": 148.0,
             "Res": 0.0,
@@ -350062,12 +350072,18 @@
             ],
             "DamageType": 0,
             "Penetration": 0.0,
-            "SkillInfoList": [
-                {
-                    "SkillType": 0,
-                    "SkillValue": 0.10000000149011612
-                }
-            ]
+            "SkillData": {
+                "MaxSP": 0.0,
+                "CurrentSP": 0.0,
+                "StartSP": 0.0,
+                "GainSPType": 0,
+                "ActivationSkillType": 0,
+                "ActiveSkillTime": {
+                    "m_Interval": 0.0,
+                    "m_Time": 0.0
+                },
+                "SkillText": ""
+            }
         }
     ],
     "m_EnemyKeyList": [
@@ -350097,7 +350113,9 @@
             "Description": "리유니온의 초급 원거리 전투원. 노획하거나 불법 루트를 통해 입수한 복장과 무기를 장비하고 있으며, 자신의 신분과 행동이 노출되지 않도록 통일된 복장과 가면을 착용하고 있다.",
             "Trait": "",
             "ImmuneType": 0,
-            "DamageType": 0
+            "DamageType": 0,
+            "Tag": [],
+            "SkillDataList": []
         },
         {
             "RaceType": 1,
@@ -350118,7 +350136,9 @@
             "Description": "야생의 감염 생물. 복부에 대량의 오리지늄과 동화되어 불안정한 상태인 관계로 사망 시 폭발이 발생할 수 있다. 이런 저지능 생물은 적의 캐스터에게 조종당할 가능성이 있으며, 인공설비에 침입하여 무리지어 공격한다.",
             "Trait": "•<indent=15><line-height=25>처치될 시 자폭해 주변 1.25타일 내 모든 아군에게 공격력의 400%만큼 물리 피해를 입힌다.</line-height></indent>",
             "ImmuneType": 0,
-            "DamageType": 0
+            "DamageType": 0,
+            "Tag": [],
+            "SkillDataList": []
         },
         {
             "RaceType": 1,
@@ -350139,7 +350159,9 @@
             "Description": "야생의 감염 생물. 이런 저지능 생물은 적의 캐스터에게 조종당할 가능성이 있으며, 인공설비에 침입하여 무리지어 공격한다.",
             "Trait": "",
             "ImmuneType": 0,
-            "DamageType": 0
+            "DamageType": 0,
+            "Tag": [],
+            "SkillDataList": []
         },
         {
             "RaceType": 0,
@@ -350160,7 +350182,9 @@
             "Description": "길리슈트처럼 보이는 방어구를 입은 리유니온의 원거리 전투원. 교전하기 전까진 다른 유닛들은 공격 목표로 삼을 수 없으니, 제대로 상대하고자 한다면 주변의 협력이 필수다.",
             "Trait": "•<indent=15><line-height=25>[은신]: 저지되지 않았을 때 공격 목표가 되지 않는다.</line-height></indent>",
             "ImmuneType": 0,
-            "DamageType": 0
+            "DamageType": 0,
+            "Tag": [],
+            "SkillDataList": []
         },
         {
             "RaceType": 2,
@@ -350181,7 +350205,9 @@
             "Description": "적이 조종하는 드론. 내부에선 '요마'라고 불리고 있다. 원거리 조종이 가능한 아츠 리시버가 탑재된 것으로 미뤄보아 가까운 곳에 숨어있는 캐스터가 조종하고 있는 것으로 보인다. 방어력이 높은 오퍼레이터에겐 큰 대미지를 줄 수는 없겠지만, 그렇지 않은 오퍼레이터에겐 여전히 위협적인 존재다.",
             "Trait": "•<indent=15><line-height=25>비행 유닛</line-height></indent>",
             "ImmuneType": 0,
-            "DamageType": 0
+            "DamageType": 0,
+            "Tag": [],
+            "SkillDataList": []
         }
     ],
     "m_EnemyVariableDataList": [

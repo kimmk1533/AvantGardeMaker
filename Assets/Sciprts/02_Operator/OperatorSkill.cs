@@ -61,11 +61,7 @@ namespace AvantGardeMaker.OperatorSpace
 			}
 				
 		}
-		public void DeployGainCost(int gainCostValue)
-		{
-			M_GamePlaying.currentCost += gainCostValue;
-		}
-
+		
 		private void AttackBuff(Operator targetOperator, float buffSkillValue)
 		{
 			if (buffSkillValue < 1)

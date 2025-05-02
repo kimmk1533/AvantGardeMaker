@@ -65,7 +65,7 @@ namespace AvantGardeMaker.OperatorSpace
 				m_FrontSprite = M_Operator.GetOperatorFrontSprite(value.key);
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
 
-				m_AttackCoolTimer.interval = value.VariableData.InitAttakSpeed;
+				m_AttackCoolTimer.interval = value.VariableData.InitAttakSpeed / 100;
 				m_MaxBlock = value.VariableData.BlockCount;
 			}
 		}
@@ -130,8 +130,9 @@ namespace AvantGardeMaker.OperatorSpace
 			if (isFinishedDirectionSetting == false)
 				return;
 
-			AutoSPGainProcess();
-			ActivateSkill();
+			//CreateReChargeSkill();
+			//ActivateSkill();
+			//AutoSPGainProcess();
 			AttackEnemyProcess();
 		}
 
@@ -168,6 +169,7 @@ namespace AvantGardeMaker.OperatorSpace
 			currentDirection = E_OperatorDirection.None;
 			m_SettingDirection = E_OperatorDirection.None;
 			redeployCount = 0;
+			m_AutoSPGainTimer = new UtilClass.Timer(1f);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -458,16 +460,14 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private void AutoSPGainProcess()
 		{
-			if (m_AutoSPGainTimer == null)
-			{
-				m_AutoSPGainTimer = new UtilClass.Timer(1f);
-			}
-
+			if (m_VariableData.SkillData.GainSPType != E_SPGainType.Auto)
+				return;
 			m_AutoSPGainTimer.Update();
 
 			if (m_AutoSPGainTimer.TimeCheck(true) == true)
 			{
 				operatorSkill.RecoverSP(1);
+				Debug.Log("현재 Sp:" + operatorSkill.currentSP);
 			}
 
 		}
@@ -475,6 +475,13 @@ namespace AvantGardeMaker.OperatorSpace
 		public virtual void ActivateSkill()
 		{
 			operatorSkill.Activate();
+		}
+
+		public OperatorSkill CreateReChargeSkill()
+		{
+			SkillInfo skillData = new SkillInfo(variableData.SkillData);
+
+			return new SkillReChargeCost(skillData);
 		}
 	}
 }
