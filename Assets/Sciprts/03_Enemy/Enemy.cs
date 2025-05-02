@@ -6,7 +6,7 @@ using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.CoreSpace.Enum;
-using static AvantGardeMaker.EnemySpace.EnemySkillInterface;
+using static AvantGardeMaker.EnemySpace.IEnemySkill;
 
 namespace AvantGardeMaker.EnemySpace
 {
@@ -237,34 +237,12 @@ namespace AvantGardeMaker.EnemySpace
 					default:
 						break;
 					case E_EnemySkillType.OnAttack:
-						m_OnAttackSkill = GetAttackSkill(skillDataList[i]);
+						m_OnAttackSkill = (IOnAttackSkill)skillDataList[i].CreateSkill();
 						break;
 					case E_EnemySkillType.OnDead:
-						m_OnDeadSkill = GetDeadSkill(skillDataList[i]);
+						m_OnDeadSkill = (IOnDeadSkill)skillDataList[i].CreateSkill();
 						break;
 				}
-			}
-		}
-
-		private IOnAttackSkill GetAttackSkill(EnemySkillData skillData)
-		{
-			switch (skillData.Name)
-			{
-				default:
-					return null;
-				case "Splash":
-					return new SplashSkill();
-			}
-		}
-
-		private IOnDeadSkill GetDeadSkill(EnemySkillData skillData)
-		{
-			switch (skillData.Name)
-			{
-				default:
-					return null;
-				case "SuicideExplode":
-					return new SuicideExplodeSkill();
 			}
 		}
 		public void SetWayPointList(List<Vector2> wayPointList)

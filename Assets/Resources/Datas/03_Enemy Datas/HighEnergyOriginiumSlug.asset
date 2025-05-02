@@ -50,7 +50,9 @@ MonoBehaviour:
       \uACF5\uACA9\uB825\uC758 400%\uB9CC\uD07C \uBB3C\uB9AC \uD53C\uD574\uB97C \uC785\uD78C\uB2E4.</line-height></indent>"
     ImmuneType: 0
     DamageType: 0
-    SkillDataList: []
+    Tag: []
+    SkillDataList:
+    - {fileID: 11400000, guid: 1cb1d02aa2e5a43479d0cdafa2259684, type: 2}
   VariableData:
     Hp:
       InitStat: 0

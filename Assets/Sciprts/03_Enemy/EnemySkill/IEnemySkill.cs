@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.EnemySpace
 {
-	public class EnemySkillInterface :MonoBehaviour
+	public interface IEnemySkill
 	{
 		//공격 시
 		public interface IOnAttackSkill

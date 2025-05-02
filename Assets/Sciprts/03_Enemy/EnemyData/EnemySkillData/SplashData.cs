@@ -6,12 +6,20 @@ using AvantGardeMaker.CoreSpace.Enum;
 
 namespace AvantGardeMaker.EnemySpace
 {
+	[CreateAssetMenu(fileName = "ScriptableEnemySplashData", menuName = "Scriptable Object/ScriptableEnemySkill/SplashSkillData", order = int.MinValue)]
 	public class SplashData : EnemySkillData
 	{
 		public float AoeRadius;
 		public float DamageCoefficient;
-		public E_DamageType DmgType;
+		public E_DamageType DamageType;
 
-		//기능 함수()
+		public override IEnemySkill CreateSkill()
+		{
+			Splash newSplash = new Splash();
+			newSplash.SetAoeRadius(AoeRadius);
+			newSplash.SetDamageCoef(DamageCoefficient);
+			newSplash.SetDamageType(DamageType);
+			return newSplash;
+		}
 	}
 }

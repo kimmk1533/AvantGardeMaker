@@ -3,7 +3,7 @@ using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using static AvantGardeMaker.EnemySpace.EnemySkillInterface;
+using static AvantGardeMaker.EnemySpace.IEnemySkill;
 
 /*
  * 옵젝 매니저(풀링 되어있음)
@@ -35,6 +35,7 @@ namespace AvantGardeMaker.EnemySpace
 		#region 기본 템플릿
 		#region 변수
 		private const string c_EnemyDataPath = "Datas\\03_Enemy Datas";
+		private const string c_EnemySkillDataPath = "Datas\\03_Enemy Datas\\EnemySkillDatas";
 		private bool m_IsStageStart;
 
 		//생성한 enemy 목록
@@ -46,6 +47,8 @@ namespace AvantGardeMaker.EnemySpace
 		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
 		[SerializeField]
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
+		[SerializeField]
+		private List<EnemySkillData> m_EnemySkillDataList = null;
 
 		[SerializeField, ReadOnly]
 		private UtilClass.Timer m_EnemySpawnTimer = null;
@@ -79,21 +82,12 @@ namespace AvantGardeMaker.EnemySpace
 			m_EnemyDataMap = new Dictionary<string, EnemyData>();
 			m_EnemySpawnDataQueue = new Queue<EnemySpawnData>();
 
+			m_EnemySkillDataList = new List<EnemySkillData>();
+
 			m_EnemySpawnTimer = new UtilClass.Timer();
 
-			//디버깅용//
-			//EnemySpawnData spawnData = new EnemySpawnData();
-
-			//spawnData.Name = "OriginiumSlug";
-			//spawnData.TransitPosList.Add(new Vector2(0, 0));
-			//spawnData.TransitPosList.Add(new Vector2(6, 6));
-			//spawnData.TransitPosList.Add(new Vector2(0, 0));
-			//spawnData.TransitPosList.Add(new Vector2(6, 6));
-
-			//m_EnemySpawnDataQueue.Add(spawnData);
-			//디버깅용//
-
 			LoadEnemyData();
+			LoadEnemySkillData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -186,10 +180,11 @@ namespace AvantGardeMaker.EnemySpace
 				m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;
 		}
 
-		[Button]
-		public void ClearEnemyDataList()
+		public void LoadEnemySkillData()
 		{
-			m_EnemyDataMap.Clear();
+			EnemySkillData[] enemySkillDatas = Resources.LoadAll<EnemySkillData>(c_EnemySkillDataPath);
+			m_EnemySkillDataList.Clear();
+			m_EnemySkillDataList.AddRange(enemySkillDatas);
 		}
 		#endregion
 
@@ -261,11 +256,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			m_EnemyList.Add(enemy);
 			m_EnemySpawnDataQueue.Dequeue();
-			//Debug.Log("적 생성");
-
-			//enemy.gameObject.SetActive(true);
 		}
-
 
 		public EnemyData GetEnemyData(string enName)
 		{
@@ -274,6 +265,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			return enemyData;
 		}
+
 		public List<EnemyData> GetAllEnemyData()
 		{
 			return new List<EnemyData>(m_EnemyDataMap.Values);

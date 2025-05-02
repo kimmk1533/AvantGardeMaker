@@ -6,10 +6,20 @@ using AvantGardeMaker.CoreSpace.Enum;
 
 namespace AvantGardeMaker.EnemySpace
 {
-	public class SuicideExplodeData:EnemySkillData
+	[CreateAssetMenu(fileName = "ScriptableEnemySuicideExplodeData", menuName = "Scriptable Object/ScriptableEnemySkill/SuicideExplodeSkillData", order = int.MinValue)]
+	public class SuicideExplodeData : EnemySkillData
 	{
 		public float AoeRadius;
 		public float DamageCoefficient;
-		public E_DamageType DmgType;
+		public E_DamageType DamageType;
+
+		public override IEnemySkill CreateSkill()
+		{
+			SuicideExplode newSuicideExplode = new SuicideExplode();
+			newSuicideExplode.SetAoeRadius(AoeRadius);
+			newSuicideExplode.SetDamageCoef(DamageCoefficient);
+			newSuicideExplode.SetDamageType(DamageType);
+			return newSuicideExplode;
+		}
 	}
 }

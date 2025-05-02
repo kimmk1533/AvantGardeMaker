@@ -7,9 +7,11 @@ using UnityEngine;
 namespace AvantGardeMaker.EnemySpace
 {
 	[System.Serializable]
-	public class EnemySkillData : SerializedScriptableObject
+	public abstract class EnemySkillData : SerializedScriptableObject
 	{
 		public string Name;
 		public E_EnemySkillType Type;
+
+		public abstract IEnemySkill CreateSkill();
 	}
 }
