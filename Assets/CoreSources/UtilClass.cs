@@ -227,11 +227,17 @@ public static class UtilClass
 		public bool isPaused => m_IsSimulating == false;
 		#endregion
 
+		#region 이벤트
+		public event Action onTime = null;
+		#endregion
+
 		#region 생성자
 		public Timer()
 		{
 			m_Time = m_Interval = 0f;
 			m_IsSimulating = true;
+
+			onTime = null;
 		}
 		public Timer(float interval, bool filled = false)
 		{
@@ -243,6 +249,15 @@ public static class UtilClass
 				m_Time = 0f;
 
 			m_IsSimulating = true;
+
+			onTime = null;
+		}
+		public Timer(in Timer timer)
+		{
+			m_Interval = timer.interval;
+			m_Time = timer.m_Time;
+			m_IsSimulating = timer.m_IsSimulating;
+			onTime = timer.onTime;
 		}
 		#endregion
 
@@ -257,6 +272,8 @@ public static class UtilClass
 			{
 				if (autoClear)
 					Clear();
+
+				onTime?.Invoke();
 
 				return true;
 			}
