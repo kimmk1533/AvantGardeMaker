@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -307,5 +308,222 @@ public static class UtilClass
 		{
 			m_IsSimulating = true;
 		}
+	}
+}
+
+public static class ExtensionMethods
+{
+	public static void Swap<T>(this List<T> list, int index1, int index2)
+	{
+		if (index1 == index2)
+			return;
+
+		if (list.Count <= index1 ||
+			list.Count <= index2)
+			return;
+
+		T temp = list[index1];
+		list[index1] = list[index2];
+		list[index2] = temp;
+	}
+	public static void EnqueueRange<T>(this Queue<T> queue, IEnumerable<T> collection)
+	{
+		foreach (var item in collection)
+		{
+			queue.Enqueue(item);
+		}
+	}
+	public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> collection)
+	{
+		foreach (var item in collection)
+		{
+			stack.Push(item);
+		}
+	}
+	public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, IEnumerable<KeyValuePair<TKey, TValue>> collection)
+	{
+		foreach (var item in collection)
+		{
+			dictionary.Add(item.Key, item.Value);
+		}
+	}
+
+	public static T GetChild<T>(this Transform transform, int index) where T : Component
+	{
+		Transform child = transform.GetChild(index);
+
+		if (child == null)
+			return default(T);
+
+		return child.GetComponent<T>();
+	}
+	public static Transform[] GetChildren(this Transform transform, string name)
+	{
+		int count = transform.childCount;
+
+		List<Transform> ret_list = new List<Transform>();
+		if (transform.name == name)
+		{
+			ret_list.Add(transform);
+		}
+		else if (count == 0)
+			return null;
+
+		for (int i = 0; i < count; i++)
+		{
+			Transform[] arr = transform.GetChild(i).GetChildren(name);
+			if (arr != null)
+				ret_list.AddRange(arr);
+		}
+
+		return ret_list.ToArray();
+	}
+
+	public static T Find<T>(this Transform transform, string name) where T : Component
+	{
+		Transform tf = transform.Find(name);
+
+		if (tf == null)
+			return null;
+
+		return tf.GetComponent<T>();
+	}
+	public static Transform FindInChildren(this Transform transform, string name)
+	{
+		int count = transform.childCount;
+
+		Transform childTransform;
+
+		for (int i = 0; i < count; i++)
+		{
+			childTransform = transform.GetChild(i);
+			if (childTransform.name == name)
+			{
+				return childTransform;
+			}
+			else if (childTransform.childCount > 0)
+			{
+				childTransform = FindInChildren(childTransform, name);
+				if (childTransform != null)
+				{
+					return childTransform;
+				}
+			}
+		}
+		return null;
+	}
+	public static T FindInChildren<T>(this Transform transform, string name) where T : Component
+	{
+		return transform.FindInChildren(name)?.GetComponent<T>();
+	}
+
+	// 좌표 평면 기준 -180 ~ 180 도 리턴
+	public static float GetAngle(this Vector2 vStart, Vector2 vEnd)
+	{
+		// return Quaternion.FromToRotation(vStart, vEnd).eulerAngles.z;
+		Vector3 v = vEnd - vStart;
+		return Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
+	}
+	public static float GetAngle(this Vector3 vStart, Vector3 vEnd)
+	{
+		// return Quaternion.FromToRotation(vStart, vEnd).eulerAngles.z;
+		Vector3 v = vEnd - vStart;
+		return Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
+	}
+
+	public static T AddComponent<T>(this Transform transform) where T : Component
+	{
+		if (transform == null)
+			return null;
+
+		return transform.gameObject.AddComponent<T>();
+	}
+	public static Component GetOrAddComponent(this Component origin, System.Type type)
+	{
+		if (origin == null)
+			return null;
+
+		Component result = origin.GetComponent(type);
+		if (result == null)
+			result = origin.gameObject.AddComponent(type);
+
+		return result;
+	}
+	public static T GetOrAddComponent<T>(this Component origin) where T : Component
+	{
+		if (origin == null)
+			return null;
+
+		T result = origin.GetComponent<T>();
+		if (result == null)
+			result = origin.gameObject.AddComponent<T>();
+
+		return result;
+	}
+	/// <summary>
+	/// 기존 컴포넌트를 검사 후 없으면 추가하는 함수
+	/// </summary>
+	/// <typeparam name="T">추가할 컴포넌트</typeparam>
+	/// <param name="result">결과 컴포넌트</param>
+	/// <returns>추가 여부</returns>
+	public static bool GetOrAddComponent<T>(this Component origin, out T result) where T : Component
+	{
+		result = origin.GetComponent<T>();
+		if (result == null)
+		{
+			result = origin.gameObject.AddComponent<T>();
+			return true;
+		}
+
+		return false;
+	}
+	public static T CopyComponent<T>(this Component original) where T : Component
+	{
+		Type type = original.GetType();
+		GameObject tempObj = new GameObject("temp");
+		T copy = tempObj.AddComponent<T>();
+
+		FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		foreach (FieldInfo field in fields)
+		{
+			field.SetValue(copy, field.GetValue(original));
+		}
+
+		//PropertyInfo[] properties = type.GetProperties();
+		//foreach (PropertyInfo property in properties)
+		//{
+		//    if (property.CanWrite)
+		//    {
+		//        property.SetValue(copy, property.GetValue(original));
+		//    }
+		//}
+
+		GameObject.DestroyImmediate(tempObj);
+		return copy;
+	}
+	public static T CopyComponent<T>(this Component original, GameObject dest) where T : Component
+	{
+		Type type = original.GetType();
+		Component copy = dest.GetComponent(type);
+		if (null == copy)
+		{
+			copy = dest.AddComponent(type);
+		}
+
+		FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		foreach (FieldInfo field in fields)
+		{
+			field.SetValue(copy, field.GetValue(original));
+		}
+
+		PropertyInfo[] properties = type.GetProperties();
+		foreach (PropertyInfo property in properties)
+		{
+			if (property.CanWrite)
+			{
+				property.SetValue(copy, property.GetValue(original));
+			}
+		}
+		return copy as T;
 	}
 }
