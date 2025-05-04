@@ -87,13 +87,4 @@ MonoBehaviour:
     - {x: 1, y: 0}
     DamageType: 0
     Penetration: 0
-    SkillData:
-      MaxSP: 30
-      CurrentSP: 0
-      StartSP: 0
-      GainSPType: 0
-      ActivationSkillType: 0
-      ActiveSkillTime:
-        m_Interval: 0
-        m_Time: 0
-      SkillText: 
+    SkillData: {fileID: 11400000, guid: 0b607147eb3f4a748924a0970c6aaebb, type: 2}

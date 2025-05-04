@@ -47,6 +47,8 @@ MonoBehaviour:
     Trait: 
     ImmuneType: 0
     DamageType: 0
+    Tag: []
+    SkillDataList: []
   VariableData:
     Hp:
       InitStat: 10

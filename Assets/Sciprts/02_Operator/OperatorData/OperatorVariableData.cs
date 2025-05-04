@@ -39,6 +39,6 @@ namespace AvantGardeMaker.OperatorSpace
 		//관통력
 		public float Penetration;
 		//스킬 정보
-		public SkillInfo SkillData;
+		public OperatorSkillData SkillData;
 	}
 }

@@ -2,45 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.OperatorSpace.Enum;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	
 	[System.Serializable]
-	public class SkillInfo
+	public abstract class OperatorSkillData : SerializedScriptableObject
 	{
+		[Title("OpratorSkillData")]
+		public string Name;
 		public float MaxSP;
-		public float CurrentSP;
-		public float StartSP;
-		public E_SPGainType GainSPType;
-		public E_SkillActivationType ActivationSkillType;
-		public UtilClass.Timer ActiveSkillTime;
-		public string SkillText;
+		public float InitSP;
+		public E_SPGainType SPGainType;
+		public E_SkillActivationType SkillActivationType;
+		//public UtilClass.Timer ActiveSkillTimer = null;
+		public string SkillInfoText = null;
 
-		public Dictionary<E_OperatorSkillType,SkillAbilityInfo> SkillAbilityInfoList;
-
-		public SkillInfo(SkillInfo skillData)
+		public OperatorSkillData()
 		{
-			MaxSP = skillData.MaxSP;
-			CurrentSP = skillData.CurrentSP;
-			StartSP = skillData.StartSP;
-			GainSPType = skillData.GainSPType;
-			ActivationSkillType = skillData.ActivationSkillType;
-			ActiveSkillTime = skillData.ActiveSkillTime;
-			SkillText = skillData.SkillText;
-			SkillAbilityInfoList = skillData.SkillAbilityInfoList;
+			Name = string.Empty;
+			//ActiveSkillTimer = new UtilClass.Timer();
+			SkillInfoText = string.Empty;
 		}
-	}
-	[System.Serializable]
-	public class SkillAbilityInfo
-	{
-		public E_OperatorSkillType SkillType;
-		public float SkillValue;
 
-		public float GetSkillTypeValue(E_OperatorSkillType skillType)
+		public OperatorSkillData(OperatorSkillData skillInfo)
 		{
-			return SkillValue;
+			name = skillInfo.Name;
+			MaxSP = skillInfo.MaxSP;
+			InitSP = skillInfo.InitSP;
+			SPGainType = skillInfo.SPGainType;
+			SkillActivationType = skillInfo.SkillActivationType;
+			//ActiveSkillTimer = new UtilClass.Timer(skillInfo.ActiveSkillTimer);
+			SkillInfoText = skillInfo.SkillInfoText;
 		}
+
+		public abstract IOperatorSkill CreateSkill();
 	}
 }

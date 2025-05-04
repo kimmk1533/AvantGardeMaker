@@ -50,6 +50,8 @@ namespace AvantGardeMaker.OperatorSpace
 		private bool isAttack = true;
 
 		private UtilClass.Timer m_AutoSPGainTimer = null;
+
+		private IOperatorSkill m_OperatorSkill = null;
 		#endregion
 
 		#region 프로퍼티
@@ -83,7 +85,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		protected bool isAlive => m_OperatorData.VariableData.CurrentHp > 0;
 
-		public OperatorSkill operatorSkill { get; set; }
+		//public OperatorSkill operatorSkill { get; set; }
 		#endregion
 
 		#region 이벤트
@@ -130,9 +132,8 @@ namespace AvantGardeMaker.OperatorSpace
 			if (isFinishedDirectionSetting == false)
 				return;
 
-			//CreateReChargeSkill();
-			//ActivateSkill();
-			//AutoSPGainProcess();
+			ActivateSkill();
+			AutoSPGainProcess();
 			AttackEnemyProcess();
 		}
 
@@ -170,6 +171,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_SettingDirection = E_OperatorDirection.None;
 			redeployCount = 0;
 			m_AutoSPGainTimer = new UtilClass.Timer(1f);
+			SetSkill(m_VariableData.SkillData);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -404,10 +406,12 @@ namespace AvantGardeMaker.OperatorSpace
 					m_AttackTartgetEnemy = tile.enemyOnTileList[0];
 					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
 					//공격회복 스킬일시 실행
-					if (operatorSkill.gainSPType == E_SPGainType.Attack)
+					/*
+					if (operatorSkill.OperatorSkillInfo.SPGainType == E_SPGainType.Attack)
 					{
 						operatorSkill.RecoverSP(1);
 					}
+					*/
 				}
 			}
 		}
@@ -439,11 +443,13 @@ namespace AvantGardeMaker.OperatorSpace
 			float minDamage = atk * 0.05f;
 
 			DecreaseHp(Mathf.Max(minDamage, damage));
-
-			if (operatorSkill.gainSPType == E_SPGainType.TakeAttack)
+			//공격을받을때 Sp충전
+			/*
+			if (operatorSkill.OperatorSkillInfo.SPGainType == E_SPGainType.TakeAttack)
 			{
 				operatorSkill.RecoverSP(1);
 			}
+			*/
 		}
 		private void DecreaseHp(float value)
 		{
@@ -460,28 +466,28 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private void AutoSPGainProcess()
 		{
-			if (m_VariableData.SkillData.GainSPType != E_SPGainType.Auto)
+			if (m_VariableData.SkillData.SPGainType != E_SPGainType.Auto)
 				return;
 			m_AutoSPGainTimer.Update();
 
 			if (m_AutoSPGainTimer.TimeCheck(true) == true)
 			{
-				operatorSkill.RecoverSP(1);
-				Debug.Log("현재 Sp:" + operatorSkill.currentSP);
+				//operatorSkill.RecoverSP(1);
+				//Debug.Log("현재 Sp:" + operatorSkill.currentSP);
 			}
 
 		}
 
 		public virtual void ActivateSkill()
 		{
-			operatorSkill.Activate();
+			//operatorSkill.Activate();
 		}
 
-		public OperatorSkill CreateReChargeSkill()
+		public void SetSkill(OperatorSkillData operatorSkillData)
 		{
-			SkillInfo skillData = new SkillInfo(variableData.SkillData);
-
-			return new SkillReChargeCost(skillData);
+			//m_OperatorSkill = new operatorSkillData.CreateSkill();
 		}
+
+		
 	}
 }

@@ -1,0 +1,31 @@
+using System.Collections;
+using System.Collections.Generic;
+using AvantGardeMaker.OperatorSpace.Enum;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+namespace AvantGardeMaker.OperatorSpace
+{
+	public interface IOperatorSkill
+	{
+		public string SkillName { get; }
+		public int SkillLevel { get; }
+		public int SkillValue { get; }
+
+		public void Activate();
+		public void RecoverSP(int value);
+
+	}
+
+	public interface ISPRecover
+	{
+		public E_SPGainType GainType { get; }
+		//시간경과시 획득
+		public void OnTick();
+		//공격시 획득
+		public void OnAttack();
+		//피격시 획득
+		public void OnTakeAttack();
+	}
+
+}

@@ -40,32 +40,5 @@ namespace AvantGardeMaker.OperatorSpace
 			base.FinallizePoolItem();
 		}
 		#endregion
-
-		#region 직업스킬
-		
-		#endregion
-	}
-
-	public class SkillReChargeCost : OperatorSkill
-	{
-		public int reChargeCostValue { get; private set; }
-		private SkillInfo skillInfo;
-
-		public SkillReChargeCost(SkillInfo skillData) : base(skillData)
-		{
-			skillInfo = skillData;
-			reChargeCostValue = (int)skillInfo.SkillAbilityInfoList[E_OperatorSkillType.GainCost].SkillValue;
-		}
-		public override void Activate()
-		{
-			if (skillInfo == null)
-				return;
-			if (currentSP >= maxSP)
-			{
-				M_GamePlaying.currentCost += reChargeCostValue;
-				currentSP = 0;
-			}
-			
-		}
 	}
 }
