@@ -10,15 +10,18 @@ using UnityEngine;
 
 namespace AvantGardeMaker.TileSpace
 {
-
 	public class TileManager : ObjectManager<TileManager, Tile>
 	{
 		#region 변수
+		private const string c_TileDataPath = "Datas\\01_Tile Datas";
+
 		// 생성한 타일 부모
 		private GameObject m_TileParent = null;
 
 		// 생성한 타일 맵
 		private Dictionary<Vector2Int, Tile> m_TileMap = null;
+		// 타일 데이터 저장용 딕셔너리
+		private Dictionary<string, TileData> m_TileDataMap = null;
 		#endregion
 
 		#region 프로퍼티
@@ -26,6 +29,18 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 이벤트
+
+		#region 이벤트 함수
+		private void OnTileDespawned(Tile tile)
+		{
+			// 기존 텍스트 제거
+			TextMeshPro[] textMeshs = tile.transform.GetComponentsInChildren<TextMeshPro>();
+			foreach (var item in textMeshs)
+			{
+				Destroy(item.gameObject);
+			}
+		}
+		#endregion
 		#endregion
 
 		#region 매니저
@@ -45,6 +60,9 @@ namespace AvantGardeMaker.TileSpace
 			base.Initialize();
 
 			m_TileMap = new Dictionary<Vector2Int, Tile>();
+			m_TileDataMap = new Dictionary<string, TileData>();
+
+			LoadTileData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -66,15 +84,7 @@ namespace AvantGardeMaker.TileSpace
 
 			foreach (var item in m_ObjectPoolMap)
 			{
-				item.Value.onItemDespawned += (Tile tile) =>
-				{
-					// 기존 텍스트 제거
-					TextMeshPro[] textMeshs = tile.transform.GetComponentsInChildren<TextMeshPro>();
-					foreach (var item in textMeshs)
-					{
-						GameObject.Destroy(item.gameObject);
-					}
-				};
+				item.Value.onItemDespawned += OnTileDespawned;
 			}
 		}
 		/// <summary>
@@ -84,17 +94,80 @@ namespace AvantGardeMaker.TileSpace
 		{
 			base.FinallizeMain();
 
-			m_TileMap.Clear();
+			ClearTile();
+
+			foreach (var item in m_ObjectPoolMap)
+			{
+				item.Value.onItemDespawned -= OnTileDespawned;
+			}
 
 			m_TileParent = null;
 		}
 		#endregion
 
-		public void AddTile(Vector2Int tilePos, E_TileType tileType)
+		public void ClearTile()
 		{
-			string tileKey = tileType.ToString().Replace('_', ' ');
+			foreach (var item in m_TileMap)
+			{
+				Despawn(item.Value);
+			}
+			m_TileMap.Clear();
+		}
 
-			Vector3 tilePosition = new Vector3(tilePos.x, tilePos.y) + M_MapEditing.GetTileOffset(tileType);
+		///<summary>
+		/// Resources 폴더에 있는 TileData 스크립터블 오브젝트를 딕셔너리에 저장
+		/// </summary>
+		[Button("Load TileData")]
+		public void LoadTileData()
+		{
+			m_TileDataMap.Clear();
+
+			TileData[] tileDatas = Resources.LoadAll<TileData>(c_TileDataPath);
+
+			for (int i = 0; i < tileDatas.Length; ++i)
+			{
+				string key = tileDatas[i].key;
+
+				m_TileDataMap.Add(key, tileDatas[i]);
+			}
+		}
+
+		public void AddTile(TileSpawnData tileSpawnData)
+		{
+			string tileKey = tileSpawnData.TileSpawnKey;
+			Vector2Int tilePos = tileSpawnData.TilePos;
+			E_TileType tileType = tileSpawnData.TileType;
+			E_TilePositionType tilePositionType = tileSpawnData.TilePositionType;
+			E_TileDeployableTypeFlag tileDeployableTypeFlag = tileSpawnData.TileDeployableTypeFlag;
+
+			if (m_TileMap.TryGetValue(tilePos, out Tile tile) == false)
+			{
+				AddTile_Internal(tileSpawnData);
+
+				return;
+			}
+
+			if (tile.poolKey == tileKey &&
+				tile.tileType == tileType &&
+				tile.tilePositionType == tilePositionType &&
+				tile.tileDeployableTypeFlag == tileDeployableTypeFlag)
+				return;
+
+			RemoveTile(tilePos);
+
+			AddTile_Internal(tileSpawnData);
+
+			Debug.Log("재배치됨");
+		}
+		private void AddTile_Internal(TileSpawnData tileSpawnData)
+		{
+			string tileKey = tileSpawnData.TileSpawnKey;
+			Vector2Int tilePos = tileSpawnData.TilePos;
+			E_TileType tileType = tileSpawnData.TileType;
+			E_TilePositionType tilePositionType = tileSpawnData.TilePositionType;
+			E_TileDeployableTypeFlag tileDeployableTypeFlag = tileSpawnData.TileDeployableTypeFlag;
+
+			Vector3 tilePosition = (Vector2)tileSpawnData.TilePos + (Vector2)M_MapEditing.GetTileOffset(tilePositionType);
 
 			Tile newTile = GetBuilder(tileKey)
 				.SetPosition(tilePosition)
@@ -105,6 +178,8 @@ namespace AvantGardeMaker.TileSpace
 				.Spawn();
 
 			newTile.tileType = tileType;
+			newTile.tilePositionType = tilePositionType;
+			newTile.tileDeployableTypeFlag = tileDeployableTypeFlag;
 
 			m_TileMap.Add(tilePos, newTile);
 
@@ -126,58 +201,67 @@ namespace AvantGardeMaker.TileSpace
 		}
 		public void RemoveTile(Vector2Int tilePos)
 		{
-			Tile removeTile = m_TileMap[tilePos];
+			if (m_TileMap.TryGetValue(tilePos, out Tile tile) == false)
+				return;
 
-			Despawn(removeTile);
+			Despawn(tile);
 
 			m_TileMap.Remove(tilePos);
-		}
-		public void ReplaceTile(Vector2Int tilePos, E_TileType tileType)
-		{
-			RemoveTile(tilePos);
-
-			AddTile(tilePos, tileType);
-		}
-		public Tile GetTile(Vector2Int tilePos)
-		{
-			if (m_TileMap.TryGetValue(tilePos, out Tile tile) == false)
-				return default;
-
-			return tile;
-		}
-		public void ClearTile()
-		{
-			int count = m_TileMap.Count;
-			for (int i = 0; i < count; ++i)
-			{
-				Despawn(m_TileParent.transform.GetChild<Tile>(0));
-			}
-			m_TileMap.Clear();
 		}
 
 		public void SaveTileData(ref StageData stageData)
 		{
 			foreach (var item in m_TileMap)
 			{
-				stageData.SaveTileData(item.Key, item.Value.tileType);
+				string tileKey = item.Value.poolKey;
+
+				if (m_TileDataMap.TryGetValue(tileKey, out TileData tileData) == false)
+					continue;
+
+				stageData.SaveTileData(tileData);
+			}
+		}
+		public void SaveSpawnTileData(ref StageData stageData)
+		{
+			foreach (var item in m_TileMap)
+			{
+				Tile tile = item.Value;
+				TileSpawnData tileSpawnData = new TileSpawnData();
+
+				tileSpawnData.TileSpawnKey = tile.poolKey;
+
+				tileSpawnData.TilePos = item.Key;
+				tileSpawnData.TileDeployableTypeFlag = tile.tileDeployableTypeFlag;
+
+				stageData.SaveTileSpawnData(tileSpawnData);
 			}
 		}
 		public void LoadTileData(in StageData stageData)
 		{
-			ClearTile();
+			List<TileSpawnData> spawnDataList = stageData.tileSpawnDataList;
+			List<TileFixedData> fixedDataList = stageData.tileFixedDataList;
+			List<TileVariableData> variableDataList = stageData.tileVariableDataList;
 
-			int count = stageData.tilePointList.Count;
-
-			if (count != stageData.tileTypeList.Count)
-				Debug.LogError("저장한 위치와 타일의 갯수가 다름");
+			int count = spawnDataList.Count;
 
 			for (int i = 0; i < count; ++i)
 			{
-				Vector2Int tilePos = stageData.tilePointList[i];
-				E_TileType tileType = stageData.tileTypeList[i];
+				TileSpawnData tileSpawnData = spawnDataList[i];
 
-				AddTile(tilePos, tileType);
+				AddTile_Internal(tileSpawnData);
 			}
+		}
+
+		public Tile GetTile(Vector2Int tilePos)
+		{
+			if (m_TileMap.TryGetValue(tilePos, out Tile tile) == false)
+				return null;
+
+			return tile;
+		}
+		public List<TileData> GetAllTileDatas()
+		{
+			return new List<TileData>(m_TileDataMap.Values);
 		}
 	}
 }

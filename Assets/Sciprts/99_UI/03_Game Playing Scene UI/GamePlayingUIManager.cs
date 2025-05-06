@@ -221,20 +221,21 @@ namespace AvantGardeMaker.UI
 
 		private void CreateOperatorSquadUI()
 		{
-			List<string> operatorSquadKeyList = M_GamePlaying.operatorSquadKeyList;
+			List<OperatorSpawnData> operatorSpawnDataList = M_GamePlaying.operatorSpawnDataList;
 
 			// 생성
-			for (int i = 0; i < operatorSquadKeyList.Count; ++i)
+			for (int i = 0; i < operatorSpawnDataList.Count; ++i)
 			{
-				string operatorKey = operatorSquadKeyList[i];
+				OperatorSpawnData operatorSpawnData = operatorSpawnDataList[i];
+				string key = operatorSpawnData.OperatorSpawnKey;
 
 				OperatorSquadUI operatorSquadUI = GetBuilder("Operator Squad UI")
 					.SetAutoInit(true)
 					.SetActive(true)
-					.SetName(operatorKey)
+					.SetName(key)
 					.Spawn<OperatorSquadUI>();
 
-				operatorSquadUI.operatorData = M_Operator.GetOperatorData(operatorKey);
+				operatorSquadUI.operatorData = M_Operator.GetOperatorData(key);
 
 				operatorSquadUI.onOperatorSquadUIClicked += OnOperatorSquadUIClicked;
 

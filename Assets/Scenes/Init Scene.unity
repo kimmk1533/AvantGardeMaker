@@ -379,6 +379,7 @@ MonoBehaviour:
     <poolSize>k__BackingField: 2
     <origin>k__BackingField: {fileID: 2424297171841779531, guid: 0525b4f60feef5744b0b0e2d52c6016b, type: 3}
   m_EnemyList: []
+  m_EnemySkillDataList: []
   m_EnemySpawnTimer:
     m_Interval: 0
     m_Time: 0
@@ -447,17 +448,16 @@ MonoBehaviour:
     m_InitCost: 0
     m_MaxCost: 0
     m_CostIncreaseTime: 0
-    m_TilePointList: []
-    m_TileTypeList: 
+    m_TileSpawnDataList: []
+    m_TileFixedDataList: []
+    m_TileVariableDataList: []
     m_MinTile: {x: 0, y: 0}
     m_MaxTile: {x: 0, y: 0}
-    m_OperatorKeyList: []
     m_OperatorFixedDataList: []
     m_OperatorVariableDataList: []
-    m_EnemyKeyList: []
+    m_EnemySpawnDataList: []
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
-    m_EnemySpawnDataList: []
   m_DeployingOperatorList: []
 --- !u!4 &1446381273
 Transform:
@@ -683,29 +683,29 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\01_Tile Prefabs
   m_Origins:
-  - <key>k__BackingField: None
+  - <key>k__BackingField: Episode0 Hole
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
-    <poolSize>k__BackingField: 0
-    <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
-  - <key>k__BackingField: LowGround
+    <poolSize>k__BackingField: 30
+    <origin>k__BackingField: {fileID: 3517390410534930288, guid: e3fa56c9c48ade14cb01d76aa67d83dc, type: 3}
+  - <key>k__BackingField: Episode0 Default
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
-  - <key>k__BackingField: HighGround
+  - <key>k__BackingField: Episode1 Default
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: 1bca4103252419f48b44396adf68a65f, type: 3}
   - <key>k__BackingField: ProtectionObjective
     <additionalPath>k__BackingField: 
-    <useFlag>k__BackingField: 1
+    <useFlag>k__BackingField: 0
     <poolSize>k__BackingField: 5
     <origin>k__BackingField: {fileID: -2000793769421993583, guid: ae049637790ef4e46933620dfdefcb96, type: 3}
   - <key>k__BackingField: IncursionPoint
     <additionalPath>k__BackingField: 
-    <useFlag>k__BackingField: 1
+    <useFlag>k__BackingField: 0
     <poolSize>k__BackingField: 5
     <origin>k__BackingField: {fileID: -8871848148905976471, guid: 54fc1097332a64b459847bf0a035be7a, type: 3}
 --- !u!1 &1595956305
@@ -771,9 +771,9 @@ MonoBehaviour:
   m_Origins:
   - <key>k__BackingField: Tile Data UI
     <additionalPath>k__BackingField: 01_Tile Setting
-    <useFlag>k__BackingField: 0
+    <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 10
-    <origin>k__BackingField: {fileID: 0}
+    <origin>k__BackingField: {fileID: 2802314384488431511, guid: 51dcfa7286c9ca04bbb98cf6d6178788, type: 3}
   - <key>k__BackingField: Operator Data UI
     <additionalPath>k__BackingField: 02_Operator Setting
     <useFlag>k__BackingField: 1
@@ -893,101 +893,16 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 2100000, guid: 41ac777673c50ea4888d695d901452ea, type: 2}
-    - {fileID: 2100000, guid: f06c4402bfb0ce346b00ae5a6c7b4c52, type: 2}
-    - {fileID: 2100000, guid: ee0d865896881d7428df553ff1ed9eda, type: 2}
-    - {fileID: 2100000, guid: 3206e53488f9fd040adca06dff110473, type: 2}
-    - {fileID: 2100000, guid: 631649d35a613d445bf1c3c1e89742cb, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: m_MaterialMap
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Material,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: None
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: LowGround
-    - Name: $v
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: IncursionPoint
-    - Name: $v
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: ProtectionObjective
-    - Name: $v
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: HighGround
-    - Name: $v
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   m_IsInitScene: 1
   m_DontDestroyOnLoad: 1
   m_CameraSwitchDuration: 0.1
-  m_CameraMode: 1
+  m_IsEditView: 1
   m_IsCameraSwitching: 0
   m_EditingStageData:
     m_Title: 
@@ -999,17 +914,16 @@ MonoBehaviour:
     m_InitCost: 0
     m_MaxCost: 0
     m_CostIncreaseTime: 0
-    m_TilePointList: []
-    m_TileTypeList: 
+    m_TileSpawnDataList: []
+    m_TileFixedDataList: []
+    m_TileVariableDataList: []
     m_MinTile: {x: 0, y: 0}
     m_MaxTile: {x: 0, y: 0}
-    m_OperatorKeyList: []
     m_OperatorFixedDataList: []
     m_OperatorVariableDataList: []
-    m_EnemyKeyList: []
+    m_EnemySpawnDataList: []
     m_EnemyFixedDataList: []
     m_EnemyVariableDataList: []
-    m_EnemySpawnDataList: []
   <stageTitle>k__BackingField: 
   <creatorNickName>k__BackingField: 
   <description>k__BackingField: 

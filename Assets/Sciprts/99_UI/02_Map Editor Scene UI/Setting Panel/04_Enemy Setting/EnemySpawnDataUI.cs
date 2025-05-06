@@ -12,14 +12,14 @@ namespace AvantGardeMaker.UI
 	{
 		#region 변수
 		private Button m_OptionButton = null;
-		private TMP_Text m_IndexText = null;
+		private TextMeshProUGUI m_IndexText = null;
 		private Image m_EnemyPortraitImage = null;
-		private TMP_Text m_DebugText = null;
+		private TextMeshProUGUI m_DebugText = null;
 		private TMP_InputField m_EnemyCountInputField = null;
 		private TMP_InputField m_IntervalInputField = null;
 		private TMP_InputField m_WaveInputField = null;
 		private TMP_InputField m_WaveTimeInputField = null;
-		private TMP_Text m_TimeStampText = null;
+		private TextMeshProUGUI m_TimeStampText = null;
 		private Button m_DeleteButton = null;
 
 		private List<Vector2> m_EnemyWayPointList = null;
@@ -159,7 +159,7 @@ namespace AvantGardeMaker.UI
 
 			if (m_IndexText == null)
 			{
-				m_IndexText = transform.Find<TMP_Text>("Index Text");
+				m_IndexText = transform.Find<TextMeshProUGUI>("Index Text");
 			}
 			if (m_EnemyPortraitImage == null)
 			{
@@ -169,7 +169,7 @@ namespace AvantGardeMaker.UI
 			}
 			if (m_DebugText == null)
 			{
-				m_DebugText = m_EnemyPortraitImage.GetComponentInChildren<TMP_Text>();
+				m_DebugText = m_EnemyPortraitImage.GetComponentInChildren<TextMeshProUGUI>();
 			}
 			if (m_EnemyCountInputField == null)
 			{
@@ -187,7 +187,7 @@ namespace AvantGardeMaker.UI
 			}
 			if (m_TimeStampText == null)
 			{
-				m_TimeStampText = transform.Find("Time Stamp").Find<TMP_Text>("Time Stamp Text");
+				m_TimeStampText = transform.Find("Time Stamp").Find<TextMeshProUGUI>("Time Stamp Text");
 			}
 			if (m_WaveInputField == null)
 			{
@@ -238,7 +238,7 @@ namespace AvantGardeMaker.UI
 			EnemySpawnData enemySpawnData = new EnemySpawnData();
 
 			// 스폰시킬 적의 이름
-			enemySpawnData.Name = enemyData.EngName;
+			enemySpawnData.EnemySpawnKey = enemyData.key;
 
 			// 수량(일괄 스폰 시 사용)
 			enemySpawnData.Amount = count;

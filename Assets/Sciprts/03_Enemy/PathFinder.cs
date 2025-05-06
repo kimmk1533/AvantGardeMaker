@@ -61,95 +61,138 @@ namespace AvantGardeMaker.EnemySpace
 
 		//위(12시)부터 시계방향으로 탐색
 		private static readonly Vector2[] m_Directions = {
-			Vector2.up,new Vector2(1, 1),Vector2.right, new Vector3(1, -1),
-			Vector2.down,new Vector3(-1,-1),Vector2.left, new Vector3(-1, 1)
+			Vector2.up,
+			Vector2.up + Vector2.right,
+			Vector2.right,
+			Vector2.right + Vector2.down,
+			Vector2.down,
+			Vector2.down + Vector2.left,
+			Vector2.left,
+			Vector2.left + Vector2.up,
 		};
 
 		public class Node
 		{
-			public Vector2 m_Position;
-			public Node m_Parent;
-			public float m_G, m_H;
-			public float m_F => m_G + m_H;
+			public Vector2 Position;
+			public Node Parent;
+			// 시작점 -> 현재 위치
+			public float G;
+			// 현재 위치 -> 도착점
+			public float H;
+			public float F => G + H;
 
 			public Node(Vector2 position, Node parent, float g, float h)
 			{
-				m_Position = position;
-				m_Parent = parent;
-				m_G = g;
-				m_H = h;
+				Position = position;
+				Parent = parent;
+				G = g;
+				H = h;
 			}
 		}
 
-		public static bool[,] TileToGrid(E_TileType[,] map, bool isFlyable = false)
+		public static float[,] GetWeightMap(in (E_TileType tileType, E_TilePositionType tilePositionType)[,] map, bool isFlyable = false)
 		{
-			bool[,] returnMap = new bool[map.GetLength(0), map.GetLength(1)];
+			float[,] weightMap = new float[map.GetLength(0), map.GetLength(1)];
+
+			if (isFlyable == true)
+				return weightMap;
 
 			for (int y = 0; y < map.GetLength(0); ++y)
 			{
 				for (int x = 0; x < map.GetLength(1); ++x)
 				{
-					switch (map[y, x])
-					{
-						default:
-							returnMap[y, x] = true;
-							break;
-						case E_TileType.HighGround:
-						case E_TileType.None:
-							if (isFlyable)
-								returnMap[y, x] = true;
-							else
-								returnMap[y, x] = false;
-							break;
-					}
+					// 이동 불가 타일인 경우(울타리이거나 언덕 타일인 경우)
+					if (map[y, x].tileType == E_TileType.Fence ||
+						map[y, x].tilePositionType == E_TilePositionType.HighGround)
+						// 가중치 1백만 추가
+						weightMap[y, x] += 1000000f;
+					// 즉사 타일인 경우(구덩이인 경우)
+					if (map[y, x].tileType == E_TileType.Hole)
+						// 가중치 1만 추가
+						weightMap[y, x] += 10000f;
 				}
 			}
 
-			return returnMap;
+			return weightMap;
 		}
 
-		public static List<Vector2> FindPath(Vector2 start, Vector2 goal, bool[,] grid)
+		public static List<Vector2> FindPath(Vector2 start, Vector2 goal, in float[,] weightMap)
 		{
-			List<Node> openList = new List<Node>();                     //열린 노드
-			HashSet<Vector2> closedSet = new HashSet<Vector2>();  //닫힌 노드(중복x라 해시셋)
+			//열린 노드
+			PriorityQueue<Node, float> openPriorityQueue = new PriorityQueue<Node, float>();
+			//닫힌 노드(중복x라 해시셋)
+			HashSet<Vector2> closedSet = new HashSet<Vector2>();
+			// gCost 맵
+			Dictionary<Vector2, float> gCostMap = new Dictionary<Vector2, float>();
 
-			Node startNode = new Node(start, null, 0, Vector3.Distance(start, goal));    //시작 노드(부모x)
-			openList.Add(startNode);                                                        //열린 노드에 시작 노드 삽입
+			//시작 노드(부모x)
+			Node startNode = new Node(start, null, 0, Vector2.Distance(start, goal));
+			//열린 노드에 시작 노드 삽입
+			openPriorityQueue.Enqueue(startNode, startNode.F);
+			// gCost 저장
+			gCostMap.Add(start, 0f);
 
-			while (openList.Count > 0)
+			while (openPriorityQueue.Count > 0)
 			{
-				openList.Sort((a, b) => a.m_F.CompareTo(b.m_F));//F 값이 작은 순으로 정렬
-				Node currentNode = openList[0];                 //현재 노드 선택
-				openList.RemoveAt(0);                           //열린 노드에서 제거
-				closedSet.Add(currentNode.m_Position);          //닫힌 노드에 좌표 추가
+				//현재 노드 선택
+				Node currentNode = openPriorityQueue.Dequeue();
+				//닫힌 노드에 좌표 추가
+				closedSet.Add(currentNode.Position);
 
-				if (currentNode.m_Position == goal)             //현재 노드가 도착 지점이라면
-					return ReconstructPath(currentNode);        //parent를 따라 경로 완성 후 return
+				//현재 노드가 도착 지점이라면
+				if (currentNode.Position == goal)
+					//parent를 따라 경로 완성 후 return
+					return ReconstructPath(currentNode);
 
-				foreach (var direction in m_Directions)         //8방향 탐색
+				//8방향 탐색
+				foreach (var direction in m_Directions)
 				{
-					Vector2 neighborPos = currentNode.m_Position + direction;                //이웃 노드 선택
-					if (!IsValidPosition(Mathf.RoundToInt(neighborPos.x), Mathf.RoundToInt(neighborPos.y), grid) || closedSet.Contains(neighborPos)) //이동이 불가하거나 닫힌 노드에 있는 노드면 생략
+					//이웃 노드 선택
+					Vector2 neighborPos = currentNode.Position + direction;
+
+					// 생략 가능 여부 확인
+					if (!IsValidPosition(neighborPos.x, neighborPos.y, weightMap) || // 이동이 불가하거나
+						closedSet.Contains(neighborPos)) // 닫힌 노드에 있는 노드면 생략
 						continue;
 
-					float gCost = currentNode.m_G + Vector3.Distance(currentNode.m_Position, neighborPos);   //G(시작~자신) = 부모(curNode)의 G+부모에서 자신까지의 거리 합산
-					float hCost = Vector3.Distance(neighborPos, goal);                                       //H(자신~도착) = Distance(맨해튼 x, 단순 거리로 했음)
-					Node neighborNode = new Node(neighborPos, currentNode, gCost, hCost);                       //list에 넣기 위해 새 노드 생성
-
-					if (openList.Exists(n => n.m_Position == neighborPos && n.m_G <= gCost))    //만약 열린 노드에 G 소모값이 더 낮은 노드가 이미 존재할 경우 생략
-						continue;
-
-					if (direction.x * direction.y != 0) //x와 y가 모두 움직이는 경우(=대각선의 경우)
+					//x와 y가 모두 움직이는 경우(=대각선의 경우)
+					if (direction.x * direction.y != 0)
 					{
-						if (!IsValidPosition(Mathf.RoundToInt(currentNode.m_Position.x + direction.x), Mathf.RoundToInt(currentNode.m_Position.y), grid))//이동 방향의 x축이 이동 불가 지형인 경우 생략
+						//이동 방향의 x축이 이동 불가 지형인 경우 생략
+						if (!IsValidPosition(currentNode.Position.x + direction.x, currentNode.Position.y, weightMap))
 							continue;
-						if (!IsValidPosition(Mathf.RoundToInt(currentNode.m_Position.x), Mathf.RoundToInt(currentNode.m_Position.y + direction.y), grid))//이동 방향의 y축이 이동 불가 지형인 경우 생략
+						//이동 방향의 y축이 이동 불가 지형인 경우 생략
+						if (!IsValidPosition(currentNode.Position.x, currentNode.Position.y + direction.y, weightMap))
 							continue;
 					}
 
-					openList.Add(neighborNode);                                                 //위 조건에 해당하지 않으면 열린 노드에 추가
+					float weight = weightMap[Mathf.RoundToInt(neighborPos.y), Mathf.RoundToInt(neighborPos.x)];
+					//G(시작~자신) = 부모(curNode)의 G + 부모에서 자신까지의 거리 + 가중치 합산
+					float gCost = currentNode.G + Vector2.Distance(currentNode.Position, neighborPos) + weight;
+					//H(자신~도착) = Distance(맨해튼 x, 단순 거리로 했음)
+					float hCost = Vector2.Distance(neighborPos, goal);
+					//list에 넣기 위해 새 노드 생성
+					Node neighborNode = new Node(neighborPos, currentNode, gCost, hCost);
+
+					//만약 열린 노드에 G 소모값이 더 낮은 노드가 이미 존재할 경우 생략
+					if (gCostMap.TryGetValue(neighborPos, out float g) == true)
+					{
+						// 해당 노드까지 오기 위한 비용이 더 낮은 길이 이미 존재할 경우 생략
+						if (g < gCost)
+							continue;
+
+						// 현재 길의 비용이 더 낮은 경우 비용 저장
+						gCostMap[neighborPos] = g;
+					}
+					else
+						// gCost 저장
+						gCostMap.Add(neighborPos, gCost);
+
+					//위 조건에 해당하지 않으면 열린 노드에 추가
+					openPriorityQueue.Enqueue(neighborNode, neighborNode.F);
 				}
 			}
+
 			return null; //while 내에서 return되지 않았다면 경로 없음
 		}
 
@@ -161,8 +204,8 @@ namespace AvantGardeMaker.EnemySpace
 			List<Vector2> path = new List<Vector2>();
 			while (node != null)//부모가 null인 시작 노드까지 가기 위함
 			{
-				path.Add(node.m_Position);
-				node = node.m_Parent;
+				path.Add(node.Position);
+				node = node.Parent;
 			}
 			//path.Reverse(); //도착점부터 add했기 때문에 전체 순서를 뒤집어야 함
 			return path;
@@ -170,14 +213,17 @@ namespace AvantGardeMaker.EnemySpace
 		/// <summary>
 		/// 이동 가능 여부
 		/// </summary>
-		private static bool IsValidPosition(int posX, int posY, bool[,] grid)
+		private static bool IsValidPosition(float posX, float posY, in float[,] weightMap)
 		{
-			int x = posX + offset.x;
-			int y = posY + offset.y;
+			int posXInt = Mathf.RoundToInt(posX);
+			int posYInt = Mathf.RoundToInt(posY);
 
-			return x >= 0 && x < grid.GetLength(1) &&   //x값이 grid 안에 있는지
-				y >= 0 && y < grid.GetLength(0) &&      //y값이 grid 안에 있는지
-				grid[y, x];                             //현재 좌표가 grid에서 이동 가능한지
+			int x = posXInt + offset.x;
+			int y = posYInt + offset.y;
+
+			return x >= 0 && x < weightMap.GetLength(1) &&   //x값이 grid 안에 있는지
+				y >= 0 && y < weightMap.GetLength(0) &&      //y값이 grid 안에 있는지
+				weightMap[y, x] < 1000000f;                             //현재 좌표가 grid에서 이동 가능한지
 		}
 	}
 }

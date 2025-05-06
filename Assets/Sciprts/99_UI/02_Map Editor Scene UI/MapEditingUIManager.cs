@@ -5,6 +5,8 @@ using AvantGardeMaker.CoreSpace;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.OperatorSpace;
+using AvantGardeMaker.TileSpace;
+using AvantGardeMaker.TileSpace.Enum;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -20,7 +22,9 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 타일 설정 관련 변수
+		private Dictionary<string, TileDataUI> m_SpawnedTileDataUIMap = null;
 
+		private Dictionary<E_TileThemaType, RectTransform> m_TileDataUIParentMap = null;
 		#endregion
 
 		#region 오퍼레이터 설정 관련 변수
@@ -51,17 +55,16 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 타일 설정 관련 프로퍼티
-		public RectTransform tileDataUIParent { get; set; }
-
-		public RectTransform tileSettingButtonParent { get; set; }
+		public RectTransform tileDataUIContent { get; set; }
 		#endregion
 
 		#region 오퍼레이터 설정 관련 프로퍼티
-		public RectTransform operatorDataUIParent { get; set; }
+		public RectTransform operatorDataUIContent { get; set; }
 		#endregion
 
 		#region 적 설정 관련 프로퍼티
-		public RectTransform enemyDataUIParent { get; set; }
+		public RectTransform enemyDataUIContent { get; set; }
+
 		public RectTransform enemySpawnDataUIParent { get; set; }
 		public RectTransform enemyWayPointDataUIParent { get; set; }
 		public RectTransform enemyImmuneDescriptionParent { get; set; }
@@ -117,6 +120,8 @@ namespace AvantGardeMaker.UI
 		#region 매니저
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
+
+		private static TileManager M_Tile => TileManager.Instance;
 		private static OperatorManager M_Operator => OperatorManager.Instance;
 		private static EnemyManager M_Enemy => EnemyManager.Instance;
 		#endregion
@@ -135,6 +140,9 @@ namespace AvantGardeMaker.UI
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_SpawnedTileDataUIMap = new Dictionary<string, TileDataUI>();
+			m_TileDataUIParentMap = new Dictionary<E_TileThemaType, RectTransform>();
 
 			m_SpawnedOperatorDataUIMap = new Dictionary<string, OperatorDataUI>();
 
@@ -165,40 +173,9 @@ namespace AvantGardeMaker.UI
 
 			maxWave = 0;
 
-			#region Operator Data UI 생성
-			List<OperatorData> operatorDataList = M_Operator.GetAllOperatorDatas();
-			for (int i = 0; i < operatorDataList.Count; ++i)
-			{
-				OperatorDataUI operatorDataUI = GetBuilder("Operator Data UI")
-					.SetParent(operatorDataUIParent)
-					.SetScale(Vector3.one)
-					.SetAutoInit(true)
-					.SetActive(true)
-					.Spawn<OperatorDataUI>();
-
-				operatorDataUI.operatorData = operatorDataList[i];
-
-				m_SpawnedOperatorDataUIMap.Add(operatorDataList[i].key, operatorDataUI);
-			}
-			#endregion
-
-			#region Spawn Enemy Data UI
-			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
-			for (int i = 0; i < enemyDataList.Count; ++i)
-			{
-				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
-					.SetParent(enemyDataUIParent)
-					.SetScale(Vector3.one)
-					.SetAutoInit(true)
-					.SetActive(true)
-					.Spawn<EnemyDataUI>();
-
-				enemyDataUI.enemyData = enemyDataList[i];
-				enemyDataUI.debugText = enemyDataList[i].KorName;
-
-				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
-			}
-			#endregion
+			CreateTileDataUI();
+			CreateOperatorDataUI();
+			CreateEnemyDataUI();
 
 			GetPool("Enemy Spawn Data UI").onItemSpawned += OnEnemySpawnDataUISpawned;
 			GetPool("Enemy Spawn Data UI").onItemDespawned += OnEnemySpawnDataUIDespawned;
@@ -210,37 +187,148 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
-			m_SpawnedOperatorDataUIMap.Clear();
-			m_SpawnedEnemyDataUIList.Clear();
-			m_SpawnedEnemySpawnDataUIList.Clear();
+			ClearTileDataUI();
+			ClearOperatorDataUI();
+			ClearEnemyDataUI();
+			ClearEnemySpawnDataUI();
 
 			menuPanelController.Finallize();
 			settingPanelController.Finallize();
+
+			GetPool("Enemy Spawn Data UI").onItemSpawned -= OnEnemySpawnDataUISpawned;
+			GetPool("Enemy Spawn Data UI").onItemDespawned -= OnEnemySpawnDataUIDespawned;
 		}
 		#endregion
 
-		//private void MenuShortcut()
-		//{
-		//	foreach (string key in m_KeyList)
-		//	{
-		//		OptionViewport optionViewport = settingPanelController.optionViewportController[key];
-		//		KeyCode keyCode = optionViewport.shortcut;
-		//		if (Input.GetKeyDown(keyCode) == true)
-		//		{
-		//			optionViewport.OnMenuButtonClicked();
-		//			M_MapEditing.SetEditModeType(optionViewport.editModeType);
-		//		}
-		//	}
-		//}
+		private void CreateTileDataUI()
+		{
+			List<TileData> tileDataList = M_Tile.GetAllTileDatas();
+			RectTransform template = tileDataUIContent.Find<RectTransform>("Tile Data UI Group Template");
+
+			//tileDataList = tileDataList
+			//	.OrderBy(tileData => tileData.FixedData.TileType)
+			//	.ToList();
+
+			for (int i = 0; i < tileDataList.Count; ++i)
+			{
+				TileData tileData = tileDataList[i];
+				E_TileThemaType tileThemaType = tileData.FixedData.ThemaType;
+
+				// 타일 테마 그룹 생성
+				if (m_TileDataUIParentMap.TryGetValue(tileThemaType, out RectTransform tileDataUIParent) == false)
+				{
+					tileDataUIParent = Instantiate(template, tileDataUIContent);
+					tileDataUIParent.name = tileThemaType.ToString();
+
+					TextMeshProUGUI titleTextMesh = tileDataUIParent.Find<TextMeshProUGUI>("Title/Text");
+					titleTextMesh.text = TileEnumUtil.GetTileThemaKorString(tileThemaType);
+
+					tileDataUIParent.gameObject.SetActive(true);
+
+					m_TileDataUIParentMap.Add(tileThemaType, tileDataUIParent);
+				}
+
+				TileDataUI tileDataUI = GetBuilder("Tile Data UI")
+					.SetParent(tileDataUIParent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn<TileDataUI>();
+
+				tileDataUI.tileData = tileData;
+
+				m_SpawnedTileDataUIMap.Add(tileData.key, tileDataUI);
+			}
+		}
+		private void CreateOperatorDataUI()
+		{
+			List<OperatorData> operatorDataList = M_Operator.GetAllOperatorDatas();
+
+			for (int i = 0; i < operatorDataList.Count; ++i)
+			{
+				OperatorDataUI operatorDataUI = GetBuilder("Operator Data UI")
+					.SetParent(operatorDataUIContent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn<OperatorDataUI>();
+
+				operatorDataUI.operatorData = operatorDataList[i];
+
+				m_SpawnedOperatorDataUIMap.Add(operatorDataList[i].key, operatorDataUI);
+			}
+		}
+		private void CreateEnemyDataUI()
+		{
+			List<EnemyData> enemyDataList = M_Enemy.GetAllEnemyData();
+
+			for (int i = 0; i < enemyDataList.Count; ++i)
+			{
+				EnemyDataUI enemyDataUI = GetBuilder("Enemy Data UI")
+					.SetParent(enemyDataUIContent)
+					.SetScale(Vector3.one)
+					.SetAutoInit(true)
+					.SetActive(true)
+					.Spawn<EnemyDataUI>();
+
+				enemyDataUI.enemyData = enemyDataList[i];
+
+				m_SpawnedEnemyDataUIList.Add(enemyDataUI);
+			}
+		}
+
+		private void ClearTileDataUI()
+		{
+			foreach (var item in m_SpawnedTileDataUIMap)
+			{
+				Despawn(item.Value);
+			}
+			m_SpawnedTileDataUIMap.Clear();
+
+			m_TileDataUIParentMap.Clear();
+		}
+		private void ClearOperatorDataUI()
+		{
+			foreach (KeyValuePair<string, OperatorDataUI> item in m_SpawnedOperatorDataUIMap)
+			{
+				Despawn(item.Value);
+			}
+			m_SpawnedOperatorDataUIMap.Clear();
+		}
+		private void ClearEnemyDataUI()
+		{
+			int count = m_SpawnedEnemyDataUIList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Despawn(m_SpawnedEnemyDataUIList[i]);
+			}
+			m_SpawnedEnemyDataUIList.Clear();
+		}
+		private void ClearEnemySpawnDataUI()
+		{
+			int count = m_SpawnedEnemySpawnDataUIList.Count;
+			for (int i = 0; i < count; ++i)
+			{
+				Despawn(m_SpawnedEnemySpawnDataUIList[0]);
+			}
+			m_SpawnedEnemySpawnDataUIList.Clear();
+		}
 
 		#region Save
-		public void SaveOperatorDataUI(ref StageData stageData)
+		public void SaveOperatorData(ref StageData stageData)
 		{
 			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>();
 
-			operatorSettingPanel.SaveOperatorDataUI(ref stageData);
+			operatorSettingPanel.SaveOperatorData(ref stageData);
 		}
-		public void SaveEnemyDataUI(ref StageData stageData)
+		public void SaveOperatorSpawnData(ref StageData stageData)
+		{
+			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>();
+
+			operatorSettingPanel.SaveOperatorSpawnData(ref stageData);
+		}
+
+		public void SaveEnemyData(ref StageData stageData)
 		{
 			for (int i = 0; i < m_SpawnedEnemyDataUIList.Count; ++i)
 			{
@@ -249,7 +337,7 @@ namespace AvantGardeMaker.UI
 				stageData.SaveEnemyData(enemyDataUI.enemyData);
 			}
 		}
-		public void SaveEnemySpawnDataUI(ref StageData stageData)
+		public void SaveEnemySpawnData(ref StageData stageData)
 		{
 			for (int i = 0; i < m_SpawnedEnemySpawnDataUIList.Count; ++i)
 			{
@@ -272,13 +360,13 @@ namespace AvantGardeMaker.UI
 			systemSettingPanel.costIncreaseTime = stageData.costIncreaseTime;
 			systemSettingPanel.description = stageData.description;
 		}
-		public void LoadOperatorDataUI(in StageData stageData)
+		public void LoadOperatorSetting(in StageData stageData)
 		{
 			OperatorSettingPanel operatorSettingPanel = settingPanelController.GetSettingPanel<OperatorSettingPanel>();
 
-			operatorSettingPanel.LoadOperatorDataUI(stageData);
+			operatorSettingPanel.LoadOperatorData(stageData);
 		}
-		public void LoadEnemySpawnDataUI(in StageData stageData)
+		public void LoadEnemySetting(in StageData stageData)
 		{
 			ClearEnemySpawnDataUI();
 
@@ -294,7 +382,7 @@ namespace AvantGardeMaker.UI
 
 				EnemySpawnData enemySpawnData = enemySpawnDataList[i];
 
-				enemySpawnDataUI.enemyData = M_Enemy.GetEnemyData(enemySpawnData.Name);
+				enemySpawnDataUI.enemyData = M_Enemy.GetEnemyData(enemySpawnData.EnemySpawnKey);
 
 				enemySpawnDataUI.debugText = enemySpawnDataUI.enemyData.KorName;
 				enemySpawnDataUI.count = enemySpawnData.Amount;
@@ -325,33 +413,6 @@ namespace AvantGardeMaker.UI
 				return;
 
 			operatorDataUI.gameObject.SetActive(true);
-		}
-
-		public void ClearOperatorDataUI()
-		{
-			foreach (KeyValuePair<string, OperatorDataUI> item in m_SpawnedOperatorDataUIMap)
-			{
-				Despawn(item.Value);
-			}
-			m_SpawnedOperatorDataUIMap.Clear();
-		}
-		public void ClearEnemyDataUI()
-		{
-			int count = m_SpawnedEnemyDataUIList.Count;
-			for (int i = 0; i < count; ++i)
-			{
-				Despawn(m_SpawnedEnemyDataUIList[i]);
-			}
-			m_SpawnedEnemyDataUIList.Clear();
-		}
-		public void ClearEnemySpawnDataUI()
-		{
-			int count = m_SpawnedEnemySpawnDataUIList.Count;
-			for (int i = 0; i < count; ++i)
-			{
-				Despawn(m_SpawnedEnemySpawnDataUIList[0]);
-			}
-			m_SpawnedEnemySpawnDataUIList.Clear();
 		}
 
 		public void ReorderEnemySpawnDataUI()

@@ -32,10 +32,10 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 
 		[SerializeField]
 		[FoldoutGroup("카메라 관련")]
-		private Transform m_EditModeCameraTransform = null;
+		private Transform m_EditViewCameraTransform = null;
 		[SerializeField]
 		[FoldoutGroup("카메라 관련")]
-		private Transform m_GameModeCameraTransform = null;
+		private Transform m_GameViewCameraTransform = null;
 		#endregion
 
 		#region 컨트롤러 관련 변수
@@ -51,23 +51,19 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		[SerializeField]
 		[FoldoutGroup("설정 관련")]
 		[FoldoutGroup("설정 관련/타일")]
-		private RectTransform m_TileDataUIParent = null;
-
-		[SerializeField]
-		[FoldoutGroup("설정 관련/타일")]
-		private RectTransform m_TileSettingButtonParent = null;
+		private RectTransform m_TileDataUIContent = null;
 		#endregion
 
 		#region 오퍼레이터 설정 관련 변수
 		[SerializeField]
 		[FoldoutGroup("설정 관련/오퍼레이터")]
-		private RectTransform m_OperatorDataUIParent = null;
+		private RectTransform m_OperatorDataUIContent = null;
 		#endregion
 
 		#region 적 설정 관련 변수
 		[SerializeField]
 		[FoldoutGroup("설정 관련/적")]
-		private RectTransform m_EnemyDataUIParent = null;
+		private RectTransform m_EnemyDataUIContent = null;
 		[SerializeField]
 		[FoldoutGroup("설정 관련/적")]
 		private RectTransform m_EnemySpawnDataUIParent = null;
@@ -124,8 +120,8 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			M_MapEditing.mapEditorCamera = m_MapEditorCamera;
 			M_MapEditing.thumnailCamera = m_ThumnailCamera;
 
-			M_MapEditing.editModeCameraTransform = m_EditModeCameraTransform;
-			M_MapEditing.gameModeCameraTransform = m_GameModeCameraTransform;
+			M_MapEditing.editViewCameraTransform = m_EditViewCameraTransform;
+			M_MapEditing.gameViewCameraTransform = m_GameViewCameraTransform;
 			#endregion
 
 			#region 컨트롤러 관련 변수 링킹
@@ -135,17 +131,15 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 
 			#region 설정 관련 변수 링킹
 			#region 타일
-			M_MapEditingUI.tileDataUIParent = m_TileDataUIParent;
-
-			M_MapEditingUI.tileSettingButtonParent = m_TileSettingButtonParent;
+			M_MapEditingUI.tileDataUIContent = m_TileDataUIContent;
 			#endregion
 
 			#region 오퍼레이터
-			M_MapEditingUI.operatorDataUIParent = m_OperatorDataUIParent;
+			M_MapEditingUI.operatorDataUIContent = m_OperatorDataUIContent;
 			#endregion
 
 			#region 적
-			M_MapEditingUI.enemyDataUIParent = m_EnemyDataUIParent;
+			M_MapEditingUI.enemyDataUIContent = m_EnemyDataUIContent;
 			M_MapEditingUI.enemySpawnDataUIParent = m_EnemySpawnDataUIParent;
 			M_MapEditingUI.enemyWayPointDataUIParent = m_EnemyWayPointDataUIParent;
 			M_MapEditingUI.enemyImmuneDescriptionParent = m_EnemyImmuneDescriptionParent;

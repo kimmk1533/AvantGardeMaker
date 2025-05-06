@@ -120,7 +120,7 @@ namespace AvantGardeMaker.UI
 		{
 			if (m_CurrentOperatorData == operatorDataUI.operatorData)
 			{
-				ChangeParentsActive(false);
+				ChangeActiveParents(false);
 				m_CurrentOperatorData = null;
 
 				return;
@@ -130,7 +130,7 @@ namespace AvantGardeMaker.UI
 
 			UpdateUI(m_CurrentOperatorData);
 
-			ChangeParentsActive(true);
+			ChangeActiveParents(true);
 		}
 		private void OnLevelModifyButtonClicked(int value)
 		{
@@ -164,6 +164,18 @@ namespace AvantGardeMaker.UI
 				M_MapEditingUI.RespawnOperatorDataUI(slotOperatorData.key);
 			if (seletedOperatorData != null)
 				M_MapEditingUI.RemoveOperatorDataUI(seletedOperatorData.key);
+
+			OperatorSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetSettingPanel<OperatorSettingPanel>();
+
+			if (seletedOperatorData != null)
+			{
+				if (slotOperatorData == null)
+					++settingPanel.usedSlotCount;
+			}
+			else if (slotOperatorData != null)
+			{
+				--settingPanel.usedSlotCount;
+			}
 		}
 		#endregion
 		#endregion
@@ -230,7 +242,7 @@ namespace AvantGardeMaker.UI
 
 			m_ConfirmButton.onClick.AddListener(OnConfirmButtonClicked);
 
-			ChangeParentsActive(false);
+			ChangeActiveParents(false);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -254,24 +266,24 @@ namespace AvantGardeMaker.UI
 		#endregion
 		#endregion
 
-		public void StartSetting(OperatorSettingSlot settingSlot)
+		public void StartSetting(OperatorSettingSlot clickedSlot, OperatorSettingSlot settingSlot)
 		{
 			m_CurrentSettingSlot = settingSlot;
 
-			if (isSlotHasOperatorData == true)
+			if (clickedSlot.hasData == true)
 			{
-				m_CurrentOperatorData = settingSlot.operatorData;
+				m_CurrentOperatorData = clickedSlot.operatorData;
 
 				UpdateUI(m_CurrentOperatorData);
 
 				M_MapEditingUI.RespawnOperatorDataUI(m_CurrentOperatorData.key);
 			}
 
-			ChangeParentsActive(isSlotHasOperatorData);
+			ChangeActiveParents(isSlotHasOperatorData);
 
 			gameObject.SetActive(true);
 		}
-		private void UpdateUI(OperatorData operatorData)
+		public void UpdateUI(OperatorData operatorData)
 		{
 			m_EngNameText.text = operatorData.EngName;
 			m_KorNameText.text = operatorData.KorName;
@@ -287,7 +299,7 @@ namespace AvantGardeMaker.UI
 
 			m_LevelText.text = "<size=45><color=#00AFFF>" + operatorData.FixedData.Level + "</color></size>/" + operatorData.FixedData.MaxLevel.GetLevelData(operatorData.FixedData.Elite);
 		}
-		private void ChangeParentsActive(bool showParents)
+		private void ChangeActiveParents(bool showParents)
 		{
 			m_InfoPanel.gameObject.SetActive(!showParents);
 

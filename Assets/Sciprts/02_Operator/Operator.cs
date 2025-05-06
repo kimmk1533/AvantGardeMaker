@@ -397,13 +397,10 @@ namespace AvantGardeMaker.OperatorSpace
 
 			foreach (var tile in m_AttackRangeInTileList)
 			{
-				if (tile.enemyOnTileList == null)
-					continue;
-
 				m_AttackCoolTimer.Update();
 				if (m_AttackCoolTimer.TimeCheck())
 				{
-					m_AttackTartgetEnemy = tile.enemyOnTileList[0];
+					m_AttackTartgetEnemy = tile.GetFirstEnemy();
 					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
 					//공격회복 스킬일시 실행
 					/*
@@ -488,6 +485,6 @@ namespace AvantGardeMaker.OperatorSpace
 			//m_OperatorSkill = new operatorSkillData.CreateSkill();
 		}
 
-		
+
 	}
 }

@@ -59,8 +59,6 @@ namespace AvantGardeMaker.OperatorSpace.Enum
 
 	public enum E_OperatorSkillType
 	{
-		None,
-
 		AttackBuff,
 		AttackSpeedBuff,
 		GainCost,

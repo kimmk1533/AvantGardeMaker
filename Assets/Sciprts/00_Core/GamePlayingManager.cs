@@ -30,11 +30,6 @@ namespace AvantGardeMaker.CoreSpace
 		#region 오퍼레이터 관련 변수
 		[SerializeField, ReadOnly]
 		private List<Operator> m_DeployingOperatorList = null;
-
-		//선택된 오퍼레이터
-		private Operator m_SelectedOperator = null;
-		//선택된 오퍼레이터가있는 타일
-		private Tile m_SelectedTile = null;
 		#endregion
 
 		#region 적 관련 변수
@@ -59,14 +54,8 @@ namespace AvantGardeMaker.CoreSpace
 
 		public UtilClass.Timer costTimer => m_CostTimer;
 
-		public Operator selectedOperator
-		{
-			get => m_SelectedOperator;
-			set => m_SelectedOperator = value;
-		}
-
-		public E_TileType[,] currentMap { get; private set; }
-		public List<string> operatorSquadKeyList { get; private set; }
+		public (E_TileType tileType, E_TilePositionType tilePositionType)[,] currentMap { get; private set; }
+		public List<OperatorSpawnData> operatorSpawnDataList { get; private set; }
 		#endregion
 
 		#region 이벤트
@@ -100,7 +89,6 @@ namespace AvantGardeMaker.CoreSpace
 			m_DeployingOperatorList = new List<Operator>();
 
 			currentMap = null;
-			operatorSquadKeyList = new List<string>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -129,9 +117,9 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.FinallizeMain();
 
-			currentMap = default;
-			operatorSquadKeyList.Clear();
-			operatorSquadKeyList = null;
+			currentMap = null;
+			operatorSpawnDataList.Clear();
+			operatorSpawnDataList = null;
 		}
 		#endregion
 
@@ -182,7 +170,7 @@ namespace AvantGardeMaker.CoreSpace
 			m_GameStageData = stageData;
 
 			currentMap = stageData.map;
-			operatorSquadKeyList = stageData.operatorKeyList;
+			operatorSpawnDataList = stageData.operatorSpawnDataList;
 
 			currentCost = stageData.initCost;
 			maxCost = stageData.maxCost;

@@ -5,11 +5,6 @@ using UnityEngine;
 
 namespace AvantGardeMaker.CoreSpace.Enum
 {
-	public enum E_CameraMode
-	{
-		GameMode,
-		EditMode,
-	}
 	public enum E_DamageType
 	{
 		Physics,

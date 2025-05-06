@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace;
+using AvantGardeMaker.TileSpace.Enum;
 using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.OperatorSpace.Enum;
 using AvantGardeMaker.EnemySpace;
@@ -9,7 +10,6 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using AvantGardeMaker.TileSpace.Enum;
 
 namespace AvantGardeMaker.TileSpace
 {
@@ -22,14 +22,12 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 프로퍼티
+		public E_TileType tileType { get; set; }
+		public E_TilePositionType tilePositionType { get; set; }
+		public E_TileDeployableTypeFlag tileDeployableTypeFlag { get; set; }
+
 		[field: SerializeField, ReadOnly]
 		public Operator currentOperator { get; private set; }
-		public List<Enemy> enemyOnTileList
-		{
-			get => m_EnemyOnTileList;
-			set => m_EnemyOnTileList = value;
-		}
-		public E_TileType tileType { get; set; }
 		#endregion
 
 		#region 이벤트
@@ -94,7 +92,11 @@ namespace AvantGardeMaker.TileSpace
 
 			onTileClicked -= M_GamePlayingUI.OnTileClicked;
 
+			currentOperator = null;
+
 			tileType = E_TileType.None;
+			tilePositionType = E_TilePositionType.LowGround;
+			tileDeployableTypeFlag = E_TileDeployableTypeFlag.None;
 		}
 		#endregion
 
@@ -121,6 +123,12 @@ namespace AvantGardeMaker.TileSpace
 			OperatorSquadUI squadUI = M_GamePlayingUI.GetOperatorSquadUI(this);
 			squadUI.gameObject.SetActive(true);
 			squadUI.StartRedeployment();
+		}
+
+		public Enemy GetFirstEnemy()
+		{
+			// 임시
+			return m_EnemyOnTileList[0];
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

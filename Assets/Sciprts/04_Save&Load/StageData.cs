@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.OperatorSpace;
+using AvantGardeMaker.TileSpace;
 using AvantGardeMaker.TileSpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -49,10 +50,13 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 저장&불러오기
 		[SerializeField]
 		[FoldoutGroup("타일")]
-		private List<Vector2Int> m_TilePointList;
+		public List<TileSpawnData> m_TileSpawnDataList;
 		[SerializeField]
 		[FoldoutGroup("타일")]
-		private List<E_TileType> m_TileTypeList;
+		private List<TileFixedData> m_TileFixedDataList;
+		[SerializeField]
+		[FoldoutGroup("타일")]
+		public List<TileVariableData> m_TileVariableDataList;
 		#endregion
 
 		[SerializeField, ReadOnly]
@@ -67,7 +71,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 저장&불러오기
 		[SerializeField]
 		[FoldoutGroup("오퍼레이터")]
-		private List<string> m_OperatorKeyList;
+		private List<OperatorSpawnData> m_OperatorSpawnDataList;
 		[SerializeField]
 		[FoldoutGroup("오퍼레이터")]
 		private List<OperatorFixedData> m_OperatorFixedDataList;
@@ -82,16 +86,13 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 저장&불러오기
 		[SerializeField]
 		[FoldoutGroup("적")]
-		private List<string> m_EnemyKeyList;
+		private List<EnemySpawnData> m_EnemySpawnDataList;
 		[SerializeField]
 		[FoldoutGroup("적")]
 		private List<EnemyFixedData> m_EnemyFixedDataList;
 		[SerializeField]
 		[FoldoutGroup("적")]
 		private List<EnemyVariableData> m_EnemyVariableDataList;
-		[SerializeField]
-		[FoldoutGroup("적")]
-		private List<EnemySpawnData> m_EnemySpawnDataList;
 		#endregion
 
 		#endregion
@@ -149,37 +150,41 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#endregion
 
 		#region 2. 타일 관련 프로퍼티
-		public readonly List<Vector2Int> tilePointList => new List<Vector2Int>(m_TilePointList);
-		public readonly List<E_TileType> tileTypeList => new List<E_TileType>(m_TileTypeList);
+		public readonly List<TileSpawnData> tileSpawnDataList => new List<TileSpawnData>(m_TileSpawnDataList);
+		public readonly List<TileFixedData> tileFixedDataList => new List<TileFixedData>(m_TileFixedDataList);
+		public readonly List<TileVariableData> tileVariableDataList => new List<TileVariableData>(m_TileVariableDataList);
 
 		public readonly int mapWidth => m_MaxTile.x - m_MinTile.x + 1;
 		public readonly int mapHeight => m_MaxTile.y - m_MinTile.y + 1;
 
 		public readonly Vector2Int minTile => m_MinTile;
 
-		public readonly E_TileType[,] map
+		public readonly (E_TileType tileType, E_TilePositionType tilePositionType)[,] map
 		{
 			get
 			{
 				int mapWidth = this.mapWidth;
 				int mapHeight = this.mapHeight;
 
-				E_TileType[,] mapArray = new E_TileType[mapHeight, mapWidth];
+				(E_TileType tileType, E_TilePositionType tilePositionType)[,] mapArray = new (E_TileType, E_TilePositionType)[mapHeight, mapWidth];
 				for (int y = 0; y < mapHeight; ++y)
 				{
 					for (int x = 0; x < mapWidth; ++x)
 					{
-						mapArray[y, x] = E_TileType.None;
+						mapArray[y, x] = (E_TileType.None, E_TilePositionType.LowGround);
 					}
 				}
 
 				Vector2Int offset = -m_MinTile;
 
-				for (int i = 0; i < m_TilePointList.Count; ++i)
+				for (int i = 0; i < m_TileSpawnDataList.Count; ++i)
 				{
-					Vector2Int tilePoint = m_TilePointList[i] + offset;
+					Vector2Int tilePoint = m_TileSpawnDataList[i].TilePos + offset;
 
-					mapArray[tilePoint.y, tilePoint.x] = m_TileTypeList[i];
+					E_TileType tileType = m_TileSpawnDataList[i].TileType;
+					E_TilePositionType tilePositionType = m_TileSpawnDataList[i].TilePositionType;
+
+					mapArray[tilePoint.y, tilePoint.x] = (tileType, tilePositionType);
 				}
 
 				return mapArray;
@@ -188,16 +193,15 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#endregion
 
 		#region 3. 오퍼레이터 관련 프로퍼티
-		public readonly List<string> operatorKeyList => new List<string>(m_OperatorKeyList);
+		public readonly List<OperatorSpawnData> operatorSpawnDataList => new List<OperatorSpawnData>(m_OperatorSpawnDataList);
 		public readonly List<OperatorFixedData> operatorFixedDataList => new List<OperatorFixedData>(m_OperatorFixedDataList);
 		public readonly List<OperatorVariableData> operatorVariableDataList => new List<OperatorVariableData>(m_OperatorVariableDataList);
 		#endregion
 
 		#region 4. 적 관련 프로퍼티
-		public readonly List<string> enemyKeyList => new List<string>(m_EnemyKeyList);
+		public readonly List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		public readonly List<EnemyFixedData> enemyFixedDataList => new List<EnemyFixedData>(m_EnemyFixedDataList);
 		public readonly List<EnemyVariableData> enemyVariableDataList => new List<EnemyVariableData>(m_EnemyVariableDataList);
-		public readonly List<EnemySpawnData> enemySpawnDataList => new List<EnemySpawnData>(m_EnemySpawnDataList);
 		#endregion
 		#endregion
 
@@ -208,71 +212,77 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		public static void Initialize(ref StageData stageData)
 		{
 			#region 타일 관련 초기화
-			if (stageData.m_TilePointList == null)
-				stageData.m_TilePointList = new List<Vector2Int>();
-			if (stageData.m_TileTypeList == null)
-				stageData.m_TileTypeList = new List<E_TileType>();
+			if (stageData.m_TileSpawnDataList == null)
+				stageData.m_TileSpawnDataList = new List<TileSpawnData>();
+			if (stageData.m_TileFixedDataList == null)
+				stageData.m_TileFixedDataList = new List<TileFixedData>();
+			if (stageData.m_TileVariableDataList == null)
+				stageData.m_TileVariableDataList = new List<TileVariableData>();
 
-			stageData.m_TilePointList.Clear();
-			stageData.m_TileTypeList.Clear();
+			stageData.m_TileSpawnDataList.Clear();
+			stageData.m_TileFixedDataList.Clear();
+			stageData.m_TileVariableDataList.Clear();
 
 			stageData.m_MinTile = Vector2Int.one * int.MaxValue;
 			stageData.m_MaxTile = Vector2Int.one * int.MinValue;
 			#endregion
 
 			#region 오퍼레이터 관련 초기화
-			if (stageData.m_OperatorKeyList == null)
-				stageData.m_OperatorKeyList = new List<string>();
+			if (stageData.m_OperatorSpawnDataList == null)
+				stageData.m_OperatorSpawnDataList = new List<OperatorSpawnData>();
 			if (stageData.m_OperatorFixedDataList == null)
 				stageData.m_OperatorFixedDataList = new List<OperatorFixedData>();
 			if (stageData.m_OperatorVariableDataList == null)
 				stageData.m_OperatorVariableDataList = new List<OperatorVariableData>();
 
-			stageData.m_OperatorKeyList.Clear();
+			stageData.m_OperatorSpawnDataList.Clear();
 			stageData.m_OperatorFixedDataList.Clear();
 			stageData.m_OperatorVariableDataList.Clear();
 			#endregion
 
 			#region 적 관련 초기화
-			if (stageData.m_EnemyKeyList == null)
-				stageData.m_EnemyKeyList = new List<string>();
+			if (stageData.m_EnemySpawnDataList == null)
+				stageData.m_EnemySpawnDataList = new List<EnemySpawnData>();
 			if (stageData.m_EnemyFixedDataList == null)
 				stageData.m_EnemyFixedDataList = new List<EnemyFixedData>();
 			if (stageData.m_EnemyVariableDataList == null)
 				stageData.m_EnemyVariableDataList = new List<EnemyVariableData>();
 
-			if (stageData.m_EnemySpawnDataList == null)
-				stageData.m_EnemySpawnDataList = new List<EnemySpawnData>();
-
-			stageData.m_EnemyKeyList.Clear();
+			stageData.m_EnemySpawnDataList.Clear();
 			stageData.m_EnemyFixedDataList.Clear();
 			stageData.m_EnemyVariableDataList.Clear();
-
-			stageData.m_EnemySpawnDataList.Clear();
 			#endregion
 		}
 		#endregion
 
-		public void SaveTileData(Vector2Int pos, E_TileType tileType)
+		public void SaveTileData(TileData tileData)
 		{
-			m_TilePointList.Add(pos);
-			m_TileTypeList.Add(tileType);
+			m_TileFixedDataList.Add(tileData.FixedData);
+			m_TileVariableDataList.Add(tileData.VariableData);
+		}
+		public void SaveTileSpawnData(TileSpawnData tileSpawnData)
+		{
+			m_TileSpawnDataList.Add(tileSpawnData);
 
-			m_MinTile.x = Mathf.Min(m_MinTile.x, pos.x);
-			m_MinTile.y = Mathf.Min(m_MinTile.y, pos.y);
+			Vector2Int tilePos = tileSpawnData.TilePos;
 
-			m_MaxTile.x = Mathf.Max(m_MaxTile.x, pos.x);
-			m_MaxTile.y = Mathf.Max(m_MaxTile.y, pos.y);
+			m_MinTile.x = Mathf.Min(m_MinTile.x, tilePos.x);
+			m_MinTile.y = Mathf.Min(m_MinTile.y, tilePos.y);
+
+			m_MaxTile.x = Mathf.Max(m_MaxTile.x, tilePos.x);
+			m_MaxTile.y = Mathf.Max(m_MaxTile.y, tilePos.y);
 		}
 		public void SaveOperatorData(OperatorData operatorData)
 		{
-			m_OperatorKeyList.Add(operatorData.key);
 			m_OperatorFixedDataList.Add(operatorData.FixedData);
 			m_OperatorVariableDataList.Add(operatorData.VariableData);
 		}
+		public void SaveOperatorSpawnData(OperatorSpawnData operatorSpawnData)
+		{
+			m_OperatorSpawnDataList.Add(operatorSpawnData);
+		}
 		public void SaveEnemyData(EnemyData enemyData)
 		{
-			m_EnemyKeyList.Add(enemyData.EngName);
 			m_EnemyFixedDataList.Add(enemyData.FixedData);
 			m_EnemyVariableDataList.Add(enemyData.VariableData);
 		}

@@ -428,8 +428,8 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		private void UpdatePathPointList()
 		{
-			bool[,] map = PathFinder.TileToGrid(M_GamePlaying.currentMap);
-			List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, map);
+			float[,] weightMap = PathFinder.GetWeightMap(M_GamePlaying.currentMap);
+			List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, weightMap);
 			//List<Vector2> pathList = PathFinder.FindPath(curPos, targetPos, m_testMap);
 			m_PathPointStack.Clear();
 			if (pathList == null)

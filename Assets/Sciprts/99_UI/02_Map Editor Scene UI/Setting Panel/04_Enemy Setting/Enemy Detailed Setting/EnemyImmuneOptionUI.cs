@@ -11,7 +11,7 @@ namespace AvantGardeMaker.UI
 	{
 		#region 변수
 		private Image m_ImmuneIconImage = null;
-		private TMP_Text m_ImmuneText = null;
+		private TextMeshProUGUI m_ImmuneText = null;
 		#endregion
 
 		#region 프로퍼티
@@ -45,7 +45,7 @@ namespace AvantGardeMaker.UI
 			if (m_ImmuneIconImage == null)
 				m_ImmuneIconImage = transform.Find<Image>("Immune Icon Image");
 			if (m_ImmuneText == null)
-				m_ImmuneText = transform.Find<TMP_Text>("Immune Description Text");
+				m_ImmuneText = transform.Find<TextMeshProUGUI>("Immune Description Text");
 		}
 		/// <summary>
 		/// 마무리화 함수

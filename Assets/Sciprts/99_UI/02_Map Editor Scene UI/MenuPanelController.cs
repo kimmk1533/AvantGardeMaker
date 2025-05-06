@@ -16,9 +16,9 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 잠금 설정 관련 변수
-		private bool m_IsMovable = false;
-		private Button m_MenuMovingLockButton = null;
-		private Image m_MenuMovingLockButtonImage = null;
+		private bool m_IsLock = false;
+		private Button m_MenuLockButton = null;
+		private Image m_MenuLockButtonImage = null;
 
 		private Vector3 m_EnterPosition = default;
 		private Vector3 m_ExitPosition = default;
@@ -34,6 +34,17 @@ namespace AvantGardeMaker.UI
 
 		#region 프로퍼티
 		public RectTransform rectTransform => transform as RectTransform;
+
+		public bool isLock
+		{
+			get => m_IsLock;
+			set
+			{
+				m_IsLock = value;
+
+				m_MenuLockButtonImage.sprite = (m_IsLock == true) ? m_LockSprite : m_UnlockSprite;
+			}
+		}
 		#endregion
 
 		#region 이벤트
@@ -43,41 +54,31 @@ namespace AvantGardeMaker.UI
 		private void OnMenuButtonClicked(string key)
 		{
 			SettingPanelController settingPanelController = M_MapEditingUI.settingPanelController;
-			SettingPanel prevSettingPanel = settingPanelController.currentSettingPanel;
 
-			if (prevSettingPanel != null)
-				prevSettingPanel.gameObject.SetActive(false);
+			SettingPanel currentSettingPanel = settingPanelController.currentSettingPanel;
+			SettingPanel clickedSettingPanel = settingPanelController.GetSettingPanel(key);
 
-			SettingPanel currSettingPanel = settingPanelController.GetSettingPanel(key);
+			if (currentSettingPanel != null)
+				currentSettingPanel.gameObject.SetActive(false);
 
-			currSettingPanel.OnMenuButtonClicked();
+			clickedSettingPanel.OnMenuButtonClicked();
 		}
 		#endregion
 
 		#region 잠금 설정 관련 이벤트 함수
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (m_IsMovable == false)
+			if (m_IsLock == true)
 				return;
 
 			rectTransform.anchoredPosition = m_EnterPosition;
 		}
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			if (m_IsMovable == false)
+			if (m_IsLock == true)
 				return;
 
 			rectTransform.anchoredPosition = m_ExitPosition;
-		}
-
-		private void OnMenuLockButtonClicked()
-		{
-			m_IsMovable = !m_IsMovable;
-
-			if (m_IsMovable)
-				m_MenuMovingLockButtonImage.sprite = m_UnlockSprite;
-			else
-				m_MenuMovingLockButtonImage.sprite = m_LockSprite;
 		}
 		#endregion
 		#endregion
@@ -116,17 +117,17 @@ namespace AvantGardeMaker.UI
 			#endregion
 
 			#region 잠금 설정 관련 초기화
-			m_IsMovable = false;
+			m_MenuLockButton = rectTransform.Find<Button>("Lock Button");
+			m_MenuLockButton.onClick.AddListener(() => isLock = !isLock);
 
-			m_MenuMovingLockButton = rectTransform.Find<Button>("Lock Button");
-			m_MenuMovingLockButton.onClick.AddListener(OnMenuLockButtonClicked);
-
-			m_MenuMovingLockButtonImage = m_MenuMovingLockButton.transform.Find<Image>("Lock Button Image");
-			m_MenuMovingLockButtonImage.sprite = m_LockSprite;
+			m_MenuLockButtonImage = m_MenuLockButton.transform.Find<Image>("Lock Button Image");
 
 			m_EnterPosition = rectTransform.anchoredPosition;
 			m_ExitPosition = rectTransform.anchoredPosition;
 			m_ExitPosition.y *= -1f;
+
+			isLock = true;
+			rectTransform.anchoredPosition = m_IsLock ? m_EnterPosition : m_ExitPosition;
 			#endregion
 		}
 		/// <summary>
@@ -134,7 +135,12 @@ namespace AvantGardeMaker.UI
 		/// </summary>
 		public void Finallize()
 		{
-
+			foreach (var item in m_MenuButtonMap)
+			{
+				item.Value.onClick.RemoveAllListeners();
+			}
+			m_MenuButtonMap.Clear();
+			m_MenuButtonMap = null;
 		}
 		#endregion
 		#endregion

@@ -18,18 +18,18 @@ namespace AvantGardeMaker.UI
 		#region Enemy Stat 변수
 		#region Infos 변수
 		private Image m_EnemyTypeImage = null;
-		private TMP_Text m_RaceText = null;
-		private TMP_Text m_CodeText = null;
-		private TMP_Text m_NameText = null;
-		private TMP_Text m_AttackInfoText = null;
+		private TextMeshProUGUI m_RaceText = null;
+		private TextMeshProUGUI m_CodeText = null;
+		private TextMeshProUGUI m_NameText = null;
+		private TextMeshProUGUI m_AttackInfoText = null;
 		private Image m_LifeTypeImage = null;
-		private TMP_Text m_LifeValueText = null;
+		private TextMeshProUGUI m_LifeValueText = null;
 		#endregion
 
 		#region Datas 변수
 		private Image m_PortraitImage = null;
 
-		private TMP_Text m_WeightValueText = null;
+		private TextMeshProUGUI m_WeightValueText = null;
 
 		private StatDataUI m_HpDataUI = null;
 		private StatDataUI m_AtkDataUI = null;
@@ -42,8 +42,8 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region Descriptions 변수
-		private TMP_Text m_EnemyDescriptionText = null;
-		private TMP_Text m_TraitDescriptionText = null;
+		private TextMeshProUGUI m_EnemyDescriptionText = null;
+		private TextMeshProUGUI m_TraitDescriptionText = null;
 		#endregion
 		#endregion
 
@@ -148,17 +148,17 @@ namespace AvantGardeMaker.UI
 			if (m_EnemyTypeImage == null)
 				m_EnemyTypeImage = transform.FindInChildren<Image>("Enemy Type Image");
 			if (m_RaceText == null)
-				m_RaceText = transform.FindInChildren<TMP_Text>("Race Info Text");
+				m_RaceText = transform.FindInChildren<TextMeshProUGUI>("Race Info Text");
 			if (m_CodeText == null)
-				m_CodeText = transform.FindInChildren<TMP_Text>("Code Info Text");
+				m_CodeText = transform.FindInChildren<TextMeshProUGUI>("Code Info Text");
 			if (m_NameText == null)
-				m_NameText = transform.FindInChildren<TMP_Text>("Name Info Text");
+				m_NameText = transform.FindInChildren<TextMeshProUGUI>("Name Info Text");
 			if (m_AttackInfoText == null)
-				m_AttackInfoText = transform.FindInChildren<TMP_Text>("Attack Info Text");
+				m_AttackInfoText = transform.FindInChildren<TextMeshProUGUI>("Attack Info Text");
 			if (m_LifeTypeImage == null)
 				m_LifeTypeImage = transform.FindInChildren<Image>("Life Type Image");
 			if (m_LifeValueText == null)
-				m_LifeValueText = transform.FindInChildren<TMP_Text>("Life Value Text");
+				m_LifeValueText = transform.FindInChildren<TextMeshProUGUI>("Life Value Text");
 			#endregion
 
 			#region Datas 초기화
@@ -166,7 +166,7 @@ namespace AvantGardeMaker.UI
 				m_PortraitImage = transform.FindInChildren<Image>("Portrait Image");
 
 			if (m_WeightValueText == null)
-				m_WeightValueText = transform.FindInChildren<TMP_Text>("Weight Value Text");
+				m_WeightValueText = transform.FindInChildren<TextMeshProUGUI>("Weight Value Text");
 
 			if (m_HpDataUI == null)
 			{
@@ -220,9 +220,9 @@ namespace AvantGardeMaker.UI
 
 			#region Descriptions 초기화
 			if (m_EnemyDescriptionText == null)
-				m_EnemyDescriptionText = transform.FindInChildren<TMP_Text>("Enemy Description Text");
+				m_EnemyDescriptionText = transform.FindInChildren<TextMeshProUGUI>("Enemy Description Text");
 			if (m_TraitDescriptionText == null)
-				m_TraitDescriptionText = transform.FindInChildren<TMP_Text>("Trait Description Text");
+				m_TraitDescriptionText = transform.FindInChildren<TextMeshProUGUI>("Trait Description Text");
 			#endregion
 			#endregion
 
@@ -296,7 +296,7 @@ namespace AvantGardeMaker.UI
 			/// 한섭 기준: 지위
 			/// 
 			/// 값: 일반, 정예, 리더
-			string enemyType = EnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
+			string enemyType = EnemyEnumUtil.EnumToKorString(enemyData.FixedData.EnemyType);
 			m_EnemyTypeImage.sprite = null;
 
 			/// 
@@ -304,7 +304,7 @@ namespace AvantGardeMaker.UI
 			/// 
 			/// 값: 감염생물, 드론, 살카즈, 숙주, 바다 괴물, 아츠 피조물, 요괴, 기계, 야생동물, 붕괴체, 기타
 			/// 
-			string raceText = EnumUtil.EnumToKorString(enemyData.FixedData.RaceType);
+			string raceText = EnemyEnumUtil.EnumToKorString(enemyData.FixedData.RaceType);
 			m_RaceText.text = raceText;
 
 			/// 
@@ -322,13 +322,13 @@ namespace AvantGardeMaker.UI
 			/// 
 			/// 값: 비공격, 근거리, 원거리
 			/// 
-			string atkPattern = EnumUtil.EnumToKorString(enemyData.FixedData.AtkPattern);
+			string atkPattern = EnemyEnumUtil.EnumToKorString(enemyData.FixedData.AtkPattern);
 			/// 
 			/// 한섭 기준: 대미지 타입
 			/// 
 			/// 값: 물리, 마법, 치료, 없음
 			/// 
-			string dmgType = EnumUtil.EnumToKorString(enemyData.FixedData.DmgType);
+			string dmgType = EnemyEnumUtil.EnumToKorString(enemyData.FixedData.DmgType);
 			m_AttackInfoText.text = atkPattern + " " + dmgType;
 
 			/// 
@@ -394,7 +394,7 @@ namespace AvantGardeMaker.UI
 			// 내성 패널 On / Off
 			immuneParent.parent.gameObject.SetActive(enemyData.FixedData.ImmuneType > 0);
 
-			string[] immuneKorStringArr = EnumUtil.EnumFlagToKorString(enemyData.FixedData.ImmuneType);
+			string[] immuneKorStringArr = EnemyEnumUtil.EnumFlagToKorString(enemyData.FixedData.ImmuneType);
 
 			for (int i = 0; i < immuneKorStringArr.Length; ++i)
 			{
@@ -485,7 +485,7 @@ namespace AvantGardeMaker.UI
 		{
 			public TMP_InputField inputField { get; }
 			[System.Obsolete("현재는 사용X, 이후 추가 가능성 있음")]
-			public TMP_Text rankText { get; }
+			public TextMeshProUGUI rankText { get; }
 			public TMP_Dropdown rankDropdown { get; }
 
 			public StatDataUI(Transform transform, string dataName)
@@ -493,7 +493,7 @@ namespace AvantGardeMaker.UI
 				inputField = transform.FindInChildren<TMP_InputField>(dataName + " InputField");
 				inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
 
-				rankText = transform.FindInChildren<TMP_Text>(dataName + " Rank Text");
+				rankText = transform.FindInChildren<TextMeshProUGUI>(dataName + " Rank Text");
 				rankDropdown = transform.FindInChildren<TMP_Dropdown>(dataName + " Rank Dropdown");
 			}
 

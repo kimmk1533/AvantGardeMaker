@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using AvantGardeMaker.CoreSpace.Enum;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.TileSpace;
@@ -23,7 +22,7 @@ namespace AvantGardeMaker.CoreSpace
 		private float m_CameraSwitchDuration = 1f;
 
 		[SerializeField, ReadOnly]
-		private E_CameraMode m_CameraMode = E_CameraMode.EditMode;
+		private bool m_IsEditView = true;
 
 		[SerializeField, ReadOnly]
 		private bool m_IsCameraSwitching = false;
@@ -31,26 +30,15 @@ namespace AvantGardeMaker.CoreSpace
 
 		#region 편집 모드 관련 변수
 		private bool m_IsEditMode = false;
-
-		private E_EditModeType m_EditModeType = E_EditModeType.Tile;
 		#endregion
 
 		#region 타일 관련 변수
-		// 타일 배치 가능 여부
-		private bool m_TilePlacementFlag = true;
-
 		private Vector3 m_HighGroundTileOffset = Vector3.back * 0.2f;
 
-		// 현재 타일 타입
-		private E_TileType m_CurrentTileType = E_TileType.LowGround;
+		// 타일 배치 가능 여부
+		private bool m_TilePlacementFlag = true;
 		// 타일 프리뷰 오브젝트
 		private Tile m_TilePreview = null;
-		// 타일 프리뷰 오브젝트 맵
-		private Dictionary<E_TileType, Tile> m_TilePreviewMap = null;
-
-		// 머터리얼 정보 맵
-		[SerializeField]
-		private Dictionary<string, Material> m_MaterialMap = null;
 		#endregion
 
 		#region 적 관련 변수
@@ -67,8 +55,11 @@ namespace AvantGardeMaker.CoreSpace
 		public Camera mapEditorCamera { get; set; }
 		public Camera thumnailCamera { get; set; }
 
-		public Transform editModeCameraTransform { get; set; }
-		public Transform gameModeCameraTransform { get; set; }
+		public Transform editViewCameraTransform { get; set; }
+		public Transform gameViewCameraTransform { get; set; }
+
+		private bool isEditView => m_IsEditView;
+		private bool isGameView => !m_IsEditView;
 		#endregion
 
 		#region 편집 모드 관련 프로퍼티
@@ -76,9 +67,10 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 타일 관련 프로퍼티
-		private bool tilePreviewActive =>
-			m_CameraMode == E_CameraMode.EditMode &&
-			m_IsCameraSwitching == false;
+		public string tileKey { get; set; }
+		public E_TileType tileType { get; set; }
+		public E_TilePositionType tilePositionType { get; set; }
+		public E_TileDeployableTypeFlag tileDeployableTypeFlag { get; set; }
 		#endregion
 
 		#region 저장 & 불러오기 관련 프로퍼티
@@ -111,23 +103,8 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 이벤트
-		private event System.Action onCameraSwitcingFinished = null;
 
 		#region 이벤트 함수
-		private void OnCameraSwitchingFinished()
-		{
-			switch (m_CameraMode)
-			{
-				case E_CameraMode.GameMode:
-					//m_EditModeCamera.orthographic = false;
-					break;
-				case E_CameraMode.EditMode:
-					mapEditorCamera.orthographic = true;
-					break;
-				default:
-					break;
-			}
-		}
 		#endregion
 		#endregion
 
@@ -145,16 +122,7 @@ namespace AvantGardeMaker.CoreSpace
 			if (Input.GetKeyDown(KeyCode.Space) == true)
 				SwitchCameraMode();
 
-			switch (m_EditModeType)
-			{
-				case E_EditModeType.System:
-					break;
-				case E_EditModeType.Tile:
-					TileEditModeProcess();
-					break;
-				case E_EditModeType.Enemy:
-					break;
-			}
+			TileEditModeProcess();
 		}
 		#endregion
 
@@ -165,30 +133,6 @@ namespace AvantGardeMaker.CoreSpace
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			#region 프리뷰 타일 머터리얼 생성
-			List<KeyValuePair<string, Material>> previewMaterialList = new List<KeyValuePair<string, Material>>();
-			foreach (var item in m_MaterialMap)
-			{
-				string previewKey = item.Key + " Preview";
-				Material previewMaterial = new Material(item.Value);
-
-				previewMaterial.name = previewKey;
-
-				Color previewColor = previewMaterial.color;
-				previewColor.a = 0.3f;
-				previewMaterial.color = previewColor;
-
-				KeyValuePair<string, Material> keyValuePair = new KeyValuePair<string, Material>(previewKey, previewMaterial);
-				previewMaterialList.Add(keyValuePair);
-			}
-			foreach (var item in previewMaterialList)
-			{
-				m_MaterialMap.Add(item.Key, item.Value);
-			}
-			#endregion
-
-			onCameraSwitcingFinished += OnCameraSwitchingFinished;
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -196,8 +140,6 @@ namespace AvantGardeMaker.CoreSpace
 		public override void Finallize()
 		{
 			base.Finallize();
-
-			onCameraSwitcingFinished -= OnCameraSwitchingFinished;
 		}
 
 		/// <summary>
@@ -211,31 +153,42 @@ namespace AvantGardeMaker.CoreSpace
 
 			m_TilePlacementFlag = true;
 
-			if (m_TilePreviewMap == null)
-			{
-				m_TilePreviewMap = new Dictionary<E_TileType, Tile>();
+			//if (m_PreviewTileMap == null)
+			//{
+			//	m_PreviewTileMap = new Dictionary<E_TileTypeFlag, (Tile tile, Material material)>();
 
-				for (E_TileType tileType = E_TileType.LowGround; tileType < E_TileType.Max; ++tileType)
-				{
-					string key = tileType.ToString().Replace('_', ' ');
-					string previewKey = key + " Preview";
+			//	for (E_TileType tileType = E_TileType.LowGround; tileType < E_TileType.Max; ++tileType)
+			//	{
+			//		string key = tileType.ToString().Replace('_', ' ');
 
-					Tile previewTile = M_Tile.GetBuilder(key)
-						.SetParent(transform)
-						.SetName(previewKey)
-						.SetAutoInit(true)
-						.Spawn();
+			//		Tile previewTile = M_Tile.GetBuilder(key)
+			//			.SetParent(transform)
+			//			.SetName(key + " Preview")
+			//			.SetAutoInit(true)
+			//			.SetActive(false)
+			//			.Spawn();
 
-					previewTile.GetComponent<MeshRenderer>().material = m_MaterialMap[previewKey];
+			//		MeshRenderer meshRenderer = previewTile.GetComponent<MeshRenderer>();
 
-					m_TilePreviewMap.Add(tileType, previewTile);
-				}
-			}
+			//		Material originMaterial = meshRenderer.material;
+			//		Material previewMaterial = new Material(originMaterial);
 
-			m_EditModeType = E_EditModeType.Tile;
-			m_CurrentTileType = E_TileType.LowGround;
+			//		Color previewColor = previewMaterial.color;
+			//		previewColor.a = 0.3f;
+			//		previewMaterial.color = previewColor;
 
-			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
+			//		meshRenderer.material = previewMaterial;
+
+			//		m_PreviewTileMap.Add(tileType, (previewTile, originMaterial));
+			//	}
+			//}
+
+			m_TilePreview = null;
+
+			tileKey = string.Empty;
+			tileType = E_TileType.None;
+			tilePositionType = E_TilePositionType.LowGround;
+			tileDeployableTypeFlag = E_TileDeployableTypeFlag.None;
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -244,16 +197,16 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.FinallizeMain();
 
-			foreach (var item in m_TilePreviewMap)
-			{
-				string key = item.Key.ToString().Replace('_', ' ');
+			//foreach (var item in m_PreviewTileMap)
+			//{
+			//	string key = item.Key.ToString().Replace('_', ' ');
 
-				item.Value.GetComponent<MeshRenderer>().material = m_MaterialMap[key];
+			//	item.Value.tile.GetComponent<MeshRenderer>().material = item.Value.originMaterial;
 
-				M_Tile.Despawn(item.Value);
-			}
-			m_TilePreviewMap.Clear();
-			m_TilePreviewMap = null;
+			//	M_Tile.Despawn(item.Value.tile);
+			//}
+			//m_PreviewTileMap.Clear();
+			//m_PreviewTileMap = null;
 
 			m_EditingStageData = default;
 			stageTitle = string.Empty;
@@ -261,14 +214,6 @@ namespace AvantGardeMaker.CoreSpace
 			m_IsEditMode = false;
 		}
 		#endregion
-
-		public void SetEditModeType(E_EditModeType editModeType)
-		{
-			m_EditModeType = editModeType;
-
-			m_TilePreview.gameObject.SetActive(editModeType == E_EditModeType.Tile &&
-				tilePreviewActive);
-		}
 
 		#region 카메라 관련 함수
 		private void SwitchCameraMode()
@@ -278,27 +223,17 @@ namespace AvantGardeMaker.CoreSpace
 			if (m_IsCameraSwitching == true)
 				return;
 
-			m_IsCameraSwitching = true;
+			Transform targetTransform = (m_IsEditView == true) ? gameViewCameraTransform : editViewCameraTransform;
 
-			switch (m_CameraMode)
+			StartCoroutine(MoveCamera(targetTransform));
+			if (m_IsEditView == true)
 			{
-				case E_CameraMode.GameMode:
-					m_CameraMode = E_CameraMode.EditMode;
-
-					StartCoroutine(MoveCamera(editModeCameraTransform));
-					//m_EditModeCamera.orthographic = true;
-					break;
-				case E_CameraMode.EditMode:
-					m_CameraMode = E_CameraMode.GameMode;
-
-					StartCoroutine(MoveCamera(gameModeCameraTransform));
-					mapEditorCamera.orthographic = false;
-					m_TilePreview.gameObject.SetActive(false);
-					break;
-				default:
-					return;
+				mapEditorCamera.orthographic = false;
+				//m_TilePreview.gameObject.SetActive(false);
 			}
 
+			m_IsCameraSwitching = true;
+			m_IsEditView = !m_IsEditView;
 		}
 
 		private IEnumerator MoveCamera(Transform targetTransform)
@@ -308,7 +243,9 @@ namespace AvantGardeMaker.CoreSpace
 				mapEditorCamera.transform.position = targetTransform.position;
 				mapEditorCamera.transform.rotation = targetTransform.rotation;
 				m_IsCameraSwitching = false;
-				onCameraSwitcingFinished?.Invoke();
+
+				if (m_IsEditView)
+					mapEditorCamera.orthographic = true;
 				yield break;
 			}
 
@@ -316,7 +253,7 @@ namespace AvantGardeMaker.CoreSpace
 			Quaternion initRotation = mapEditorCamera.transform.rotation;
 			float t = 0f;
 
-			for (float time = 0f; time <= m_CameraSwitchDuration; time += Time.deltaTime)
+			for (float time = 0f; time < m_CameraSwitchDuration; time += Time.deltaTime)
 			{
 				yield return null;
 
@@ -329,15 +266,16 @@ namespace AvantGardeMaker.CoreSpace
 			mapEditorCamera.transform.position = targetTransform.position;
 			mapEditorCamera.transform.rotation = targetTransform.rotation;
 			m_IsCameraSwitching = false;
-			onCameraSwitcingFinished?.Invoke();
+
+			if (m_IsEditView)
+				mapEditorCamera.orthographic = true;
 		}
 		#endregion
 
 		#region 타일 편집 모드 관련 함수
 		private void TileEditModeProcess()
 		{
-			if (m_CurrentTileType == E_TileType.None ||
-				m_CameraMode == E_CameraMode.GameMode ||
+			if (isEditView == false ||
 				m_IsCameraSwitching == true)
 				return;
 
@@ -358,29 +296,33 @@ namespace AvantGardeMaker.CoreSpace
 				if (m_TilePlacementFlag == false)
 					return;
 
-				m_TilePreview.transform.position = (Vector3Int)mousePositionInt;
-				m_TilePreview.gameObject.SetActive(true);
-
-				Tile tile = M_Tile.GetTile(mousePositionInt);
+				//m_TilePreview.transform.position = (Vector3Int)mousePositionInt;
+				//m_TilePreview.gameObject.SetActive(true);
 
 				// 타일 배치
-				if (Input.GetMouseButton(0) == true)
+				if (Input.GetMouseButton(0) == true &&
+					string.IsNullOrEmpty(tileKey) == false)
 				{
-					if (tile == null)
-						M_Tile.AddTile(mousePositionInt, m_CurrentTileType);
-					else if (tile.tileType != m_CurrentTileType)
-						M_Tile.ReplaceTile(mousePositionInt, m_CurrentTileType);
+					TileSpawnData tileSpawnData = new TileSpawnData()
+					{
+						TileSpawnKey = tileKey,
+						TilePos = mousePositionInt,
+						TileType = tileType,
+						TilePositionType = tilePositionType,
+						TileDeployableTypeFlag = tileDeployableTypeFlag,
+					};
+
+					M_Tile.AddTile(tileSpawnData);
 				}
 				// 타일 제거
-				if (Input.GetMouseButton(1) == true &&
-					tile != null)
+				if (Input.GetMouseButton(1) == true)
 				{
 					M_Tile.RemoveTile(mousePositionInt);
 				}
 			}
 			else
 			{
-				m_TilePreview.gameObject.SetActive(false);
+				//m_TilePreview.gameObject.SetActive(false);
 
 				if (Input.GetMouseButtonDown(0) == true ||
 					Input.GetMouseButtonDown(1) == true)
@@ -388,20 +330,25 @@ namespace AvantGardeMaker.CoreSpace
 			}
 		}
 
-		public Vector3 GetTileOffset(E_TileType tileType)
+		public Vector3 GetTileOffset(E_TilePositionType tileType)
 		{
-			if (tileType == E_TileType.HighGround)
+			if (tileType == E_TilePositionType.HighGround)
 				return m_HighGroundTileOffset;
 
 			return Vector3.zero;
 		}
 
-		public void SetTileType(E_TileType tileType)
+		public void AddTileDeployableTypeFlag(E_TileDeployableTypeFlag flag)
 		{
-			m_CurrentTileType = tileType;
-			m_TilePreview = m_TilePreviewMap[m_CurrentTileType];
-
-			m_TilePreview.gameObject.SetActive(tileType != E_TileType.None);
+			tileDeployableTypeFlag |= flag;
+		}
+		public void RemoveTileDeployableTypeFlag(E_TileDeployableTypeFlag flag)
+		{
+			tileDeployableTypeFlag &= ~flag;
+		}
+		public bool HasTileDeployableTypeFlag(E_TileDeployableTypeFlag flag)
+		{
+			return tileDeployableTypeFlag.HasFlag(flag);
 		}
 		#endregion
 
@@ -411,6 +358,7 @@ namespace AvantGardeMaker.CoreSpace
 		#region 저장 & 불러오기 관련 함수
 		private async Awaitable<byte[]> CreateThumnailRawTextureData()
 		{
+			// Main Menu Scene Thumanil Image 크기
 			int resWidth = 580;
 			int resHeight = 326;
 
@@ -453,17 +401,16 @@ namespace AvantGardeMaker.CoreSpace
 
 			m_EditingStageData.thumnail = await CreateThumnailRawTextureData();
 
-			#region 타일 저장
+			#region Data 저장
 			M_Tile.SaveTileData(ref m_EditingStageData);
+			M_MapEditingUI.SaveOperatorData(ref m_EditingStageData);
+			M_MapEditingUI.SaveEnemyData(ref m_EditingStageData);
 			#endregion
 
-			#region 오퍼레이터 저장
-			M_MapEditingUI.SaveOperatorDataUI(ref m_EditingStageData);
-			#endregion
-
-			#region 적 저장
-			M_MapEditingUI.SaveEnemyDataUI(ref m_EditingStageData);
-			M_MapEditingUI.SaveEnemySpawnDataUI(ref m_EditingStageData);
+			#region SpawnData 저장
+			M_Tile.SaveSpawnTileData(ref m_EditingStageData);
+			M_MapEditingUI.SaveOperatorSpawnData(ref m_EditingStageData);
+			M_MapEditingUI.SaveEnemySpawnData(ref m_EditingStageData);
 			#endregion
 		}
 		public async Awaitable SaveDataToCloud()
@@ -505,8 +452,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_Enemy.LoadEnemyData(m_EditingStageData);
 
 			M_MapEditingUI.LoadSystemSetting(m_EditingStageData);
-			M_MapEditingUI.LoadOperatorDataUI(m_EditingStageData);
-			M_MapEditingUI.LoadEnemySpawnDataUI(m_EditingStageData);
+			M_MapEditingUI.LoadOperatorSetting(m_EditingStageData);
+			M_MapEditingUI.LoadEnemySetting(m_EditingStageData);
 
 			#region Debug
 			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 로드 완료", new UtilClass.WorldTMP_TextOption()

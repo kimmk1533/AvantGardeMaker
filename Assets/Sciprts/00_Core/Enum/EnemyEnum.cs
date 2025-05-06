@@ -122,7 +122,7 @@ namespace AvantGardeMaker.EnemySpace.Enum
 		OnNotBlock,
 	}
 
-	public class EnumUtil
+	public static class EnemyEnumUtil
 	{
 		public static string EnumToKorString<TEnum>(TEnum enumValue) where TEnum : System.Enum
 		{

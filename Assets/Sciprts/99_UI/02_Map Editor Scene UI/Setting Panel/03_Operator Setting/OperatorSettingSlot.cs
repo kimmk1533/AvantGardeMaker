@@ -89,6 +89,7 @@ namespace AvantGardeMaker.UI
 				m_SkillImage.sprite = null;
 			}
 		}
+		public bool hasData => operatorData != null;
 		#endregion
 
 		#region 이벤트
@@ -96,9 +97,13 @@ namespace AvantGardeMaker.UI
 		#region 이벤트 함수
 		private void OnSlotButtonClicked()
 		{
-			OperatorDetailedSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<OperatorDetailedSettingPanel>();
+			OperatorSettingPanel settingPanel = M_MapEditingUI.settingPanelController.GetSettingPanel<OperatorSettingPanel>();
+			OperatorDetailedSettingPanel detailedSettingPanel = M_MapEditingUI.settingPanelController.GetDetailedSettingPanel<OperatorDetailedSettingPanel>();
 
-			settingPanel.StartSetting(this);
+			if (hasData == true)
+				detailedSettingPanel.StartSetting(this, this);
+			else
+				detailedSettingPanel.StartSetting(this, settingPanel.currentSettingSlot);
 		}
 		private void OnMinusButtonClicked(int currentLevel, TextMeshProUGUI text)
 		{
@@ -146,14 +151,14 @@ namespace AvantGardeMaker.UI
 			m_ModuleLevelMinusButton = m_ModuleParent.Find<Button>("Minus Button");
 			m_ModuleButton = m_ModuleParent.Find<Button>("Module Button");
 			m_ModuleImage = m_ModuleButton.transform.Find<Image>("Module Image");
-			m_ModuleLevelText = m_ModuleButton.transform.Find("Module Level").Find<TextMeshProUGUI>("Module Level Text");
+			m_ModuleLevelText = m_ModuleButton.transform.Find<TextMeshProUGUI>("Module Level/Module Level Text");
 			m_ModuleLevelPlusButton = m_ModuleParent.Find<Button>("Plus Button");
 
 			m_SkillParent = transform.Find("Skill") as RectTransform;
 			m_SkillLevelMinusButton = m_SkillParent.Find<Button>("Minus Button");
 			m_SkillButton = m_SkillParent.Find<Button>("Skill Button");
 			m_SkillImage = m_SkillButton.transform.Find<Image>("Skill Image");
-			m_SkillLevelText = m_SkillButton.transform.Find("Skill Level").Find<TextMeshProUGUI>("Skill Level Text");
+			m_SkillLevelText = m_SkillButton.transform.Find<TextMeshProUGUI>("Skill Level/Skill Level Text");
 			m_SkillLevelPlusButton = m_SkillParent.Find<Button>("Plus Button");
 
 			m_ModuleLevelMinusButton.onClick.AddListener(() => OnMinusButtonClicked(m_ModuleLevel, m_ModuleLevelText));

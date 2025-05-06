@@ -70,6 +70,10 @@ public class ObjectPool<TItem> where TItem : ObjectPoolItemBase
 	}
 	public void Finallize()
 	{
+		// 이미 Dispose된 경우 중도 return
+		if (m_SpawnedItemList == null)
+			return;
+
 		int count = m_SpawnedItemList.Count;
 		for (int i = 0; i < count; ++i)
 		{

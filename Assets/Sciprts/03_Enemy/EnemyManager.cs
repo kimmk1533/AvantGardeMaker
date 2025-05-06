@@ -143,7 +143,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			for (int i = 0; i < enemyDatas.Length; ++i)
 			{
-				string key = enemyDatas[i].EngName;
+				string key = enemyDatas[i].key;
 
 				m_EnemyDataMap.Add(key, enemyDatas[i]);
 			}
@@ -153,21 +153,17 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		public void LoadEnemyData(in StageData stageData)
 		{
-			List<string> enemyKeyList = stageData.enemyKeyList;
+			List<EnemySpawnData> spawnDataList = stageData.enemySpawnDataList;
 			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
 			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
 
-			int count = enemyKeyList.Count;
-
-			if (count != fixedDataList.Count ||
-				count != variableDataList.Count)
-				throw new System.Exception("적 데이터 갯수 다름");
+			int count = spawnDataList.Count;
 
 			for (int i = 0; i < count; ++i)
 			{
-				string key = enemyKeyList[i];
+				EnemySpawnData spawnData = spawnDataList[i];
 
-				EnemyData enemyData = m_EnemyDataMap[key];
+				EnemyData enemyData = m_EnemyDataMap[spawnData.EnemySpawnKey];
 
 				enemyData.FixedData = fixedDataList[i];
 				enemyData.VariableData = variableDataList[i];
@@ -212,13 +208,13 @@ namespace AvantGardeMaker.EnemySpace
 				return;
 
 			//스테이지 시작 시 n초가 경과했다면
-			Enemy enemy = GetBuilder(enemySpawnData.Name)
+			Enemy enemy = GetBuilder(enemySpawnData.EnemySpawnKey)
 							.SetPosition(enemySpawnData.startPos)
 							.SetAutoInit(false)
 							.SetActive(false)
 							.Spawn();
 
-			enemy.SetEnemyData(m_EnemyDataMap[enemySpawnData.Name]);
+			enemy.SetEnemyData(m_EnemyDataMap[enemySpawnData.EnemySpawnKey]);
 			enemy.state = E_EnemyState.Move;
 			enemy.InitializePoolItem();
 			enemy.SetRange(1.9f);
@@ -241,17 +237,17 @@ namespace AvantGardeMaker.EnemySpace
 				case E_EnemyGradeType.Normal:
 					break;
 				case E_EnemyGradeType.Elite:
-					{
-						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-						enemyCollider.radius = 0.4f;
-						break;
-					}
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.4f;
+					break;
+				}
 				case E_EnemyGradeType.Leader:
-					{
-						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-						enemyCollider.radius = 0.5f;
-						break;
-					}
+				{
+					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+					enemyCollider.radius = 0.5f;
+					break;
+				}
 			}
 
 			m_EnemyList.Add(enemy);

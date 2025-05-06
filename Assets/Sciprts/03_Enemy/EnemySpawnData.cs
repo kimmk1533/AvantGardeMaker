@@ -8,7 +8,7 @@ namespace AvantGardeMaker.EnemySpace
 	public class EnemySpawnData
 	{
 		//스폰시킬 적의 이름
-		public string Name = string.Empty;
+		public string EnemySpawnKey = string.Empty;
 
 		//수량(일괄 스폰 시 사용)
 		public int Amount = 1;
@@ -32,7 +32,7 @@ namespace AvantGardeMaker.EnemySpace
 
 		public EnemySpawnData()
 		{
-			Name = "DummyEnemy";
+			EnemySpawnKey = "DummyEnemy";
 
 			Amount = 1;
 			Interval = 0f;

@@ -13,19 +13,19 @@ namespace AvantGardeMaker.UI
 	{
 		#region 변수
 		#region Map Item List 관련 변수
-		private TMP_Text m_LoadingText = null;
+		private TextMeshProUGUI m_LoadingText = null;
 
 		private MapListItem m_SelectedMapListItem = null;
 		#endregion
 
 		#region Map Info 관련 변수
 		private RawImage m_ThumnailImage = null;
-		private TMP_Text m_TitleText = null;
-		private TMP_Text m_CreatorText = null;
+		private TextMeshProUGUI m_TitleText = null;
+		private TextMeshProUGUI m_CreatorText = null;
 		//private Rating m_Rating = null;
 		private Button m_OperatorInfoButton = null;
 		private Button m_EnemyInfoButton = null;
-		private TMP_Text m_DescriptionText = null;
+		private TextMeshProUGUI m_DescriptionText = null;
 		#endregion
 
 		private Button m_PlayButton = null;
@@ -122,11 +122,11 @@ namespace AvantGardeMaker.UI
 		{
 			base.Initialize();
 
-			m_LoadingText = transform.Find("Map Scroll Rect").Find<TMP_Text>("Loading Text");
+			m_LoadingText = transform.Find("Map Scroll Rect").Find<TextMeshProUGUI>("Loading Text");
 
 			m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
-			m_TitleText = transform.Find("Map Info Panel").Find<TMP_Text>("Title Text");
-			m_CreatorText = transform.Find("Map Info Panel").Find<TMP_Text>("Creator Text");
+			m_TitleText = transform.Find("Map Info Panel").Find<TextMeshProUGUI>("Title Text");
+			m_CreatorText = transform.Find("Map Info Panel").Find<TextMeshProUGUI>("Creator Text");
 			//m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
 			m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
 
@@ -136,7 +136,7 @@ namespace AvantGardeMaker.UI
 				.Find("Description Scroll Rect")
 				.Find("Description Viewport")
 				.Find("Description Content")
-				.Find<TMP_Text>("Description Text");
+				.Find<TextMeshProUGUI>("Description Text");
 
 			m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
 			m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");

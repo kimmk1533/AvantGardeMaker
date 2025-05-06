@@ -16,8 +16,8 @@ namespace AvantGardeMaker.UI
 
 		private Button m_SelfButton = null;
 		private RawImage m_ThumnailImage = null;
-		private TMP_Text m_TitleText = null;
-		private TMP_Text m_CreatorText = null;
+		private TextMeshProUGUI m_TitleText = null;
+		private TextMeshProUGUI m_CreatorText = null;
 		//private Rating m_Rating = null;
 		#endregion
 
@@ -67,9 +67,9 @@ namespace AvantGardeMaker.UI
 			if (m_ThumnailImage == null)
 				m_ThumnailImage = transform.Find<RawImage>("Thumnail Image");
 			if (m_TitleText == null)
-				m_TitleText = transform.Find<TMP_Text>("Title Text");
+				m_TitleText = transform.Find<TextMeshProUGUI>("Title Text");
 			if (m_CreatorText == null)
-				m_CreatorText = transform.Find<TMP_Text>("Creator Text");
+				m_CreatorText = transform.Find<TextMeshProUGUI>("Creator Text");
 			//if (m_Rating == null)
 			//{
 			//	m_Rating = transform.Find<Rating>("Rating");

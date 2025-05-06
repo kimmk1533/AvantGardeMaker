@@ -15,7 +15,7 @@ namespace AvantGardeMaker.UI
 
 		private Button m_Button = null;
 
-		private TMP_Text m_DebugText = null;
+		private TextMeshProUGUI m_DebugText = null;
 		#endregion
 
 		#region 프로퍼티
@@ -28,12 +28,6 @@ namespace AvantGardeMaker.UI
 
 				m_DebugText.text = value.KorName;
 			}
-		}
-
-		public string debugText
-		{
-			get => m_DebugText.text;
-			set => m_DebugText.text = value;
 		}
 		#endregion
 
@@ -79,7 +73,7 @@ namespace AvantGardeMaker.UI
 
 			if (m_DebugText == null)
 			{
-				m_DebugText = transform.GetComponentInChildren<TMP_Text>();
+				m_DebugText = transform.GetComponentInChildren<TextMeshProUGUI>();
 			}
 		}
 		/// <summary>

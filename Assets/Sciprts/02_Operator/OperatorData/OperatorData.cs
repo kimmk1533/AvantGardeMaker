@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	[CreateAssetMenu(fileName = "OperatorInfo", menuName = "Scriptable Object/OperatorInfo", order = int.MinValue)]
+	[CreateAssetMenu(fileName = "OperatorData", menuName = "Scriptable Object/OperatorData", order = int.MinValue)]
 	public class OperatorData : SerializedScriptableObject
 	{
 		#region 변수
 		//영어이름
-		public string EngName;
+		public string EngName = string.Empty;
 		//한글이름
-		public string KorName;
+		public string KorName = string.Empty;
 
 		public OperatorFixedData FixedData = new OperatorFixedData();
 		public OperatorVariableData VariableData = new OperatorVariableData();
