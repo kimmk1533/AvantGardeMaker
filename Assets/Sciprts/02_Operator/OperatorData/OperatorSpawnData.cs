@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
+	[System.Serializable]
 	public class OperatorSpawnData
 	{
 		#region 변수
