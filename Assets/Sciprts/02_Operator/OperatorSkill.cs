@@ -15,7 +15,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#region 프로퍼티
 		public abstract string SkillName { get; protected set; }
-		public abstract OperatorSkillData OperatorSkillInfo { get; }
+		public abstract OperatorSkillData OperatorSkillInfo { get; set; }
 		public abstract int SkillLevel { get; }
 		public abstract int SkillValue { get; }
 		public float currentSP { get; protected set; }
@@ -67,6 +67,7 @@ namespace AvantGardeMaker.OperatorSpace
 				}
 				else
 				{
+					Debug.Log(value);
 					currentSP += value;
 				}
 			}

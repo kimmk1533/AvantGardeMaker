@@ -14,7 +14,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override string SkillName { get; protected set; }
 
-		public override OperatorSkillData OperatorSkillInfo { get; }
+		public override OperatorSkillData OperatorSkillInfo { get; set; }
 
 		public override int SkillLevel { get; }
 
@@ -55,6 +55,10 @@ namespace AvantGardeMaker.OperatorSpace
 		}
 		#endregion
 		#endregion
+		public void SetOperatorSkillData(OperatorSkillData skillData)
+		{
+			OperatorSkillInfo = skillData;
+		}
 
 		public void SetRecoverCostValue(int value)
 		{
@@ -63,8 +67,10 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override void Activate()
 		{
+			Debug.Log("CheckActivate");
 			if (OperatorSkillInfo.MaxSP > currentSP)
 				return;
+			Debug.Log("SucceseActive");
 			currentSP = 0;
 			M_GamePlaying.currentCost += m_RecoverCostValue;
 		}
