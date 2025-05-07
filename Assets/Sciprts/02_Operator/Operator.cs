@@ -48,10 +48,12 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private Enemy m_AttackTartgetEnemy = null;
 		private bool isAttack = true;
-
+		#region 스킬
+		private bool isFinishedSkillSetting = false;
 		private UtilClass.Timer m_AutoSPGainTimer = null;
 
 		private IOperatorSkill m_OperatorSkill = null;
+		#endregion
 		#endregion
 
 		#region 프로퍼티
@@ -132,9 +134,11 @@ namespace AvantGardeMaker.OperatorSpace
 			if (isFinishedDirectionSetting == false)
 				return;
 
-			ActivateSkill();
-			AutoSPGainProcess();
 			AttackEnemyProcess();
+
+			SkillSettingProcess();
+			AutoSPGainProcess();
+			ActivateSkill();
 		}
 
 		//저지시킬때
@@ -171,7 +175,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_SettingDirection = E_OperatorDirection.None;
 			redeployCount = 0;
 			m_AutoSPGainTimer = new UtilClass.Timer(1f);
-			SetSkill(m_VariableData.SkillData);
+			
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -461,28 +465,39 @@ namespace AvantGardeMaker.OperatorSpace
 		// Vanguard: 직군 공용 스킬 구현(코스트 획득 등)
 		// 머틀: 머틀 고유 스킬 구현
 
+		private void SkillSettingProcess()
+		{
+			if (isFinishedSkillSetting == true)
+				return;
+
+			SetSkill(m_VariableData.SkillData);
+			isFinishedSkillSetting = true;
+		}
+
 		private void AutoSPGainProcess()
 		{
+			Debug.Log(m_VariableData.SkillData.SPGainType);
 			if (m_VariableData.SkillData.SPGainType != E_SPGainType.Auto)
 				return;
 			m_AutoSPGainTimer.Update();
 
 			if (m_AutoSPGainTimer.TimeCheck(true) == true)
 			{
-				//operatorSkill.RecoverSP(1);
-				//Debug.Log("현재 Sp:" + operatorSkill.currentSP);
+				Debug.Log("TimerOn");
+				m_OperatorSkill.RecoverSP(1);
 			}
 
 		}
 
 		public virtual void ActivateSkill()
 		{
-			//operatorSkill.Activate();
+			m_OperatorSkill.Activate();
 		}
 
 		public void SetSkill(OperatorSkillData operatorSkillData)
 		{
-			//m_OperatorSkill = new operatorSkillData.CreateSkill();
+			m_OperatorSkill = operatorSkillData.CreateSkill();
+			
 		}
 
 
