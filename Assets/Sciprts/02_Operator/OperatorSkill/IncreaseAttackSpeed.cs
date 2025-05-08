@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using AvantGardeMaker.CoreSpace;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using AvantGardeMaker.CoreSpace;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class RecoverCost : OperatorSkill
+	public class IncreaseAttackSpeed : OperatorSkill
 	{
 		#region 기본 템플릿
 		#region 변수
-		private int m_RecoverCostValue;
+		private float m_IncreaseAttackSpeedValue;
+		#endregion
 
+		#region 프로퍼티
 		public override string SkillName { get; protected set; }
 
 		public override OperatorSkillData OperatorSkillInfo { get; set; }
@@ -21,10 +23,6 @@ namespace AvantGardeMaker.OperatorSpace
 		public override int SkillValue { get; }
 
 		public override bool IsSkillActive { get; set; }
-
-		#endregion
-
-		#region 프로퍼티
 		#endregion
 
 		#region 이벤트
@@ -34,7 +32,6 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		#region 매니저
-		public GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수
@@ -61,20 +58,29 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			OperatorSkillInfo = skillData;
 			IsSkillActive = false;
+			OperatorSkillInfo.ActiveSkillTimer = new UtilClass.Timer(skillData.ActiveSkillTimer);
 		}
 
-		public void SetRecoverCostValue(int value)
+		public void SetIncreaseStatusValue(float value)
 		{
-			m_RecoverCostValue = value;
+			m_IncreaseAttackSpeedValue = value;
 		}
 
 		public override void Activate(OperatorData operatorData)
 		{
 			if (OperatorSkillInfo.MaxSP > currentSP)
 				return;
+				
+			IsSkillActive = true;
+			float increasedAttackSpeed = operatorData.VariableData.CurrentAttakSpeed * m_IncreaseAttackSpeedValue;
+			operatorData.VariableData.CurrentAttakSpeed += increasedAttackSpeed;
+			OperatorSkillInfo.ActiveSkillTimer.Update();
+			if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(false) == true)
+			{
+				operatorData.VariableData.CurrentAttakSpeed -= increasedAttackSpeed;
+				IsSkillActive = false;
+			}
 			currentSP = 0;
-			M_GamePlaying.currentCost += m_RecoverCostValue;
 		}
-
 	}
 }

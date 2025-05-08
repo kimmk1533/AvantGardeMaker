@@ -48,11 +48,13 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private Enemy m_AttackTartgetEnemy = null;
 		private bool isAttack = true;
+
 		#region 스킬
 		private bool isFinishedSkillSetting = false;
 		private UtilClass.Timer m_AutoSPGainTimer = null;
 
 		private IOperatorSkill m_OperatorSkill = null;
+		private bool isActivateSkill = false;
 		#endregion
 		#endregion
 
@@ -69,7 +71,7 @@ namespace AvantGardeMaker.OperatorSpace
 				m_FrontSprite = M_Operator.GetOperatorFrontSprite(value.key);
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
 
-				m_AttackCoolTimer.interval = value.VariableData.InitAttakSpeed / 100;
+				m_AttackCoolTimer.interval = value.VariableData.CurrentAttakSpeed / 100;
 				m_MaxBlock = value.VariableData.BlockCount;
 			}
 		}
@@ -112,7 +114,9 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void OnSkillButtonClicked()
 		{
-			Debug.Log("스킬 발동");
+			if (isActivateSkill == true)
+				return;
+			isActivateSkill = true;
 		}
 		#endregion
 		#endregion
@@ -138,7 +142,11 @@ namespace AvantGardeMaker.OperatorSpace
 
 			SkillSettingProcess();
 			AutoSPGainProcess();
-			ActivateSkill();
+
+			AutoActivateSkill();
+			if (isActivateSkill == false)
+				return;
+			MenualAcivateSkill();
 		}
 
 		//저지시킬때
@@ -387,8 +395,8 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void FindedEnemyInAttackRangeTile()
 		{
-			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(m_VariableData.InitAttakSpeed / 100);
-			operatorAttackTimer.interval = m_VariableData.InitAttakSpeed / 100;
+			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(m_VariableData.CurrentAttakSpeed / 100);
+			operatorAttackTimer.interval = m_VariableData.CurrentAttakSpeed / 100;
 		}
 
 		/// <summary>
@@ -476,30 +484,40 @@ namespace AvantGardeMaker.OperatorSpace
 
 		private void AutoSPGainProcess()
 		{
-			Debug.Log(m_VariableData.SkillData.SPGainType);
 			if (m_VariableData.SkillData.SPGainType != E_SPGainType.Auto)
+				return;
+			if (m_OperatorSkill.IsSkillActive == true)
 				return;
 			m_AutoSPGainTimer.Update();
 
 			if (m_AutoSPGainTimer.TimeCheck(true) == true)
 			{
-				Debug.Log("TimerOn");
 				m_OperatorSkill.RecoverSP(1);
 			}
 
 		}
-
-		public virtual void ActivateSkill()
+		/// <summary>
+		/// 자동발동스킬함수
+		/// </summary>
+		public void AutoActivateSkill()
 		{
-			m_OperatorSkill.Activate();
+			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.AutoActive)
+				return;
+			m_OperatorSkill.Activate(m_OperatorData);
+		}
+		/// <summary>
+		/// 수동발동스킬함수
+		/// </summary>
+		public void MenualAcivateSkill()
+		{
+			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.MenualActive)
+				return;
+			m_OperatorSkill.Activate(m_OperatorData);
 		}
 
 		public void SetSkill(OperatorSkillData operatorSkillData)
 		{
 			m_OperatorSkill = operatorSkillData.CreateSkill();
-			
 		}
-
-
 	}
 }

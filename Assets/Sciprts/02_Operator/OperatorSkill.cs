@@ -18,6 +18,7 @@ namespace AvantGardeMaker.OperatorSpace
 		public abstract OperatorSkillData OperatorSkillInfo { get; set; }
 		public abstract int SkillLevel { get; }
 		public abstract int SkillValue { get; }
+		public abstract bool IsSkillActive { get; set; }
 		public float currentSP { get; protected set; }
 
 		public E_SPGainType GainType { get; protected set; }
@@ -34,7 +35,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#endregion
 
-		public abstract void Activate();
+		public abstract void Activate(OperatorData operatorData);
 
 		public void OnAttack()
 		{
@@ -67,7 +68,6 @@ namespace AvantGardeMaker.OperatorSpace
 				}
 				else
 				{
-					Debug.Log(value);
 					currentSP += value;
 				}
 			}

@@ -26,16 +26,16 @@ namespace AvantGardeMaker.OperatorSpace
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public void Initialize()
+		public override void InitializePoolItem()
 		{
-
+			base.InitializePoolItem();
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public void Finallize()
+		public override void FinallizePoolItem()
 		{
-
+			base.FinallizePoolItem();
 		}
 		#endregion
 	}
