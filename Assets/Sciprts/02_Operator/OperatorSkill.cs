@@ -19,9 +19,11 @@ namespace AvantGardeMaker.OperatorSpace
 		public abstract int SkillLevel { get; }
 		public abstract int SkillValue { get; }
 		public abstract bool IsSkillActive { get; set; }
+		public abstract bool IsSkillEnd { get; set; }
 		public float currentSP { get; protected set; }
 
 		public E_SPGainType GainType { get; protected set; }
+		
 
 		private readonly System.Action _onActivate;
 

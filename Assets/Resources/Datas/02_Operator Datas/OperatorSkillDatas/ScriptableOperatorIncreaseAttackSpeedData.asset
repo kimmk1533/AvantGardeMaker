@@ -22,8 +22,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   Name: IncreaseAttackSpeed
-  MaxSP: 50
-  InitSP: 40
+  MaxSP: 10
+  InitSP: 0
   SPGainType: 0
   SkillActivationType: 1
   ActiveSkillTimer:

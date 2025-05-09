@@ -12,6 +12,7 @@ namespace AvantGardeMaker.OperatorSpace
 		public int SkillLevel { get; }
 		public int SkillValue { get; }
 		public bool IsSkillActive { get; set; }
+		public bool IsSkillEnd { get; set; }
 
 		public void Activate(OperatorData operatorData);
 		public void RecoverSP(int value);

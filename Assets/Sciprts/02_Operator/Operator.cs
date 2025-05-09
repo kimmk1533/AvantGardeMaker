@@ -503,6 +503,8 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.AutoActive)
 				return;
+			if (m_OperatorSkill.IsSkillEnd == false)
+				return;
 			m_OperatorSkill.Activate(m_OperatorData);
 		}
 		/// <summary>
@@ -511,6 +513,8 @@ namespace AvantGardeMaker.OperatorSpace
 		public void MenualAcivateSkill()
 		{
 			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.MenualActive)
+				return;
+			if (m_OperatorSkill.IsSkillEnd == false)
 				return;
 			m_OperatorSkill.Activate(m_OperatorData);
 		}
