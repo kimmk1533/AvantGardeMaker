@@ -122,34 +122,29 @@ namespace AvantGardeMaker.UI
 		{
 			base.Initialize();
 
-			m_LoadingText = transform.Find("Map Scroll Rect").Find<TextMeshProUGUI>("Loading Text");
+			m_LoadingText = transform.Find<TextMeshProUGUI>("Map List Item Panel/Loading Text");
 
-			m_ThumnailImage = transform.Find("Map Info Panel").Find<RawImage>("Thumnail Image");
-			m_TitleText = transform.Find("Map Info Panel").Find<TextMeshProUGUI>("Title Text");
-			m_CreatorText = transform.Find("Map Info Panel").Find<TextMeshProUGUI>("Creator Text");
-			//m_Rating = transform.Find("Map Info Panel").Find<Rating>("Rating");
-			m_OperatorInfoButton = transform.Find("Map Info Panel").Find<Button>("Operator Info Button");
+			m_ThumnailImage = transform.Find<RawImage>("Map Info Panel/Thumnail Image");
+			m_TitleText = transform.Find<TextMeshProUGUI>("Map Info Panel/Title Text");
+			m_CreatorText = transform.Find<TextMeshProUGUI>("Map Info Panel/Creator Text");
+			//m_Rating = transform.Find<Rating>("Map Info Panel/Rating");
+			m_OperatorInfoButton = transform.Find<Button>("Map Info Panel/Operator Info Button");
+			m_EnemyInfoButton = transform.Find<Button>("Map Info Panel/Enemy Info Button");
+			m_DescriptionText = transform.Find<TextMeshProUGUI>("Map Info Panel/Description Scroll Rect/Description Viewport/Description Content/Description Text");
 
-			m_EnemyInfoButton = transform.Find("Map Info Panel").Find<Button>("Enemy Info Button");
-			m_DescriptionText = transform
-				.Find("Map Info Panel")
-				.Find("Description Scroll Rect")
-				.Find("Description Viewport")
-				.Find("Description Content")
-				.Find<TextMeshProUGUI>("Description Text");
-
-			m_PlayButton = transform.Find("Buttons").Find<Button>("Play Button");
-			m_EditButton = transform.Find("Buttons").Find<Button>("Edit Button");
-			m_DeleteButton = transform.Find("Buttons").Find<Button>("Delete Button");
+			m_PlayButton = transform.Find<Button>("Buttons/Play Button");
+			m_EditButton = transform.Find<Button>("Buttons/Edit Button");
+			m_DeleteButton = transform.Find<Button>("Buttons/Delete Button");
 
 			m_OperatorInfoButton.onClick.AddListener(OnOperatorInfoButtonClicked);
 			m_EnemyInfoButton.onClick.AddListener(OnEnemyInfoButtonClicked);
 
 			m_PlayButton.onClick.AddListener(OnPlayButtonClicked);
-			m_PlayButton.interactable = false;
 			m_EditButton.onClick.AddListener(OnEditButtonClicked);
-			m_EditButton.interactable = false;
 			m_DeleteButton.onClick.AddListener(OnDeleteButtonClicked);
+
+			m_PlayButton.interactable = false;
+			m_EditButton.interactable = false;
 			m_DeleteButton.interactable = false;
 
 			//m_Rating.Initialize();
@@ -184,10 +179,15 @@ namespace AvantGardeMaker.UI
 			m_LoadingText.text = "Loading…";
 			m_LoadingText.gameObject.SetActive(true);
 		}
-		private async Awaitable CreateMapListItem()
+		private async Awaitable CreateMapListItem(string filter)
 		{
 			Transform itemParent = M_MainMenuUI.mapListItemParent;
-			List<StageData> stageDataList = await SaveLoadUtility.LoadAllStageData(M_MainMenuUI.testFilter);
+			List<StageData> stageDataList = null;
+
+			if (string.IsNullOrEmpty(filter) == true)
+				stageDataList = await SaveLoadUtility.LoadAllStageData();
+			else
+				stageDataList = await SaveLoadUtility.LoadAllStageData(filter);
 
 			for (int i = 0; i < stageDataList.Count; ++i)
 			{
@@ -213,10 +213,10 @@ namespace AvantGardeMaker.UI
 			else
 				m_LoadingText.gameObject.SetActive(false);
 		}
-		private async void UpdateMapListItem()
+		public async void UpdateMapListItem(string filter = "")
 		{
 			ClearMapListItem();
-			await CreateMapListItem();
+			await CreateMapListItem(filter);
 		}
 	}
 }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe8756bc5aa49074789b0a1f097dedee, type: 3}
-  m_Name: Episode0 Hole
+  m_Name: Episode0 Tile 0
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,8 +21,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  EngName: Episode0 Hole
-  KorName: "\uC5D0\uD53C\uC18C\uB4DC0 \uAD6C\uB369\uC774"
+  EngName: Episode0 Tile 0
+  KorName: "\uC5D0\uD53C\uC18C\uB4DC0 \uD0C0\uC77C 0"
   FixedData:
-    TileType: 2
     ThemaType: 0

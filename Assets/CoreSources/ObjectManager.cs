@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 [DefaultExecutionOrder(-97)]
-public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> where TSelf : SerializedSingleton<TSelf> where TItem : ObjectPoolItemBase
+public abstract class ObjectManager<TSelf, TItem> : SerializedSingleton<TSelf> where TSelf : SerializedSingleton<TSelf> where TItem : ObjectPoolItemBase<TItem>
 {
 	#region 변수
 	// 공통 경로

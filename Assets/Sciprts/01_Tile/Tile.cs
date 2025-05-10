@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 
 namespace AvantGardeMaker.TileSpace
 {
-	public class Tile : ObjectPoolItemBase, IPointerClickHandler
+	public class Tile : ObjectPoolItemBase<Tile>, IPointerClickHandler
 	{
 		#region 변수
 		//현제 타일의 위에 있는 에너미 리스트 먼저들어온 Enemy가 앞순서의 인덱스를 가짐

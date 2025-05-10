@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.UI
 {
-	public class MainMenuUI : ObjectPoolItemBase
+	public class MainMenuUIPoolItem : ObjectPoolItemBase<MainMenuUIPoolItem>
 	{
 		#region 변수
 		private RectTransform m_RectTransform;

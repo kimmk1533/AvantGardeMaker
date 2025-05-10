@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class GamePlayingUI : ObjectPoolItemBase
+	public class GamePlayingUI : ObjectPoolItemBase<GamePlayingUI>
 	{
 		#region 변수
 		

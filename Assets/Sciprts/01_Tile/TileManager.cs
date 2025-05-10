@@ -117,7 +117,6 @@ namespace AvantGardeMaker.TileSpace
 		///<summary>
 		/// Resources 폴더에 있는 TileData 스크립터블 오브젝트를 딕셔너리에 저장
 		/// </summary>
-		[Button("Load TileData")]
 		public void LoadTileData()
 		{
 			m_TileDataMap.Clear();
@@ -156,8 +155,6 @@ namespace AvantGardeMaker.TileSpace
 			RemoveTile(tilePos);
 
 			AddTile_Internal(tileSpawnData);
-
-			Debug.Log("재배치됨");
 		}
 		private void AddTile_Internal(TileSpawnData tileSpawnData)
 		{

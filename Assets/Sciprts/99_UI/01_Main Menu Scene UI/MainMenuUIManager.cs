@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace AvantGardeMaker.UI
 {
 	// Main Scene: Main Menu Scene
-	public class MainMenuUIManager : ObjectManager<MainMenuUIManager, MainMenuUI>
+	public class MainMenuUIManager : ObjectManager<MainMenuUIManager, MainMenuUIPoolItem>
 	{
 		#region 변수
 		[SerializeField]
@@ -19,6 +19,11 @@ namespace AvantGardeMaker.UI
 		#region Init Panel
 		private TMP_InputField m_NickNameInputField = null;
 		private Button m_NickNameConfirmButton = null;
+		#endregion
+
+		#region Map List Panel
+		private TMP_InputField m_MapFilterInputField = null;
+		private Button m_MapListRefreshButton = null;
 		#endregion
 
 		#region MainMenu Buttons
@@ -55,6 +60,15 @@ namespace AvantGardeMaker.UI
 
 			mainMenuInitPanel.gameObject.SetActive(false);
 			mainMenuButtonsPanel.gameObject.SetActive(true);
+		}
+
+		private void OnMapFilterInputFiledSubmit(string value)
+		{
+			mapListPanel.UpdateMapListItem(value);
+		}
+		private void OnMapListRefreshButtonClicked()
+		{
+			mapListPanel.UpdateMapListItem(m_MapFilterInputField.text);
 		}
 
 		private void OnMapListButtonClicked()
@@ -94,8 +108,6 @@ namespace AvantGardeMaker.UI
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			gameObject.SetActive(false);
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -112,32 +124,36 @@ namespace AvantGardeMaker.UI
 		{
 			base.InitializeMain();
 
+			m_NickNameInputField = mainMenuInitPanel.Find<TMP_InputField>("NickName InputField");
+			m_NickNameConfirmButton = mainMenuInitPanel.Find<Button>("Confirm Button");
+
+			m_MapFilterInputField = mapListPanel.transform.Find<TMP_InputField>("Map List Item Panel/Filter/InputField");
+			m_MapListRefreshButton = mapListPanel.transform.Find<Button>("Map List Item Panel/Refresh Button");
+
 			m_MapListButton = mainMenuButtonsPanel.Find<Button>("Map List Button");
 			m_MapEditorButton = mainMenuButtonsPanel.Find<Button>("Map Editor Button");
 			m_OptionButton = mainMenuButtonsPanel.Find<Button>("Option Button");
 			m_QuitButton = mainMenuButtonsPanel.Find<Button>("Quit Button");
+
+			m_NickNameConfirmButton.onClick.AddListener(OnNicknameConfirmButtonClicked);
+
+			m_MapFilterInputField.onSubmit.AddListener(OnMapFilterInputFiledSubmit);
+			m_MapListRefreshButton.onClick.AddListener(OnMapListRefreshButtonClicked);
 
 			m_MapListButton.onClick.AddListener(OnMapListButtonClicked);
 			m_MapEditorButton.onClick.AddListener(OnMapEditorButtonClicked);
 			m_OptionButton.onClick.AddListener(OnOptionButtonClicked);
 			m_QuitButton.onClick.AddListener(OnQuitButtonClicked);
 
+			mapListPanel.Initialize();
+
 			mainMenuInitPanel.gameObject.SetActive(false);
 			mainMenuButtonsPanel.gameObject.SetActive(false);
-
-			m_NickNameInputField = mainMenuInitPanel.Find<TMP_InputField>("NickName InputField");
-			m_NickNameConfirmButton = mainMenuInitPanel.Find<Button>("Confirm Button");
-
-			m_NickNameConfirmButton.onClick.AddListener(OnNicknameConfirmButtonClicked);
-
-			InitProcess();
-
-			mapListPanel.Initialize();
 
 			mapListPanel.gameObject.SetActive(false);
 			optionPanel.gameObject.SetActive(false);
 
-			gameObject.SetActive(true);
+			InitProcess();
 		}
 		/// <summary>
 		/// 메인 마무리화 함수 (본인 Main Scene 나갈 시 호출)
@@ -150,20 +166,24 @@ namespace AvantGardeMaker.UI
 
 			m_NickNameConfirmButton.onClick.RemoveListener(OnNicknameConfirmButtonClicked);
 
-			m_NickNameConfirmButton = null;
-			m_NickNameInputField = null;
+			m_MapFilterInputField.onSubmit.RemoveListener(OnMapFilterInputFiledSubmit);
+			m_MapListRefreshButton.onClick.RemoveListener(OnMapListRefreshButtonClicked);
 
 			m_MapListButton.onClick.RemoveListener(OnMapListButtonClicked);
 			m_MapEditorButton.onClick.RemoveListener(OnMapEditorButtonClicked);
 			m_OptionButton.onClick.RemoveListener(OnOptionButtonClicked);
 			m_QuitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
+			m_NickNameConfirmButton = null;
+			m_NickNameInputField = null;
+
+			m_MapFilterInputField = null;
+			m_MapListRefreshButton = null;
+
 			m_MapListButton = null;
 			m_MapEditorButton = null;
 			m_OptionButton = null;
 			m_QuitButton = null;
-
-			gameObject.SetActive(false);
 		}
 		#endregion
 

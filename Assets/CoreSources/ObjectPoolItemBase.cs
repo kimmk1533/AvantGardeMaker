@@ -9,7 +9,7 @@ public interface IPoolItem
 	public void FinallizePoolItem();
 }
 
-public abstract class ObjectPoolItemBase : SerializedMonoBehaviour, IPoolItem
+public abstract class ObjectPoolItemBase<TItem> : SerializedMonoBehaviour, IPoolItem where TItem : ObjectPoolItemBase<TItem>
 {
 	#region 변수
 
@@ -21,8 +21,8 @@ public abstract class ObjectPoolItemBase : SerializedMonoBehaviour, IPoolItem
 	#endregion
 
 	#region 이벤트
-	public event System.Action<ObjectPoolItemBase> onSpawn;
-	public event System.Action<ObjectPoolItemBase> onDespawn;
+	public event System.Action<TItem> onSpawn = null;
+	public event System.Action<TItem> onDespawn = null;
 	#endregion
 
 	#region 매니저
@@ -33,7 +33,7 @@ public abstract class ObjectPoolItemBase : SerializedMonoBehaviour, IPoolItem
 	{
 		isSpawning = true;
 
-		onSpawn?.Invoke(this);
+		onSpawn?.Invoke(this as TItem);
 	}
 	// ObjectManager를 통해 스폰하면 자동으로 호출되므로 직접 호출 X
 	public virtual void FinallizePoolItem()
@@ -41,7 +41,7 @@ public abstract class ObjectPoolItemBase : SerializedMonoBehaviour, IPoolItem
 		if (isSpawning == true)
 			isSpawning = false;
 
-		onDespawn?.Invoke(this);
+		onDespawn?.Invoke(this as TItem);
 
 		onSpawn = null;
 		onDespawn = null;

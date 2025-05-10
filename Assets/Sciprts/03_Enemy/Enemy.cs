@@ -13,7 +13,7 @@ namespace AvantGardeMaker.EnemySpace
 	/*최상위 개체에 콜라이더
 	 아래에 렌더러	 */
 
-	public class Enemy : ObjectPoolItemBase
+	public class Enemy : ObjectPoolItemBase<Enemy>
 	{
 		#region 변수
 		//자신의 스테이터스 정보

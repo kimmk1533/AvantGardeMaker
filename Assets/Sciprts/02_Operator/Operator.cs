@@ -11,7 +11,7 @@ using AvantGardeMaker.CoreSpace.Enum;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class Operator : ObjectPoolItemBase
+	public class Operator : ObjectPoolItemBase<Operator>
 	{
 		#region 변수
 		#region 스탯

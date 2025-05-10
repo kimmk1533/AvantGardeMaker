@@ -35,10 +35,10 @@ namespace AvantGardeMaker.CoreSpace
 		#region 타일 관련 변수
 		private Vector3 m_HighGroundTileOffset = Vector3.back * 0.2f;
 
+		// 프리뷰 타일 맵
+		private Dictionary<string, (Tile previewTile, Material originMaterial)> m_PreviewTileMap = null;
 		// 타일 배치 가능 여부
 		private bool m_TilePlacementFlag = true;
-		// 타일 프리뷰 오브젝트
-		private Tile m_TilePreview = null;
 		#endregion
 
 		#region 적 관련 변수
@@ -133,6 +133,8 @@ namespace AvantGardeMaker.CoreSpace
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			m_PreviewTileMap = new Dictionary<string, (Tile previewTile, Material originMaterial)>();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -140,6 +142,8 @@ namespace AvantGardeMaker.CoreSpace
 		public override void Finallize()
 		{
 			base.Finallize();
+
+			m_PreviewTileMap = null;
 		}
 
 		/// <summary>
@@ -153,37 +157,31 @@ namespace AvantGardeMaker.CoreSpace
 
 			m_TilePlacementFlag = true;
 
-			//if (m_PreviewTileMap == null)
-			//{
-			//	m_PreviewTileMap = new Dictionary<E_TileTypeFlag, (Tile tile, Material material)>();
+			List<TileData> tileDataList = M_Tile.GetAllTileDatas();
+			for (int i = 0; i < tileDataList.Count; ++i)
+			{
+				string key = tileDataList[i].key;
 
-			//	for (E_TileType tileType = E_TileType.LowGround; tileType < E_TileType.Max; ++tileType)
-			//	{
-			//		string key = tileType.ToString().Replace('_', ' ');
+				Tile previewTile = M_Tile.GetBuilder(key)
+					.SetParent(transform)
+					.SetName(key + " Preview")
+					.SetAutoInit(true)
+					.SetActive(false)
+					.Spawn();
 
-			//		Tile previewTile = M_Tile.GetBuilder(key)
-			//			.SetParent(transform)
-			//			.SetName(key + " Preview")
-			//			.SetAutoInit(true)
-			//			.SetActive(false)
-			//			.Spawn();
+				MeshRenderer meshRenderer = previewTile.GetComponent<MeshRenderer>();
 
-			//		MeshRenderer meshRenderer = previewTile.GetComponent<MeshRenderer>();
+				Material originMaterial = meshRenderer.material;
+				Material previewMaterial = new Material(originMaterial);
 
-			//		Material originMaterial = meshRenderer.material;
-			//		Material previewMaterial = new Material(originMaterial);
+				Color previewColor = previewMaterial.color;
+				previewColor.a = 0.3f;
+				previewMaterial.color = previewColor;
 
-			//		Color previewColor = previewMaterial.color;
-			//		previewColor.a = 0.3f;
-			//		previewMaterial.color = previewColor;
+				meshRenderer.material = previewMaterial;
 
-			//		meshRenderer.material = previewMaterial;
-
-			//		m_PreviewTileMap.Add(tileType, (previewTile, originMaterial));
-			//	}
-			//}
-
-			m_TilePreview = null;
+				m_PreviewTileMap.Add(key, (previewTile, originMaterial));
+			}
 
 			tileKey = string.Empty;
 			tileType = E_TileType.None;
@@ -197,16 +195,13 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.FinallizeMain();
 
-			//foreach (var item in m_PreviewTileMap)
-			//{
-			//	string key = item.Key.ToString().Replace('_', ' ');
+			foreach (var item in m_PreviewTileMap)
+			{
+				item.Value.previewTile.GetComponent<MeshRenderer>().material = item.Value.originMaterial;
 
-			//	item.Value.tile.GetComponent<MeshRenderer>().material = item.Value.originMaterial;
-
-			//	M_Tile.Despawn(item.Value.tile);
-			//}
-			//m_PreviewTileMap.Clear();
-			//m_PreviewTileMap = null;
+				M_Tile.Despawn(item.Value.previewTile);
+			}
+			m_PreviewTileMap.Clear();
 
 			m_EditingStageData = default;
 			stageTitle = string.Empty;
@@ -296,8 +291,13 @@ namespace AvantGardeMaker.CoreSpace
 				if (m_TilePlacementFlag == false)
 					return;
 
-				//m_TilePreview.transform.position = (Vector3Int)mousePositionInt;
-				//m_TilePreview.gameObject.SetActive(true);
+				if (string.IsNullOrEmpty(tileKey) == false)
+				{
+					Tile previewTile = m_PreviewTileMap[tileKey].previewTile;
+
+					previewTile.transform.position = (Vector3Int)mousePositionInt;
+					previewTile.gameObject.SetActive(true);
+				}
 
 				// 타일 배치
 				if (Input.GetMouseButton(0) == true &&
@@ -320,9 +320,15 @@ namespace AvantGardeMaker.CoreSpace
 					M_Tile.RemoveTile(mousePositionInt);
 				}
 			}
+			// 마우스 포인터가 UI 위에 있을 때
 			else
 			{
-				//m_TilePreview.gameObject.SetActive(false);
+				if (string.IsNullOrEmpty(tileKey) == false)
+				{
+					Tile previewTile = m_PreviewTileMap[tileKey].previewTile;
+
+					previewTile?.gameObject.SetActive(false);
+				}
 
 				if (Input.GetMouseButtonDown(0) == true ||
 					Input.GetMouseButtonDown(1) == true)

@@ -453,6 +453,7 @@ MonoBehaviour:
     m_TileVariableDataList: []
     m_MinTile: {x: 0, y: 0}
     m_MaxTile: {x: 0, y: 0}
+    m_OperatorSpawnDataList: []
     m_OperatorFixedDataList: []
     m_OperatorVariableDataList: []
     m_EnemySpawnDataList: []
@@ -683,21 +684,21 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_CommonPath: Prefabs\01_Tile Prefabs
   m_Origins:
-  - <key>k__BackingField: Episode0 Hole
-    <additionalPath>k__BackingField: 
-    <useFlag>k__BackingField: 1
-    <poolSize>k__BackingField: 30
-    <origin>k__BackingField: {fileID: 3517390410534930288, guid: e3fa56c9c48ade14cb01d76aa67d83dc, type: 3}
-  - <key>k__BackingField: Episode0 Default
+  - <key>k__BackingField: Episode0 Tile 0
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: fa02f73474d208049828fa8bc455b775, type: 3}
-  - <key>k__BackingField: Episode1 Default
+  - <key>k__BackingField: Episode0 Tile 1
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 1
     <poolSize>k__BackingField: 30
     <origin>k__BackingField: {fileID: 3517390410534930288, guid: 1bca4103252419f48b44396adf68a65f, type: 3}
+  - <key>k__BackingField: Episode1 Tile 0
+    <additionalPath>k__BackingField: 
+    <useFlag>k__BackingField: 1
+    <poolSize>k__BackingField: 30
+    <origin>k__BackingField: {fileID: 3517390410534930288, guid: e3fa56c9c48ade14cb01d76aa67d83dc, type: 3}
   - <key>k__BackingField: ProtectionObjective
     <additionalPath>k__BackingField: 
     <useFlag>k__BackingField: 0
@@ -919,6 +920,7 @@ MonoBehaviour:
     m_TileVariableDataList: []
     m_MinTile: {x: 0, y: 0}
     m_MaxTile: {x: 0, y: 0}
+    m_OperatorSpawnDataList: []
     m_OperatorFixedDataList: []
     m_OperatorVariableDataList: []
     m_EnemySpawnDataList: []
