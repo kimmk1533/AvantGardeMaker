@@ -54,7 +54,7 @@ namespace AvantGardeMaker.OperatorSpace
 		private UtilClass.Timer m_AutoSPGainTimer = null;
 
 		private IOperatorSkill m_OperatorSkill = null;
-		private bool isActivateSkill = false;
+		private bool OnSkillButton = false;
 		#endregion
 		#endregion
 
@@ -71,7 +71,7 @@ namespace AvantGardeMaker.OperatorSpace
 				m_FrontSprite = M_Operator.GetOperatorFrontSprite(value.key);
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
 
-				m_AttackCoolTimer.interval = value.VariableData.CurrentAttakSpeed / 100;
+				m_AttackCoolTimer.interval = value.VariableData.CurrentAttackSpeed / 100;
 				m_MaxBlock = value.VariableData.BlockCount;
 			}
 		}
@@ -114,9 +114,9 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void OnSkillButtonClicked()
 		{
-			if (isActivateSkill == true)
+			if (m_OperatorSkill.IsSkillActive)
 				return;
-			isActivateSkill = true;
+			m_OperatorSkill.OnClickSkillEvent(operatorData, m_OperatorSkill.SkillValue);
 		}
 		#endregion
 		#endregion
@@ -144,8 +144,6 @@ namespace AvantGardeMaker.OperatorSpace
 			AutoSPGainProcess();
 
 			AutoActivateSkill();
-			if (isActivateSkill == false)
-				return;
 			MenualAcivateSkill();
 		}
 
@@ -395,8 +393,8 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void FindedEnemyInAttackRangeTile()
 		{
-			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(m_VariableData.CurrentAttakSpeed / 100);
-			operatorAttackTimer.interval = m_VariableData.CurrentAttakSpeed / 100;
+			UtilClass.Timer operatorAttackTimer = new UtilClass.Timer(m_VariableData.CurrentAttackSpeed / 100);
+			operatorAttackTimer.interval = m_VariableData.CurrentAttackSpeed / 100;
 		}
 
 		/// <summary>
@@ -414,13 +412,6 @@ namespace AvantGardeMaker.OperatorSpace
 				{
 					m_AttackTartgetEnemy = tile.GetFirstEnemy();
 					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
-					//공격회복 스킬일시 실행
-					/*
-					if (operatorSkill.OperatorSkillInfo.SPGainType == E_SPGainType.Attack)
-					{
-						operatorSkill.RecoverSP(1);
-					}
-					*/
 				}
 			}
 		}
@@ -452,13 +443,6 @@ namespace AvantGardeMaker.OperatorSpace
 			float minDamage = atk * 0.05f;
 
 			DecreaseHp(Mathf.Max(minDamage, damage));
-			//공격을받을때 Sp충전
-			/*
-			if (operatorSkill.OperatorSkillInfo.SPGainType == E_SPGainType.TakeAttack)
-			{
-				operatorSkill.RecoverSP(1);
-			}
-			*/
 		}
 		private void DecreaseHp(float value)
 		{
@@ -478,7 +462,7 @@ namespace AvantGardeMaker.OperatorSpace
 			if (isFinishedSkillSetting == true)
 				return;
 
-			SetSkill(m_VariableData.SkillData);
+			SetSkill(operatorData.VariableData.SkillData);
 			isFinishedSkillSetting = true;
 		}
 
@@ -494,7 +478,6 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				m_OperatorSkill.RecoverSP(1);
 			}
-
 		}
 		/// <summary>
 		/// 자동발동스킬함수
@@ -512,11 +495,10 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void MenualAcivateSkill()
 		{
-			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.MenualActive)
-				return;
-			if (m_OperatorSkill.IsSkillEnd == false)
-				return;
-			m_OperatorSkill.Activate(m_OperatorData);
+			if (m_OperatorSkill.IsSkillActive)
+			{
+				m_OperatorSkill.Activate(m_OperatorData);
+			}
 		}
 
 		public void SetSkill(OperatorSkillData operatorSkillData)

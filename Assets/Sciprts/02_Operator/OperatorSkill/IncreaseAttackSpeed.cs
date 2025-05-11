@@ -11,6 +11,7 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 기본 템플릿
 		#region 변수
 		private float m_IncreaseAttackSpeedValue;
+		float increasedAttackSpeed = 0f;
 		#endregion
 
 		#region 프로퍼티
@@ -24,6 +25,8 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override bool IsSkillActive { get; set; }
 		public override bool IsSkillEnd { get; set; }
+		public override bool OnSkillButton { get; set; }
+
 		#endregion
 		#endregion
 		public void SetOperatorSkillData(OperatorSkillData skillData)
@@ -32,6 +35,7 @@ namespace AvantGardeMaker.OperatorSpace
 			IsSkillActive = false;
 			IsSkillEnd = true;
 			OperatorSkillInfo.ActiveSkillTimer = new UtilClass.Timer(skillData.ActiveSkillTimer);
+			OnSkillButton = false;
 		}
 
 		public void SetIncreaseStatusValue(float value)
@@ -41,33 +45,29 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override void Activate(OperatorData operatorData)
 		{
-			Debug.Log("Activate");
-			if (IsSkillActive == true || OperatorSkillInfo.MaxSP <= currentSP)
+			OperatorSkillInfo.ActiveSkillTimer.Update();
+			if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(true) == true)
 			{
-				Debug.Log("MaxSP: " + OperatorSkillInfo.MaxSP);
-				Debug.Log("currentSP: " + currentSP);
-				float increasedAttackSpeed = operatorData.VariableData.CurrentAttakSpeed * m_IncreaseAttackSpeedValue;
-				if (IsSkillActive == false)
-				{
-					Debug.Log("FirstActivate");
-					IsSkillActive = true;
-					IsSkillEnd = false;
-					Debug.Log("IncreaseBack: " + operatorData.VariableData.CurrentAttakSpeed);
-					operatorData.VariableData.CurrentAttakSpeed += increasedAttackSpeed;
-					Debug.Log("IncreaseNow: " + operatorData.VariableData.CurrentAttakSpeed);
-					currentSP = 0;
-				}
-				else
-				{
-					OperatorSkillInfo.ActiveSkillTimer.Update();
-					if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(false) == true)
-					{
-						operatorData.VariableData.CurrentAttakSpeed -= increasedAttackSpeed;
-						Debug.Log("IncreaseEnd: " + operatorData.VariableData.CurrentAttakSpeed);
-						IsSkillActive = false;
-						IsSkillEnd = true;
-					}
-				}
+				Debug.Log("ActivateOff");
+				operatorData.VariableData.CurrentAttackSpeed -= increasedAttackSpeed;
+				IsSkillActive = false;
+			}
+		}
+
+		public override void OnClickSkillEvent(OperatorData operatorData, float value)
+		{
+			if(OperatorSkillInfo.MaxSP <= currentSP)
+			{
+				Debug.Log("ActivateOn");
+				increasedAttackSpeed = operatorData.VariableData.CurrentAttackSpeed * value;
+				operatorData.VariableData.CurrentAttackSpeed += increasedAttackSpeed;
+				IsSkillActive = true;
+				currentSP = 0;
+				OperatorSkillInfo.ActiveSkillTimer.Clear();
+			}
+			else
+			{
+				Debug.Log("Sp부족");
 			}
 		}
 	}

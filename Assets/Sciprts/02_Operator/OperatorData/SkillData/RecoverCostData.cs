@@ -13,6 +13,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override IOperatorSkill CreateSkill()
 		{
+			Debug.Log("RecoverCostData.CreateSkill");
 			RecoverCost newRecoverCost = new RecoverCost();
 			newRecoverCost.SetOperatorSkillData(this);
 			newRecoverCost.SetRecoverCostValue(RecoverCostValue);

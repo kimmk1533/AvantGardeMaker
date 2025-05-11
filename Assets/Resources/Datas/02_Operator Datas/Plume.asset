@@ -89,4 +89,4 @@ MonoBehaviour:
     - {x: 0, y: -1}
     DamageType: 0
     Penetration: 0
-    SkillData: {fileID: 0}
+    SkillData: {fileID: 11400000, guid: 0b607147eb3f4a748924a0970c6aaebb, type: 2}

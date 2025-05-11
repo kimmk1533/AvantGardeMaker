@@ -29,7 +29,7 @@ namespace AvantGardeMaker.OperatorSpace
 		//저지
 		public int BlockCount;
 		//공격속도 실제값
-		public float CurrentAttakSpeed;
+		public float CurrentAttackSpeed;
 		//도발
 		public int Provocation;
 		//공격범위좌표
