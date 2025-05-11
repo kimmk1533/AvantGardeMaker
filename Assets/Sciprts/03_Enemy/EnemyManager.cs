@@ -3,7 +3,7 @@ using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using static AvantGardeMaker.EnemySpace.IEnemySkill;
+using static AvantGardeMaker.EnemySpace.EnemySkill;
 
 /*
  * 옵젝 매니저(풀링 되어있음)

@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   Name: SuicideExplode
-  Type: 0
+  Type: 1
   AoeRadius: 1.25
   DamageCoefficient: 1
-  DmgType: 0
+  DamageType: 0

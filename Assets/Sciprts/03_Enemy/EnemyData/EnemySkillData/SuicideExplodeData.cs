@@ -13,7 +13,7 @@ namespace AvantGardeMaker.EnemySpace
 		public float DamageCoefficient;
 		public E_DamageType DamageType;
 
-		public override IEnemySkill CreateSkill()
+		public override EnemySkill CreateSkill()
 		{
 			SuicideExplode newSuicideExplode = new SuicideExplode();
 			newSuicideExplode.SetAoeRadius(AoeRadius);

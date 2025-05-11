@@ -12,6 +12,6 @@ namespace AvantGardeMaker.EnemySpace
 		public string Name;
 		public E_EnemySkillType Type;
 
-		public abstract IEnemySkill CreateSkill();
+		public abstract EnemySkill CreateSkill();
 	}
 }

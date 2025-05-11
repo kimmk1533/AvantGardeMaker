@@ -6,7 +6,7 @@ using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.CoreSpace.Enum;
-using static AvantGardeMaker.EnemySpace.IEnemySkill;
+using static AvantGardeMaker.EnemySpace.EnemySkill;
 
 namespace AvantGardeMaker.EnemySpace
 {
@@ -59,23 +59,29 @@ namespace AvantGardeMaker.EnemySpace
 		#region 콜라이더
 		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
 		private CircleCollider2D m_BodyCollider = null;
-		public float m_BodySize;
 		//공격 오브젝터 콜라이더를 가진 자식
 		[SerializeField]
 		private EnemyAtkRange m_AtkRange = null;
-		public float m_RangeSize;
+
+		//투사체 만들려다가 안하는게 낫다는걸 깨우침//
+
+		//공격 효과 범위
+		private EnemyAtkEffectRange m_AtkSkillRange = null;
+		//사망 효과 범위
+		private EnemyDeadEffectRange m_DeadSkillRange = null;
+
+		#endregion
 		//공격 범위 내 오퍼들
 		public List<Operator> m_TargetOperList = null;
 		//공격할 오퍼
 		public Operator m_TargetOper;
-		#endregion
 		#endregion
 
 		#region 프로퍼티
 		public E_EnemyState state { get { return m_CurEnemyState; } set { m_CurEnemyState = value; } }
 		public E_EnemyGradeType grade { get { return m_FixedData.EnemyType; } }
 		public bool isAlive => m_VariableData.Hp.CurStat > 0f;
-		private bool isBlocked => m_IsBlocked == true;
+		public bool isBlocked => m_IsBlocked == true;
 		private float moveSpeed => m_VariableData.MovementSpeed.CurStat;
 		private Vector2 curPos => new Vector2(transform.position.x, transform.position.y);
 		private Vector2 targetPos => m_WayPointList[Mathf.Min(m_WayPointIndex, m_WayPointList.Count - 1)];
@@ -87,7 +93,7 @@ namespace AvantGardeMaker.EnemySpace
 
 		#region 이벤트 함수
 		//공격범위 내에 적이 들어올 경우
-		private void OnOperatorEnterRange(Operator oper)
+		private void OnOperatorEnterAtkRange(Operator oper)
 		{
 			//공격범위 내 들어온 대상이 operator가 아닐 경우
 			if (oper == null)
@@ -98,7 +104,7 @@ namespace AvantGardeMaker.EnemySpace
 			Debug.Log("오퍼가 사정거리 내에 들어옴");
 		}
 		//공격범위 내에서 적이 나갈 경우
-		private void OnOperatorExitRange(Operator oper)
+		private void OnOperatorExitAtkRange(Operator oper)
 		{
 			if (oper == null)
 				return;
@@ -168,8 +174,8 @@ namespace AvantGardeMaker.EnemySpace
 			if (m_AtkRange == null)
 				m_AtkRange = GetComponentInChildren<EnemyAtkRange>();
 
-			m_AtkRange.onOperatorEnterRange += OnOperatorEnterRange;
-			m_AtkRange.onOperatorExitRange += OnOperatorExitRange;
+			m_AtkRange.onOperatorEnterRange += OnOperatorEnterAtkRange;
+			m_AtkRange.onOperatorExitRange += OnOperatorExitAtkRange;
 
 			if (m_WayPointList == null)
 			{
@@ -192,6 +198,15 @@ namespace AvantGardeMaker.EnemySpace
 		public override void FinallizePoolItem()
 		{
 			base.FinallizePoolItem();
+
+			m_FixedData = null;
+			m_VariableData = null;
+
+			m_AtkRange.onOperatorEnterRange -= OnOperatorEnterAtkRange;
+			m_AtkRange.onOperatorExitRange -= OnOperatorExitAtkRange;
+
+			m_BodyCollider = null;
+			m_AtkRange = null;
 
 			m_WayPointList.Clear();
 			m_PathPointStack.Clear();
@@ -237,7 +252,15 @@ namespace AvantGardeMaker.EnemySpace
 					default:
 						break;
 					case E_EnemySkillType.OnAttack:
+						if (m_AtkSkillRange == null)
+						{
+							m_AtkSkillRange = GetComponentInChildren<EnemyAtkEffectRange>();
+						}
+
 						m_OnAttackSkill = (IOnAttackSkill)skillDataList[i].CreateSkill();
+						m_OnAttackSkill.Initialize();
+
+						//이제 공격 스킬 범위 설정해야 함
 						break;
 					case E_EnemySkillType.OnDead:
 						m_OnDeadSkill = (IOnDeadSkill)skillDataList[i].CreateSkill();
@@ -271,9 +294,6 @@ namespace AvantGardeMaker.EnemySpace
 
 			CircleCollider2D atkRangeCollider = m_AtkRange.GetComponent<CircleCollider2D>();
 			atkRangeCollider.radius = range;
-
-			m_BodySize = m_BodyCollider.radius;
-			m_RangeSize = m_AtkRange.GetComponent<CircleCollider2D>().radius;
 		}
 		#endregion
 
@@ -344,9 +364,9 @@ namespace AvantGardeMaker.EnemySpace
 
 		public void Attack()
 		{
-			//어떤 경우에도 공격 상태로는 전환 가능
-
 			m_AtkIntervalTimer.Update();
+			//여기 timecheck을 쓰지 않는건 저지당했을 때와 안당했을때 처리가 달라서 그럼
+
 
 			//저지당한 경우
 			if (isBlocked)
@@ -358,8 +378,12 @@ namespace AvantGardeMaker.EnemySpace
 					return;
 				}
 
-				//BodyTrigger에 맞닿은 오퍼를 공격(인데 operatorData null이라 터져서 봉인)
-				//m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat, 0);
+				if (m_OnAttackSkill != null)
+					//공격 스킬이 있다면 스킬 공격
+					m_OnAttackSkill.OnAttackSkill(m_TargetOper, m_VariableData.Atk.CurStat);
+				else
+					//BodyTrigger에 맞닿은 오퍼를 공격
+					m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat);
 				Debug.Log("저지 공격");
 			}
 			//공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
@@ -377,9 +401,12 @@ namespace AvantGardeMaker.EnemySpace
 				if (state != E_EnemyState.Attack)
 					state = E_EnemyState.Attack;
 
-				//ad1a 씬에 오퍼 매니저가 없어서 터짐. 임시 봉인
-				//m_TargetOper = M_GamePlaying.CompareDeployOrder(m_TargetOperList)[0];
-				m_TargetOper = m_TargetOperList[0];
+				m_TargetOper = M_GamePlaying.SortOperatorListByAttackIndex(m_TargetOperList)[0];
+
+				if (m_OnAttackSkill != null)
+					m_OnAttackSkill.OnAttackSkill(m_TargetOper, m_VariableData.Atk.CurStat);
+				else
+					m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat);
 
 				Debug.Log("원거리 공격");
 			}
@@ -393,6 +420,10 @@ namespace AvantGardeMaker.EnemySpace
 		public void Dead()
 		{
 			Debug.Log("사망");
+
+			if (m_OnAttackSkill != null && !isAlive)
+				m_OnDeadSkill.OnDeadSkill(m_VariableData.Atk.CurStat);
+
 			M_Enemy.Despawn(this);
 		}
 		#endregion
@@ -402,6 +433,11 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		public void TakeDamage(E_DamageType dmgType, float val, float piercePercentage = 0)
 		{
+			//은신이고 저지당하지 않았다면 데미지를 입지 않으나
+			//이건 오퍼가 때릴 때 처리하는게 맞지 않나?
+			if (m_HasStealth && !isBlocked)
+				return;
+
 			switch (dmgType)
 			{
 				case E_DamageType.Physics:

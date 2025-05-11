@@ -13,12 +13,12 @@ namespace AvantGardeMaker.EnemySpace
 		public float DamageCoefficient;
 		public E_DamageType DamageType;
 
-		public override IEnemySkill CreateSkill()
+		public override EnemySkill CreateSkill()
 		{
 			Splash newSplash = new Splash();
-			newSplash.SetAoeRadius(AoeRadius);
-			newSplash.SetDamageCoef(DamageCoefficient);
-			newSplash.SetDamageType(DamageType);
+			newSplash.AoeRadius = AoeRadius;
+			newSplash.DamageCoefficient = DamageCoefficient;
+			newSplash.DamageType = DamageType;
 			return newSplash;
 		}
 	}

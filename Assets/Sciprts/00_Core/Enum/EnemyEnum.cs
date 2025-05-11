@@ -119,7 +119,6 @@ namespace AvantGardeMaker.EnemySpace.Enum
 	{
 		OnAttack,
 		OnDead,
-		OnNotBlock,
 	}
 
 	public static class EnemyEnumUtil
