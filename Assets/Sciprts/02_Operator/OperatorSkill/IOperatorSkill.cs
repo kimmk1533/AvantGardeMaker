@@ -10,14 +10,13 @@ namespace AvantGardeMaker.OperatorSpace
 	{
 		public string SkillName { get; }
 		public int SkillLevel { get; }
-		public int SkillValue { get; }
 		public bool IsSkillActive { get; set; }
 		public bool IsSkillEnd { get; set; }
 		public bool OnSkillButton { get; set; }
 
 		public void Activate(OperatorData operatorData);
 		public void RecoverSP(int value);
-		public void OnClickSkillEvent(OperatorData operatorData, float value);
+		public void OnClickSkillEvent(OperatorData operatorData);
 
 	}
 

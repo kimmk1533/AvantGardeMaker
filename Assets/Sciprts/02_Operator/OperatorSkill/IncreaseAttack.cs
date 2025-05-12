@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class IncreaseAttackSpeed : OperatorSkill
+	public class IncreaseAttack : OperatorSkill
 	{
 		#region 기본 템플릿
 		#region 변수
-		private float m_IncreaseAttackSpeedValue;
-		float increasedAttackSpeed = 0f;
+		private float m_IncreaseAttackValue;
+		float increasedAttack = 0f;
 		#endregion
 
 		#region 프로퍼티
@@ -20,8 +20,6 @@ namespace AvantGardeMaker.OperatorSpace
 		public override OperatorSkillData OperatorSkillInfo { get; set; }
 
 		public override int SkillLevel { get; }
-
-		public override int SkillValue { get; }
 
 		public override bool IsSkillActive { get; set; }
 		public override bool IsSkillEnd { get; set; }
@@ -38,9 +36,9 @@ namespace AvantGardeMaker.OperatorSpace
 			OnSkillButton = false;
 		}
 
-		public void SetIncreaseStatusValue(float value)
+		public void SetIncreaseAttackValue(float value)
 		{
-			m_IncreaseAttackSpeedValue = value;
+			m_IncreaseAttackValue = value;
 		}
 
 		public override void Activate(OperatorData operatorData)
@@ -49,18 +47,18 @@ namespace AvantGardeMaker.OperatorSpace
 			if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(true) == true)
 			{
 				Debug.Log("ActivateOff");
-				operatorData.VariableData.CurrentAttackSpeed -= increasedAttackSpeed;
+				operatorData.VariableData.Atk -= increasedAttack;
 				IsSkillActive = false;
 			}
 		}
 
-		public override void OnClickSkillEvent(OperatorData operatorData, float value)
+		public override void OnClickSkillEvent(OperatorData operatorData)
 		{
 			if(OperatorSkillInfo.MaxSP <= currentSP)
 			{
 				Debug.Log("ActivateOn");
-				increasedAttackSpeed = operatorData.VariableData.CurrentAttackSpeed * value;
-				operatorData.VariableData.CurrentAttackSpeed += increasedAttackSpeed;
+				increasedAttack = operatorData.VariableData.Atk * m_IncreaseAttackValue;
+				operatorData.VariableData.Atk += increasedAttack;
 				IsSkillActive = true;
 				currentSP = 0;
 				OperatorSkillInfo.ActiveSkillTimer.Clear();

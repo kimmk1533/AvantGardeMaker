@@ -17,7 +17,6 @@ namespace AvantGardeMaker.OperatorSpace
 		public abstract string SkillName { get; protected set; }
 		public abstract OperatorSkillData OperatorSkillInfo { get; set; }
 		public abstract int SkillLevel { get; }
-		public abstract int SkillValue { get; }
 		public abstract bool IsSkillActive { get; set; }
 		public abstract bool IsSkillEnd { get; set; }
 		public abstract bool OnSkillButton { get; set; }
@@ -39,7 +38,7 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		public abstract void Activate(OperatorData operatorData);
-		public abstract void OnClickSkillEvent(OperatorData operatorData, float value);
+		public abstract void OnClickSkillEvent(OperatorData operatorData);
 
 		public void OnAttack()
 		{

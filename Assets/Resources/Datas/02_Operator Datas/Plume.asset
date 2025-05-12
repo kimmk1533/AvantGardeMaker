@@ -80,7 +80,7 @@ MonoBehaviour:
     RedeploymentInterval: 5
     DeploymentCost: 8
     BlockCount: 1
-    CurrentAttakSpeed: 100
+    CurrentAttackSpeed: 0
     Provocation: 0
     AttackPos:
     - {x: 0, y: 0}
@@ -89,4 +89,4 @@ MonoBehaviour:
     - {x: 0, y: -1}
     DamageType: 0
     Penetration: 0
-    SkillData: {fileID: 11400000, guid: 0b607147eb3f4a748924a0970c6aaebb, type: 2}
+    SkillData: {fileID: 11400000, guid: 18ac6cb041809434cb5e6815801dfb24, type: 2}

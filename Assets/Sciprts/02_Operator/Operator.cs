@@ -116,7 +116,7 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			if (m_OperatorSkill.IsSkillActive)
 				return;
-			m_OperatorSkill.OnClickSkillEvent(operatorData, m_OperatorSkill.SkillValue);
+			m_OperatorSkill.OnClickSkillEvent(operatorData);
 		}
 		#endregion
 		#endregion

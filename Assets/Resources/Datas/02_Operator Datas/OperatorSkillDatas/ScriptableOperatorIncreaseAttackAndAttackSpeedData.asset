@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1fad0aa6e060864e813f955b01893a4, type: 3}
-  m_Name: ScriptableOperatorIncreaseAttackSpeedData
+  m_Script: {fileID: 11500000, guid: d9c3a202f5ef4fd48bb3496ea422ce11, type: 3}
+  m_Name: ScriptableOperatorIncreaseAttackAndAttackSpeedData
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,13 +21,14 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: IncreaseAttack
-  MaxSP: 10
+  Name: IncreaseAttackAndAttackSpeed
+  MaxSP: 55
   InitSP: 0
   SPGainType: 0
   SkillActivationType: 1
   ActiveSkillTimer:
-    m_Interval: 10
-    m_Time: 0.014235303
+    m_Interval: 0
+    m_Time: 0
   SkillInfoText: 
-  IncreaseAttackValue: 0.1
+  IncreaseAttackSpeedValue: 10
+  IncreaseAttackValue: 6

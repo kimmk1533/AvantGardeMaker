@@ -20,8 +20,6 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override int SkillLevel { get; }
 
-		public override int SkillValue { get; }
-
 		public override bool IsSkillActive { get; set; }
 		public override bool IsSkillEnd { get; set; }
 		public override bool OnSkillButton { get; set; }
@@ -50,7 +48,7 @@ namespace AvantGardeMaker.OperatorSpace
 			M_GamePlaying.currentCost += m_RecoverCostValue;
 		}
 
-		public override void OnClickSkillEvent(OperatorData operatorData, float value)
+		public override void OnClickSkillEvent(OperatorData operatorData)
 		{
 			throw new System.NotImplementedException();
 		}
