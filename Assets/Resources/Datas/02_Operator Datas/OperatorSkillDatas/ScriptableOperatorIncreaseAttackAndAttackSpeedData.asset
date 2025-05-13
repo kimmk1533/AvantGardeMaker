@@ -31,4 +31,4 @@ MonoBehaviour:
     m_Time: 0
   SkillInfoText: 
   IncreaseAttackSpeedValue: 10
-  IncreaseAttackValue: 6
+  IncreaseAttackValue: 0.06

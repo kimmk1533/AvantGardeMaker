@@ -293,32 +293,6 @@ namespace AvantGardeMaker.OperatorSpace
 			M_GamePlayingUI.OnSettingDirectionEnd();
 
 			return true;
-
-			//m_AttackRangeInTileList.Clear();
-			//List<Vector2Int> currentAttackRangePosList = new List<Vector2Int>();
-
-			//for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
-			//{
-			//	Vector2Int copyPos = new Vector2Int(m_VariableData.AttackPos[i].x, m_VariableData.AttackPos[i].y);
-			//	currentAttackRangePosList.Add(copyPos);
-			//}
-			//for (int i = 0; i < currentAttackRangePosList.Count; i++)
-			//{
-			//	currentAttackRangePosList[i] = new Vector2Int(currentAttackRangePosList[i].x + (int)transform.position.x, currentAttackRangePosList[i].y + (int)transform.position.y);
-			//}
-			//currentAttackRangePosList = RotatePosList(currentAttackRangePosList, currentAttackRangePosList[0], currentDirection);
-			//for (int i = 0; i < m_VariableData.AttackPos.Count; i++)
-			//{
-			//	//임시 공격범위 타일회전
-			//	m_AttackRangeInTileList.Add(M_TileManager.GetTile(currentAttackRangePosList[i]).Item2);
-			//	/*
-			//	if (M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList == null)
-			//	{
-			//		M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList = new List<Operator>();
-			//	}
-			//	M_TileManager.GetTile(m_currentAttackRangePosList[i]).Item2.operatorAttackRangeTileList.Add(this);
-			//	*/
-			//}
 		}
 
 		/// <summary>
