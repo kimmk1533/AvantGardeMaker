@@ -101,8 +101,9 @@ namespace AvantGardeMaker.EnemySpace
 			{
 				for (int x = 0; x < map.GetLength(1); ++x)
 				{
-					// 이동 불가 타일인 경우(울타리이거나 언덕 타일인 경우)
-					if (map[y, x].tileType == E_TileType.Fence ||
+					// 이동 불가 타일인 경우(장식이거나 울타리이거나 언덕 타일인 경우)
+					if (map[y, x].tileType == E_TileType.Decoration ||
+						map[y, x].tileType == E_TileType.Fence ||
 						map[y, x].tilePositionType == E_TilePositionType.HighGround)
 						// 가중치 1백만 추가
 						weightMap[y, x] += 1000000f;
@@ -159,14 +160,16 @@ namespace AvantGardeMaker.EnemySpace
 					if (direction.x * direction.y != 0)
 					{
 						//이동 방향의 x축이 이동 불가 지형인 경우 생략
-						if (!IsValidPosition(currentNode.Position.x + direction.x, currentNode.Position.y, weightMap))
+						if (!IsValidPosition(currentNode.Position.x + direction.x, currentNode.Position.y, weightMap) ||
+							GetWeight(currentNode.Position.x + direction.x, currentNode.Position.y, weightMap) >= 10000f)
 							continue;
 						//이동 방향의 y축이 이동 불가 지형인 경우 생략
-						if (!IsValidPosition(currentNode.Position.x, currentNode.Position.y + direction.y, weightMap))
+						if (!IsValidPosition(currentNode.Position.x, currentNode.Position.y + direction.y, weightMap) ||
+							GetWeight(currentNode.Position.x, currentNode.Position.y + direction.y, weightMap) >= 10000f)
 							continue;
 					}
 
-					float weight = weightMap[Mathf.RoundToInt(neighborPos.y), Mathf.RoundToInt(neighborPos.x)];
+					float weight = GetWeight(neighborPos.x, neighborPos.y, weightMap);
 					//G(시작~자신) = 부모(curNode)의 G + 부모에서 자신까지의 거리 + 가중치 합산
 					float gCost = currentNode.G + Vector2.Distance(currentNode.Position, neighborPos) + weight;
 					//H(자신~도착) = Distance(맨해튼 x, 단순 거리로 했음)
@@ -224,6 +227,16 @@ namespace AvantGardeMaker.EnemySpace
 			return x >= 0 && x < weightMap.GetLength(1) &&   //x값이 grid 안에 있는지
 				y >= 0 && y < weightMap.GetLength(0) &&      //y값이 grid 안에 있는지
 				weightMap[y, x] < 1000000f;                             //현재 좌표가 grid에서 이동 가능한지
+		}
+		private static float GetWeight(float posX, float posY, in float[,] weightMap)
+		{
+			int posXInt = Mathf.RoundToInt(posX);
+			int posYInt = Mathf.RoundToInt(posY);
+
+			int x = posXInt + offset.x;
+			int y = posYInt + offset.y;
+
+			return weightMap[y, x];
 		}
 	}
 }

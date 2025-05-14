@@ -127,9 +127,6 @@ namespace AvantGardeMaker.EnemySpace
 		#region 유니티 콜백 함수
 		private void Update()
 		{
-			if (!isAlive)
-				Dead();
-
 			Attack();
 			Move();
 		}
@@ -163,11 +160,6 @@ namespace AvantGardeMaker.EnemySpace
 		public override void InitializePoolItem()
 		{
 			base.InitializePoolItem();
-
-			if (m_FixedData == null)
-				m_FixedData = new EnemyFixedData();
-			if (m_VariableData == null)
-				m_VariableData = new EnemyVariableData();
 
 			if (m_BodyCollider == null)
 				m_BodyCollider = GetComponent<CircleCollider2D>();
@@ -327,16 +319,16 @@ namespace AvantGardeMaker.EnemySpace
 			}
 			else
 			{
-				//////경로 타일 도착 처리//////
+				#region 경로 타일 도착 처리
+				#endregion
 
+				#region 경유지 도착 처리
 				//도착 위치로 순간이동
 				transform.position = m_PathPointStack.Pop();
 
 				//아직 경로가 남은 것이므로 return
 				if (m_PathPointStack.Count != 0)
 					return;
-
-				//////경유지 도착 처리//////
 
 				//다음 경유지로 출발하기 전 대기시간
 				if (m_WayPointIntervalList[m_WayPointIndex] > 0)
@@ -359,6 +351,7 @@ namespace AvantGardeMaker.EnemySpace
 				}
 				//경로 최신화
 				UpdatePathPointList();
+				#endregion
 			}
 		}
 
@@ -366,7 +359,6 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			m_AtkIntervalTimer.Update();
 			//여기 timecheck을 쓰지 않는건 저지당했을 때와 안당했을때 처리가 달라서 그럼
-
 
 			//저지당한 경우
 			if (isBlocked)
@@ -456,6 +448,9 @@ namespace AvantGardeMaker.EnemySpace
 		private void DecreaseHp(float val)
 		{
 			m_VariableData.Hp.CurStat -= val;
+
+			if (!isAlive)
+				Dead();
 		}
 		/// <summary>
 		/// 현재 위치에서 경유지[m_WayPointIndex]로 가기 위한 경로인 m_PathPointStack 최신화

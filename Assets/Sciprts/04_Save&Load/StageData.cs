@@ -171,7 +171,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 				{
 					for (int x = 0; x < mapWidth; ++x)
 					{
-						mapArray[y, x] = (E_TileType.None, E_TilePositionType.LowGround);
+						mapArray[y, x] = (E_TileType.Hole, E_TilePositionType.LowGround);
 					}
 				}
 

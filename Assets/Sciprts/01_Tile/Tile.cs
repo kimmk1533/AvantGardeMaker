@@ -94,7 +94,7 @@ namespace AvantGardeMaker.TileSpace
 
 			currentOperator = null;
 
-			tileType = E_TileType.None;
+			tileType = E_TileType.Default;
 			tilePositionType = E_TilePositionType.LowGround;
 			tileDeployableTypeFlag = E_TileDeployableTypeFlag.None;
 		}

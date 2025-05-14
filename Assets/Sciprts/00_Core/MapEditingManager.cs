@@ -184,7 +184,7 @@ namespace AvantGardeMaker.CoreSpace
 			}
 
 			tileKey = string.Empty;
-			tileType = E_TileType.None;
+			tileType = E_TileType.Default;
 			tilePositionType = E_TilePositionType.LowGround;
 			tileDeployableTypeFlag = E_TileDeployableTypeFlag.None;
 		}

@@ -8,7 +8,7 @@ namespace AvantGardeMaker.TileSpace.Enum
 	public enum E_TileType : byte
 	{
 		// 일반 타일
-		None,
+		Default,
 
 		// 장식
 		Decoration,

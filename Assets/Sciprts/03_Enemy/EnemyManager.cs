@@ -211,7 +211,7 @@ namespace AvantGardeMaker.EnemySpace
 			Enemy enemy = GetBuilder(enemySpawnData.EnemySpawnKey)
 							.SetPosition(enemySpawnData.startPos)
 							.SetAutoInit(false)
-							.SetActive(false)
+							.SetActive(true)
 							.Spawn();
 
 			enemy.SetEnemyData(m_EnemyDataMap[enemySpawnData.EnemySpawnKey]);
