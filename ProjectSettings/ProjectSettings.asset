@@ -938,10 +938,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 54af405b-374b-4fac-a767-5e3fd7cdcc9f
+  cloudProjectId: 2ffc0e4f-1808-4f21-9179-4bb2391cd4ed
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: AvantGardeMaker
+  projectName: ArknightsMaker
   organizationId: ceeu
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
