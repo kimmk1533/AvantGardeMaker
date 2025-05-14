@@ -120,8 +120,13 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 
 			// 디버깅용 파일 저장
 			string debugJson = JsonUtility.ToJson(stageData, true);
-			string debugPath = Path.Combine(Application.dataPath, "..", "Data", mapTitle + ".json");
-			File.WriteAllText(debugPath, debugJson);
+			string debugPath = Path.Combine(Application.dataPath, "..", "Data");
+			string debugFile = mapTitle + ".json";
+
+			if (Directory.Exists(debugPath) == false)
+				Directory.CreateDirectory(debugPath);
+
+			File.WriteAllText(Path.Combine(debugPath, debugFile), debugJson);
 
 			t1 = Time.realtimeSinceStartup;
 
