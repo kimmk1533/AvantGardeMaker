@@ -14,15 +14,6 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		#region 프로퍼티
-		public override string SkillName { get; protected set; }
-
-		public override OperatorSkillData OperatorSkillInfo { get; set; }
-
-		public override int SkillLevel { get; }
-
-		public override bool IsSkillActive { get; set; }
-		public override bool IsSkillEnd { get; set; }
-		public override bool OnSkillButton { get; set; }
 		#endregion
 
 		#region 매니저
@@ -33,6 +24,7 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			OperatorSkillInfo = skillData;
 			IsSkillActive = false;
+			IsSkillEnd = true;
 		}
 
 		public void SetRecoverCostValue(int value)
@@ -42,15 +34,19 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override void Activate(OperatorData operatorData)
 		{
+			base.Activate(operatorData);
+			Debug.Log("Activate");
 			if (OperatorSkillInfo.MaxSP > currentSP)
 				return;
+			Debug.Log("코스트회복");
 			currentSP = 0;
 			M_GamePlaying.currentCost += m_RecoverCostValue;
 		}
 
 		public override void OnClickSkillEvent(OperatorData operatorData)
 		{
-			throw new System.NotImplementedException();
+			base.OnClickSkillEvent(operatorData);
+			return;
 		}
 	}
 }

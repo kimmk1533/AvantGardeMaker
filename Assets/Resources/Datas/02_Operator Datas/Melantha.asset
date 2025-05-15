@@ -80,7 +80,7 @@ MonoBehaviour:
     RedeploymentInterval: 5
     DeploymentCost: 13
     BlockCount: 1
-    CurrentAttakSpeed: 150
+    CurrentAttackSpeed: 150
     Provocation: 0
     AttackPos:
     - {x: 0, y: 0}

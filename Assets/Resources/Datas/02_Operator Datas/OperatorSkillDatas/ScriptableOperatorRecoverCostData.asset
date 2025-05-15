@@ -26,5 +26,8 @@ MonoBehaviour:
   InitSP: 0
   SPGainType: 0
   SkillActivationType: 0
+  ActiveSkillTimer:
+    m_Interval: 0
+    m_Time: 0
   SkillInfoText: 
   RecoverCostValue: 6

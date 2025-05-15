@@ -6,14 +6,13 @@ using UnityEngine;
 namespace AvantGardeMaker.OperatorSpace
 {
 	[CreateAssetMenu(fileName = "ScriptableOperatorRecoverCostData", menuName = "Scriptable Object/ScriptableOperatorSkill/RecoverCostSkillData", order = int.MinValue)]
-	public class RecoverCostData : OperatorSkillData
+	public class RecoverCostData : OperatorSkillCreate
 	{
 		[Title("RecoverCostData")]
 		public int RecoverCostValue;
 
-		public override IOperatorSkill CreateSkill()
+		public override OperatorSkill CreateSkill()
 		{
-			Debug.Log("RecoverCostData.CreateSkill");
 			RecoverCost newRecoverCost = new RecoverCost();
 			newRecoverCost.SetOperatorSkillData(this);
 			newRecoverCost.SetRecoverCostValue(RecoverCostValue);

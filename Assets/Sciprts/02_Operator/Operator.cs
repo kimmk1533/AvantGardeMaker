@@ -67,7 +67,6 @@ namespace AvantGardeMaker.OperatorSpace
 				m_OperatorData = value;
 				m_FixedData = value.FixedData;
 				m_VariableData = value.VariableData;
-
 				m_FrontSprite = M_Operator.GetOperatorFrontSprite(value.key);
 				m_BackSprite = M_Operator.GetOperatorBackSprite(value.key);
 
@@ -436,7 +435,7 @@ namespace AvantGardeMaker.OperatorSpace
 			if (isFinishedSkillSetting == true)
 				return;
 
-			SetSkill(operatorData.VariableData.SkillData);
+			//SetSkill(operatorData.VariableData.SkillData);
 			isFinishedSkillSetting = true;
 		}
 
@@ -473,11 +472,6 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				m_OperatorSkill.Activate(m_OperatorData);
 			}
-		}
-
-		public void SetSkill(OperatorSkillData operatorSkillData)
-		{
-			m_OperatorSkill = operatorSkillData.CreateSkill();
 		}
 	}
 }

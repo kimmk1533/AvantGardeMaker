@@ -15,16 +15,6 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		#region 프로퍼티
-		public override string SkillName { get; protected set; }
-
-		public override OperatorSkillData OperatorSkillInfo { get; set; }
-
-		public override int SkillLevel { get; }
-
-		public override bool IsSkillActive { get; set; }
-		public override bool IsSkillEnd { get; set; }
-		public override bool OnSkillButton { get; set; }
-
 		#endregion
 		#endregion
 		public void SetOperatorSkillData(OperatorSkillData skillData)
@@ -46,7 +36,7 @@ namespace AvantGardeMaker.OperatorSpace
 			OperatorSkillInfo.ActiveSkillTimer.Update();
 			if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(true) == true)
 			{
-				Debug.Log("ActivateOff");
+				Debug.Log("공격력원상복귀");
 				operatorData.VariableData.Atk -= increasedAttack;
 				IsSkillActive = false;
 			}
@@ -56,7 +46,7 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			if(OperatorSkillInfo.MaxSP <= currentSP)
 			{
-				Debug.Log("ActivateOn");
+				Debug.Log("공격력증가");
 				increasedAttack = operatorData.VariableData.Atk * m_IncreaseAttackValue;
 				operatorData.VariableData.Atk += increasedAttack;
 				IsSkillActive = true;

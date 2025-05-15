@@ -6,11 +6,11 @@ using UnityEngine;
 namespace AvantGardeMaker.OperatorSpace
 {
 	[CreateAssetMenu(fileName = "ScriptableOperatorIncreaseAttackData", menuName = "Scriptable Object/ScriptableOperatorSkill/IncreaseAttackData", order = int.MinValue)]
-	public class IncreaseAttackData : OperatorSkillData
+	public class IncreaseAttackData : OperatorSkillCreate
 	{
 		[Title("IncreaseAttackData")]
 		public float IncreaseAttackValue;
-		public override IOperatorSkill CreateSkill()
+		public override OperatorSkill CreateSkill()
 		{
 			IncreaseAttack newIncreaseAttack = new IncreaseAttack();
 			newIncreaseAttack.SetOperatorSkillData(this);

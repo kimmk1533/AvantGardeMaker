@@ -7,19 +7,18 @@ using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public abstract class OperatorSkill : IOperatorSkill, ISPRecover
+	public class OperatorSkill : IOperatorSkill, ISPRecover
 	{
-
 		#region 변수
 		#endregion
 
 		#region 프로퍼티
-		public abstract string SkillName { get; protected set; }
-		public abstract OperatorSkillData OperatorSkillInfo { get; set; }
-		public abstract int SkillLevel { get; }
-		public abstract bool IsSkillActive { get; set; }
-		public abstract bool IsSkillEnd { get; set; }
-		public abstract bool OnSkillButton { get; set; }
+		public string SkillName { get; protected set; }
+		public OperatorSkillData OperatorSkillInfo { get; set; }
+		public int SkillLevel { get; }
+		public bool IsSkillActive { get; set; }
+		public bool IsSkillEnd { get; set; }
+		public bool OnSkillButton { get; set; }
 		public float currentSP { get; protected set; }
 
 		public E_SPGainType GainType { get; protected set; }
@@ -36,9 +35,6 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 매니져
 
 		#endregion
-
-		public abstract void Activate(OperatorData operatorData);
-		public abstract void OnClickSkillEvent(OperatorData operatorData);
 
 		public void OnAttack()
 		{
@@ -63,16 +59,15 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void RecoverSP(int value)
 		{
-			if (currentSP < OperatorSkillInfo.MaxSP)
+			if (currentSP + value > OperatorSkillInfo.MaxSP)
 			{
-				if (currentSP + value > OperatorSkillInfo.MaxSP)
-				{
-					currentSP = OperatorSkillInfo.MaxSP;
-				}
-				else
-				{
-					currentSP += value;
-				}
+				Debug.Log("Sp충전완료 Sp: " + currentSP);
+				currentSP = OperatorSkillInfo.MaxSP;
+			}
+			else
+			{
+				Debug.Log("Sp: " + currentSP);
+				currentSP += value;
 			}
 		}
 
@@ -83,6 +78,16 @@ namespace AvantGardeMaker.OperatorSpace
 				_onActivate?.Invoke();
 				currentSP = 0;
 			}
+		}
+
+		public virtual void Activate(OperatorData operatorData)
+		{
+		
+		}
+
+		public virtual void OnClickSkillEvent(OperatorData operatorData)
+		{
+			
 		}
 	}
 }
