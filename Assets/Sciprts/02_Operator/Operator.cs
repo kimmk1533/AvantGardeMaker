@@ -434,8 +434,7 @@ namespace AvantGardeMaker.OperatorSpace
 		{
 			if (isFinishedSkillSetting == true)
 				return;
-
-			//SetSkill(operatorData.VariableData.SkillData);
+			m_OperatorSkill = operatorData.VariableData.SkillData.CreateSkill();
 			isFinishedSkillSetting = true;
 		}
 
