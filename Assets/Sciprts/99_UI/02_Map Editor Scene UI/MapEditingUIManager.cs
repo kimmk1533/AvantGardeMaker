@@ -82,6 +82,14 @@ namespace AvantGardeMaker.UI
 		}
 		private async void OnSaveButtonClicked()
 		{
+			SystemSettingPanel systemSettingPanel = settingPanelController.GetSettingPanel<SystemSettingPanel>();
+
+			if (string.IsNullOrEmpty(systemSettingPanel.stageTitle) == true)
+			{
+				Debug.LogError("스테이지명 비어있음");
+				return;
+			}
+
 			await M_MapEditing.SaveData();
 
 			await M_MapEditing.SaveDataToCloud();

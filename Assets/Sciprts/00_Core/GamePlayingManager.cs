@@ -85,7 +85,7 @@ namespace AvantGardeMaker.CoreSpace
 		{
 			base.Initialize();
 
-			m_CostTimer = new UtilClass.Timer(1f);
+			m_CostTimer = new UtilClass.Timer();
 			m_DeployingOperatorList = new List<Operator>();
 
 			currentMap = null;
@@ -106,6 +106,9 @@ namespace AvantGardeMaker.CoreSpace
 		public override void InitializeMain()
 		{
 			base.InitializeMain();
+
+			if (m_CostTimer.interval <= 0f)
+				return;
 
 			m_CostTimer.Clear();
 			m_CostTimer.Resume();

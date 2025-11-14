@@ -39,15 +39,11 @@ namespace AvantGardeMaker.EnemySpace
 		private bool m_IsStageStart;
 
 		//생성한 enemy 목록
-		[SerializeField]
 		private List<Enemy> m_EnemyList = null;
 
 		//스크립터블 오브젝트 추가용
-		[SerializeField]
 		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
-		[SerializeField]
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
-		[SerializeField]
 		private List<EnemySkillData> m_EnemySkillDataList = null;
 
 		[SerializeField, ReadOnly]

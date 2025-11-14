@@ -12,43 +12,43 @@ namespace AvantGardeMaker.UI
 		#region 기본 템플릿
 		#region 변수
 		private TMP_InputField m_StageTitleInputField = null;
+		private TMP_InputField m_DescriptionInputField = null;
 		private TMP_InputField m_LifePointInputField = null;
 		private TMP_InputField m_InitCostInputField = null;
 		private TMP_InputField m_MaxCostInputField = null;
 		private TMP_InputField m_CostIncreaseTimeInputField = null;
-		private TMP_InputField m_DescriptionInputField = null;
 		#endregion
 
 		#region 프로퍼티
 		public string stageTitle
 		{
 			get => m_StageTitleInputField.text;
-			set => m_StageTitleInputField.SetTextWithoutNotify(value);
-		}
-		public int lifePoint
-		{
-			get => int.Parse(m_LifePointInputField.text);
-			set => m_LifePointInputField.SetTextWithoutNotify(value.ToString());
-		}
-		public int initCost
-		{
-			get => int.Parse(m_InitCostInputField.text);
-			set => m_InitCostInputField.SetTextWithoutNotify(value.ToString());
-		}
-		public int maxCost
-		{
-			get => int.Parse(m_MaxCostInputField.text);
-			set => m_MaxCostInputField.SetTextWithoutNotify(value.ToString());
-		}
-		public float costIncreaseTime
-		{
-			get => float.Parse(m_CostIncreaseTimeInputField.text);
-			set => m_CostIncreaseTimeInputField.SetTextWithoutNotify(value.ToString());
+			set => m_StageTitleInputField.text = value;
 		}
 		public string description
 		{
 			get => m_DescriptionInputField.text;
-			set => m_DescriptionInputField.SetTextWithoutNotify(value);
+			set => m_DescriptionInputField.text = value;
+		}
+		public int lifePoint
+		{
+			get => int.Parse(m_LifePointInputField.text);
+			set => m_LifePointInputField.text = value.ToString();
+		}
+		public int initCost
+		{
+			get => int.Parse(m_InitCostInputField.text);
+			set => m_InitCostInputField.text = value.ToString();
+		}
+		public int maxCost
+		{
+			get => int.Parse(m_MaxCostInputField.text);
+			set => m_MaxCostInputField.text = value.ToString();
+		}
+		public float costIncreaseTime
+		{
+			get => float.Parse(m_CostIncreaseTimeInputField.text);
+			set => m_CostIncreaseTimeInputField.text = value.ToString();
 		}
 		#endregion
 
@@ -68,6 +68,8 @@ namespace AvantGardeMaker.UI
 			if (int.TryParse(value, out int lifePoint) == false)
 				return;
 
+			lifePoint = Mathf.Clamp(lifePoint, 1, 999);
+
 			M_MapEditing.lifePoint = lifePoint;
 			m_LifePointInputField.SetTextWithoutNotify(lifePoint.ToString());
 		}
@@ -75,6 +77,8 @@ namespace AvantGardeMaker.UI
 		{
 			if (int.TryParse(value, out int initCost) == false)
 				return;
+
+			initCost = Mathf.Clamp(initCost, 0, 999);
 
 			M_MapEditing.initCost = initCost;
 			m_InitCostInputField.SetTextWithoutNotify(initCost.ToString());
@@ -84,6 +88,8 @@ namespace AvantGardeMaker.UI
 			if (int.TryParse(value, out int maxCost) == false)
 				return;
 
+			maxCost = Mathf.Clamp(maxCost, 0, 999);
+
 			M_MapEditing.maxCost = maxCost;
 			m_MaxCostInputField.SetTextWithoutNotify(maxCost.ToString());
 		}
@@ -91,6 +97,8 @@ namespace AvantGardeMaker.UI
 		{
 			if (float.TryParse(value, out float costIncreaseTime) == false)
 				return;
+
+			costIncreaseTime = Mathf.Clamp(costIncreaseTime, 0f, 99f);
 
 			M_MapEditing.costIncreaseTime = costIncreaseTime;
 			m_CostIncreaseTimeInputField.SetTextWithoutNotify(costIncreaseTime.ToString());

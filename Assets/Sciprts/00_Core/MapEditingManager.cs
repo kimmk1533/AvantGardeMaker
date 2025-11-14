@@ -441,10 +441,6 @@ namespace AvantGardeMaker.CoreSpace
 		}
 		public void LoadData()
 		{
-			if (m_EditingStageData.title == null ||
-				m_EditingStageData.title.Equals(string.Empty) == true)
-				return;
-
 			stageTitle = m_EditingStageData.title;
 			description = m_EditingStageData.description;
 
@@ -462,14 +458,17 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.LoadEnemySetting(m_EditingStageData);
 
 			#region Debug
-			TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 로드 완료", new UtilClass.WorldTMP_TextOption()
+			if (string.IsNullOrEmpty(stageTitle) == false)
 			{
-				tmpFont = M_MapEditingUI.uiFont,
-				fontSize = 20,
-				textAlignment = TextAlignmentOptions.Midline,
-				duration = 1f,
-			});
-			textMesh.transform.rotation = mapEditorCamera.transform.rotation;
+				TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 로드 완료", new UtilClass.WorldTMP_TextOption()
+				{
+					tmpFont = M_MapEditingUI.uiFont,
+					fontSize = 20,
+					textAlignment = TextAlignmentOptions.Midline,
+					duration = 1f,
+				});
+				textMesh.transform.rotation = mapEditorCamera.transform.rotation;
+			}
 			#endregion
 		}
 

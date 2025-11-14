@@ -86,6 +86,8 @@ namespace AvantGardeMaker.CoreSpace
 			M_Operator.Initialize();
 			M_Enemy.Initialize();
 
+			M_MapEditing.SynchronizeStageData(defaultStageData);
+
 			Debug.Log("Initialize");
 		}
 		/// <summary>
