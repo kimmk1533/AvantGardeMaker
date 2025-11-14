@@ -17,7 +17,9 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		[SerializeField]
 		private MapListPanel m_MapListPanel = null;
 		[SerializeField]
-		private RectTransform m_OptionPanel = null;
+		private MapOptionPanel m_MapOptionPanel = null;
+		[SerializeField]
+		private RectTransform m_SystemOptionPanel = null;
 
 		[SerializeField]
 		private RectTransform m_MapListItemParent = null;
@@ -60,7 +62,8 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			M_MainMenuUI.mainMenuButtonsPanel = m_MainMenuButtonsPanel;
 
 			M_MainMenuUI.mapListPanel = m_MapListPanel;
-			M_MainMenuUI.optionPanel = m_OptionPanel;
+			M_MainMenuUI.mapOptionPanel = m_MapOptionPanel;
+			M_MainMenuUI.systemOptionPanel = m_SystemOptionPanel;
 
 			M_MainMenuUI.mapListItemParent = m_MapListItemParent;
 			#endregion

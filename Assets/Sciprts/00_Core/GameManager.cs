@@ -21,6 +21,7 @@ namespace AvantGardeMaker.CoreSpace
 		#region 게임 관련 변수
 		private static readonly StageData defaultStageData = new StageData()
 		{
+			title = "",
 			lifePoint = 3,
 
 			initCost = 10,
@@ -118,7 +119,7 @@ namespace AvantGardeMaker.CoreSpace
 		}
 
 		/// <summary>
-		/// 메인 초기화 함수 (Main Menu Scene 진입 시 호출)
+		/// Main Menu Scene 초기화 함수 (Main Menu Scene 진입 시 호출)
 		/// </summary>
 		public void InitializeMainMenu()
 		{
@@ -128,7 +129,7 @@ namespace AvantGardeMaker.CoreSpace
 			Debug.Log("Initialize Main Menu");
 		}
 		/// <summary>
-		/// 메인 마무리화 함수 (Main Menu Scene 나갈 시 호출)
+		/// Main Menu Scene 마무리화 함수 (Main Menu Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeMainMenu()
 		{
@@ -139,7 +140,7 @@ namespace AvantGardeMaker.CoreSpace
 		}
 
 		/// <summary>
-		/// 메인 초기화 함수 (Game Playing Scene 진입 시 호출)
+		/// Game Playing Scene 초기화 함수 (Game Playing Scene 진입 시 호출)
 		/// </summary>
 		public void InitializeGamePlaying()
 		{
@@ -157,7 +158,7 @@ namespace AvantGardeMaker.CoreSpace
 			Debug.Log("Initialize Game Playing");
 		}
 		/// <summary>
-		/// 메인 마무리화 함수 (Game Playing Scene 나갈 시 호출)
+		/// Game Playing Scene 마무리화 함수 (Game Playing Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeGamePlaying()
 		{
@@ -176,7 +177,7 @@ namespace AvantGardeMaker.CoreSpace
 		}
 
 		/// <summary>
-		/// 메인 초기화 함수 (Map Editing Scene 진입 시 호출)
+		/// Map Editing Scene 초기화 함수 (Map Editing Scene 진입 시 호출)
 		/// </summary>
 		public void InitializeMapEditing()
 		{
@@ -192,7 +193,7 @@ namespace AvantGardeMaker.CoreSpace
 			Debug.Log("Initialize Map Editing");
 		}
 		/// <summary>
-		/// 메인 마무리화 함수 (Map Editing Scene 나갈 시 호출)
+		/// Map Editing Scene 마무리화 함수 (Map Editing Scene 나갈 시 호출)
 		/// </summary>
 		public void FinallizeMapEditing()
 		{

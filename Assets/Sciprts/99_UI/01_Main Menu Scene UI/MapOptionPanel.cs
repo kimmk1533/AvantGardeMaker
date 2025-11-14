@@ -2,55 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using AvantGardeMaker.CoreSpace;
+using AvantGardeMaker.CoreSpace.SaveLoad;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class SystemSettingPanel : SettingPanel
+	public class MapOptionPanel : Panel
 	{
 		#region 기본 템플릿
 		#region 변수
 		private TMP_InputField m_StageTitleInputField = null;
-		private TMP_InputField m_DescriptionInputField = null;
 		private TMP_InputField m_LifePointInputField = null;
 		private TMP_InputField m_InitCostInputField = null;
 		private TMP_InputField m_MaxCostInputField = null;
 		private TMP_InputField m_CostIncreaseTimeInputField = null;
+
+		private Button m_ConfirmButton = null;
+		private Button m_CancleButton = null;
 		#endregion
 
 		#region 프로퍼티
-		public string stageTitle
-		{
-			get => m_StageTitleInputField.text;
-			set => m_StageTitleInputField.text = value;
-		}
-		public string description
-		{
-			get => m_DescriptionInputField.text;
-			set => m_DescriptionInputField.text = value;
-		}
-		public int lifePoint
-		{
-			get => int.Parse(m_LifePointInputField.text);
-			set => m_LifePointInputField.text = value.ToString();
-		}
-		public int initCost
-		{
-			get => int.Parse(m_InitCostInputField.text);
-			set => m_InitCostInputField.text = value.ToString();
-		}
-		public int maxCost
-		{
-			get => int.Parse(m_MaxCostInputField.text);
-			set => m_MaxCostInputField.text = value.ToString();
-		}
-		public float costIncreaseTime
-		{
-			get => float.Parse(m_CostIncreaseTimeInputField.text);
-			set => m_CostIncreaseTimeInputField.text = value.ToString();
-		}
+		#endregion
+
+		#region 매니저
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		#endregion
 
 		#region 이벤트
@@ -60,11 +38,6 @@ namespace AvantGardeMaker.UI
 		{
 			string regexTitle = Regex.Replace(value, @"[\\/:*?""<>|]", "");
 			m_StageTitleInputField.SetTextWithoutNotify(regexTitle);
-			M_MapEditing.stageTitle = regexTitle;
-		}
-		private void OnDescriptionInputFieldEndEdit(string value)
-		{
-			M_MapEditing.description = value;
 		}
 		private void OnLifePointInputFieldEndEdit(string value)
 		{
@@ -106,14 +79,31 @@ namespace AvantGardeMaker.UI
 			M_MapEditing.costIncreaseTime = costIncreaseTime;
 			m_CostIncreaseTimeInputField.SetTextWithoutNotify(costIncreaseTime.ToString());
 		}
-		#endregion
-		#endregion
 
-		#region 매니저
-		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
-		#endregion
+		private void OnConfirmButtonClicked()
+		{
+			StageData stageData = new StageData();
+			StageData.Initialize(ref stageData);
 
-		#region 유니티 콜백 함수
+			stageData.title = m_StageTitleInputField.text;
+			stageData.lifePoint = GetInputFieldIntValue(m_LifePointInputField);
+			stageData.initCost = GetInputFieldIntValue(m_InitCostInputField);
+			stageData.maxCost = GetInputFieldIntValue(m_MaxCostInputField);
+			stageData.costIncreaseTime = GetInputFieldFloatValue(m_CostIncreaseTimeInputField);
+
+			M_MapEditing.SynchronizeStageData(stageData);
+
+			SceneLoader.LoadScene("Map Editing Scene");
+		}
+		private void OnCancleButtonClicked()
+		{
+			// 인풋필드 초기화 하고
+			InitializeInputFields();
+
+			// 패널창 닫기
+			gameObject.SetActive(false);
+		}
+		#endregion
 		#endregion
 
 		#region 초기화 & 마무리화 함수
@@ -125,18 +115,24 @@ namespace AvantGardeMaker.UI
 			base.Initialize();
 
 			m_StageTitleInputField = transform.Find<TMP_InputField>("Stage Title/Input Field");
-			m_DescriptionInputField = transform.Find<TMP_InputField>("Description/Input Field");
 			m_LifePointInputField = transform.Find<TMP_InputField>("Life Point/Input Field");
 			m_InitCostInputField = transform.Find<TMP_InputField>("Cost/Init Cost/Input Field");
 			m_MaxCostInputField = transform.Find<TMP_InputField>("Cost/Max Cost/Input Field");
 			m_CostIncreaseTimeInputField = transform.Find<TMP_InputField>("Cost/Cost Increase Time/Input Field");
 
+			m_ConfirmButton = transform.Find<Button>("Confirm Button");
+			m_CancleButton = transform.Find<Button>("Cancle Button");
+
+			InitializeInputFields();
+
 			m_StageTitleInputField.onEndEdit.AddListener(OnStageTitleInputFieldEndEdit);
-			m_DescriptionInputField.onEndEdit.AddListener(OnDescriptionInputFieldEndEdit);
 			m_LifePointInputField.onEndEdit.AddListener(OnLifePointInputFieldEndEdit);
 			m_InitCostInputField.onEndEdit.AddListener(OnInitCostInputFieldEndEdit);
 			m_MaxCostInputField.onEndEdit.AddListener(OnMaxCostInputFieldEndEdit);
 			m_CostIncreaseTimeInputField.onEndEdit.AddListener(OnCostIncreaseTimeInputFieldEndEdit);
+
+			m_ConfirmButton.onClick.AddListener(OnConfirmButtonClicked);
+			m_CancleButton.onClick.AddListener(OnCancleButtonClicked);
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -145,20 +141,42 @@ namespace AvantGardeMaker.UI
 		{
 			base.Finallize();
 
-			FinallizeInputField(ref m_StageTitleInputField);
-			FinallizeInputField(ref m_DescriptionInputField);
-			FinallizeInputField(ref m_LifePointInputField);
-			FinallizeInputField(ref m_InitCostInputField);
-			FinallizeInputField(ref m_MaxCostInputField);
-			FinallizeInputField(ref m_CostIncreaseTimeInputField);
+
 		}
+
+		private void InitializeInputFields()
+		{
+			m_StageTitleInputField.SetTextWithoutNotify(string.Empty);
+			m_LifePointInputField.SetTextWithoutNotify("3");
+			m_InitCostInputField.SetTextWithoutNotify("10");
+			m_MaxCostInputField.SetTextWithoutNotify("99");
+			m_CostIncreaseTimeInputField.SetTextWithoutNotify("1.0");
+		}
+		#endregion
+
+		#region 유니티 콜백 함수
 		#endregion
 		#endregion
 
-		private void FinallizeInputField(ref TMP_InputField inputField)
+		private async Awaitable CheckStageTitle()
 		{
-			inputField.onEndEdit.RemoveAllListeners();
-			inputField = null;
+			List<string> titleList = await SaveLoadUtility.GetMakingMapTitleList();
+
+			//if ()
+		}
+		private int GetInputFieldIntValue(TMP_InputField inputField)
+		{
+			if (int.TryParse(inputField.text, out int result) == false)
+				return default;
+
+			return result;
+		}
+		private float GetInputFieldFloatValue(TMP_InputField inputField)
+		{
+			if (float.TryParse(inputField.text, out float result) == false)
+				return default;
+
+			return result;
 		}
 	}
 }

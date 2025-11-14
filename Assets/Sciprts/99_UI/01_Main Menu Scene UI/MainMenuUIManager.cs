@@ -29,7 +29,7 @@ namespace AvantGardeMaker.UI
 		#region MainMenu Buttons
 		private Button m_MapListButton = null;
 		private Button m_MapEditorButton = null;
-		private Button m_OptionButton = null;
+		private Button m_SystemOptionButton = null;
 		private Button m_QuitButton = null;
 		#endregion
 		#endregion
@@ -41,7 +41,8 @@ namespace AvantGardeMaker.UI
 		public RectTransform mainMenuButtonsPanel { get; set; }
 
 		public MapListPanel mapListPanel { get; set; }
-		public RectTransform optionPanel { get; set; }
+		public MapOptionPanel mapOptionPanel { get; set; }
+		public RectTransform systemOptionPanel { get; set; }
 
 		public RectTransform mapListItemParent { get; set; }
 		#endregion
@@ -77,11 +78,11 @@ namespace AvantGardeMaker.UI
 		}
 		private void OnMapEditorButtonClicked()
 		{
-			SceneLoader.LoadScene("Map Editing Scene");
+			mapOptionPanel.gameObject.SetActive(true);
 		}
-		private void OnOptionButtonClicked()
+		private void OnSystemOptionButtonClicked()
 		{
-			optionPanel.gameObject.SetActive(true);
+			systemOptionPanel.gameObject.SetActive(true);
 		}
 		private void OnQuitButtonClicked()
 		{
@@ -132,7 +133,7 @@ namespace AvantGardeMaker.UI
 
 			m_MapListButton = mainMenuButtonsPanel.Find<Button>("Map List Button");
 			m_MapEditorButton = mainMenuButtonsPanel.Find<Button>("Map Editor Button");
-			m_OptionButton = mainMenuButtonsPanel.Find<Button>("Option Button");
+			m_SystemOptionButton = mainMenuButtonsPanel.Find<Button>("System Option Button");
 			m_QuitButton = mainMenuButtonsPanel.Find<Button>("Quit Button");
 
 			m_NickNameConfirmButton.onClick.AddListener(OnNicknameConfirmButtonClicked);
@@ -142,16 +143,18 @@ namespace AvantGardeMaker.UI
 
 			m_MapListButton.onClick.AddListener(OnMapListButtonClicked);
 			m_MapEditorButton.onClick.AddListener(OnMapEditorButtonClicked);
-			m_OptionButton.onClick.AddListener(OnOptionButtonClicked);
+			m_SystemOptionButton.onClick.AddListener(OnSystemOptionButtonClicked);
 			m_QuitButton.onClick.AddListener(OnQuitButtonClicked);
 
 			mapListPanel.Initialize();
+			mapOptionPanel.Initialize();
 
 			mainMenuInitPanel.gameObject.SetActive(false);
 			mainMenuButtonsPanel.gameObject.SetActive(false);
 
 			mapListPanel.gameObject.SetActive(false);
-			optionPanel.gameObject.SetActive(false);
+			mapOptionPanel.gameObject.SetActive(false);
+			systemOptionPanel.gameObject.SetActive(false);
 
 			InitProcess();
 		}
@@ -162,6 +165,7 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
+			mapOptionPanel.Finallize();
 			mapListPanel.Finallize();
 
 			m_NickNameConfirmButton.onClick.RemoveListener(OnNicknameConfirmButtonClicked);
@@ -171,7 +175,7 @@ namespace AvantGardeMaker.UI
 
 			m_MapListButton.onClick.RemoveListener(OnMapListButtonClicked);
 			m_MapEditorButton.onClick.RemoveListener(OnMapEditorButtonClicked);
-			m_OptionButton.onClick.RemoveListener(OnOptionButtonClicked);
+			m_SystemOptionButton.onClick.RemoveListener(OnSystemOptionButtonClicked);
 			m_QuitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
 			m_NickNameConfirmButton = null;
@@ -182,7 +186,7 @@ namespace AvantGardeMaker.UI
 
 			m_MapListButton = null;
 			m_MapEditorButton = null;
-			m_OptionButton = null;
+			m_SystemOptionButton = null;
 			m_QuitButton = null;
 		}
 		#endregion

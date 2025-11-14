@@ -142,8 +142,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
+  m_sharedMaterial: {fileID: 1963738424256772380, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -357,6 +357,27 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  m_StageData:
+    m_Title: 
+    m_CreatorNickName: 
+    m_CreatedPlayerId: 
+    m_ThumnailTexture: 
+    m_Description: 
+    m_LifePoint: 0
+    m_InitCost: 0
+    m_MaxCost: 0
+    m_CostIncreaseTime: 0
+    m_TileSpawnDataList: []
+    m_TileFixedDataList: []
+    m_TileVariableDataList: []
+    m_MinTile: {x: 0, y: 0}
+    m_MaxTile: {x: 0, y: 0}
+    m_OperatorSpawnDataList: []
+    m_OperatorFixedDataList: []
+    m_OperatorVariableDataList: []
+    m_EnemySpawnDataList: []
+    m_EnemyFixedDataList: []
+    m_EnemyVariableDataList: []
 --- !u!1 &3021494295479120422
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,8 +867,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
+  m_sharedMaterial: {fileID: 1963738424256772380, guid: 9bd4c0ba7cdc6834daf7b26ffd9cef39, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

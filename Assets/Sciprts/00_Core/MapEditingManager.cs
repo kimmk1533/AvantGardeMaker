@@ -156,7 +156,8 @@ namespace AvantGardeMaker.CoreSpace
 			m_IsEditMode = true;
 
 			m_TilePlacementFlag = true;
-
+			
+			// 프리뷰 타일 생성
 			List<TileData> tileDataList = M_Tile.GetAllTileDatas();
 			for (int i = 0; i < tileDataList.Count; ++i)
 			{

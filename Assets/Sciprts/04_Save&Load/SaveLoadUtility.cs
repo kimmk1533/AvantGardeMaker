@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Unity.Services.Authentication;
@@ -118,16 +119,6 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			// Json 변환
 			string json = JsonUtility.ToJson(stageData);
 
-			// 디버깅용 파일 저장
-			string debugJson = JsonUtility.ToJson(stageData, true);
-			string debugPath = Path.Combine(Application.dataPath, "..", "Data");
-			string debugFile = mapTitle + ".json";
-
-			if (Directory.Exists(debugPath) == false)
-				Directory.CreateDirectory(debugPath);
-
-			File.WriteAllText(Path.Combine(debugPath, debugFile), debugJson);
-
 			t1 = Time.realtimeSinceStartup;
 
 			// 압축
@@ -145,7 +136,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			if (mapTitleList.Contains(mapTitle) == false)
 				mapTitleList.Add(mapTitle);
 
-			string mapTitlListData = string.Join(", ", mapTitleList);
+			string mapTitleListData = string.Join(", ", mapTitleList);
 
 			t2 = Time.realtimeSinceStartup;
 
@@ -155,17 +146,30 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			Dictionary<string, object> data = new Dictionary<string, object>();
 
 			data.Add("isUse", true);
-			data.Add("makingMapTitleList", mapTitlListData);
-			data.Add(mapTitle, compressedJson);
+			data.Add("makingMapTitleList", mapTitleListData);
+			data.Add(GetByteArrTitle(mapTitle), compressedJson);
 
 			// 데이터 저장
 			await CloudSaveService.Instance.Data.Player.SaveAsync(data, saveOption);
+
+			#region 디버깅
+			// 디버깅용 파일 저장
+			string debugJson = JsonUtility.ToJson(stageData, true);
+			string debugPath = Path.Combine(Application.dataPath, "..", "Data");
+			string debugTitle = Regex.Replace(mapTitle, @"[\\/:*?""<>|]", "");
+			string debugFile = debugTitle + ".json";
+
+			if (Directory.Exists(debugPath) == false)
+				Directory.CreateDirectory(debugPath);
+
+			File.WriteAllText(Path.Combine(debugPath, debugFile), debugJson);
+			#endregion
 		}
 		public static async Awaitable DeleteStageData(string mapTitle)
 		{
 			DeleteOptions deleteOption = new DeleteOptions(new PublicWriteAccessClassOptions());
 
-			await CloudSaveService.Instance.Data.Player.DeleteAsync(mapTitle, deleteOption);
+			await CloudSaveService.Instance.Data.Player.DeleteAsync(GetByteArrTitle(mapTitle), deleteOption);
 
 			// 기존 제작한 맵 타이틀 리스트 가져오기
 			List<string> mapTitleList = await GetMakingMapTitleList(AuthenticationService.Instance.PlayerId);
@@ -231,7 +235,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 				{
 					// index 건너뛰기
 					if (IsIndexKey(item.Key) || // 인덱스 예외처리
-						item.Key.Contains(mapTitleFilter) == false) // 검색 필터 예외처리
+						item.Key.Contains(GetByteArrTitle(mapTitleFilter)) == false) // 검색 필터 예외처리
 						continue;
 
 					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
@@ -264,7 +268,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 
 			return mapTitleStr;
 		}
-		private static async Awaitable<List<string>> GetMakingMapTitleList(string playerId)
+		public static async Awaitable<List<string>> GetMakingMapTitleList(string playerId)
 		{
 			string mapTitleStr = await GetMakingMapTitleStr(playerId);
 
@@ -274,6 +278,11 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			List<string> mapTitleList = new List<string>(mapTitleStr.Split(", "));
 
 			return mapTitleList;
+		}
+		public static async Awaitable<List<string>> GetMakingMapTitleList() => await GetMakingMapTitleList(GetPlayerId());
+		private static string GetByteArrTitle(string mapTitle)
+		{
+			return string.Join('_', Encoding.UTF8.GetBytes(mapTitle));
 		}
 
 		public static string GetPlayerId()
