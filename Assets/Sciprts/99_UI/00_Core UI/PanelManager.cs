@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace AvantGardeMaker.UI
 {
@@ -24,7 +25,7 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Update()
+		private void OnBack()
 		{
 			PanelStackShortcut();
 		}
@@ -74,8 +75,6 @@ namespace AvantGardeMaker.UI
 		private void PanelStackShortcut()
 		{
 			if (m_PanelStack.Count <= 0)
-				return;
-			if (Input.GetKeyDown(KeyCode.Escape) == false)
 				return;
 
 			Panel panel = m_PanelStack.Peek();

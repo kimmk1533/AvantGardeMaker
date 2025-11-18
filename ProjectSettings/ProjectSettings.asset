@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: Kim & Jang
   productName: AvantGardeMaker
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -946,7 +946,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 2
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 2ffc0e4f-1808-4f21-9179-4bb2391cd4ed
   framebufferDepthMemorylessMode: 0

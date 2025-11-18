@@ -82,8 +82,8 @@ namespace AvantGardeMaker.UI
 				m_SkillLevel = value.FixedData.SkillLevel;
 
 				m_OperatorImage.sprite = M_Operator.GetOperatorPortrait(value.key);
-				m_PotentialText.text = value.FixedData.Potential.ToString();
-				m_EliteText.text = value.FixedData.Elite.ToString();
+				m_PotentialText.text = value.FixedData.PotentialLevel.ToString();
+				m_EliteText.text = value.FixedData.EliteLevel.ToString();
 				m_LevelText.text = "<size=13>LV</size>\n" + value.FixedData.Level.ToString();
 				m_ModuleImage.sprite = null;
 				m_SkillImage.sprite = null;

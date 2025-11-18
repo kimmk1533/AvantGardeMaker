@@ -45,7 +45,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public void OnTakeAttack()
 		{
-			if (GainType != E_SPGainType.TakeAttack)
+			if (GainType != E_SPGainType.Hit)
 				return;
 			TryActivate();
 		}

@@ -1,0 +1,52 @@
+{
+    "version": 1,
+    "name": "InputSystem_Panel Manager",
+    "maps": [
+        {
+            "name": "All",
+            "id": "f4bc9bdf-512c-480b-9915-3bf8e163e12a",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "86452383-5fbe-4219-8b90-b14d66f6e174",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bfbc5096-96fb-43f9-8f0e-041079c8ed03",
+                    "path": "*/{Back}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

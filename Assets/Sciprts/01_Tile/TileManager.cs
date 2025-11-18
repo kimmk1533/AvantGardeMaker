@@ -160,11 +160,12 @@ namespace AvantGardeMaker.TileSpace
 		{
 			string tileKey = tileSpawnData.TileSpawnKey;
 			Vector2Int tilePos = tileSpawnData.TilePos;
+			Vector3 tileOffset = tileSpawnData.TileOffset;
 			E_TileType tileType = tileSpawnData.TileType;
 			E_TilePositionType tilePositionType = tileSpawnData.TilePositionType;
 			E_TileDeployableTypeFlag tileDeployableTypeFlag = tileSpawnData.TileDeployableTypeFlag;
 
-			Vector3 tilePosition = (Vector2)tileSpawnData.TilePos + (Vector2)M_MapEditing.GetTileOffset(tilePositionType);
+			Vector3 tilePosition = (Vector3)(Vector2)tileSpawnData.TilePos + tileOffset;
 
 			Tile newTile = GetBuilder(tileKey)
 				.SetPosition(tilePosition)

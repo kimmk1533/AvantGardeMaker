@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -117,12 +118,14 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Update()
+		private void OnSpace()
 		{
-			if (Input.GetKeyDown(KeyCode.Space) == true)
-				SwitchCameraMode();
-
-			TileEditModeProcess();
+			SwitchCameraMode();
+		}
+		private void OnMouseMove(InputValue inputValue)
+		{
+			if (inputValue.Get<Vector2>().sqrMagnitude != 0f)
+				TileEditModeProcess();
 		}
 		#endregion
 
@@ -156,7 +159,7 @@ namespace AvantGardeMaker.CoreSpace
 			m_IsEditMode = true;
 
 			m_TilePlacementFlag = true;
-			
+
 			// 프리뷰 타일 생성
 			List<TileData> tileDataList = M_Tile.GetAllTileDatas();
 			for (int i = 0; i < tileDataList.Count; ++i)
@@ -282,8 +285,8 @@ namespace AvantGardeMaker.CoreSpace
 				Mathf.RoundToInt(mousePosition.y)
 				);
 
-			if (Input.GetMouseButtonUp(0) == true ||
-				Input.GetMouseButtonUp(1) == true)
+			if (Mouse.current.leftButton.wasReleasedThisFrame == true ||
+				Mouse.current.rightButton.wasReleasedThisFrame == true)
 				m_TilePlacementFlag = true;
 
 			// 마우스 포인터가 UI 위에 없는 지 확인
@@ -301,13 +304,14 @@ namespace AvantGardeMaker.CoreSpace
 				}
 
 				// 타일 배치
-				if (Input.GetMouseButton(0) == true &&
+				if (Mouse.current.leftButton.isPressed == true &&
 					string.IsNullOrEmpty(tileKey) == false)
 				{
 					TileSpawnData tileSpawnData = new TileSpawnData()
 					{
 						TileSpawnKey = tileKey,
 						TilePos = mousePositionInt,
+						TileOffset = GetTileOffset(tilePositionType),
 						TileType = tileType,
 						TilePositionType = tilePositionType,
 						TileDeployableTypeFlag = tileDeployableTypeFlag,
@@ -316,7 +320,7 @@ namespace AvantGardeMaker.CoreSpace
 					M_Tile.AddTile(tileSpawnData);
 				}
 				// 타일 제거
-				if (Input.GetMouseButton(1) == true)
+				if (Mouse.current.rightButton.isPressed == true)
 				{
 					M_Tile.RemoveTile(mousePositionInt);
 				}
@@ -331,15 +335,14 @@ namespace AvantGardeMaker.CoreSpace
 					previewTile?.gameObject.SetActive(false);
 				}
 
-				if (Input.GetMouseButtonDown(0) == true ||
-					Input.GetMouseButtonDown(1) == true)
+				if (Mouse.current.leftButton.wasPressedThisFrame == true ||
+					Mouse.current.rightButton.wasPressedThisFrame == true)
 					m_TilePlacementFlag = false;
 			}
 		}
-
-		public Vector3 GetTileOffset(E_TilePositionType tileType)
+		private Vector3 GetTileOffset(E_TilePositionType tilePositionType)
 		{
-			if (tileType == E_TilePositionType.HighGround)
+			if (tilePositionType == E_TilePositionType.HighGround)
 				return m_HighGroundTileOffset;
 
 			return Vector3.zero;

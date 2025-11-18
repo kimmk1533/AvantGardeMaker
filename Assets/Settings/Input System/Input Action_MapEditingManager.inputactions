@@ -1,0 +1,72 @@
+{
+    "version": 1,
+    "name": "Input Action_MapEditingManager",
+    "maps": [
+        {
+            "name": "Map Editing Scene",
+            "id": "c2d79bba-1a27-42be-a64c-5807359c35bd",
+            "actions": [
+                {
+                    "name": "Space",
+                    "type": "Button",
+                    "id": "92737fb8-3b89-44a8-8c6b-2cbbfa86f153",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse Move",
+                    "type": "Value",
+                    "id": "44181971-e4c9-4728-972b-61d5384bb405",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9c90d8bc-7671-48e8-af26-0b7c7df5e8be",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35058072-5ee7-425d-8795-ec4e59c480d1",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

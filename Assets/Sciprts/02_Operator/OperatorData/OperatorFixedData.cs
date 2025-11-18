@@ -9,42 +9,40 @@ namespace AvantGardeMaker.OperatorSpace
 	[System.Serializable]
 	public class OperatorFixedData
 	{
-		// 최대체력
+		// 최대 체력
 		public OperatorLevelData<float> MaxHp;
 		// 공격력
 		public OperatorLevelData<float> Atk;
 		// 방어력
 		public OperatorLevelData<float> Def;
-		// 마항
+		// 마법 저항력
 		public OperatorLevelData<float> Res;
-		// 배치코스트
+		// 배치 코스트
 		public OperatorLevelData<int> DeploymentCost;
 		// 저지
 		public OperatorLevelData<int> BlockCount;
-		//최대레벨
+		// 최대 레벨
 		public OperatorLevelData<int> MaxLevel;
 
-		//레어도
+		// 레어도
 		public int Rate;
-		//현재레벨
+		// 현재 레벨
 		public int Level;
-		//특성
-		public int Elite;
-		//재능
-		public int Potential;
-		//직군
-		public E_ClassType Class;
-		//공격속도(ex)느림 빠름)
+		// 특성 단계
+		public int EliteLevel;
+		// 재능 단계
+		public int PotentialLevel;
+		// 직군
+		public E_OperatorClass OperatorClass;
+		// 공격 속도 (ex)느림 빠름)
 		public E_AttackSpeed AtkSpeed;
-		//공격범위
-		public E_AttackRange AtkRange;
-		//스킬 이름
+		// 스킬 이름
 		public string SkillName;
-		//스킬레벨
+		// 스킬레벨
 		public int SkillLevel;
-		//초상화 에셋경로
-		public string PortraitPath;
-		//전신 이미지 에셋경로
-		public string FullShotPath;
+		// 초상화 에셋 경로
+		public string PortraitImagePath;
+		// 전신 이미지 에셋 경로
+		public string FullShotImagePath;
 	}
 }

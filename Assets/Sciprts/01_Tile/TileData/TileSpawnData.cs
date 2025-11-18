@@ -15,6 +15,8 @@ namespace AvantGardeMaker.TileSpace
 
 		// 타일 위치
 		public Vector2Int TilePos = Vector2Int.zero;
+		// 타일 위치 오프셋
+		public Vector3 TileOffset = Vector3.zero;
 		// 타일 종류
 		public E_TileType TileType;
 		// 타일 위치 종류

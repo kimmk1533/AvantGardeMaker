@@ -13,6 +13,7 @@ namespace AvantGardeMaker.OperatorSpace
 {
 	public class Operator : ObjectPoolItemBase<Operator>
 	{
+		#region 기본 템플릿
 		#region 변수
 		#region 스탯
 		protected OperatorData m_OperatorData = null;
@@ -34,16 +35,14 @@ namespace AvantGardeMaker.OperatorSpace
 		// 드래그로 인정할 최소 거리 (픽셀)
 		private float m_DragThreshold = 150f;
 
-		private List<Vector2Int> m_currentAttackRangePosList = null;
-
-		[SerializeField, ReadOnly]
+		// 공격(평타) 쿨타임
+		private UtilClass.Timer m_AttackCoolTimer = null;
+		// 공격 범위 타일
 		private List<Tile> m_AttackRangeInTileList = null;
 
-		private UtilClass.Timer m_AttackCoolTimer = null;
-
-
-
+		// 현재 저지 수
 		private int m_CurrentBlock = 0;
+		// 최대 저지 수
 		private int m_MaxBlock = 0;
 
 		private Enemy m_AttackTartgetEnemy = null;
@@ -180,7 +179,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_SettingDirection = E_OperatorDirection.None;
 			redeployCount = 0;
 			m_AutoSPGainTimer = new UtilClass.Timer(1f);
-			
+
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -192,6 +191,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_AttackRangeInTileList.Clear();
 			m_AttackCoolTimer.Clear();
 		}
+		#endregion
 		#endregion
 
 		// 배치
@@ -456,7 +456,7 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void AutoActivateSkill()
 		{
-			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.AutoActive)
+			if (m_VariableData.SkillData.SkillActivationType != E_SkillActivationType.Auto)
 				return;
 			if (m_OperatorSkill.IsSkillEnd == false)
 				return;

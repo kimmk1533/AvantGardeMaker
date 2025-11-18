@@ -124,7 +124,7 @@ namespace AvantGardeMaker.OperatorSpace
 				m_OperatorDataMap.Add(key, operatorDatas[i]);
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));
 				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Back")));
-				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].FixedData.PortraitPath));
+				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].FixedData.PortraitImagePath));
 			}
 		}
 		/// <summary>

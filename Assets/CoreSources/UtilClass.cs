@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public static class UtilClass
 {
@@ -47,7 +48,11 @@ public static class UtilClass
 	}
 	public static Vector2 GetMouseWorldPosition2D(Camera worldCamera)
 	{
+#if ENABLE_INPUT_SYSTEM
+		Vector2 mousePosition = Mouse.current.position.ReadValue();
+#else
 		Vector2 mousePosition = Input.mousePosition;
+#endif
 
 		return GetMouseWorldPosition2D(mousePosition, worldCamera);
 	}
@@ -65,7 +70,11 @@ public static class UtilClass
 	}
 	public static Vector3 GetMouseWorldPosition3D(Camera worldCamera)
 	{
+#if ENABLE_INPUT_SYSTEM
+		Vector3 mousePosition = Mouse.current.position.ReadValue();
+#else
 		Vector3 mousePosition = Input.mousePosition;
+#endif
 		mousePosition.z = -worldCamera.transform.position.z;
 
 		return GetMouseWorldPosition3D(mousePosition, worldCamera);

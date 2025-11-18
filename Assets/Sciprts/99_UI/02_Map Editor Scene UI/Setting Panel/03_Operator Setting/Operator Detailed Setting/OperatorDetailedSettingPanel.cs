@@ -50,7 +50,7 @@ namespace AvantGardeMaker.UI
 		#region 프로퍼티
 		private float maxHp
 		{
-			get => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			get => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel);
 			set
 			{
 				m_CurrentOperatorData.VariableData.MaxHp = Mathf.Clamp(value, maxHp, nextMaxHp);
@@ -61,7 +61,7 @@ namespace AvantGardeMaker.UI
 		}
 		private float atk
 		{
-			get => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			get => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel);
 			set
 			{
 				m_CurrentOperatorData.VariableData.Atk = Mathf.Clamp(value, atk, nextAtk);
@@ -71,7 +71,7 @@ namespace AvantGardeMaker.UI
 		}
 		private float def
 		{
-			get => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			get => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel);
 			set
 			{
 				m_CurrentOperatorData.VariableData.Def = Mathf.Clamp(value, def, nextDef);
@@ -81,7 +81,7 @@ namespace AvantGardeMaker.UI
 		}
 		private float res
 		{
-			get => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			get => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel);
 			set
 			{
 				m_CurrentOperatorData.VariableData.Res = Mathf.Clamp(value, res, nextRes);
@@ -101,14 +101,14 @@ namespace AvantGardeMaker.UI
 		}
 		private int maxLevel
 		{
-			get => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.Elite);
+			get => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel);
 		}
 
-		private float nextMaxHp => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float nextAtk => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float nextDef => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private float nextRes => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
-		private int nextMaxLevel => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.Elite + 1);
+		private float nextMaxHp => m_CurrentOperatorData.FixedData.MaxHp.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel + 1);
+		private float nextAtk => m_CurrentOperatorData.FixedData.Atk.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel + 1);
+		private float nextDef => m_CurrentOperatorData.FixedData.Def.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel + 1);
+		private float nextRes => m_CurrentOperatorData.FixedData.Res.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel + 1);
+		private int nextMaxLevel => m_CurrentOperatorData.FixedData.MaxLevel.GetLevelData(m_CurrentOperatorData.FixedData.EliteLevel + 1);
 
 		private bool isSlotHasOperatorData => m_CurrentSettingSlot != null && m_CurrentSettingSlot.operatorData != null;
 		#endregion
@@ -297,7 +297,7 @@ namespace AvantGardeMaker.UI
 			m_BlockCountText.text = operatorData.VariableData.BlockCount.ToString();
 			m_AspdText.text = operatorData.FixedData.AtkSpeed.ToString();
 
-			m_LevelText.text = "<size=45><color=#00AFFF>" + operatorData.FixedData.Level + "</color></size>/" + operatorData.FixedData.MaxLevel.GetLevelData(operatorData.FixedData.Elite);
+			m_LevelText.text = "<size=45><color=#00AFFF>" + operatorData.FixedData.Level + "</color></size>/" + operatorData.FixedData.MaxLevel.GetLevelData(operatorData.FixedData.EliteLevel);
 		}
 		private void ChangeActiveParents(bool showParents)
 		{
