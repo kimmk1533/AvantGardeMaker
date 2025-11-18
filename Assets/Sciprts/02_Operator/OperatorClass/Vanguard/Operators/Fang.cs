@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using AvantGardeMaker.OperatorSpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class Vangard : Operator
+	public class Fang : Vanguard
 	{
 		#region 변수
 		#endregion
@@ -21,23 +20,22 @@ namespace AvantGardeMaker.OperatorSpace
 		#endregion
 
 		#region 유니티 콜백 함수
-		
 		#endregion
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
 		/// 초기화 함수
 		/// </summary>
-		public override void InitializePoolItem()
+		public void Initialize()
 		{
-			base.InitializePoolItem();
+
 		}
 		/// <summary>
 		/// 마무리화 함수
 		/// </summary>
-		public override void FinallizePoolItem()
+		public void Finallize()
 		{
-			base.FinallizePoolItem();
+
 		}
 		#endregion
 	}

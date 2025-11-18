@@ -9,9 +9,9 @@ namespace AvantGardeMaker.OperatorSpace
 	public class OperatorData : SerializedScriptableObject
 	{
 		#region 변수
-		//영어이름
+		// 영어이름
 		public string EngName = string.Empty;
-		//한글이름
+		// 한글이름
 		public string KorName = string.Empty;
 
 		public OperatorFixedData FixedData = new OperatorFixedData();
