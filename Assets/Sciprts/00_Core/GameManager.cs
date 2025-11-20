@@ -43,15 +43,15 @@ namespace AvantGardeMaker.CoreSpace
 		#region 매니저
 		// Main Menu Scene Manager
 		private static PanelManager M_Panel => PanelManager.Instance;
-		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
+		private static MainMenuSceneUIManager M_MainMenuUI => MainMenuSceneUIManager.Instance;
 
 		// Map Editing Scene Manager
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 
 		// Game Playing Scene Manager
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
-		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 
 		// Object Manager
 		private static TileManager M_Tile => TileManager.Instance;

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class GamePlayingUIManager : ObjectManager<GamePlayingUIManager, GamePlayingUI>
+	public class GamePlayingSceneUIManager : ObjectManager<GamePlayingSceneUIManager, GamePlayingSceneUIPoolItem>
 	{
 		#region 변수
 		[SerializeField, ReadOnly]
@@ -59,6 +59,8 @@ namespace AvantGardeMaker.UI
 		{
 			get => m_SelectedOperatorSquadUI;
 		}
+
+		public OperatorStatusUI operatorStatus => OperatorStatusUI.Instance;
 		#endregion
 
 		#region 이벤트
@@ -209,7 +211,7 @@ namespace AvantGardeMaker.UI
 		}
 		#endregion
 
-		public void LoadPrevScene()
+		private void LoadPrevScene()
 		{
 			if (SceneLoader.prevSceneName.Equals("Map Editing Scene") == true)
 				M_MapEditing.SynchronizeStageData(M_GamePlaying.currentStageData);

@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class MainMenuUIPoolItem : ObjectPoolItemBase<MainMenuUIPoolItem>
+	public class GamePlayingSceneUIPoolItem : ObjectPoolItemBase<GamePlayingSceneUIPoolItem>
 	{
 		#region 변수
-		private RectTransform m_RectTransform;
+		
 		#endregion
 
 		#region 프로퍼티
-		protected RectTransform rectTransform => m_RectTransform;
 		#endregion
 
 		#region 이벤트
-
+	
 		#region 이벤트 함수
 		#endregion
 		#endregion
@@ -35,8 +35,7 @@ namespace AvantGardeMaker.UI
 		{
 			base.InitializePoolItem();
 
-			if (m_RectTransform == null)
-				m_RectTransform = transform as RectTransform;
+
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -44,6 +43,8 @@ namespace AvantGardeMaker.UI
 		public override void FinallizePoolItem()
 		{
 			base.FinallizePoolItem();
+
+
 		}
 		#endregion
 	}

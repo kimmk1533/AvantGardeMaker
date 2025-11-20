@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace.SaveLoad;
-using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.TileSpace;
 using AvantGardeMaker.TileSpace.Enum;
+using AvantGardeMaker.OperatorSpace;
 using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
@@ -110,7 +110,7 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 매니저
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 
 		private static TileManager M_Tile => TileManager.Instance;
 		private static OperatorManager M_Operator => OperatorManager.Instance;

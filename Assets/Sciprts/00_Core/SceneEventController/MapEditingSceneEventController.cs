@@ -89,7 +89,7 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		private static GameManager M_Game => GameManager.Instance;
 
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

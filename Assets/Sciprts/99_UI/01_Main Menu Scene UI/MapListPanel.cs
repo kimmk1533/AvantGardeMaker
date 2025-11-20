@@ -100,7 +100,7 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 매니저
-		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
+		private static MainMenuSceneUIManager M_MainMenuUI => MainMenuSceneUIManager.Instance;
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 		#endregion

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class TileDataUI : MapEditingUIPoolItem
+	public class TileDataUI : MapEditingSceneUIPoolItem
 	{
 		#region 기본 템플릿
 		#region 변수

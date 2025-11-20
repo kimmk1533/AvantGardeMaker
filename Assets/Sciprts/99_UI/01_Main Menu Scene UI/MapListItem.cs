@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class MapListItem : MainMenuUIPoolItem
+	public class MapListItem : MainMenuSceneUIPoolItem
 	{
 		#region 변수
 		[SerializeField]

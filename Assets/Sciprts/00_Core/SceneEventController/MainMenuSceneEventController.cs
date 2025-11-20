@@ -37,7 +37,7 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		#region 매니저
 		private static GameManager M_Game => GameManager.Instance;
 
-		private static MainMenuUIManager M_MainMenuUI => MainMenuUIManager.Instance;
+		private static MainMenuSceneUIManager M_MainMenuUI => MainMenuSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

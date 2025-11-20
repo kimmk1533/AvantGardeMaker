@@ -1,25 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class EnemyImmuneOptionUI : MapEditingSceneUIPoolItem
+	public class MainMenuSceneUIPoolItem : ObjectPoolItemBase<MainMenuSceneUIPoolItem>
 	{
 		#region 변수
-		private Image m_ImmuneIconImage = null;
-		private TextMeshProUGUI m_ImmuneText = null;
+		private RectTransform m_RectTransform;
 		#endregion
 
 		#region 프로퍼티
-		public string text
-		{
-			get => m_ImmuneText.text;
-			set => m_ImmuneText.text = value;
-		}
+		protected RectTransform rectTransform => m_RectTransform;
 		#endregion
 
 		#region 이벤트
@@ -42,10 +35,8 @@ namespace AvantGardeMaker.UI
 		{
 			base.InitializePoolItem();
 
-			if (m_ImmuneIconImage == null)
-				m_ImmuneIconImage = transform.Find<Image>("Immune Icon Image");
-			if (m_ImmuneText == null)
-				m_ImmuneText = transform.Find<TextMeshProUGUI>("Immune Description Text");
+			if (m_RectTransform == null)
+				m_RectTransform = transform as RectTransform;
 		}
 		/// <summary>
 		/// 마무리화 함수
@@ -53,8 +44,6 @@ namespace AvantGardeMaker.UI
 		public override void FinallizePoolItem()
 		{
 			base.FinallizePoolItem();
-
-
 		}
 		#endregion
 	}

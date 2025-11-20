@@ -49,7 +49,7 @@ namespace AvantGardeMaker.TileSpace
 		#endregion
 
 		#region 매니저
-		private GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

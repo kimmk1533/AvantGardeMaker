@@ -66,7 +66,7 @@ namespace AvantGardeMaker.UI
 
 		#region 매니저
 		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

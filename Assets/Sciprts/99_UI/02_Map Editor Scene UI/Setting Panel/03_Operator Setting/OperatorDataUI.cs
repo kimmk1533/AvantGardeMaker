@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class OperatorDataUI : MapEditingUIPoolItem
+	public class OperatorDataUI : MapEditingSceneUIPoolItem
 	{
 		#region 기본 템플릿
 		#region 변수
@@ -38,7 +38,7 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 매니저
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

@@ -63,7 +63,7 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 매니저
-		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 
 		private static TileManager M_Tile => TileManager.Instance;
 		private static OperatorManager M_Operator => OperatorManager.Instance;

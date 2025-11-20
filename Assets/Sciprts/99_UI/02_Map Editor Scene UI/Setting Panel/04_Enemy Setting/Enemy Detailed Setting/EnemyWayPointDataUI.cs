@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class EnemyWayPointDataUI : MapEditingUIPoolItem
+	public class EnemyWayPointDataUI : MapEditingSceneUIPoolItem
 	{
 		#region 변수
 		private Button m_TileSelectButton = null;
@@ -91,7 +91,7 @@ namespace AvantGardeMaker.UI
 		#endregion
 
 		#region 매니저
-		private static MapEditingUIManager M_MapEditingUI => MapEditingUIManager.Instance;
+		private static MapEditingSceneUIManager M_MapEditingUI => MapEditingSceneUIManager.Instance;
 		#endregion
 
 		#region 유니티 콜백 함수

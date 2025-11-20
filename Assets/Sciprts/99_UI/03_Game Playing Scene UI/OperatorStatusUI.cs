@@ -8,33 +8,23 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class OperatorStatusUI : GamePlayingUI
+	public class OperatorStatusUI : SerializedSingleton<OperatorStatusUI>
 	{
+		#region 기본 템플릿
 		#region 변수
 		[SerializeField, ReadOnly]
 		private OperatorData m_SelectedOperator = null;
 
-		[SerializeField]
 		private TextMeshProUGUI m_OperatorKorNameText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_OperatorHpText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_OperatorLevelText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_AtkText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_DefText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_ResText = null;
-		[SerializeField]
 		private TextMeshProUGUI m_BlockText = null;
-		[SerializeField]
 		private Image OperImg = null;
-		[SerializeField]
 		private Image JobImg = null;
-		[SerializeField]
 		private Image Arousal = null;
-		[SerializeField]
 		private Image m_AttackRangeFieldParent;
 		[SerializeField]
 		private Image m_OperatorPosAttackRangeUI;
@@ -76,65 +66,42 @@ namespace AvantGardeMaker.UI
 		}
 		#endregion
 
-		#region 이벤트
+		#region 매니저
+		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 		#endregion
 
-		#region 매니저
-		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		#region 이벤트
+
+		#region 이벤트 함수
+		#endregion
+		#endregion
+
+		#region 초기화 & 마무리화 함수
+		/// <summary>
+		/// 초기화 함수
+		/// </summary>
+		public override void Initialize()
+		{
+			base.Initialize();
+
+
+		}
+		/// <summary>
+		/// 마무리화 함수
+		/// </summary>
+		public override void Finallize()
+		{
+			base.Finallize();
+
+
+		}
 		#endregion
 
 		#region 유니티 콜백 함수
-		private void Start()
-		{
-			Initialize();
-		}
-		private void Update()
-		{
-
-		}
 		#endregion
-		/*
-		public Vector2[] RotateViewAtkRange(Vector2[] operatorAttackRange, float angleDeg)//회전각도 ex)90
-		{
-			float angleRad = angleDeg * Mathf.Deg2Rad; // 라디안으로 변환
-
-			float cos = Mathf.Cos(angleRad);
-			float sin = Mathf.Sin(angleRad);
+		#endregion
 
 
-			Vector2[] temp = new Vector2[operatorAttackRange.Length];
-			for (int i = 0; i < temp.Length; i++)
-			{
-				temp[i] = new Vector2((int)(operatorAttackRange[i].x * cos - operatorAttackRange[i].y * sin), (int)(operatorAttackRange[i].x * sin + operatorAttackRange[i].y * cos));
-			}
-			return temp;
-		}
-		
-		public void OperAtkRangeHighlight(Vector2[] _OperAtkRange, GameObject _FindTile)
-		{
-			if (m_CreatedAttackRangeHighlightList.Count > 0)
-			{
-				for (int i = 0; i < m_CreatedAttackRangeHighlightList.Count; i++)
-				{
-					Destroy(m_CreatedAttackRangeHighlightList[i]);
-				}
-				m_CreatedAttackRangeHighlightList = null;
-				m_CreatedAttackRangeHighlightList = new List<GameObject>();
-			}
-			for (int i = 0; i < _OperAtkRange.Length + 1; i++)
-			{
-				m_CreatedAttackRangeHighlightList.Add(Instantiate(m_AttackRangeHighlight, m_AttackRangeHighlightParent.transform));
-				if (i == 0)
-				{
-					m_CreatedAttackRangeHighlightList[i].transform.position = new Vector3(_FindTile.transform.position.x, 0.2f, _FindTile.transform.position.z);
-				}
-				else
-				{
-					m_CreatedAttackRangeHighlightList[i].transform.position = new Vector3(_FindTile.transform.position.x + _OperAtkRange[i - 1].x, 0.2f, _FindTile.transform.position.z + _OperAtkRange[i - 1].y);
-				}
-			}
-		}
-		*/
 		//공격범위 UI생성함수
 		private void OperATKRangeCreate(List<Vector2Int> _ATKRange)
 		{
@@ -190,22 +157,5 @@ namespace AvantGardeMaker.UI
 				}
 			}
 		}
-		#region 초기화 & 마무리화 함수
-		/// <summary>
-		/// 초기화 함수
-		/// </summary>
-		public void Initialize()
-		{
-
-
-		}
-		/// <summary>
-		/// 마무리화 함수
-		/// </summary>
-		public void Finallize()
-		{
-
-		}
-		#endregion
 	}
 }

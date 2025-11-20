@@ -6,12 +6,13 @@ using AvantGardeMaker.OperatorSpace;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
 namespace AvantGardeMaker.UI
 {
-	public class OperatorSquadUI : GamePlayingUI, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+	public class OperatorSquadUI : GamePlayingSceneUIPoolItem, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
 		#region 변수
 		private Button m_Button = null;
@@ -76,7 +77,7 @@ namespace AvantGardeMaker.UI
 
 		#region 매니저
 		private static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
-		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 
 		private static OperatorManager M_Operator => OperatorManager.Instance;
 		#endregion
@@ -153,7 +154,7 @@ namespace AvantGardeMaker.UI
 			if (isDeployable == false)
 				return;
 
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.value);
 
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
 			{
@@ -179,7 +180,7 @@ namespace AvantGardeMaker.UI
 			if (isDeployable == false)
 				return;
 
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.value);
 			if (Physics.Raycast(ray, out RaycastHit hit) == false)
 			{
 				m_PreviewOperator.gameObject.SetActive(false);

@@ -9,8 +9,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	// Main Scene: Main Menu Scene
-	public class MainMenuUIManager : ObjectManager<MainMenuUIManager, MainMenuUIPoolItem>
+	public class MainMenuSceneUIManager : ObjectManager<MainMenuSceneUIManager, MainMenuSceneUIPoolItem>
 	{
 		#region 변수
 		[SerializeField]

@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 namespace AvantGardeMaker.UI
 {
-	public class MapEditingUIManager : ObjectManager<MapEditingUIManager, MapEditingUIPoolItem>
+	public class MapEditingSceneUIManager : ObjectManager<MapEditingSceneUIManager, MapEditingSceneUIPoolItem>
 	{
 		#region 변수
 		#region 시스템 설정 관련 변수
@@ -103,7 +103,7 @@ namespace AvantGardeMaker.UI
 			SceneLoader.LoadScene("Game Playing Scene");
 		}
 
-		private void OnEnemySpawnDataUISpawned(MapEditingUIPoolItem mapEditingUI)
+		private void OnEnemySpawnDataUISpawned(MapEditingSceneUIPoolItem mapEditingUI)
 		{
 			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 
@@ -114,7 +114,7 @@ namespace AvantGardeMaker.UI
 
 			ReorderEnemySpawnDataUI();
 		}
-		private void OnEnemySpawnDataUIDespawned(MapEditingUIPoolItem mapEditingUI)
+		private void OnEnemySpawnDataUIDespawned(MapEditingSceneUIPoolItem mapEditingUI)
 		{
 			EnemySpawnDataUI enemySpawnDataUI = mapEditingUI as EnemySpawnDataUI;
 

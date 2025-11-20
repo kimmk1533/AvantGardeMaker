@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AvantGardeMaker.UI
 {
-	public class MapEditingUIPoolItem : ObjectPoolItemBase<MapEditingUIPoolItem>
+	public class MapEditingSceneUIPoolItem : ObjectPoolItemBase<MapEditingSceneUIPoolItem>
 	{
 		#region 변수
 		private RectTransform m_RectTransform = null;

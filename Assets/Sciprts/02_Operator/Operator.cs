@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace;
+using AvantGardeMaker.CoreSpace.Enum;
 using AvantGardeMaker.OperatorSpace.Enum;
 using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.TileSpace;
 using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using AvantGardeMaker.CoreSpace.Enum;
+using UnityEngine.InputSystem;
 
 namespace AvantGardeMaker.OperatorSpace
 {
@@ -121,7 +122,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#region 매니저
 		private static OperatorManager M_Operator => OperatorManager.Instance;
-		private static GamePlayingUIManager M_GamePlayingUI => GamePlayingUIManager.Instance;
+		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 
 		protected static GamePlayingManager M_GamePlaying => GamePlayingManager.Instance;
 
@@ -235,10 +236,10 @@ namespace AvantGardeMaker.OperatorSpace
 		// 클릭했을 때
 		private bool SetDirectionStart()
 		{
-			if (Input.GetMouseButtonDown(0) == false)
+			if (Mouse.current.leftButton.wasPressedThisFrame == false)
 				return false;
 
-			m_DragStartPos = Input.mousePosition;
+			m_DragStartPos = Mouse.current.position.value;
 			m_IsDragging = true;
 
 			return true;
@@ -246,12 +247,12 @@ namespace AvantGardeMaker.OperatorSpace
 		// 드래그중일 때
 		private bool SetDirection()
 		{
-			if (Input.GetMouseButton(0) == false)
+			if (Mouse.current.leftButton.isPressed == false)
 				return false;
 			if (m_IsDragging == false)
 				return false;
 
-			Vector2 currentPos = Input.mousePosition;
+			Vector2 currentPos = Mouse.current.position.value;
 			Vector2 diff = currentPos - m_DragStartPos;
 
 			// 일정거리이상 드래그하지못했을 때
@@ -265,14 +266,14 @@ namespace AvantGardeMaker.OperatorSpace
 		// 드래그를 끝냈을 때
 		private bool SetDirectionEnd()
 		{
-			if (Input.GetMouseButtonUp(0) == false)
+			if (Mouse.current.leftButton.wasReleasedThisFrame == false)
 				return false;
 			if (m_IsDragging == false)
 				return false;
 
 			m_IsDragging = false;
 
-			Vector2 currentPos = Input.mousePosition;
+			Vector2 currentPos = Mouse.current.position.value;
 			Vector2 diff = currentPos - m_DragStartPos;
 
 			// 드래그가 일정범위를 벗어나지않은상태에서 해제되었을 때
