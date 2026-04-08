@@ -16,7 +16,7 @@ namespace AvantGardeMaker.EnemySpace
 	public class Enemy : ObjectPoolItemBase<Enemy>
 	{
 		#region 변수
-		//자신의 스테이터스 정보
+		// 자신의 스테이터스 정보
 		#region 스탯
 		private string m_EngName = string.Empty;
 		private string m_KorName = string.Empty;
@@ -28,24 +28,24 @@ namespace AvantGardeMaker.EnemySpace
 		#endregion
 
 		#region 길찾기
-		//경유지(wayPoint) 인덱스
+		// 경유지(wayPoint) 인덱스
 		private int m_WayPointIndex = 0;
-		//경유지 리스트(인덱스가 list.count와 같으면 도착)
+		// 경유지 리스트(인덱스가 list.count와 같으면 도착)
 		private List<Vector2> m_WayPointList = null;
-		//경유지로 가기 위한 경로 리스트
+		// 경유지로 가기 위한 경로 리스트
 		private Stack<Vector2> m_PathPointStack = null;
 
-		//공격 딜레이
+		// 공격 딜레이
 		private UtilClass.Timer m_AtkIntervalTimer;
 
-		//경유지 대기시간 리스트(경유지 목록과 크기가 같음)
-		//interval[n]은 waypoint[n]에서 waypoint[n+1]로 가기 전 대기시간을 의미함
+		// 경유지 대기시간 리스트(경유지 목록과 크기가 같음)
+		// interval[n]은 waypoint[n]에서 waypoint[n+1]로 가기 전 대기시간을 의미함
 		private List<float> m_WayPointIntervalList;
 
-		//현재 출발 전 대기시간
+		// 현재 출발 전 대기시간
 		private UtilClass.Timer m_CurrentWayPointIntervalTimer;
 		#endregion
-		//현재 상태
+		// 현재 상태
 		[SerializeField]
 		private E_EnemyState m_CurEnemyState;
 		private bool m_IsBlocked = false;
@@ -57,23 +57,21 @@ namespace AvantGardeMaker.EnemySpace
 		#endregion
 
 		#region 콜라이더
-		//적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
+		// 적과 오퍼간 저지를 위한 몸 크기만한 콜라이더
 		private CircleCollider2D m_BodyCollider = null;
-		//공격 오브젝터 콜라이더를 가진 자식
+		// 공격 오브젝터 콜라이더를 가진 자식
 		[SerializeField]
 		private EnemyAtkRange m_AtkRange = null;
 
-		//투사체 만들려다가 안하는게 낫다는걸 깨우침//
-
-		//공격 효과 범위
+		// 공격 효과 범위
 		private EnemyAtkEffectRange m_AtkSkillRange = null;
-		//사망 효과 범위
+		// 사망 효과 범위
 		private EnemyDeadEffectRange m_DeadSkillRange = null;
 
 		#endregion
-		//공격 범위 내 오퍼들
+		// 공격 범위 내 오퍼들
 		public List<Operator> m_TargetOperList = null;
-		//공격할 오퍼
+		// 공격할 오퍼
 		public Operator m_TargetOper;
 		#endregion
 
@@ -277,7 +275,7 @@ namespace AvantGardeMaker.EnemySpace
 		}
 		public float GetRange()
 		{
-			return m_FixedData.Range.CurStat;
+			return m_FixedData.Range;
 		}
 		public void SetRange(float range)
 		{
@@ -292,12 +290,12 @@ namespace AvantGardeMaker.EnemySpace
 		#region 기본 행동
 		public void Move()
 		{
-			//공격중 or 저지중이면 움직일 수 없음
+			// 공격중 or 저지중이면 움직일 수 없음
 			if (m_CurEnemyState == E_EnemyState.Attack || isBlocked)
 				return;
 
 			m_CurrentWayPointIntervalTimer.Update();
-			//경유지에서 대기중이면 움직이지 않음
+			// 경유지에서 대기중이면 움직이지 않음
 			if (m_CurrentWayPointIntervalTimer.TimeCheck() == false)
 				return;
 
@@ -307,49 +305,46 @@ namespace AvantGardeMaker.EnemySpace
 			Vector2 direction = m_PathPointStack.Peek() - curPos;
 			float moveAmount = moveSpeed * Time.deltaTime;
 
-			//목표 지점에서 일정 거리 이상 떨어져있다면
+			// 목표 지점에서 일정 거리 이상 떨어져있다면
 			if (direction.sqrMagnitude > moveAmount * moveAmount)
 			{
 				state = E_EnemyState.Move;
 				direction.Normalize();
 				Vector2 moveVector = direction * moveAmount;
-				//direction 방향으로 moveAmount만큼 이동
+				// direction 방향으로 moveAmount만큼 이동
 				transform.position = curPos + moveVector;
 				Debug.Log("이동");
 			}
 			else
 			{
-				#region 경로 타일 도착 처리
-				#endregion
-
 				#region 경유지 도착 처리
-				//도착 위치로 순간이동
+				// 도착 위치로 순간이동
 				transform.position = m_PathPointStack.Pop();
 
-				//아직 경로가 남은 것이므로 return
+				// 아직 경로가 남은 것이므로 return
 				if (m_PathPointStack.Count != 0)
 					return;
 
-				//다음 경유지로 출발하기 전 대기시간
+				// 다음 경유지로 출발하기 전 대기시간
 				if (m_WayPointIntervalList[m_WayPointIndex] > 0)
 				{
 					m_CurrentWayPointIntervalTimer.Clear();
 					m_CurrentWayPointIntervalTimer.interval = m_WayPointIntervalList[m_WayPointIndex];
-					//대기시간이 존재한다면 move가 아닌 idle상태
+					// 대기시간이 존재한다면 move가 아닌 idle상태
 					state = E_EnemyState.Idle;
 				}
-
-				//경유지 인덱스 +1
+				// 경유지 인덱스 +1
 				++m_WayPointIndex;
 
-				//경유지의 끝에 다다르면 소멸 처리
+				// 경유지의 끝에 다다르면 소멸 처리
 				if (m_WayPointIndex >= m_WayPointList.Count)
 				{
 					Debug.Log("이동 완료");
-					//Dead();
+					// 목표 지점에 도착함
+					Reach();
 					return;
 				}
-				//경로 최신화
+				// 경로 최신화
 				UpdatePathPointList();
 				#endregion
 			}
@@ -358,12 +353,12 @@ namespace AvantGardeMaker.EnemySpace
 		public void Attack()
 		{
 			m_AtkIntervalTimer.Update();
-			//여기 timecheck을 쓰지 않는건 저지당했을 때와 안당했을때 처리가 달라서 그럼
+			// 여기 timecheck을 쓰지 않는건 저지당했을 때와 안당했을때 처리가 달라서 그럼
 
-			//저지당한 경우
+			// 저지당한 경우
 			if (isBlocked)
 			{
-				//공격 간격이 다 지나지 않았을 경우 attack하지 않음
+				// 공격 간격이 다 지나지 않았을 경우 attack하지 않음
 				if (m_AtkIntervalTimer.TimeCheck(true) == false)
 				{
 					Debug.Log("공격 쿨타임임");
@@ -371,25 +366,25 @@ namespace AvantGardeMaker.EnemySpace
 				}
 
 				if (m_OnAttackSkill != null)
-					//공격 스킬이 있다면 스킬 공격
+					// 공격 스킬이 있다면 스킬 공격
 					m_OnAttackSkill.OnAttackSkill(m_TargetOper, m_VariableData.Atk.CurStat);
 				else
 					//BodyTrigger에 맞닿은 오퍼를 공격
 					m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat);
 				Debug.Log("저지 공격");
 			}
-			//공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
+			// 공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
 			else if (m_TargetOperList.Count > 0)
 			{
-				//공격 간격이 다 지나지 않았을 경우 attack하지 않음
+				// 공격 간격이 다 지나지 않았을 경우 attack하지 않음
 				if (m_AtkIntervalTimer.TimeCheck(true) == false)
 				{
-					//공격 범위내 적이 들어올 때 attack상태가 되어서 move로 되돌려주기
+					// 공격 범위내 적이 들어올 때 attack상태가 되어서 move로 되돌려주기
 					state = E_EnemyState.Move;
 					return;
 				}
 
-				//공격 범위 내 적이 있었는데 쿨타임이라 안때렸을 경우 move상태므로 attack로 변경
+				// 공격 범위 내 적이 있었는데 쿨타임이라 안때렸을 경우 move상태므로 attack로 변경
 				if (state != E_EnemyState.Attack)
 					state = E_EnemyState.Attack;
 
@@ -417,6 +412,15 @@ namespace AvantGardeMaker.EnemySpace
 				m_OnDeadSkill.OnDeadSkill(m_VariableData.Atk.CurStat);
 
 			M_Enemy.Despawn(this);
+		}
+
+		// 목표 지점 도착
+		public void Reach()
+		{
+			// 보호 HP 깎음
+			M_GamePlaying.lifePoint -= m_FixedData.LossHp;
+
+			Dead();
 		}
 		#endregion
 

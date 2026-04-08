@@ -141,7 +141,8 @@ namespace AvantGardeMaker.EnemySpace
 			{
 				string key = enemyDatas[i].key;
 
-				m_EnemyDataMap.Add(key, enemyDatas[i]);
+
+				m_EnemyDataMap.Add(key, new EnemyData(enemyDatas[i]));
 			}
 		}
 		/// <summary>
@@ -159,10 +160,12 @@ namespace AvantGardeMaker.EnemySpace
 			{
 				EnemySpawnData spawnData = spawnDataList[i];
 
-				EnemyData enemyData = m_EnemyDataMap[spawnData.EnemySpawnKey];
+				EnemyData enemyData = new EnemyData();
+				enemyData.FixedData = m_EnemyDataMap[spawnData.EnemySpawnKey].FixedData;
+				enemyData.VariableData = m_EnemyDataMap[spawnData.EnemySpawnKey].VariableData;
 
-				enemyData.FixedData = fixedDataList[i];
-				enemyData.VariableData = variableDataList[i];
+				//enemyData.FixedData = fixedDataList[i];
+				//enemyData.VariableData = variableDataList[i];
 			}
 
 			m_EnemySpawnDataQueue.Clear();
@@ -233,17 +236,17 @@ namespace AvantGardeMaker.EnemySpace
 				case E_EnemyGradeType.Normal:
 					break;
 				case E_EnemyGradeType.Elite:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.4f;
-					break;
-				}
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.4f;
+						break;
+					}
 				case E_EnemyGradeType.Leader:
-				{
-					CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
-					enemyCollider.radius = 0.5f;
-					break;
-				}
+					{
+						CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>();
+						enemyCollider.radius = 0.5f;
+						break;
+					}
 			}
 
 			m_EnemyList.Add(enemy);

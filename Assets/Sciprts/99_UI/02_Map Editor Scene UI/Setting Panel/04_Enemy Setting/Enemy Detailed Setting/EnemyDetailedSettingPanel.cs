@@ -357,7 +357,7 @@ namespace AvantGardeMaker.UI
 			//m_PortraitImage.sprite = null;
 
 			// 무게
-			m_WeightValueText.text = enemyData.FixedData.Weight.InitStat.ToString();
+			m_WeightValueText.text = enemyData.FixedData.Weight.ToString();
 
 			// 체력
 			m_HpDataUI.UpdateUI(enemyData.VariableData.Hp);

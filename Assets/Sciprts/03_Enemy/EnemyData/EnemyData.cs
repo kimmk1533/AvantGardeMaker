@@ -24,6 +24,20 @@ namespace AvantGardeMaker.EnemySpace
 		#region 프로퍼티
 		public string key => EngName;
 		#endregion
+
+		public EnemyData()
+		{
+
+		}
+		public EnemyData(EnemyData _data)
+		{
+			EngName = _data.EngName;
+			KorName = _data.KorName;
+			PortraitImagePath = _data.PortraitImagePath;
+
+			FixedData = _data.FixedData;
+			VariableData = _data.VariableData;
+		}
 	}
 
 }

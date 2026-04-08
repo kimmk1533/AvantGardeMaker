@@ -52,6 +52,8 @@ namespace AvantGardeMaker.CoreSpace
 		}
 		public int maxCost { get; private set; }
 
+		public int lifePoint { get; set; }
+
 		public UtilClass.Timer costTimer => m_CostTimer;
 
 		public (E_TileType tileType, E_TilePositionType tilePositionType)[,] currentMap { get; private set; }
