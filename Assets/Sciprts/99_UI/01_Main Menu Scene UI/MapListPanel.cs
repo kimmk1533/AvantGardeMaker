@@ -184,10 +184,7 @@ namespace AvantGardeMaker.UI
 			Transform itemParent = M_MainMenuUI.mapListItemParent;
 			List<StageData> stageDataList = null;
 
-			if (string.IsNullOrEmpty(filter) == true)
-				stageDataList = await SaveLoadUtility.LoadAllStageData();
-			else
-				stageDataList = await SaveLoadUtility.LoadAllStageData(filter);
+			stageDataList = await SaveLoadUtility.LoadAllStageData(filter);
 
 			for (int i = 0; i < stageDataList.Count; ++i)
 			{

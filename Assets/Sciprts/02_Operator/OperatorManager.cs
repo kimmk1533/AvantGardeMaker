@@ -14,9 +14,14 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#region 변수
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
+		// 오퍼레이터 정면 이미지 (SD 이미지) 모음
 		private Dictionary<string, Sprite> m_OperatorFrontSpriteMap = null;
+		// 오퍼레이터 후면 이미지 (SD 이미지) 모음
 		private Dictionary<string, Sprite> m_OperatorBackSpriteMap = null;
+		// 오퍼레이터 초상화 이미지 모음
 		private Dictionary<string, Sprite> m_OperatorPortraitMap = null;
+		// 오퍼레이터 풀샷 이미지 모음
+		private Dictionary<string, Sprite> m_OperatorFullshotMap = null;
 		#endregion
 
 		#region 프로퍼티
@@ -43,6 +48,7 @@ namespace AvantGardeMaker.OperatorSpace
 			m_OperatorFrontSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorBackSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorPortraitMap = new Dictionary<string, Sprite>();
+			m_OperatorFullshotMap = new Dictionary<string, Sprite>();
 
 			LoadOperatorData();
 		}
@@ -104,6 +110,14 @@ namespace AvantGardeMaker.OperatorSpace
 
 			return portrait;
 		}
+		public Sprite GetOperatorFullshot(string key)
+		{
+			if (m_OperatorFullshotMap.TryGetValue(key, out Sprite fullshot) == false)
+				return null;
+
+			return fullshot;
+		}
+
 		///<summary>
 		/// Resources 폴더에 있는 OperatorData 스크립터블 오브젝트를 List에 저장
 		/// </summary>
@@ -114,17 +128,18 @@ namespace AvantGardeMaker.OperatorSpace
 			m_OperatorFrontSpriteMap.Clear();
 			m_OperatorBackSpriteMap.Clear();
 			m_OperatorPortraitMap.Clear();
+			m_OperatorFullshotMap.Clear();
 
 			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(c_OperatorDataPath);
-
-			for (int i = 0; i < operatorDatas.Length; ++i)
+			foreach (var operatorData in operatorDatas)
 			{
-				string key = operatorDatas[i].key;
+				string key = operatorData.key;
 
-				m_OperatorDataMap.Add(key, operatorDatas[i]);
+				m_OperatorDataMap.Add(key, operatorData);
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));
 				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Back")));
-				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorDatas[i].FixedData.PortraitImagePath));
+				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorData.FixedData.PortraitImagePath));
+				m_OperatorFullshotMap.Add(key, Resources.Load<Sprite>(operatorData.FixedData.FullShotImagePath));
 			}
 		}
 		/// <summary>

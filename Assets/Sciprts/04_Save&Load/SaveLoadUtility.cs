@@ -181,46 +181,16 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			await SaveData<string>("makingMapTitleList", mapTitlListData);
 		}
 
-		public static async Awaitable<List<StageData>> LoadAllStageData()
-		{
-			List<StageData> stageDataList = new List<StageData>();
-
-			List<string> playerIdList = await GetPlayerIdList();
-
-			for (int i = 0; i < playerIdList.Count; ++i)
-			{
-				string playerId = playerIdList[i];
-
-				LoadAllOptions loadAllOption = new LoadAllOptions(new PublicReadAccessClassOptions(playerId));
-
-				// 데이터 불러오기
-				var loadData = await CloudSaveService.Instance.Data.Player.LoadAllAsync(loadAllOption);
-
-				foreach (var item in loadData)
-				{
-					// index 건너뛰기
-					if (IsIndexKey(item.Key)) // 인덱스 예외처리
-						continue;
-
-					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();
-
-					// 압축 해제
-					string json = await Compression.ConvertToString(compressedJson);
-
-					// Json 변환
-					StageData data = JsonUtility.FromJson<StageData>(json);
-
-					stageDataList.Add(data);
-				}
-			}
-
-			return stageDataList;
-		}
 		public static async Awaitable<List<StageData>> LoadAllStageData(string mapTitleFilter)
 		{
 			List<StageData> stageDataList = new List<StageData>();
 
-			List<string> playerIdList = await GetPlayerIdList(mapTitleFilter);
+			List<string> playerIdList = null;
+
+			if (string.IsNullOrEmpty(mapTitleFilter) == true)
+				playerIdList = await GetPlayerIdList();
+			else
+				playerIdList = await GetPlayerIdList(mapTitleFilter);
 
 			for (int i = 0; i < playerIdList.Count; ++i)
 			{
@@ -235,7 +205,7 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 				{
 					// index 건너뛰기
 					if (IsIndexKey(item.Key) || // 인덱스 예외처리
-						item.Key.Contains(GetByteArrTitle(mapTitleFilter)) == false) // 검색 필터 예외처리
+						(string.IsNullOrEmpty(mapTitleFilter) == false && item.Key.Contains(GetByteArrTitle(mapTitleFilter)) == false)) // 검색 필터 예외처리
 						continue;
 
 					byte[] compressedJson = item.Value.Value.GetAs<byte[]>();

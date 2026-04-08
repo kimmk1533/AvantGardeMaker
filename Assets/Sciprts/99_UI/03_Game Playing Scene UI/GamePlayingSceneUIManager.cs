@@ -19,7 +19,6 @@ namespace AvantGardeMaker.UI
 		[SerializeField, ReadOnly]
 		private List<OperatorSquadUI> m_OperatorSquadUIList = null;
 
-		private Dictionary<string, Sprite> m_OperatorFullshotSpriteMap = null;
 		private Dictionary<Tile, OperatorSquadUI> m_TileOperatorSquadUIMap = null;
 		#endregion
 
@@ -59,8 +58,6 @@ namespace AvantGardeMaker.UI
 		{
 			get => m_SelectedOperatorSquadUI;
 		}
-
-		public OperatorStatusUI operatorStatus => OperatorStatusUI.Instance;
 		#endregion
 
 		#region 이벤트
@@ -164,13 +161,6 @@ namespace AvantGardeMaker.UI
 
 			m_OperatorSquadUIList = new List<OperatorSquadUI>();
 
-			m_OperatorFullshotSpriteMap = new Dictionary<string, Sprite>();
-			Sprite[] operatorFullshotSprites = Resources.LoadAll<Sprite>("Textures/02_Operator Textures/OperatorFullImg");
-			for (int i = 0; i < operatorFullshotSprites.Length; i++)
-			{
-				m_OperatorFullshotSpriteMap.Add(operatorFullshotSprites[i].name, operatorFullshotSprites[i]);
-			}
-
 			m_TileOperatorSquadUIMap = new Dictionary<Tile, OperatorSquadUI>();
 		}
 		/// <summary>
@@ -190,6 +180,8 @@ namespace AvantGardeMaker.UI
 		{
 			base.InitializeMain();
 
+			operatorStatusUI.Initialize();
+
 			CreateOperatorSquadUI();
 
 			optionButton.onClick.AddListener(LoadPrevScene);
@@ -202,10 +194,12 @@ namespace AvantGardeMaker.UI
 		{
 			base.FinallizeMain();
 
-			DestroyOperatorSquadUI();
-
 			deploymentCancelButton.onClick.RemoveListener(OnDeploymentCancelButtonClicked);
 			optionButton.onClick.RemoveAllListeners();
+
+			DestroyOperatorSquadUI();
+
+			operatorStatusUI.Finallize();
 
 			m_TileOperatorSquadUIMap.Clear();
 		}
@@ -306,10 +300,6 @@ namespace AvantGardeMaker.UI
 			return squadUI;
 		}
 
-		public Sprite GetOperatorFullshotSprite(string key)
-		{
-			return m_OperatorFullshotSpriteMap[key];
-		}
 		#endregion
 	}
 }
