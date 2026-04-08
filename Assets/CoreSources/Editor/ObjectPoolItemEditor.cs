@@ -5,15 +5,15 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class ManagerEditor
+public class ObjectPoolItemEditor
 {
-	[MenuItem("Assets/Create/Manager Script", false, -230)]
-	private static void CreateCustomManager()
+	[MenuItem("Assets/Create/Object Pool Item Script", false, -230)]
+	private static void CreateCustomScript()
 	{
 		string unityEditorPath = Path.GetDirectoryName(EditorApplication.applicationPath);
 
 #if UNITY_6000_0_OR_NEWER
-		string path = Path.Combine(unityEditorPath, "Data", "Resources", "ScriptTemplates", "My Templates", "1-Scripting__Manager Script-NewManagerScript.cs.txt");
+		string path = Path.Combine(unityEditorPath, "Data", "Resources", "ScriptTemplates", "My Templates", "1-Scripting__Object Pool Item Script-NewObjectPoolItemScript.cs.txt");
 #else
 		string path = Path.Combine(unityEditorPath, "Data", "Resources", "ScriptTemplates", "81-C# Script-NewBehaviourScript.cs.txt");
 #endif
@@ -24,6 +24,6 @@ public class ManagerEditor
 			return;
 		}
 
-		ProjectWindowUtil.CreateScriptAssetFromTemplateFile(path, "NewManagerScript.cs");
+		ProjectWindowUtil.CreateScriptAssetFromTemplateFile(path, "NewObjectPoolItemScript.cs");
 	}
 }
