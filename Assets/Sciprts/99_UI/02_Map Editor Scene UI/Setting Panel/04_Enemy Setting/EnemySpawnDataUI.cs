@@ -11,18 +11,30 @@ namespace AvantGardeMaker.UI
 	public class EnemySpawnDataUI : MapEditingSceneUIPoolItem
 	{
 		#region 변수
+		// 적 세부 설정 버튼
 		private Button m_OptionButton = null;
+		// 인덱스 텍스트
 		private TextMeshProUGUI m_IndexText = null;
+		// 적 초상화 이미지
 		private Image m_EnemyPortraitImage = null;
+		// 디버깅용 텍스트 (나중에 삭제)
 		private TextMeshProUGUI m_DebugText = null;
+		// 적 생성 수량 입력 칸
 		private TMP_InputField m_EnemyCountInputField = null;
+		// 적 생성 간격 입력 칸
 		private TMP_InputField m_IntervalInputField = null;
+		// 웨이브(특정 몹이 죽어야 진행될 경우 사용) 입력 칸
 		private TMP_InputField m_WaveInputField = null;
+		// 웨이브 시간(같은 웨이브에서 스폰까지 걸리는 시간) 입력 칸
 		private TMP_InputField m_WaveTimeInputField = null;
+		// 
 		private TextMeshProUGUI m_TimeStampText = null;
+		// 삭제 버튼
 		private Button m_DeleteButton = null;
 
+		// 적 웨이포인트 리스트
 		private List<Vector2> m_EnemyWayPointList = null;
+		// 적 경유 지점 대기 시간 리스트
 		private List<float> m_EnemyWayPointDelayTimeList = null;
 		#endregion
 

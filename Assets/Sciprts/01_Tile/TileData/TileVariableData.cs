@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AvantGardeMaker.TileSpace
 {
 	[System.Serializable]
-	public class TileVariableData
+	public struct TileVariableData
 	{
 	}
 }

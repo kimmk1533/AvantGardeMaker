@@ -36,18 +36,21 @@ namespace AvantGardeMaker.EnemySpace
 		#region 변수
 		private const string c_EnemyDataPath = "Datas\\03_Enemy Datas";
 		private const string c_EnemySkillDataPath = "Datas\\03_Enemy Datas\\EnemySkillDatas";
+
 		private bool m_IsStageStart;
 
-		//생성한 enemy 목록
-		private List<Enemy> m_EnemyList = null;
-
-		//스크립터블 오브젝트 추가용
+		// 스크립터블 오브젝트 추가용
 		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
-		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
-		private List<EnemySkillData> m_EnemySkillDataList = null;
 
+		// 적 생성 대기 큐
+		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
+		// 적 생성 타이머
 		[SerializeField, ReadOnly]
 		private UtilClass.Timer m_EnemySpawnTimer = null;
+		// 생성한 적 목록
+		private List<Enemy> m_EnemyList = null;
+
+		private List<EnemySkillData> m_EnemySkillDataList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -139,10 +142,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			for (int i = 0; i < enemyDatas.Length; ++i)
 			{
-				string key = enemyDatas[i].key;
-
-
-				m_EnemyDataMap.Add(key, new EnemyData(enemyDatas[i]));
+				m_EnemyDataMap.Add(enemyDatas[i].key, new EnemyData(enemyDatas[i]));
 			}
 		}
 		/// <summary>
@@ -150,26 +150,31 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		public void LoadEnemyData(in StageData stageData)
 		{
-			List<EnemySpawnData> spawnDataList = stageData.enemySpawnDataList;
 			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
 			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
 
-			int count = spawnDataList.Count;
+			if (fixedDataList.Count != variableDataList.Count)
+				throw new System.Exception("EnemyFixedData와 EnemyVariableData의 갯수가 다름");
 
-			for (int i = 0; i < count; ++i)
+			Dictionary<string, (EnemyFixedData fixedData, EnemyVariableData variableData)> tempMap = new Dictionary<string, (EnemyFixedData, EnemyVariableData)>();
+			for (int i = 0; i < fixedDataList.Count; ++i)
+			{
+				tempMap.Add(fixedDataList[i].Code, (fixedDataList[i], variableDataList[i]));
+			}
+
+			List<EnemySpawnData> spawnDataList = stageData.enemySpawnDataList;
+			for (int i = 0; i < spawnDataList.Count; ++i)
 			{
 				EnemySpawnData spawnData = spawnDataList[i];
 
-				EnemyData enemyData = new EnemyData();
-				enemyData.FixedData = m_EnemyDataMap[spawnData.EnemySpawnKey].FixedData;
-				enemyData.VariableData = m_EnemyDataMap[spawnData.EnemySpawnKey].VariableData;
+				EnemyData enemyData = m_EnemyDataMap[spawnData.EnemySpawnKey];
 
-				//enemyData.FixedData = fixedDataList[i];
-				//enemyData.VariableData = variableDataList[i];
+				enemyData.FixedData = tempMap[spawnData.EnemySpawnKey].fixedData;
+				enemyData.VariableData = tempMap[spawnData.EnemySpawnKey].variableData;
 			}
 
 			m_EnemySpawnDataQueue.Clear();
-			m_EnemySpawnDataQueue.EnqueueRange(stageData.enemySpawnDataList);
+			m_EnemySpawnDataQueue.EnqueueRange(spawnDataList);
 
 			if (m_EnemySpawnDataQueue.Count != 0)
 				m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;

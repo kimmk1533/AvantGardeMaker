@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AvantGardeMaker.OperatorSpace
 {
 	[System.Serializable]
-	public class OperatorFixedData
+	public struct OperatorFixedData
 	{
 		// 최대 체력
 		public OperatorLevelData<float> MaxHp;

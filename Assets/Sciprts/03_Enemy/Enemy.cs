@@ -23,8 +23,8 @@ namespace AvantGardeMaker.EnemySpace
 
 		private string m_PortraitImagePath = string.Empty;
 
-		private EnemyFixedData m_FixedData = null;
-		private EnemyVariableData m_VariableData = null;
+		private EnemyFixedData m_FixedData = new EnemyFixedData();
+		private EnemyVariableData m_VariableData = new EnemyVariableData();
 		#endregion
 
 		#region 길찾기
@@ -189,8 +189,8 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			base.FinallizePoolItem();
 
-			m_FixedData = null;
-			m_VariableData = null;
+			m_FixedData = default;
+			m_VariableData = default;
 
 			m_AtkRange.onOperatorEnterRange -= OnOperatorEnterAtkRange;
 			m_AtkRange.onOperatorExitRange -= OnOperatorExitAtkRange;

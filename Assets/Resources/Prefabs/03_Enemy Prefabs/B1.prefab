@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -1793374903507223745}
   - component: {fileID: -8314005692601211280}
   m_Layer: 0
-  m_Name: OriginiumSlug
+  m_Name: B1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

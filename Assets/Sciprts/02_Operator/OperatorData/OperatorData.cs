@@ -21,5 +21,14 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 프로퍼티
 		public string key => EngName;
 		#endregion
+
+		public OperatorData(in OperatorData operatorData)
+		{
+			EngName = operatorData.EngName;
+			KorName = operatorData.KorName;
+
+			FixedData = operatorData.FixedData;
+			VariableData = operatorData.VariableData;
+		}
 	}
 }

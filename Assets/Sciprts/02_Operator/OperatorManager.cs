@@ -10,7 +10,7 @@ namespace AvantGardeMaker.OperatorSpace
 	public class OperatorManager : ObjectManager<OperatorManager, Operator>
 	{
 		private const string c_OperatorDataPath = "Datas\\02_Operator Datas";
-		private const string c_OperatorSpritePath = "Textures/02_Operator Textures" + "";
+		private const string c_OperatorSpritePath = "Textures\\02_Operator Textures" + "";
 
 		#region 변수
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
@@ -57,13 +57,13 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public override void Finallize()
 		{
-			base.Finallize();
-
 			m_OperatorDataMap.Clear();
 			m_OperatorPortraitMap.Clear();
 
 			m_OperatorDataMap = null;
 			m_OperatorPortraitMap = null;
+
+			base.Finallize();
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace AvantGardeMaker.OperatorSpace
 			{
 				string key = operatorData.key;
 
-				m_OperatorDataMap.Add(key, operatorData);
+				m_OperatorDataMap.Add(key, new OperatorData(operatorData));
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));
 				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Back")));
 				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorData.FixedData.PortraitImagePath));

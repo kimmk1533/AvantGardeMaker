@@ -7,23 +7,23 @@ using UnityEngine;
 namespace AvantGardeMaker.EnemySpace
 {
 	[System.Serializable]
-	public class EnemyVariableData
+	public struct EnemyVariableData
 	{
 		// 체력
-		public EnemyVariableCombatStatValue<float> Hp = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> Hp;
 		// 공격력
-		public EnemyVariableCombatStatValue<float> Atk = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> Atk;
 		// 방어력
-		public EnemyVariableCombatStatValue<float> Def = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> Def;
 		// 마법 저항
-		public EnemyVariableCombatStatValue<float> Res = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> Res;
 		// 이동 속도(타일/s)
-		public EnemyVariableCombatStatValue<float> MovementSpeed = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> MovementSpeed;
 		// 공격 간격(n초당 1회)
-		public EnemyVariableCombatStatValue<float> Aspd = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> Aspd;
 		// 원소 내성
-		public EnemyVariableCombatStatValue<float> ElementalRes = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
-		// 피해 감소
-		public EnemyVariableCombatStatValue<float> EffectResistance = new EnemyVariableCombatStatValue<float>(0f, E_EnemyRankType.E);
+		public EnemyVariableCombatStatValue<float> ElementalRes;
+		// 손상 저항
+		public EnemyVariableCombatStatValue<float> EffectResistance;
 	}
 }

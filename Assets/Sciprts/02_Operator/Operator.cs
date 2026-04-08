@@ -19,8 +19,8 @@ namespace AvantGardeMaker.OperatorSpace
 		#region 스탯
 		protected OperatorData m_OperatorData = null;
 
-		protected OperatorFixedData m_FixedData = null;
-		protected OperatorVariableData m_VariableData = null;
+		protected OperatorFixedData m_FixedData = new OperatorFixedData();
+		protected OperatorVariableData m_VariableData = new OperatorVariableData();
 		#endregion
 
 		private SpriteRenderer m_SpriteRenderer = null;
@@ -28,6 +28,8 @@ namespace AvantGardeMaker.OperatorSpace
 		private Sprite m_FrontSprite = null;
 		private Sprite m_BackSprite = null;
 
+		// 배치 횟수
+		private int m_DeployCount = 0;
 		// 배치중 방향(설정 중일 때 방향)
 		private E_OperatorDirection m_SettingDirection = E_OperatorDirection.None;
 
@@ -84,7 +86,6 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public int deploymentIndex { get; set; }
 		public Tile deploymentTile { get; set; }
-		public int redeployCount { get; set; }
 
 		protected bool isAlive => m_OperatorData.VariableData.CurrentHp > 0;
 
@@ -176,9 +177,11 @@ namespace AvantGardeMaker.OperatorSpace
 			if (m_AttackCoolTimer == null)
 				m_AttackCoolTimer = new UtilClass.Timer();
 
-			currentDirection = E_OperatorDirection.None;
+			m_DeployCount = 0;
 			m_SettingDirection = E_OperatorDirection.None;
-			redeployCount = 0;
+
+			currentDirection = E_OperatorDirection.None;
+
 			m_AutoSPGainTimer = new UtilClass.Timer(1f);
 
 		}
@@ -198,8 +201,9 @@ namespace AvantGardeMaker.OperatorSpace
 		// 배치
 		public void Deploy()
 		{
-			currentDirection = E_OperatorDirection.None;
+			++m_DeployCount;
 			m_SettingDirection = E_OperatorDirection.None;
+			currentDirection = E_OperatorDirection.None;
 		}
 
 		// 퇴각
@@ -208,11 +212,11 @@ namespace AvantGardeMaker.OperatorSpace
 			ResetDirection();
 
 			// 퇴각 코스트(배치 코스트의 절반) 반환
-			M_GamePlaying.currentCost += (variableData.DeploymentCost >> 1);
+			M_GamePlaying.currentCost += (m_VariableData.DeploymentCost >> 1);
 
 			// 배치 코스트 2회에 한해 절반 증가
-			if (redeployCount++ < 2)
-				variableData.DeploymentCost += variableData.DeploymentCost >> 1;
+			if (m_DeployCount <= 2)
+				m_VariableData.DeploymentCost += m_VariableData.DeploymentCost >> 1;
 
 			gameObject.SetActive(false);
 		}

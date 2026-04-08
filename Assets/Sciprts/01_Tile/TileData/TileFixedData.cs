@@ -7,8 +7,8 @@ using UnityEngine;
 namespace AvantGardeMaker.TileSpace
 {
 	[System.Serializable]
-	public class TileFixedData
+	public struct TileFixedData
 	{
-		public E_TileThemaType ThemaType = E_TileThemaType.Episode0;
+		public E_TileThemaType ThemaType;
 	}
 }

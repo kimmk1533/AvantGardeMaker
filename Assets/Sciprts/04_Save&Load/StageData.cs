@@ -86,15 +86,19 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 		#region 저장&불러오기
 		[SerializeField]
 		[FoldoutGroup("적")]
-		private List<EnemySpawnData> m_EnemySpawnDataList;
-		[SerializeField]
-		[FoldoutGroup("적")]
 		private List<EnemyFixedData> m_EnemyFixedDataList;
 		[SerializeField]
 		[FoldoutGroup("적")]
 		private List<EnemyVariableData> m_EnemyVariableDataList;
+
+		[SerializeField]
+		[FoldoutGroup("적")]
+		private List<EnemySpawnData> m_EnemySpawnDataList;
 		#endregion
 
+		[SerializeField]
+		[FoldoutGroup("적")]
+		private int m_EnemyMaxCount;
 		#endregion
 		#endregion
 
@@ -241,15 +245,17 @@ namespace AvantGardeMaker.CoreSpace.SaveLoad
 			#endregion
 
 			#region 적 관련 초기화
-			if (stageData.m_EnemySpawnDataList == null)
-				stageData.m_EnemySpawnDataList = new List<EnemySpawnData>();
 			if (stageData.m_EnemyFixedDataList == null)
 				stageData.m_EnemyFixedDataList = new List<EnemyFixedData>();
 			if (stageData.m_EnemyVariableDataList == null)
 				stageData.m_EnemyVariableDataList = new List<EnemyVariableData>();
 
+			if (stageData.m_EnemySpawnDataList == null)
+				stageData.m_EnemySpawnDataList = new List<EnemySpawnData>();
+
 			stageData.m_EnemySpawnDataList.Clear();
 			stageData.m_EnemyFixedDataList.Clear();
+
 			stageData.m_EnemyVariableDataList.Clear();
 			#endregion
 		}

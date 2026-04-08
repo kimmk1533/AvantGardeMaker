@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AvantGardeMaker.OperatorSpace
 {
 	[System.Serializable]
-	public class OperatorLevelData<T>
+	public struct OperatorLevelData<T>
 	{
 		/// <summary>
 		/// 0정 1레벨 기준 데이터

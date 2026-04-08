@@ -184,7 +184,7 @@ namespace AvantGardeMaker.UI
 
 			CreateOperatorSquadUI();
 
-			optionButton.onClick.AddListener(LoadPrevScene);
+			optionButton.onClick.AddListener(M_GamePlaying.LoadPrevScene);
 			deploymentCancelButton.onClick.AddListener(OnDeploymentCancelButtonClicked);
 		}
 		/// <summary>
@@ -204,16 +204,6 @@ namespace AvantGardeMaker.UI
 			m_TileOperatorSquadUIMap.Clear();
 		}
 		#endregion
-
-		private void LoadPrevScene()
-		{
-			if (SceneLoader.prevSceneName.Equals("Map Editing Scene") == true)
-				M_MapEditing.SynchronizeStageData(M_GamePlaying.currentStageData);
-
-			Debug.Log("이전 씬: " + SceneLoader.prevSceneName);
-
-			SceneLoader.LoadScene(SceneLoader.prevSceneName);
-		}
 
 		private void CreateOperatorSquadUI()
 		{

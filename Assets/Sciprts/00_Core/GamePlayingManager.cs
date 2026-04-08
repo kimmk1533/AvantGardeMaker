@@ -18,8 +18,8 @@ namespace AvantGardeMaker.CoreSpace
 		[SerializeField, ReadOnly]
 		private StageData m_GameStageData = default;
 
-		private int m_LifePoint;
-		private int m_GameSpeed;
+		private int m_LifePoint = 3;
+		private int m_GameSpeed = 1;
 
 		#region 코스트 관련 변수
 		private int m_CurrentCost = 10;
@@ -38,7 +38,7 @@ namespace AvantGardeMaker.CoreSpace
 		#endregion
 
 		#region 프로퍼티
-		public StageData currentStageData => m_GameStageData;
+		public StageData gameStageData => m_GameStageData;
 
 		public int currentCost
 		{
@@ -52,7 +52,19 @@ namespace AvantGardeMaker.CoreSpace
 		}
 		public int maxCost { get; private set; }
 
-		public int lifePoint { get; set; }
+		public int lifePoint
+		{
+			get => m_LifePoint;
+			set
+			{
+				m_LifePoint = value;
+
+				if (m_LifePoint <= 0)
+				{
+					LoadPrevScene();
+				}
+			}
+		}
 
 		public UtilClass.Timer costTimer => m_CostTimer;
 
@@ -62,9 +74,13 @@ namespace AvantGardeMaker.CoreSpace
 
 		#region 이벤트
 		public event System.Action<int> onCostChanged = null;
+
+		#region 이벤트 함수
+		#endregion
 		#endregion
 
 		#region 매니저
+		private static MapEditingManager M_MapEditing => MapEditingManager.Instance;
 		private static GamePlayingSceneUIManager M_GamePlayingUI => GamePlayingSceneUIManager.Instance;
 
 		private static TileManager M_Tile => TileManager.Instance;
@@ -97,9 +113,9 @@ namespace AvantGardeMaker.CoreSpace
 		/// </summary>
 		public override void Finallize()
 		{
+
+
 			base.Finallize();
-
-
 		}
 
 		/// <summary>
@@ -120,11 +136,11 @@ namespace AvantGardeMaker.CoreSpace
 		/// </summary>
 		public override void FinallizeMain()
 		{
-			base.FinallizeMain();
-
 			currentMap = null;
 			operatorSpawnDataList.Clear();
 			operatorSpawnDataList = null;
+
+			base.FinallizeMain();
 		}
 		#endregion
 
@@ -182,7 +198,21 @@ namespace AvantGardeMaker.CoreSpace
 			m_CostTimer.interval = stageData.costIncreaseTime;
 			m_CostTimer.Pause();
 
+			m_LifePoint = stageData.lifePoint;
+
 			PathFinder.offset = -stageData.minTile;
+		}
+		/// <summary>
+		/// 이전 씬으로 돌아가는 함수
+		/// </summary>
+		public void LoadPrevScene()
+		{
+			if (SceneLoader.prevSceneName.Equals("Map Editing Scene") == true)
+				M_MapEditing.SynchronizeStageData(m_GameStageData);
+
+			Debug.Log("이전 씬: " + SceneLoader.prevSceneName);
+
+			SceneLoader.LoadScene(SceneLoader.prevSceneName);
 		}
 	}
 }

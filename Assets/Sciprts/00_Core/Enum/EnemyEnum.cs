@@ -7,74 +7,87 @@ namespace AvantGardeMaker.EnemySpace.Enum
 {
 	public enum E_EnemyGradeType
 	{
-		//일반
+		// 일반
 		Normal,
-		//정예
+		// 정예
 		Elite,
-		//리더
+		// 리더
 		Leader,
 	}
 	public enum E_EnemyRaceType
 	{
-		//기타
+		// 기타
 		None,
-		//감염생물
+
+		// 감염생물
 		InfectedCreature,
-		//드론
+		// 드론
 		Drone,
-		//살카즈
+		// 살카즈
 		Sarkaz,
-		//숙주
+		// 숙주
 		Possessed,
-		//바다 괴물
+		// 바다 괴물
 		SeaMonster,
-		//아츠 피조물
+		// 아츠 피조물
 		ArtsCreation,
-		//요괴
+		// 요괴
 		Apparition,
-		//기계
+		// 기계
 		Machina,
-		//야생동물
+		// 야생동물
 		WildBeast,
-		//붕괴체
+		// 붕괴체
 		Collapsal,
 	}
 	public enum E_EnemyFlyable
 	{
-		//지상
+		// 지상
 		Walk,
-		//공중
+		// 공중
 		Flying,
 	}
 	public enum E_EnemyAtkPatternType
 	{
-		//비공격
+		// 비공격
 		Disable,
-		//근거리
+		// 근거리
 		Melee,
-		//원거리
+		// 원거리
 		Range,
 	}
 	public enum E_EnemyDmgType
 	{
-		//물리
-		Physic,
-		//마법
-		Magic,
-		//치료
-		Heal,
-		//없음
+		// 없음
 		None,
+
+		// 물리
+		Physic,
+		// 마법
+		Magic,
+		// 치료
+		Heal,
 	}
 	[System.Flags]
 	public enum E_EnemyImmuneType : byte
 	{
+		// 없음
+		None = 0,
+
+		// 기절 면역
 		Stun = 1 << 0,
+		// 수면 면역
 		Sleep = 1 << 1,
+		// 빙결 면역
 		Freeze = 1 << 2,
+		// 공중 부양 면역
 		Airborn = 1 << 3,
+		// 전율 면역
 		Shiver = 1 << 4,
+		// 공포 면역
 		Fear = 1 << 5,
+
+		Max = 1 << 6
 	}
 	public enum E_EnemyRankType
 	{
@@ -107,11 +120,14 @@ namespace AvantGardeMaker.EnemySpace.Enum
 	}
 	public enum E_EnemyState
 	{
-		//생성 전
+		// 생성 전
 		None,
-		//멀뚱히 서있음(== move가 아님 && attack이 아님 && 살아있음)
+
+		// 멀뚱히 서있음(== move가 아님 && attack이 아님 && 살아있음)
 		Idle,
+		// 이동 중
 		Move,
+		// 공격 중
 		Attack,
 	}
 
@@ -217,8 +233,6 @@ namespace AvantGardeMaker.EnemySpace.Enum
 		{
 			switch (dmgType)
 			{
-				default:
-					break;
 				case E_EnemyDmgType.Physic:
 					return "물리";
 				case E_EnemyDmgType.Magic:
@@ -227,7 +241,7 @@ namespace AvantGardeMaker.EnemySpace.Enum
 					return "치료";
 			}
 
-			return string.Empty;
+			return "없음";
 		}
 
 		public static string[] EnumFlagToKorString<TEnumFlag>(TEnumFlag enumFlagValue) where TEnumFlag : System.Enum
@@ -239,22 +253,12 @@ namespace AvantGardeMaker.EnemySpace.Enum
 				default:
 					return null;
 				case "E_EnemyImmuneType":
-					E_EnemyImmuneType immuneType = (E_EnemyImmuneType)(1 << 0);
-
-					while (immuneType < E_EnemyImmuneType.Fear &&
-						immuneType != 0)
+					for (E_EnemyImmuneType immuneType = E_EnemyImmuneType.None; immuneType != E_EnemyImmuneType.Max; immuneType = (E_EnemyImmuneType)((byte)immuneType << 1))
 					{
-						InfiniteLoopDetector.Run();
-
 						if (enumFlagValue.HasFlag(immuneType) == false)
-						{
-							immuneType = (E_EnemyImmuneType)((int)immuneType << 1);
 							continue;
-						}
 
 						korStringList.Add(EnumFlagToKorString_ImmuneType(immuneType));
-
-						immuneType = (E_EnemyImmuneType)((int)immuneType << 1);
 					}
 					break;
 			}

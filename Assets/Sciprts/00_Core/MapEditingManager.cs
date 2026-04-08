@@ -462,7 +462,7 @@ namespace AvantGardeMaker.CoreSpace
 			M_MapEditingUI.LoadEnemySetting(m_EditingStageData);
 
 			#region Debug
-			if (string.IsNullOrEmpty(stageTitle) == false)
+			if (string.IsNullOrEmpty(m_EditingStageData.createdPlayerId) == false)
 			{
 				TextMeshPro textMesh = UtilClass.CreateWorldText(null, stageTitle + " 로드 완료", new UtilClass.WorldTMP_TextOption()
 				{
