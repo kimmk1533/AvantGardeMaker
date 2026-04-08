@@ -348,7 +348,7 @@ namespace HierarchyDesigner
         private HD_Settings.UpdateMode tempLayerUpdateMode;
         private bool tempEnableDynamicBackgroundForGameObjectMainIcon;
         private bool tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon;
-        private bool tempEnableMainIconOverride;
+        private bool tempEnableProjectTexturesInMainIconOverrideWindow;
         private bool tempEnableCustomizationForGameObjectComponentIcons;
         private bool tempEnableTooltipOnComponentIconHovered;
         private bool tempEnableActiveStateEffectForComponentIcons;
@@ -3034,6 +3034,7 @@ namespace HierarchyDesigner
             EditorGUI.BeginChangeCheck();
             tempEnableDynamicBackgroundForGameObjectMainIcon = HD_GUI.DrawToggle("Enable Dynamic Background", advancedSettingsToggleLabelWidth, tempEnableDynamicBackgroundForGameObjectMainIcon, true, true, "The background of the main icon will match the background color of the Hierarchy window (i.e., Editor Light, Dark Mode, GameObject Selected, Focused, Unfocused).");
             tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon = HD_GUI.DrawToggle("Enable Precise Rect For Dynamic Background", advancedSettingsToggleLabelWidth, tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon, true, true, "Uses precise rect calculations for pointer/mouse detection utilized by the Dynamic Background feature.");
+            tempEnableProjectTexturesInMainIconOverrideWindow = HD_GUI.DrawToggle("Enable Project Textures In Main Icon Override", advancedSettingsToggleLabelWidth, tempEnableProjectTexturesInMainIconOverrideWindow, true, true, "If enabled, the Main Icon Override window will index project textures so you can pick a texture from the project. Disabling this makes the window open faster.");
             if (EditorGUI.EndChangeCheck()) { advancedSettingsHasModifiedChanges = true; }
             EditorGUILayout.EndVertical();
         }
@@ -3105,6 +3106,7 @@ namespace HierarchyDesigner
             HD_Settings.LayerUpdateMode = tempLayerUpdateMode;
             HD_Settings.EnableDynamicBackgroundForGameObjectMainIcon = tempEnableDynamicBackgroundForGameObjectMainIcon;
             HD_Settings.EnablePreciseRectForDynamicBackgroundForGameObjectMainIcon = tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon;
+            HD_Settings.EnableProjectTexturesInMainIconOverrideWindow = tempEnableProjectTexturesInMainIconOverrideWindow;
             HD_Settings.EnableCustomizationForGameObjectComponentIcons = tempEnableCustomizationForGameObjectComponentIcons;
             HD_Settings.EnableTooltipOnComponentIconHovered = tempEnableTooltipOnComponentIconHovered;
             HD_Settings.EnableActiveStateEffectForComponentIcons = tempEnableActiveStateEffectForComponentIcons;
@@ -3134,6 +3136,7 @@ namespace HierarchyDesigner
             tempLayerUpdateMode = HD_Settings.LayerUpdateMode;
             tempEnableDynamicBackgroundForGameObjectMainIcon = HD_Settings.EnableDynamicBackgroundForGameObjectMainIcon;
             tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon = HD_Settings.EnablePreciseRectForDynamicBackgroundForGameObjectMainIcon;
+            tempEnableProjectTexturesInMainIconOverrideWindow = HD_Settings.EnableProjectTexturesInMainIconOverrideWindow;
             tempEnableCustomizationForGameObjectComponentIcons = HD_Settings.EnableCustomizationForGameObjectComponentIcons;
             tempEnableTooltipOnComponentIconHovered = HD_Settings.EnableTooltipOnComponentIconHovered;
             tempEnableActiveStateEffectForComponentIcons = HD_Settings.EnableActiveStateEffectForComponentIcons;
@@ -3150,6 +3153,7 @@ namespace HierarchyDesigner
         {
             tempEnableDynamicBackgroundForGameObjectMainIcon = enable;
             tempEnablePreciseRectForDynamicBackgroundForGameObjectMainIcon = enable;
+            tempEnableProjectTexturesInMainIconOverrideWindow = enable;
             tempEnableCustomizationForGameObjectComponentIcons = enable;
             tempEnableTooltipOnComponentIconHovered = enable;
             tempEnableActiveStateEffectForComponentIcons = enable;
@@ -3437,7 +3441,7 @@ namespace HierarchyDesigner
         private Vector2 notesScroll;
         private const int defaultGUISpace = 2;
         private const int sectionGUISpace = 10;
-        private const int labelFieldWidth = 100;
+        private const int labelFieldWidth = 150;
         private const int minButtonWidth = 25;
         private const int maxButtonWidth = 100;
         private const string toggle = "Toggle";
@@ -3450,6 +3454,7 @@ namespace HierarchyDesigner
 
         #region Serialized
         private SerializedProperty flattenFolderProp;
+        private SerializedProperty moveChildrenToHierarchyRootProp;
         private SerializedProperty flattenEventProp;
         private SerializedProperty onFlattenEventProp;
         private SerializedProperty onFolderDestroyProp;
@@ -3474,6 +3479,7 @@ namespace HierarchyDesigner
             folder = (HierarchyDesignerFolder)target;
 
             flattenFolderProp = serializedObject.FindProperty("flattenFolder");
+            moveChildrenToHierarchyRootProp = serializedObject.FindProperty("moveChildrenToHierarchyRoot");
             flattenEventProp = serializedObject.FindProperty("flattenEvent");
             onFlattenEventProp = serializedObject.FindProperty("OnFlattenEvent");
             onFolderDestroyProp = serializedObject.FindProperty("OnFolderDestroy");
@@ -3514,6 +3520,8 @@ namespace HierarchyDesigner
             {
                 HD_GUI.DrawPropertyField("Flatten Event", labelFieldWidth, flattenEventProp, HierarchyDesignerFolder.FlattenEvent.Start, true, "The event on which the 'Flatten Folder' action will occur.\n\nIf set to Awake, the folder will be flattened on the Awake event.\n\nIf set to Start, the folder will be flattened on the Start event.");
                 EditorGUILayout.Space(6);
+
+                HD_GUI.DrawPropertyField("Move Children To Root", labelFieldWidth, moveChildrenToHierarchyRootProp, true,  true, "If enabled, freed children are moved to the Hierarchy root.\nIf disabled, freed children are moved to the folder's parent (same layer where the folder existed).");
 
                 EditorGUILayout.LabelField("Events", HD_GUI.FieldsCategoryLabelStyle);
                 EditorGUILayout.Space(defaultGUISpace);
@@ -3747,6 +3755,8 @@ namespace HierarchyDesigner
         private static bool s_AssetFilterDirty;
         private static string s_AssetSearchCache = string.Empty;
         private static int s_AssetPage;
+
+        private static int s_OpenWindows;
         #endregion
 
         #region Initialization
@@ -3771,9 +3781,30 @@ namespace HierarchyDesigner
 
         private void OnEnable()
         {
+            s_OpenWindows++;
+
             if (s_BuiltinIcons.Count == 0) EditorApplication.delayCall += GatherBuiltinIcons;
             if (s_ComponentIcons.Count == 0) EditorApplication.delayCall += GatherComponentIcons;
-            EnsureAssetIndexingStarted();
+
+            if (HD_Settings.EnableProjectTexturesInMainIconOverrideWindow)
+            {
+                EnsureAssetIndexingStarted();
+            }
+            else
+            {
+                StopAssetIndexing();
+                ResetAssetIndexingData();
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (s_OpenWindows > 0) s_OpenWindows--;
+
+            if (s_OpenWindows == 0)
+            {
+                StopAssetIndexing();
+            }
         }
         #endregion
 
@@ -3821,7 +3852,10 @@ namespace HierarchyDesigner
             DrawSection("Built-in / Editor Icons", DrawBuiltinGrid);
             GUILayout.Space(6f);
 
-            DrawSection("Project Textures", DrawAssetGrid);
+            if (HD_Settings.EnableProjectTexturesInMainIconOverrideWindow)
+            {
+                DrawSection("Project Textures", DrawAssetGrid);
+            }
 
             EditorGUILayout.EndScrollView();
         }
@@ -4027,16 +4061,37 @@ namespace HierarchyDesigner
 
         private static void EnsureAssetIndexingStarted()
         {
+            if (!HD_Settings.EnableProjectTexturesInMainIconOverrideWindow)
+            {
+                StopAssetIndexing();
+                return;
+            }
+
             if (s_AssetIndexed || s_AssetIndexing) return;
 
-            s_AssetGuids = AssetDatabase.FindAssets("t:Texture2D");
-            s_AssetGuidIndex = 0;
-            s_AssetIcons.Clear();
+            if (s_AssetGuids == null)
+            {
+                s_AssetGuids = AssetDatabase.FindAssets("t:Texture2D");
+                s_AssetGuidIndex = 0;
+                s_AssetIcons.Clear();
+            }
 
-            s_AssetIndexing = s_AssetGuids != null && s_AssetGuids.Length > 0;
-            s_AssetIndexed = !s_AssetIndexing;
+            if (s_AssetGuids == null || s_AssetGuids.Length == 0)
+            {
+                FinalizeAssetIndexing();
+                return;
+            }
 
-            if (s_AssetIndexing && !s_AssetUpdateRegistered)
+            if (s_AssetGuidIndex >= s_AssetGuids.Length)
+            {
+                FinalizeAssetIndexing();
+                return;
+            }
+
+            s_AssetIndexing = true;
+            s_AssetIndexed = false;
+
+            if (!s_AssetUpdateRegistered)
             {
                 EditorApplication.update += ProcessAssetIndexing;
                 s_AssetUpdateRegistered = true;
@@ -4045,14 +4100,21 @@ namespace HierarchyDesigner
 
         private static void ProcessAssetIndexing()
         {
+            if (!HD_Settings.EnableProjectTexturesInMainIconOverrideWindow)
+            {
+                StopAssetIndexing();
+                return;
+            }
+
+            if (s_OpenWindows <= 0)
+            {
+                StopAssetIndexing();
+                return;
+            }
+
             if (!s_AssetIndexing)
             {
-                if (s_AssetUpdateRegistered)
-                {
-                    EditorApplication.update -= ProcessAssetIndexing;
-                    s_AssetUpdateRegistered = false;
-                }
-
+                StopAssetIndexing();
                 return;
             }
 
@@ -4074,24 +4136,54 @@ namespace HierarchyDesigner
 
             if (s_AssetGuidIndex >= s_AssetGuids.Length)
             {
-                s_AssetIndexing = false;
-                s_AssetIndexed = true;
-
-                s_AssetIcons.Sort((a, b) =>
-                {
-                    string an = a.tex != null ? a.tex.name : string.Empty;
-                    string bn = b.tex != null ? b.tex.name : string.Empty;
-                    return string.Compare(an, bn, StringComparison.Ordinal);
-                });
-
-                s_AssetFilterDirty = true;
-
-                if (s_AssetUpdateRegistered)
-                {
-                    EditorApplication.update -= ProcessAssetIndexing;
-                    s_AssetUpdateRegistered = false;
-                }
+                FinalizeAssetIndexing();
             }
+        }
+
+        private static void StopAssetIndexing()
+        {
+            s_AssetIndexing = false;
+
+            if (s_AssetUpdateRegistered)
+            {
+                EditorApplication.update -= ProcessAssetIndexing;
+                s_AssetUpdateRegistered = false;
+            }
+        }
+
+        private static void FinalizeAssetIndexing()
+        {
+            s_AssetIndexing = false;
+            s_AssetIndexed = true;
+
+            s_AssetIcons.Sort((a, b) =>
+            {
+                string an = a.tex != null ? a.tex.name : string.Empty;
+                string bn = b.tex != null ? b.tex.name : string.Empty;
+                return string.Compare(an, bn, StringComparison.Ordinal);
+            });
+
+            s_AssetFilterDirty = true;
+
+            if (s_AssetUpdateRegistered)
+            {
+                EditorApplication.update -= ProcessAssetIndexing;
+                s_AssetUpdateRegistered = false;
+            }
+        }
+
+        private static void ResetAssetIndexingData()
+        {
+            s_AssetGuids = null;
+            s_AssetGuidIndex = 0;
+            s_AssetIndexing = false;
+            s_AssetIndexed = false;
+            s_AssetFilterDirty = true;
+            s_AssetSearchCache = string.Empty;
+            s_AssetPage = 0;
+
+            s_AssetIcons.Clear();
+            s_AssetFiltered.Clear();
         }
 
         private static void GatherBuiltinIcons()

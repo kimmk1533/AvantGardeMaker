@@ -1,3 +1,19 @@
+<color=#FFF35A>Version 3.0.1</color>
+• Fixed a bug where the header collapse button would not work in the latest Unity versions.
+
+<color=#FFF35A>Version 3.0.0</color>
+• Added a new field to the Hierarchy Folders: MoveChildrenToHierarchyRoot.
+
+<color=#FFF35A>Version 2.9.1</color>
+• Fixed the warnings in Unity 6.3.
+
+<color=#FFF35A>Version 2.9.0</color>
+• Added a new header utility: Remove Missing Scripts.
+
+<color=#FFF35A>Version 2.8.0</color>
+• Added a new advanced setting: Enable Project Textures in Main Icon Override Window.
+• Minor changes.
+
 <color=#FFF35A>Version 2.7.2</color>
 • Fixed the loading issue of the main Icon Picker window.
 

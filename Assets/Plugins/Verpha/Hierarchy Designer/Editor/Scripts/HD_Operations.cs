@@ -1445,7 +1445,10 @@ namespace HierarchyDesigner
                 if (shw == null) return false;
 
                 BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-                object sceneHierarchy = shwType.GetField("m_SceneHierarchy", flags)?.GetValue(shw) ?? shwType.GetProperty("sceneHierarchy", flags)?.GetValue(shw);
+
+                object sceneHierarchy = shwType.GetField("m_SceneHierarchy", flags)?.GetValue(shw) ??
+                                        shwType.GetProperty("sceneHierarchy", flags)?.GetValue(shw);
+
                 if (sceneHierarchy == null) return false;
 
                 MethodInfo getExpanded = sceneHierarchy.GetType().GetMethod("GetExpandedIDs", flags);
@@ -1455,7 +1458,14 @@ namespace HierarchyDesigner
 
                 HashSet<int> expanded = new();
                 foreach (object o in expandedEnum)
-                    if (o is int id) expanded.Add(id);
+                {
+                    if (o == null) continue;
+
+                    if (int.TryParse(o.ToString(), out int id))
+                    {
+                        expanded.Add(id);
+                    }
+                }
 
                 int totalWithChildren = 0;
                 int expandedWithChildren = 0;
@@ -1464,11 +1474,15 @@ namespace HierarchyDesigner
                 {
                     Scene scene = SceneManager.GetSceneAt(s);
                     if (!scene.IsValid() || !scene.isLoaded) continue;
+
                     foreach (GameObject root in scene.GetRootGameObjects())
+                    {
                         Tally(root.transform, expanded, ref totalWithChildren, ref expandedWithChildren);
+                    }
                 }
 
                 if (totalWithChildren == 0) return false;
+
                 float ratio = (float)expandedWithChildren / totalWithChildren;
                 return ratio >= 0.6f;
             }
@@ -1484,8 +1498,11 @@ namespace HierarchyDesigner
                     total++;
                     if (expanded.Contains(t.gameObject.GetInstanceID())) expandedCount++;
                 }
+
                 for (int i = 0; i < t.childCount; i++)
+                {
                     Tally(t.GetChild(i), expanded, ref total, ref expandedCount);
+                }
             }
         }
 

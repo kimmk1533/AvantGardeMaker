@@ -6,7 +6,7 @@ namespace HierarchyDesigner
         #region Properties
         #region Asset Info
         public const string AssetName = "Hierarchy Designer";
-        public const string AssetVersion = "VERSION 2.7.2";
+        public const string AssetVersion = "VERSION 3.0.1";
         public const string AssetLocation = "Tools/Hierarchy Designer";
         #endregion
 
