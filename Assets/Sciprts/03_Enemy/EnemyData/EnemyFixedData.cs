@@ -56,13 +56,5 @@ namespace AvantGardeMaker.EnemySpace
 
 		// 필터에 표시되지 않는 공격 타입
 		public E_DamageType DamageType;
-
-		// EnemySkill로 구현하기 애매한 능력
-		public List<string> Tag;
-
-		public List<EnemySkillData> SkillDataList;
-
-		//▲▲▲▲▲▲▲▲▲▲▲▲스킬▲▲▲▲▲▲▲▲▲▲▲▲//
-
 	}
 }

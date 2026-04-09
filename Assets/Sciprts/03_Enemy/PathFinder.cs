@@ -90,6 +90,9 @@ namespace AvantGardeMaker.EnemySpace
 			}
 		}
 
+		/// <summary>
+		/// 현재 지형(맵)의 이동 가중치를 반환
+		/// </summary>
 		public static float[,] GetWeightMap(in (E_TileType tileType, E_TilePositionType tilePositionType)[,] map, bool isFlyable = false)
 		{
 			float[,] weightMap = new float[map.GetLength(0), map.GetLength(1)];
@@ -117,6 +120,9 @@ namespace AvantGardeMaker.EnemySpace
 			return weightMap;
 		}
 
+		/// <summary>
+		/// 가중치 맵에 따른 이동 경로 반환
+		/// </summary>
 		public static List<Vector2> FindPath(Vector2 start, Vector2 goal, in float[,] weightMap)
 		{
 			//열린 노드

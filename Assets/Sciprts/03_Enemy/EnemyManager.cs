@@ -3,7 +3,6 @@ using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using static AvantGardeMaker.EnemySpace.EnemySkill;
 
 /*
  * 옵젝 매니저(풀링 되어있음)
@@ -41,7 +40,6 @@ namespace AvantGardeMaker.EnemySpace
 
 		// 스크립터블 오브젝트 추가용
 		private Dictionary<string, EnemyData> m_EnemyDataMap = null;
-
 		// 적 생성 대기 큐
 		private Queue<EnemySpawnData> m_EnemySpawnDataQueue = null;
 		// 적 생성 타이머
@@ -49,8 +47,6 @@ namespace AvantGardeMaker.EnemySpace
 		private UtilClass.Timer m_EnemySpawnTimer = null;
 		// 생성한 적 목록
 		private List<Enemy> m_EnemyList = null;
-
-		private List<EnemySkillData> m_EnemySkillDataList = null;
 		#endregion
 
 		#region 프로퍼티
@@ -81,12 +77,9 @@ namespace AvantGardeMaker.EnemySpace
 			m_EnemyDataMap = new Dictionary<string, EnemyData>();
 			m_EnemySpawnDataQueue = new Queue<EnemySpawnData>();
 
-			m_EnemySkillDataList = new List<EnemySkillData>();
-
 			m_EnemySpawnTimer = new UtilClass.Timer();
 
 			LoadEnemyData();
-			LoadEnemySkillData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -178,13 +171,6 @@ namespace AvantGardeMaker.EnemySpace
 
 			if (m_EnemySpawnDataQueue.Count != 0)
 				m_EnemySpawnTimer.interval = m_EnemySpawnDataQueue.Peek().Time;
-		}
-
-		public void LoadEnemySkillData()
-		{
-			EnemySkillData[] enemySkillDatas = Resources.LoadAll<EnemySkillData>(c_EnemySkillDataPath);
-			m_EnemySkillDataList.Clear();
-			m_EnemySkillDataList.AddRange(enemySkillDatas);
 		}
 		#endregion
 
