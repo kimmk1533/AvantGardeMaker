@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  EngName: Melantha
-  KorName: "\uBA5C\uB780\uC0AC"
   FixedData:
+    EngName: Melantha
+    KorName: "\uBA5C\uB780\uC0AC"
     MaxHp:
       Elite0Level1: 1395
       Elite1Level1: 1993
@@ -60,19 +60,18 @@ MonoBehaviour:
       Elite2Level1: 55
       Elite2LevelFull: 55
     Rate: 3
-    Level: 20
-    Elite: 0
-    Potential: 0
-    Class: 0
+    Level: 1
+    EliteLevel: 0
+    PotentialLevel: 0
+    OperatorClass: 0
     AtkSpeed: 1
-    AtkRange: 0
     SkillName: "\uACF5\uACA9 \uAC15\uD654 \u03B1"
     SkillLevel: 1
-    PortraitPath: MikangMark\Test Images\OperatorFaceImg\Fang
-    FullShotPath: MikangMark\Test Images\OperatorFullImg\Fang
+    PortraitImagePath: 
+    FullShotImagePath: 
   VariableData:
-    MaxHp: 1686
-    CurrentHp: 1686
+    MaxHp: 1395
+    CurrentHp: 1395
     Atk: 487
     Def: 101
     Res: 0

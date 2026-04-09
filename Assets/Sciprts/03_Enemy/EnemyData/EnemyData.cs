@@ -12,9 +12,6 @@ namespace AvantGardeMaker.EnemySpace
 		public string EngName = string.Empty;
 		public string KorName = string.Empty;
 
-		// 적 초상화 경로
-		public string PortraitImagePath = string.Empty;
-
 		// 고정된 값
 		public EnemyFixedData FixedData = new EnemyFixedData();
 		// 전투중 바뀔 수 있는 값
@@ -25,14 +22,17 @@ namespace AvantGardeMaker.EnemySpace
 		public string key => FixedData.Code;
 		#endregion
 
-		public EnemyData(EnemyData _data)
+		public EnemyData Clone()
 		{
-			EngName = _data.EngName;
-			KorName = _data.KorName;
-			PortraitImagePath = _data.PortraitImagePath;
+			EnemyData enemyData = CreateInstance<EnemyData>();
 
-			FixedData = _data.FixedData;
-			VariableData = _data.VariableData;
+			enemyData.EngName = EngName;
+			enemyData.KorName = KorName;
+
+			enemyData.FixedData = FixedData;
+			enemyData.VariableData = VariableData;
+
+			return enemyData;
 		}
 	}
 

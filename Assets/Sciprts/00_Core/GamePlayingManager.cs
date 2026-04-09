@@ -9,6 +9,7 @@ using AvantGardeMaker.TileSpace.Enum;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace;
 using System.Linq;
+using CoreSources;
 
 namespace AvantGardeMaker.CoreSpace
 {
@@ -149,9 +150,7 @@ namespace AvantGardeMaker.CoreSpace
 			if (currentCost >= maxCost)
 				return;
 
-			m_CostTimer.Update();
-
-			if (m_CostTimer.TimeCheck(true) == true)
+			if (m_CostTimer.Update() == true)
 			{
 				++currentCost;
 			}

@@ -26,7 +26,7 @@ namespace AvantGardeMaker.UI
 			{
 				m_OperatorData = value;
 
-				m_OperatorKorNameText.text = value.KorName;
+				m_OperatorKorNameText.text = value.FixedData.KorName;
 			}
 		}
 		#endregion

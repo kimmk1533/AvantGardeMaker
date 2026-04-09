@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AvantGardeMaker.UI;
+using CoreSources;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -95,7 +96,7 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 		#region 유니티 콜백 함수
 		protected override void OnApplicationQuit()
 		{
-			M_Game.FinallizeMapEditing();
+			M_Game.FinallizeMapEditingScene();
 
 			M_Game.Finallize();
 		}
@@ -148,16 +149,16 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			#endregion
 
 			// Main Menu Scene 전환 전 이벤트
-			AddBeforeEvent("Main Menu Scene", M_Game.FinallizeMapEditing);
+			AddBeforeEvent("Main Menu Scene", M_Game.FinallizeMapEditingScene);
 
 			// Main Menu Scene 전환 후 이벤트
-			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenuScene);
 
 			// Game Playing Scene 전환 전 이벤트
-			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMapEditing);
+			AddBeforeEvent("Game Playing Scene", M_Game.FinallizeMapEditingScene);
 
 			// Game Playing Scene 전환 후 이벤트
-			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlaying);
+			AddAfterEvent("Game Playing Scene", M_Game.InitializeGamePlayingScene);
 		}
 		/// <summary>
 		/// 마무리화 함수

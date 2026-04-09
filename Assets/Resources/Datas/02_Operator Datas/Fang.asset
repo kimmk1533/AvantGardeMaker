@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  EngName: Fang
-  KorName: "\uD33D"
   FixedData:
+    EngName: Fang
+    KorName: "\uD33D"
     MaxHp:
       Elite0Level1: 742
       Elite1Level1: 1060
@@ -60,7 +60,7 @@ MonoBehaviour:
       Elite2Level1: 55
       Elite2LevelFull: 55
     Rate: 3
-    Level: 40
+    Level: 1
     EliteLevel: 0
     PotentialLevel: 0
     OperatorClass: 0
@@ -70,8 +70,8 @@ MonoBehaviour:
     PortraitImagePath: 
     FullShotImagePath: 
   VariableData:
-    MaxHp: 1060
-    CurrentHp: 1060
+    MaxHp: 742
+    CurrentHp: 742
     Atk: 235
     Def: 187
     Res: 0

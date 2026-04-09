@@ -9,6 +9,11 @@ namespace AvantGardeMaker.OperatorSpace
 	[System.Serializable]
 	public struct OperatorFixedData
 	{
+		// 영어 이름
+		public string EngName;
+		// 한글 이름
+		public string KorName;
+
 		// 최대 체력
 		public OperatorLevelData<float> MaxHp;
 		// 공격력

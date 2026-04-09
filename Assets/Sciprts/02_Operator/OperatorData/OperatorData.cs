@@ -9,26 +9,22 @@ namespace AvantGardeMaker.OperatorSpace
 	public class OperatorData : SerializedScriptableObject
 	{
 		#region 변수
-		// 영어이름
-		public string EngName = string.Empty;
-		// 한글이름
-		public string KorName = string.Empty;
-
 		public OperatorFixedData FixedData = new OperatorFixedData();
 		public OperatorVariableData VariableData = new OperatorVariableData();
 		#endregion
 
 		#region 프로퍼티
-		public string key => EngName;
+		public string key => FixedData.EngName;
 		#endregion
 
-		public OperatorData(in OperatorData operatorData)
+		public OperatorData Clone()
 		{
-			EngName = operatorData.EngName;
-			KorName = operatorData.KorName;
+			OperatorData operatorData = CreateInstance<OperatorData>();
 
-			FixedData = operatorData.FixedData;
-			VariableData = operatorData.VariableData;
+			operatorData.FixedData = FixedData;
+			operatorData.VariableData = VariableData;
+
+			return operatorData;
 		}
 	}
 }

@@ -7,10 +7,11 @@ using AvantGardeMaker.EnemySpace;
 using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using CoreSources;
 
 namespace AvantGardeMaker.CoreSpace
 {
-	public sealed class GameManager : SerializedSingleton<GameManager>
+	public sealed class GameManager : GameManagerBase<GameManager>
 	{
 		static GameManager()
 		{
@@ -66,8 +67,10 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// 초기화 함수 (Init Scene 진입 시, 즉 게임 실행 시 호출)
 		/// </summary>
-		public new void Initialize()
+		public override void Initialize()
 		{
+			base.Initialize();
+
 			SaveLoadUtility.Initialize();
 
 			// Main Menu Scene Manager
@@ -94,7 +97,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
 		/// </summary>
-		public new void Finallize()
+		public override void Finallize()
 		{
 			SaveLoadUtility.Finallize();
 
@@ -115,13 +118,15 @@ namespace AvantGardeMaker.CoreSpace
 			M_MainMenuUI.Finallize();
 			M_Panel.Finallize();
 
+			base.Finallize();
+
 			Debug.Log("Finallize");
 		}
 
 		/// <summary>
 		/// Main Menu Scene 초기화 함수 (Main Menu Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeMainMenu()
+		public override void InitializeMainMenuScene()
 		{
 			M_Panel.InitializeMain();
 			M_MainMenuUI.InitializeMain();
@@ -131,7 +136,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// Main Menu Scene 마무리화 함수 (Main Menu Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeMainMenu()
+		public override void FinallizeMainMenuScene()
 		{
 			M_MainMenuUI.FinallizeMain();
 			M_Panel.FinallizeMain();
@@ -142,7 +147,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// Game Playing Scene 초기화 함수 (Game Playing Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeGamePlaying()
+		public override void InitializeGamePlayingScene()
 		{
 			m_IsGameMode = true;
 
@@ -160,7 +165,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// Game Playing Scene 마무리화 함수 (Game Playing Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeGamePlaying()
+		public override void FinallizeGamePlayingScene()
 		{
 			m_IsGameMode = false;
 
@@ -179,7 +184,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// Map Editing Scene 초기화 함수 (Map Editing Scene 진입 시 호출)
 		/// </summary>
-		public void InitializeMapEditing()
+		public void InitializeMapEditingScene()
 		{
 			M_Panel.InitializeMain();
 
@@ -195,7 +200,7 @@ namespace AvantGardeMaker.CoreSpace
 		/// <summary>
 		/// Map Editing Scene 마무리화 함수 (Map Editing Scene 나갈 시 호출)
 		/// </summary>
-		public void FinallizeMapEditing()
+		public void FinallizeMapEditingScene()
 		{
 			M_MapEditingUI.FinallizeMain();
 			M_MapEditing.FinallizeMain();

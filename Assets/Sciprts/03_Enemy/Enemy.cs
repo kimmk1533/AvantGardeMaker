@@ -6,21 +6,20 @@ using AvantGardeMaker.EnemySpace.Enum;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using AvantGardeMaker.CoreSpace.Enum;
+using CoreSources;
 
 namespace AvantGardeMaker.EnemySpace
 {
 	/*최상위 개체에 콜라이더
 	 아래에 렌더러	 */
 
-	public class Enemy : ObjectPoolItemBase<Enemy>
+	public class Enemy : ObjectPoolItem<Enemy>
 	{
 		#region 변수
 		// 자신의 스테이터스 정보
 		#region 스탯
 		private string m_EngName = string.Empty;
 		private string m_KorName = string.Empty;
-
-		private string m_PortraitImagePath = string.Empty;
 
 		private EnemyFixedData m_FixedData = new EnemyFixedData();
 		private EnemyVariableData m_VariableData = new EnemyVariableData();
@@ -146,7 +145,22 @@ namespace AvantGardeMaker.EnemySpace
 
 		#region 초기화 & 마무리
 		/// <summary>
-		/// 초기화 함수
+		/// 초기화 함수 (생성될 때)
+		/// </summary>
+		public override void Initialize()
+		{
+
+		}
+		/// <summary>
+		/// 마무리화 함수 (파괴될 때)
+		/// </summary>
+		public override void Finallize()
+		{
+
+		}
+
+		/// <summary>
+		/// 초기화 함수 (스폰될 때)
 		/// </summary>
 		public override void InitializePoolItem()
 		{
@@ -176,7 +190,7 @@ namespace AvantGardeMaker.EnemySpace
 			m_CurrentWayPointIntervalTimer = new UtilClass.Timer(0f);
 		}
 		/// <summary>
-		/// 마무리화 함수
+		/// 마무리화 함수 (디스폰될 때)
 		/// </summary>
 		public override void FinallizePoolItem()
 		{
@@ -202,8 +216,6 @@ namespace AvantGardeMaker.EnemySpace
 		{
 			m_EngName = enemyData.EngName;
 			m_KorName = enemyData.KorName;
-
-			m_PortraitImagePath = enemyData.PortraitImagePath;
 
 			m_FixedData = enemyData.FixedData;
 			m_VariableData = enemyData.VariableData;
@@ -245,9 +257,8 @@ namespace AvantGardeMaker.EnemySpace
 			if (m_CurEnemyState == E_EnemyState.Attack || isBlocked)
 				return;
 
-			m_CurrentWayPointIntervalTimer.Update();
 			// 경유지에서 대기중이면 움직이지 않음
-			if (m_CurrentWayPointIntervalTimer.TimeCheck() == false)
+			if (m_CurrentWayPointIntervalTimer.Update(false) == false)
 				return;
 
 			if (m_WayPointIntervalList.Count != m_WayPointList.Count)
@@ -304,18 +315,26 @@ namespace AvantGardeMaker.EnemySpace
 
 		public void Attack()
 		{
-			m_AtkIntervalTimer.Update();
-			// 여기 timecheck을 쓰지 않는건 저지당했을 때와 안당했을때 처리가 달라서 그럼
-
-			// 저지당한 경우
-			if (isBlocked)
+			if (m_AtkIntervalTimer.Update() == false)
 			{
-				// 공격 간격이 다 지나지 않았을 경우 attack하지 않음
-				if (m_AtkIntervalTimer.TimeCheck(true) == false)
+				// 저지당한 경우
+				if (isBlocked)
 				{
 					Debug.Log("공격 쿨타임임");
 					return;
 				}
+				// 공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
+				else if (m_TargetOperList.Count > 0)
+				{
+					// 공격 범위내 적이 들어올 때 attack상태가 되어서 move로 되돌려주기
+					state = E_EnemyState.Move;
+					return;
+				}
+			}
+
+			// 저지당한 경우
+			if (isBlocked)
+			{
 				// BodyTrigger에 맞닿은 오퍼를 공격
 				m_TargetOper.TakeDamage(m_FixedData.DamageType, m_VariableData.Atk.CurStat);
 				Debug.Log("저지 공격");
@@ -323,14 +342,6 @@ namespace AvantGardeMaker.EnemySpace
 			// 공격범위 내 오퍼가 있을 경우 공격(= 원거리 공격)
 			else if (m_TargetOperList.Count > 0)
 			{
-				// 공격 간격이 다 지나지 않았을 경우 attack하지 않음
-				if (m_AtkIntervalTimer.TimeCheck(true) == false)
-				{
-					// 공격 범위내 적이 들어올 때 attack상태가 되어서 move로 되돌려주기
-					state = E_EnemyState.Move;
-					return;
-				}
-
 				// 공격 범위 내 적이 있었는데 쿨타임이라 안때렸을 경우 move상태므로 attack로 변경
 				if (state != E_EnemyState.Attack)
 					state = E_EnemyState.Attack;

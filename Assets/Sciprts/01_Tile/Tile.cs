@@ -10,10 +10,11 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using CoreSources;
 
 namespace AvantGardeMaker.TileSpace
 {
-	public class Tile : ObjectPoolItemBase<Tile>, IPointerClickHandler
+	public class Tile : ObjectPoolItem<Tile>, IPointerClickHandler
 	{
 		#region 변수
 		//현제 타일의 위에 있는 에너미 리스트 먼저들어온 Enemy가 앞순서의 인덱스를 가짐
@@ -70,7 +71,22 @@ namespace AvantGardeMaker.TileSpace
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
-		/// 초기화 함수
+		/// 초기화 함수 (생성될 때)
+		/// </summary>
+		public override void Initialize()
+		{
+
+		}
+		/// <summary>
+		/// 마무리화 함수 (파괴될 때)
+		/// </summary>
+		public override void Finallize()
+		{
+
+		}
+
+		/// <summary>
+		/// 초기화 함수 (스폰될 때)
 		/// </summary>
 		public override void InitializePoolItem()
 		{
@@ -82,12 +98,10 @@ namespace AvantGardeMaker.TileSpace
 			onTileClicked += M_GamePlayingUI.OnTileClicked;
 		}
 		/// <summary>
-		/// 마무리화 함수
+		/// 마무리화 함수 (디스폰될 때)
 		/// </summary>
 		public override void FinallizePoolItem()
 		{
-			base.FinallizePoolItem();
-
 			m_EnemyOnTileList.Clear();
 
 			onTileClicked -= M_GamePlayingUI.OnTileClicked;
@@ -97,6 +111,8 @@ namespace AvantGardeMaker.TileSpace
 			tileType = E_TileType.Default;
 			tilePositionType = E_TilePositionType.LowGround;
 			tileDeployableTypeFlag = E_TileDeployableTypeFlag.None;
+
+			base.FinallizePoolItem();
 		}
 		#endregion
 

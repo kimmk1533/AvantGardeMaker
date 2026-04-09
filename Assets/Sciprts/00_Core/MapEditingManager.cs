@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
+using CoreSources;
 
 namespace AvantGardeMaker.CoreSpace
 {

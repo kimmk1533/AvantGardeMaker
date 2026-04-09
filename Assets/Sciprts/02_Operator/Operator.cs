@@ -9,10 +9,11 @@ using AvantGardeMaker.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using CoreSources;
 
 namespace AvantGardeMaker.OperatorSpace
 {
-	public class Operator : ObjectPoolItemBase<Operator>
+	public class Operator : ObjectPoolItem<Operator>
 	{
 		#region 기본 템플릿
 		#region 변수
@@ -164,7 +165,22 @@ namespace AvantGardeMaker.OperatorSpace
 
 		#region 초기화 & 마무리화 함수
 		/// <summary>
-		/// 초기화 함수
+		/// 초기화 함수 (생성될 때)
+		/// </summary>
+		public override void Initialize()
+		{
+
+		}
+		/// <summary>
+		/// 마무리화 함수 (파괴될 때)
+		/// </summary>
+		public override void Finallize()
+		{
+
+		}
+
+		/// <summary>
+		/// 초기화 함수 (스폰될 때)
 		/// </summary>
 		public override void InitializePoolItem()
 		{
@@ -183,17 +199,16 @@ namespace AvantGardeMaker.OperatorSpace
 			currentDirection = E_OperatorDirection.None;
 
 			m_AutoSPGainTimer = new UtilClass.Timer(1f);
-
 		}
 		/// <summary>
-		/// 마무리화 함수
+		/// 마무리화 함수 (디스폰될 때)
 		/// </summary>
 		public override void FinallizePoolItem()
 		{
-			base.FinallizePoolItem();
-
 			m_AttackRangeInTileList.Clear();
 			m_AttackCoolTimer.Clear();
+
+			base.FinallizePoolItem();
 		}
 		#endregion
 		#endregion
@@ -385,8 +400,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 			foreach (var tile in m_AttackRangeInTileList)
 			{
-				m_AttackCoolTimer.Update();
-				if (m_AttackCoolTimer.TimeCheck())
+				if (m_AttackCoolTimer.Update(false))
 				{
 					m_AttackTartgetEnemy = tile.GetFirstEnemy();
 					m_AttackTartgetEnemy.TakeDamage(m_VariableData.DamageType, m_VariableData.Atk, m_VariableData.Penetration);
@@ -449,9 +463,8 @@ namespace AvantGardeMaker.OperatorSpace
 				return;
 			if (m_OperatorSkill.IsSkillActive == true)
 				return;
-			m_AutoSPGainTimer.Update();
 
-			if (m_AutoSPGainTimer.TimeCheck(true) == true)
+			if (m_AutoSPGainTimer.Update() == true)
 			{
 				m_OperatorSkill.RecoverSP(1);
 			}

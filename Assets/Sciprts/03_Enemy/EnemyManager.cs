@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AvantGardeMaker.CoreSpace.SaveLoad;
 using AvantGardeMaker.EnemySpace.Enum;
+using CoreSources;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -135,7 +136,7 @@ namespace AvantGardeMaker.EnemySpace
 
 			for (int i = 0; i < enemyDatas.Length; ++i)
 			{
-				m_EnemyDataMap.Add(enemyDatas[i].key, new EnemyData(enemyDatas[i]));
+				m_EnemyDataMap.Add(enemyDatas[i].key, enemyDatas[i].Clone());
 			}
 		}
 		/// <summary>
@@ -143,16 +144,16 @@ namespace AvantGardeMaker.EnemySpace
 		/// </summary>
 		public void LoadEnemyData(in StageData stageData)
 		{
-			List<EnemyFixedData> fixedDataList = stageData.enemyFixedDataList;
-			List<EnemyVariableData> variableDataList = stageData.enemyVariableDataList;
+			List<EnemyFixedData> stageEnemyFixedDataList = stageData.enemyFixedDataList;
+			List<EnemyVariableData> stageEnemyVariableDataList = stageData.enemyVariableDataList;
 
-			if (fixedDataList.Count != variableDataList.Count)
-				throw new System.Exception("EnemyFixedData와 EnemyVariableData의 갯수가 다름");
+			if (stageEnemyFixedDataList.Count != stageEnemyVariableDataList.Count)
+				throw new System.Exception(stageData.title + "의 EnemyFixedData와 EnemyVariableData의 갯수가 다름");
 
 			Dictionary<string, (EnemyFixedData fixedData, EnemyVariableData variableData)> tempMap = new Dictionary<string, (EnemyFixedData, EnemyVariableData)>();
-			for (int i = 0; i < fixedDataList.Count; ++i)
+			for (int i = 0; i < stageEnemyFixedDataList.Count; ++i)
 			{
-				tempMap.Add(fixedDataList[i].Code, (fixedDataList[i], variableDataList[i]));
+				tempMap.Add(stageEnemyFixedDataList[i].Code, (stageEnemyFixedDataList[i], stageEnemyVariableDataList[i]));
 			}
 
 			List<EnemySpawnData> spawnDataList = stageData.enemySpawnDataList;
@@ -185,19 +186,17 @@ namespace AvantGardeMaker.EnemySpace
 			if (m_EnemySpawnDataQueue.Count == 0)
 				return;
 
-			m_EnemySpawnTimer.Update();
-
-			if (m_EnemySpawnTimer.TimeCheck() == false)
+			if (m_EnemySpawnTimer.Update() == false)
 				return;
 
 			EnemySpawnData enemySpawnData = m_EnemySpawnDataQueue.Peek();
 
 			m_EnemySpawnTimer.interval = enemySpawnData.Time;
 
-			if (m_EnemySpawnTimer.TimeCheck() == false)
+			if (m_EnemySpawnTimer.Update(0f) == false)
 				return;
 
-			//스테이지 시작 시 n초가 경과했다면
+			// 스테이지 시작 시 n초가 경과했다면
 			Enemy enemy = GetBuilder(enemySpawnData.EnemySpawnKey)
 							.SetPosition(enemySpawnData.startPos)
 							.SetAutoInit(false)

@@ -64,13 +64,16 @@ namespace AvantGardeMaker.UI
 			{
 				m_SelectedOperatorData = value;
 
+				if (value == null)
+					return;
+
 				// 오퍼레이터 이미지
 				m_OperatorImage.sprite = M_Operator.GetOperatorFullshot(value.key);
 
 				// 직군 이미지
 				//m_JobImage = ;
 				// 오퍼레이터 이름 텍스트
-				m_OperatorNameText.text = value.KorName;
+				m_OperatorNameText.text = value.FixedData.KorName;
 				// 정예화 이미지
 				//m_ArousalImage = ;
 				// 오퍼레이터 레벨 텍스트

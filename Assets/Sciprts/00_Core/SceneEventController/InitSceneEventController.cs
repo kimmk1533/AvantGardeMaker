@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CoreSources;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ namespace AvantGardeMaker.CoreSpace.SceneEvent
 			M_Game.Initialize();
 
 			// Main Menu Scene 전환 후 이벤트
-			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenu);
+			AddAfterEvent("Main Menu Scene", M_Game.InitializeMainMenuScene);
 
 			SceneLoader.LoadScene("Main Menu Scene");
 		}

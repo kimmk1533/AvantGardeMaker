@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using AvantGardeMaker.CoreSpace;
 using AvantGardeMaker.CoreSpace.SaveLoad;
+using CoreSources;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;

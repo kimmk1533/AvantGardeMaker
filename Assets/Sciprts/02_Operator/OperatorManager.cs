@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using AvantGardeMaker.CoreSpace.SaveLoad;
+using CoreSources;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,10 +11,14 @@ namespace AvantGardeMaker.OperatorSpace
 	public class OperatorManager : ObjectManager<OperatorManager, Operator>
 	{
 		private const string c_OperatorDataPath = "Datas\\02_Operator Datas";
-		private const string c_OperatorSpritePath = "Textures\\02_Operator Textures" + "";
+		private const string c_OperatorSpritePath = "Textures\\02_Operator Textures";
 
 		#region 변수
+		// 현재 게임에서 사용하는 오퍼레이터 데이터 모음
 		private Dictionary<string, OperatorData> m_OperatorDataMap = null;
+		// 원본 오퍼레이터 데이터 모음
+		private Dictionary<string, (OperatorFixedData fixedData, OperatorVariableData variableData)> m_OperatorDataOriginMap = null;
+
 		// 오퍼레이터 정면 이미지 (SD 이미지) 모음
 		private Dictionary<string, Sprite> m_OperatorFrontSpriteMap = null;
 		// 오퍼레이터 후면 이미지 (SD 이미지) 모음
@@ -45,12 +50,14 @@ namespace AvantGardeMaker.OperatorSpace
 			base.Initialize();
 
 			m_OperatorDataMap = new Dictionary<string, OperatorData>();
+			m_OperatorDataOriginMap = new Dictionary<string, (OperatorFixedData fixedData, OperatorVariableData variableData)>();
+
 			m_OperatorFrontSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorBackSpriteMap = new Dictionary<string, Sprite>();
 			m_OperatorPortraitMap = new Dictionary<string, Sprite>();
 			m_OperatorFullshotMap = new Dictionary<string, Sprite>();
 
-			LoadOperatorData();
+			LoadOriginOperatorData();
 		}
 		/// <summary>
 		/// 마무리화 함수 (게임 종료 시 호출)
@@ -121,21 +128,16 @@ namespace AvantGardeMaker.OperatorSpace
 		///<summary>
 		/// Resources 폴더에 있는 OperatorData 스크립터블 오브젝트를 List에 저장
 		/// </summary>
-		[Button("Load OperatorData")]
-		public void LoadOperatorData()
+		private void LoadOriginOperatorData()
 		{
-			m_OperatorDataMap.Clear();
-			m_OperatorFrontSpriteMap.Clear();
-			m_OperatorBackSpriteMap.Clear();
-			m_OperatorPortraitMap.Clear();
-			m_OperatorFullshotMap.Clear();
-
 			OperatorData[] operatorDatas = Resources.LoadAll<OperatorData>(c_OperatorDataPath);
 			foreach (var operatorData in operatorDatas)
 			{
 				string key = operatorData.key;
 
-				m_OperatorDataMap.Add(key, new OperatorData(operatorData));
+				m_OperatorDataMap.Add(key, operatorData.Clone());
+				m_OperatorDataOriginMap.Add(key, (operatorData.FixedData, operatorData.VariableData));
+				
 				m_OperatorFrontSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Front")));
 				m_OperatorBackSpriteMap.Add(key, Resources.Load<Sprite>(Path.Combine(c_OperatorSpritePath, key, key + "_Back")));
 				m_OperatorPortraitMap.Add(key, Resources.Load<Sprite>(operatorData.FixedData.PortraitImagePath));
@@ -147,20 +149,23 @@ namespace AvantGardeMaker.OperatorSpace
 		/// </summary>
 		public void LoadOperatorData(in StageData stageData)
 		{
-			List<OperatorSpawnData> spawnDataList = stageData.operatorSpawnDataList;
 			List<OperatorFixedData> fixedDataList = stageData.operatorFixedDataList;
 			List<OperatorVariableData> variableDataList = stageData.operatorVariableDataList;
 
-			int count = spawnDataList.Count;
+			if (fixedDataList.Count != variableDataList.Count)
+				throw new System.Exception(stageData.title + "의 OperatorFixedData와 OperatorVariableData의 갯수가 다름");
 
-			for (int i = 0; i < count; ++i)
+			// 추후 최적화 더 생각해봐야 할 듯 (현재 생각 중인건 로드 언로드 방식. 사용하는 데이터만 로드하고 이전 씬으로 돌아갈 때 언로드(원본 데이터로 복구) 하는 방식)
+			Dictionary<string, (OperatorFixedData fixedData, OperatorVariableData variableData)> tempMap = new Dictionary<string, (OperatorFixedData, OperatorVariableData)>(m_OperatorDataOriginMap);
+			for (int i = 0; i < fixedDataList.Count; ++i)
 			{
-				OperatorSpawnData spawnData = spawnDataList[i];
+				tempMap[fixedDataList[i].EngName] = (fixedDataList[i], variableDataList[i]);
+			}
 
-				OperatorData operatorData = m_OperatorDataMap[spawnData.OperatorSpawnKey];
-
-				operatorData.FixedData = fixedDataList[i];
-				operatorData.VariableData = variableDataList[i];
+			foreach (var item in m_OperatorDataMap)
+			{
+				item.Value.FixedData = tempMap[item.Key].fixedData;
+				item.Value.VariableData = tempMap[item.Key].variableData;
 			}
 		}
 

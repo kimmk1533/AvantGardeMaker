@@ -285,8 +285,8 @@ namespace AvantGardeMaker.UI
 		}
 		public void UpdateUI(OperatorData operatorData)
 		{
-			m_EngNameText.text = operatorData.EngName;
-			m_KorNameText.text = operatorData.KorName;
+			m_EngNameText.text = operatorData.FixedData.EngName;
+			m_KorNameText.text = operatorData.FixedData.KorName;
 
 			m_MaxHpText.text = operatorData.VariableData.MaxHp.ToString();
 			m_AtkText.text = operatorData.VariableData.Atk.ToString();

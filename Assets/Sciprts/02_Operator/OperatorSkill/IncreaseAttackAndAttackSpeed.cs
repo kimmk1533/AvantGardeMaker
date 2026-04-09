@@ -38,8 +38,7 @@ namespace AvantGardeMaker.OperatorSpace
 
 		public override void Activate(OperatorData operatorData)
 		{
-			OperatorSkillInfo.ActiveSkillTimer.Update();
-			if (OperatorSkillInfo.ActiveSkillTimer.TimeCheck(true) == true)
+			if (OperatorSkillInfo.ActiveSkillTimer.Update() == true)
 			{
 				Debug.Log("공속원상복귀");
 				operatorData.VariableData.CurrentAttackSpeed -= increasedAttackSpeed;

@@ -56,5 +56,8 @@ namespace AvantGardeMaker.EnemySpace
 
 		// 필터에 표시되지 않는 공격 타입
 		public E_DamageType DamageType;
+
+		// 적 초상화 에셋 경로
+		public string PortraitImagePath;
 	}
 }

@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using CoreSources;
 
 namespace AvantGardeMaker.UI
 {
@@ -67,8 +68,9 @@ namespace AvantGardeMaker.UI
 		public void OnOperatorSquadUIClicked(OperatorSquadUI operatorSquadUI)
 		{
 			// 이미 선택된 오퍼레이터 UI 클릭 시 클릭 취소
-			if (m_SelectedOperatorSquadUI == operatorSquadUI)
+			if (operatorStatusUI.selectedOperatorData == operatorSquadUI.operatorData)
 			{
+				operatorStatusUI.selectedOperatorData = null;
 				operatorStatusUI.gameObject.SetActive(false);
 
 				m_SelectedOperatorSquadUI = null;
@@ -76,10 +78,10 @@ namespace AvantGardeMaker.UI
 				return;
 			}
 
-			m_SelectedOperatorSquadUI = operatorSquadUI;
-
 			operatorStatusUI.selectedOperatorData = operatorSquadUI.operatorData;
 			operatorStatusUI.gameObject.SetActive(true);
+
+			m_SelectedOperatorSquadUI = operatorSquadUI;
 		}
 		// 타일 클릭
 		public void OnTileClicked(Tile tile)
@@ -113,7 +115,6 @@ namespace AvantGardeMaker.UI
 		{
 			deploymentCancelButton.gameObject.SetActive(false);
 
-			m_SelectedOperatorSquadUI.CancelDeployment();
 			m_SelectedOperatorSquadUI = null;
 
 			operatorStatusUI.gameObject.gameObject.SetActive(false);
@@ -216,14 +217,14 @@ namespace AvantGardeMaker.UI
 				string key = operatorSpawnData.OperatorSpawnKey;
 
 				OperatorSquadUI operatorSquadUI = GetBuilder("Operator Squad UI")
-					.SetAutoInit(true)
+					.SetAutoInit(false)
 					.SetActive(true)
 					.SetName(key)
 					.Spawn<OperatorSquadUI>();
 
 				operatorSquadUI.operatorData = M_Operator.GetOperatorData(key);
-
-				operatorSquadUI.onOperatorSquadUIClicked += OnOperatorSquadUIClicked;
+				operatorSquadUI.onClick += OnOperatorSquadUIClicked;
+				operatorSquadUI.InitializePoolItem();
 
 				m_OperatorSquadUIList.Add(operatorSquadUI);
 			}
@@ -243,7 +244,7 @@ namespace AvantGardeMaker.UI
 		{
 			for (int i = 0; i < m_OperatorSquadUIList.Count; ++i)
 			{
-				m_OperatorSquadUIList[i].onOperatorSquadUIClicked -= OnOperatorSquadUIClicked;
+				m_OperatorSquadUIList[i].onClick -= OnOperatorSquadUIClicked;
 
 				Despawn(m_OperatorSquadUIList[i]);
 			}
